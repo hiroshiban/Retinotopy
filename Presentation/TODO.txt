@@ -1,0 +1,8 @@
+***********************************
+TODO for retinotopy experiment
+Last Update: "2013-11-25 15:31:55 ban (ban.hiroshi@gmail.com)"
+***********************************
+
+*done* 1. rename variables *_all ---> *
+*done* 2. check timing
+3. bar stimulus for pRF analysis
