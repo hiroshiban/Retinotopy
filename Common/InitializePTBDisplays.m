@@ -49,7 +49,7 @@ function [winPtr,winRect,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2013-11-25 15:07:40 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-26 17:34:38 ban (ban.hiroshi@gmail.com)"
 
 % initialize
 winPtr=[];
@@ -185,7 +185,7 @@ try
 
   initDisplay_OK=true;
 catch lasterror
-  %tmp=lasterror;
+  display(lasterror);
   initDisplay_OK=false;
 end
 
