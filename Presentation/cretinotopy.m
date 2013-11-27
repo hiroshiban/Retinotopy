@@ -15,7 +15,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-27 10:29:25 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-27 17:35:13 ban (ban.hiroshi@gmail.com)"
 %
 %
 %
@@ -87,7 +87,8 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 % dparam.ExpMode='mono';
 % 
 % % a method to start stimulus presentation
-% % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet), 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port
+% % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
+% % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,
 % % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
 % dparam.start_method=2;
 % 
@@ -226,8 +227,7 @@ today=strrep(datestr(now,'yy/mm/dd'),'/','');
 
 % result directry & file
 resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
-[is_exist1]=IsExistYouWant(resultDir,'dir');
-if ~is_exist1, mkdir(resultDir); end
+if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
 logfname=[resultDir filesep() num2str(subjID) '_cretinotopy_' sparam.mode '_results_run_' num2str(acq,'%02d') '.log'];
@@ -244,15 +244,6 @@ if nargin < 3, eval(sprintf('help %s',mfilename())); return; end
 
 %%%%% try & catch %%%%%
 try
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% adding path to the subfunctions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% adding the path to subfunctions
-addpath(fullfile(rootDir,'..','Common'));
-addpath(fullfile(rootDir,'..','Generation'));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -438,7 +429,11 @@ if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check 
 if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
 disp('done.');
 
-%% displaying the Presentation Parameters
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% displaying the presentation parameters you set
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 disp('The Presentation Parameters are as below.');
 fprintf('\n');
 disp('************************************************');
@@ -509,7 +504,6 @@ HideCursor();
 
 % set the priority of this script to MAX
 priorityLevel=MaxPriority(winPtr,'WaitBlanking');
-%priorityLevel=MaxPriority(rightEyeWindow,'WaitBlanking');
 Priority(priorityLevel);
 
 % conserve VRAM memory: Workaround for flawed hardware and drivers
@@ -1020,8 +1014,6 @@ fixRect=[0 0 fixSize]; % used to display the central fixation point
 
 % displaying texts on the center of the screen
 DisplayMessage2('Ready to Start',sparam.bgcolor,winPtr,nScr,'Arial',36);
-
-% display the message for a while
 ttime=GetSecs(); while (GetSecs()-ttime < 0.5), end  % run up the clock.
 
 
@@ -1263,7 +1255,7 @@ DrawTextureWithCLUT();
 Priority(0);
 ShowCursor();
 Screen('CloseAll');
-rmpath(fullfile(rootDir,'..','Common'));
+rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
 clear all; clear mex; clear global;
 diary off;
@@ -1288,7 +1280,7 @@ catch lasterror
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);
   keyboard;
-  rmpath(fullfile(rootDir,'..','Common'));
+  rmpath(genpath(fullfile(rootDir,'..','Common')));
   rmpath(fullfile(rootDir,'..','Generation'));
   %psychrethrow(psychlasterror);
   clear global; clear mex; clear all; close all;

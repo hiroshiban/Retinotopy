@@ -10,7 +10,8 @@
 dparam.ExpMode='mono';
 
 % a method to start stimulus presentation
-% 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet), 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port
+% 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
+% 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port
 % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
 dparam.start_method=2;
 

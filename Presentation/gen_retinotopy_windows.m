@@ -11,7 +11,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2013-11-26 10:40:35 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-27 16:43:37 ban (ban.hiroshi@gmail.com)"
 %
 %
 % [input variables]
@@ -189,7 +189,7 @@ rootDir = fileparts(mfilename('fullpath'));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % adding the path to subfunctions
-addpath(fullfile(rootDir,'..','Common'));
+addpath(genpath(fullfile(rootDir,'..','Common')));
 addpath(fullfile(rootDir,'..','Generation'));
 
 
@@ -596,7 +596,7 @@ disp('done.');
 %%%% removing path to the subfunctions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-rmpath(fullfile(rootDir,'..','Common'));
+rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
 
 clear mex;
