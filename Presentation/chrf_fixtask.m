@@ -22,7 +22,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-26 11:48:07 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-27 10:28:58 ban (ban.hiroshi@gmail.com)"
 %
 %
 %
@@ -502,9 +502,8 @@ if ~user_answer, return; end
 %%%% Initialization of Left & Right screens for binocular presenting/viewing mode
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[winPtr,winRect,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[]);
+[winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[]);
 if ~initDisplay_OK, error('Display initialization error. Please check your exp_run parameter.'); end
-if strcmpi(dparam.ExpMode,'mono'), nScr=1; else nScr=2; end
 HideCursor();
 
 

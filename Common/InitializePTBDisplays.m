@@ -1,7 +1,7 @@
-function [winPtr,winRect,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains)
+function [winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains)
 
 % Initializes PTB screen(s) for monocular/binocular presentations using PsychImaging() function.
-% function [winPtr,winRect,initDisplay_OK]=InitializePTBDisplays(:disp_mode,:bgcolor,:flipping,:rgb_gains)
+% function [winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(:disp_mode,:bgcolor,:flipping,:rgb_gains)
 % (: is optional)
 %
 % Initialize PTB Screen settings for monocular/binocular viewing
@@ -37,6 +37,7 @@ function [winPtr,winRect,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor
 % [output]
 % winPtr         : target window pointer
 % winRect        : target window screen rect
+% nScr           : the number of screens to be used for the presentation
 % initDisplay_OK : if 1, the initialization is done correctly [0/1]
 %
 % [note]
@@ -49,11 +50,12 @@ function [winPtr,winRect,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2013-11-26 17:34:38 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-27 10:27:38 ban (ban.hiroshi@gmail.com)"
 
 % initialize
 winPtr=[];
 winRect=[];
+nScr=2; % use two screens by default, but if disp_mode=='mono', it will turn to 1.
 
 % check input variables
 if nargin<1 || isempty(disp_mode), disp_mode='mono'; end
@@ -107,14 +109,25 @@ try
   scrID1=max(Screen('Screens'));
   if is_windows && (strcmpi(disp_mode,'cross') || strcmpi(disp_mode,'parallel')), scrID1=0; end
 
+  % check whether the computer is connected to two displays
   if strcmpi(disp_mode,'dual')
-    if length(Screen('Screens'))<2, warning('Not enough displays. Using screen 0 alone.'); end %#ok
+    if length(Screen('Screens'))<2
+      warning('Not enough displays. Using screen 0 alone.'); %#ok
+      disp_mode='mono';
+    end
+  end
+
+  % setup the OS-dependent screen ID for dual display mode
+  if strcmpi(disp_mode,'dual')
     if is_windows
       scrID1=1;
     else
       scrID1=0;
     end
   end
+
+  % set the number of screens
+  if strcmpi(disp_mode,'mono'), nScr=1; end
 
   % Open double-buffered onscreen window with the requested display mode,
   % setup imaging pipeline for additional on-the-fly processing:
@@ -186,6 +199,7 @@ try
   initDisplay_OK=true;
 catch lasterror
   display(lasterror);
+  nScr=0;
   initDisplay_OK=false;
 end
 
