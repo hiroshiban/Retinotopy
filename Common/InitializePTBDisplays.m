@@ -1,7 +1,7 @@
-function [winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains)
+function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains)
 
 % Initializes PTB screen(s) for monocular/binocular presentations using PsychImaging() function.
-% function [winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(:disp_mode,:bgcolor,:flipping,:rgb_gains)
+% function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(:disp_mode,:bgcolor,:flipping,:rgb_gains)
 % (: is optional)
 %
 % Initialize PTB Screen settings for monocular/binocular viewing
@@ -38,6 +38,8 @@ function [winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(disp_mode,bg
 % winPtr         : target window pointer
 % winRect        : target window screen rect
 % nScr           : the number of screens to be used for the presentation
+% fps            : screen refresh rate (the number of screen flips per second)
+% ifi            : inter flip interval in sec
 % initDisplay_OK : if 1, the initialization is done correctly [0/1]
 %
 % [note]
@@ -50,7 +52,7 @@ function [winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(disp_mode,bg
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2013-11-27 10:27:38 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-28 11:19:45 ban (ban.hiroshi@gmail.com)"
 
 % initialize
 winPtr=[];
@@ -196,10 +198,24 @@ try
     end
   end
 
+  % get screen refresh rate and inter-flip-interval
+  fps=Screen('FrameRate',winPtr);
+  ifi=Screen('GetFlipInterval',winPtr);
+  if fps==0, fps=1/ifi; end
+  %fps=Screen('FrameRate',winPtr);
+  %if fps==0
+  %  dparam.ifi=Screen('GetFlipInterval',winPtr);
+  %  dparam.fps=1/dparam.ifi;
+  %else
+  %  ifi=1/dparam.fps;
+  %end
+
   initDisplay_OK=true;
 catch lasterror
   display(lasterror);
   nScr=0;
+  fps=0;
+  ifi=0;
   initDisplay_OK=false;
 end
 

@@ -41,7 +41,7 @@ classdef responselogger
 %
 %
 % Created    : "2013-11-17 21:42:47 ban"
-% Last Update: "2013-11-23 00:45:43 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-28 13:59:33 ban (ban.hiroshi@gmail.com)"
 
 properties (Hidden)  %(SetAccess = protected)
   key_codes=[37,39]; % array of key codes, [1xn] matrix in which keycodes you want to check should be included.
@@ -95,6 +95,13 @@ methods
   function [obj,oldkey]=disable_jis_key_trouble(obj)
     [keyIsDown,secs,keyCode]=KbCheck();
     oldkey=DisableKeysForKbCheck(find(keyCode>0));
+  end
+
+  % initialize responselogger
+  function obj=initialize(obj,event)
+    obj.unify_keys();        % unifying the key name
+    obj.check_responses(event);    % load function(s) once before running the main trial loop
+    obj.disable_jis_key_trouble(); % force to set 0 for the keys that are ON by default.
   end
 
   % check participant's key responses and record them to the event log

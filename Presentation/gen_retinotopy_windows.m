@@ -1,6 +1,6 @@
 function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)
 
-% Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field)-based analysis.
+% Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field) analysis.
 % function stim_windows=gen_retinotopy_windows(subjID, exp_mode, acq, :displayfile, ...
 %                                           :stimulusfile, :overwrite_pix_per_deg, :TR)
 % (: is optional)
@@ -11,7 +11,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2013-11-27 16:43:37 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-28 10:02:58 ban (ban.hiroshi@gmail.com)"
 %
 %
 % [input variables]
@@ -141,32 +141,39 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% for DEBUG
+%%%% adding path to the subfunctions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%DEBUG = 0; % set 0 | 1
-%if DEBUG
-%  warning on;
-%  diary('cretinotopy.txt');
-%else
-  warning('off','MATLAB:dispatcher:InexactCaseMatch');
-  warning off; %#ok
-%end
+clear global; clear mex;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% difine global variables
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% add paths to the subfunctions
+rootDir=fileparts(mfilename('fullpath'));
+addpath(genpath(fullfile(rootDir,'..','Common')));
+addpath(fullfile(rootDir,'..','Generation'));
 
-clear global;
-clear mex;
+% set stimulus parameters
+sparam.mode=exp_mode;
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% difine constant variables
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% difine constant variables
 display_flg=1;
 pause_dur=0.2;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% for log file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% get date
+today=strrep(datestr(now,'yy/mm/dd'),'/','');
+
+% result directry & file
+resultDir=fullfile(rootDir,'subjects',num2str(subjID),'pRF',today);
+if ~exist(resultDir,'dir'), mkdir(resultDir); end
+
+% record the output window
+logfname=[resultDir filesep() num2str(subjID) '_stimulus_window_' sparam.mode '_run_' num2str(acq,'%02d'), '.log'];
+diary(logfname);
+warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -176,21 +183,8 @@ pause_dur=0.2;
 if nargin < 3, eval(sprintf('help %s',mfilename())); return; end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% set Root directry and add Paths to subfunctions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% get the full path of this script and set the root directory.
-rootDir = fileparts(mfilename('fullpath'));
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% adding path to the subfunctions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% adding the path to subfunctions
-addpath(genpath(fullfile(rootDir,'..','Common')));
-addpath(fullfile(rootDir,'..','Generation'));
+%%%%% try & catch %%%%%
+try
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -203,9 +197,9 @@ addpath(fullfile(rootDir,'..','Generation'));
 
 % check the number of nargin
 if nargin < 3
-  error('takes at least 3 arguments: gen_retinotopy_windows(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:overwrite_pix_per_deg), (:TR))');
+  error('takes at least 3 arguments: gen_retinotopy_windows(subjID,exp_mode,acq,(:displayfile),(:stimulusfile),(:overwrite_pix_per_deg),(:TR))');
 elseif nargin > 7
-  error('takes at most 7 arguments: gen_retinotopy_windows(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:overwrite_pix_per_deg), (:TR))');
+  error('takes at most 7 arguments: gen_retinotopy_windows(subjID,exp_mode,acq,(:displayfile),(:stimulusfile),(:overwrite_pix_per_deg),(:TR))');
 else
   if nargin == 3
     useDisplayFile = false;
@@ -319,7 +313,11 @@ if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check 
 if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
 disp('done.');
 
-%% displaying the Presentation Parameters
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% displaying the presentation parameters you set
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 disp('The Presentation Parameters are as below.');
 fprintf('\n');
 disp('************************************************');
@@ -418,7 +416,6 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
     if minlim<rmin, minlim=rmin; end
     maxlim=rmin+(nn-1)*eccedge+eccwidth/2;
     if maxlim>rmax, maxlim=rmax; end
-
     ecclims(nn,:)=[minlim,maxlim,eccwidth];
   end
 
@@ -429,17 +426,14 @@ end % if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
 
 %% flip all data for ccw/cont
 if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cont')
-
   tmp_checkerboard=cell(sparam.npositions,1);
   for nn=1:1:sparam.npositions, tmp_checkerboard{nn}=checkerboard{sparam.npositions-(nn-1)}; end
   checkerboard=tmp_checkerboard;
   clear tmp_checkerboard;
-
 end
 
 %% convert logical data to double format to process gaussian filter at the later stage
 %for nn=1:1:sparam.npositions, checkerboard{nn}=double(checkerboard{nn}); end
-
 
 %% initialize stimulus windows
 %stim_windows=zeros([round(size(checkerboard{1})),nTR_whole]);
@@ -486,7 +480,6 @@ end
 for cc=1:1:sparam.numRepeats
 
   %% rest perioed
-
   if strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont')
     if nTR_rest~=0
       counterend=TRcounter+nTR_rest-1;
@@ -533,7 +526,6 @@ for cc=1:1:sparam.numRepeats
   end % for ff=1:1:cycle_frames
 
   %% rest perioed
-
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')
     if nTR_rest~=0
       counterend=TRcounter+nTR_rest-1;
@@ -577,16 +569,6 @@ close all;
 
 % saving the results
 fprintf('saving data...');
-
-% get date
-today=strrep(datestr(now,'yy/mm/dd'),'/','');
-
-% result directry & file
-resultDir = fullfile(rootDir,'subjects',num2str(subjID),'pRF',today);
-[is_exist1] = IsExistYouWant(resultDir,'dir');
-if ~is_exist1, mkdir(resultDir); end
-
-% save data
 savefname=[resultDir filesep() num2str(subjID) '_stimulus_window_' sparam.mode '_run_' num2str(acq,'%02d'), '.mat'];
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
 disp('done.');
@@ -598,10 +580,29 @@ disp('done.');
 
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
+clear all; clear mex; clear global;
+diary off;
 
-clear mex;
-clear global;
-%diary off;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Catch the errors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+catch lasterror
+  % this "catch" section executes in case of an error in the "try" section
+  % above.  Importantly, it closes the onscreen window if its open.
+  tmp=lasterror; %#ok
+  diary off;
+  fprintf(['\nErrror detected and the program was terminated.\n',...
+           'To check error(s), please type ''tmp''.\n',...
+           'Please save the current variables now if you need.\n',...
+           'Then, quit by ''dbquit''\n']);
+  keyboard;
+  rmpath(genpath(fullfile(rootDir,'..','Common')));
+  rmpath(fullfile(rootDir,'..','Generation'));
+  clear global; clear mex; clear all; close all;
+  return
+end % try..catch
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

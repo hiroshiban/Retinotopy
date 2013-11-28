@@ -15,7 +15,7 @@ dparam.ExpMode='mono';
 % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
 dparam.start_method=2;
 
-% a pseudo trigger key from the MR scanner when it starts, only valid when dparam.start_method=4;
+% a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
 dparam.custom_trigger='t';
 
 % keyboard settings

@@ -21,7 +21,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-27 17:35:29 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-28 14:03:26 ban (ban.hiroshi@gmail.com)"
 %
 %
 %
@@ -98,7 +98,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
 % dparam.start_method=2;
 % 
-% % a pseudo trigger key from the MR scanner when it starts, only valid when dparam.start_method=4;
+% % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
 % dparam.custom_trigger='t';
 %
 % % keyboard settings
@@ -245,7 +245,7 @@ warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 %%%% for HELP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if nargin < 3, eval(sprintf('help %s',mfilename())); return; end
+if nargin < 3, help(mfilename()); return; end
 
 
 %%%%% try & catch %%%%%
@@ -388,17 +388,17 @@ else  % if useStimulusFile
   sparam.maxRad         = 8;
   sparam.minRad         = 0;
 
-  sparam.colors      = [ 128, 128, 128;
-                         255,   0,   0;
-                           0, 255,   0;
-                         255, 255,   0;
-                           0,   0, 255;
-                         255,   0, 255;
-                           0, 255, 255;
-                         255, 255, 255;
-                           0,   0,   0;
-                         255, 128,   0;
-                         128,   0, 255;];
+  sparam.colors         = [ 128, 128, 128;
+                            255,   0,   0;
+                              0, 255,   0;
+                            255, 255,   0;
+                              0,   0, 255;
+                            255,   0, 255;
+                              0, 255, 255;
+                            255, 255, 255;
+                              0,   0,   0;
+                            255, 128,   0;
+                            128,   0, 255;];
 
   %%% duration in msec for each cycle & repetitions
   sparam.cycle_duration = 60;
@@ -483,9 +483,7 @@ fprintf('\n');
 % initialize MATLAB objects for event and response logs
 event=eventlogger();
 resps=responselogger([dparam.Key1,dparam.Key2]);
-resps.unify_keys();
-resps.check_responses(event); % load function(s) once before running the main trial loop
-resps=resps.disable_jis_key_trouble(); % force to set 0 for the keys that are ON by default.
+resps.initialize(event); % initialize responselogger
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -500,7 +498,7 @@ if ~user_answer, return; end
 %%%% Initialization of Left & Right screens for binocular presenting/viewing mode
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[winPtr,winRect,nScr,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[]);
+[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[]);
 if ~initDisplay_OK, error('Display initialization error. Please check your exp_run parameter.'); end
 HideCursor();
 
@@ -559,12 +557,6 @@ DisplayMessage2('Initializing...',sparam.bgcolor,winPtr,nScr,'Arial',36);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Initializing variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% get display frames
-dparam.fps=Screen('FrameRate',winPtr);
-%dparam.ifi=Screen('GetFlipInterval',winPtr);
-%if dparam.fps==0, dparam.fps=1/dparam.ifi; end
-dparam.ifi=1/dparam.fps;
 
 %% unit conversion
 
@@ -741,11 +733,8 @@ if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cont')
 end
 
 %% Make Checkerboard textures
-
 checkertexture=cell(sparam.npositions,1);
-for nn=1:1:sparam.npositions
-  checkertexture{nn}=Screen('MakeTexture',winPtr,checkerboard{nn});
-end
+for nn=1:1:sparam.npositions, checkertexture{nn}=Screen('MakeTexture',winPtr,checkerboard{nn}); end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -938,8 +927,6 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Creating the central fixation, cross images (left/right)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-sparam.fixsize=4; % change to constant, this is just to match fixation size with cretinotopy.m
 
 % create fixation cross images, first larger fixations are generated, then they are antialiased
 % This is required to present a beautiful circle
@@ -1254,9 +1241,10 @@ DrawTextureWithCLUT();
 %%%% Cleaning up the PTB screen, removing path to the subfunctions, and finalizing the script
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Priority(0);
-ShowCursor();
 Screen('CloseAll');
+ShowCursor();
+Priority(0);
+GammaResetPTB(1.0);
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
 clear all; clear mex; clear global;
