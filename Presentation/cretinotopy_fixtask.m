@@ -21,17 +21,18 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-28 14:03:26 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-29 13:44:38 ban (ban.hiroshi@gmail.com)"
 %
 %
 %
 % [input variables]
 % sujID         : ID of subject, string, such as 's01'
+%                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %                 !!! if 'debug' (case insensitive) is included          !!!
 %                 !!! in subjID string, this program runs as DEBUG mode; !!!
 %                 !!! stimulus images are saved as *.png format at       !!!
-%                 !!! ~/CurvatureShading/Presentation/images             !!!
+%                 !!! ~/Retinotopy/Presentation/images                   !!!
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %
 % exp_mode      : experiment mode that you want to run, one of
@@ -43,8 +44,10 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %                 a integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
 %                 *.m file, such as 'RetDepth_display_fmri.m'
+%                 the file should be located in ./subjects/(subj)/
 % stimulusfile  : (optional) stimulus condition file,
 %                 *.m file, such as 'RetDepth_stimulus_exp1.m'
+%                 the file should be located in ./subjects/(subj)/
 % gamma_table   : (optional) table(s) of gamma-corrected video input values (Color LookupTable).
 %                 256(8-bits) x 3(RGB) x 1(or 2,3,... when using multiple displays) matrix
 %                 or a *.mat file specified with a relative path format. e.g. '/gamma_table/gamma1.mat'
@@ -91,13 +94,13 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
 % % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
 % dparam.ExpMode='mono';
-% 
+%
 % % a method to start stimulus presentation
 % % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
 % % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,
 % % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
 % dparam.start_method=2;
-% 
+%
 % % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
 % dparam.custom_trigger='t';
 %
@@ -210,10 +213,20 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% adding path to the subfunctions
+%%%% Check input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear global; clear mex;
+if nargin < 3, help(mfilename()); return; end
+
+% check the aqcuisition number. up to 10 design files can be used
+if acq<1, error('Acquistion number must be integer and greater than zero'); end
+if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check input variable.'); end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Add path to the subfunctions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % add paths to the subfunctions
 rootDir=fileparts(mfilename('fullpath'));
@@ -225,7 +238,7 @@ sparam.mode=exp_mode;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% for log file
+%%%% For log file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % get date
@@ -241,19 +254,12 @@ diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% for HELP
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if nargin < 3, help(mfilename()); return; end
-
-
 %%%%% try & catch %%%%%
 try
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% check the PTB version
+%%%% Check the PTB version
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 PTB_OK=CheckPTBversion(3); % check wether the PTB version is 3
@@ -283,11 +289,11 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% 1. check input variables,
-%%%% 2. read a condition file,
-%%%% 3. check the validity of input variables,
-%%%% 4. store informascatio about directories & design file,
-%%%% 5. and load design & condition file.
+%%%% 1. Check input variables,
+%%%% 2. Read a condition file,
+%%%% 3. Check the validity of input variables,
+%%%% 4. Store informascatio about directories & design file,
+%%%% 5. Load design & condition file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % check the number of nargin
@@ -438,7 +444,7 @@ disp('done.');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% displaying the presentation parameters you set
+%%%% Displaying the presentation parameters you set
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('The Presentation Parameters are as below.');
@@ -477,7 +483,7 @@ fprintf('\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% initialize response & event logger objects
+%%%% Initialize response & event logger objects
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % initialize MATLAB objects for event and response logs
@@ -539,7 +545,7 @@ Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% initializing MATLAB OpenGL shader API
+%%%% Initializing MATLAB OpenGL shader API
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % just call DrawTextureWithCLUT with window pointer alone
@@ -941,7 +947,7 @@ fcircle{2}=Screen('MakeTexture',winPtr,dark_fix);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% image size adjusting to match the current display resolutions
+%%%% Image size adjusting to match the current display resolutions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if dparam.fullscr
@@ -1013,7 +1019,7 @@ Screen('DrawingFinished',winPtr);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% wait the first trigger pulse from fMRI scanner or start with button pressing
+%%%% Wait for the first trigger pulse from fMRI scanner or start with button pressing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % add time stamp (this also works to load add_event method in memory in advance of the actual displays)
@@ -1279,7 +1285,7 @@ end % try..catch
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% that's it - we're done
+%%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
 % end % function cretinotopy_fixtask

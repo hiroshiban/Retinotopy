@@ -52,7 +52,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2013-11-28 11:19:45 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-29 12:49:52 ban (ban.hiroshi@gmail.com)"
 
 % initialize
 winPtr=[];

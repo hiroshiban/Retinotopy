@@ -11,23 +11,23 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 % - For details, see each function's help
 %
 % [example]
-% >> retinotopy('HB','checkerccw',1);
-% >> retinotopy('HB',{'checkerccw','checkerexp','checkerccw','checkerexp'},[1,1,2,2]);
+% >> retinotopy('HB','ccw',1);
+% >> retinotopy('HB',{'ccw','exp','ccw','exp'},[1,1,2,2]);
 % >> retinotopy('HB',{'ccwwindows','cwwindows','expwindows','contwindows'},[1,1,1,1]);
 %
 % [input]
 % subj    : subject's name, e.g. 'HB'
 % exp_mode: experiment mode that you want to run, one of
 %           (task -- luminance change detection on the checkerboard for 4 modes below)
-%           - checkerccw   : color/luminance-defined checkerboard wedge rotated counter-clockwisely
-%           - checkercw    : color/luminance-defined checkerboard wedge rotated clockwisely
-%           - checkerexp   : color/luminance-defined checkerboard anuulus expanding from fovea
-%           - checkercont  : color/luminance-defined checkerboard annulus contracting from periphery
+%           - ccw   : color/luminance-defined checkerboard wedge rotated counter-clockwisely
+%           - cw    : color/luminance-defined checkerboard wedge rotated clockwisely
+%           - exp   : color/luminance-defined checkerboard anuulus expanding from fovea
+%           - cont  : color/luminance-defined checkerboard annulus contracting from periphery
 %           (task -- luminance change detection on the central fixation for 4 modes below)
-%           - checkerccwf  : color/luminance-defined checkerboard wedge rotated counter-clockwisely
-%           - checkercwf   : color/luminance-defined checkerboard wedge rotated clockwisely
-%           - checkerexpf  : color/luminance-defined checkerboard anuulus expanding from fovea
-%           - checkercontf : color/luminance-defined checkerboard annulus contracting from periphery
+%           - ccwf  : color/luminance-defined checkerboard wedge rotated counter-clockwisely
+%           - cwf   : color/luminance-defined checkerboard wedge rotated clockwisely
+%           - expf  : color/luminance-defined checkerboard anuulus expanding from fovea
+%           - contf : color/luminance-defined checkerboard annulus contracting from periphery
 %           (task -- luminance change detection on the central fixation for 4 modes below)
 %           - hrf          : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
 %                            to measure HRF responses and to test scanner sequence
@@ -36,7 +36,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           - cwwindows    : stimulation windows of wedge rotated clockwisely
 %           - expwindows   : stimulation windows of annulus expanding from fovea
 %           - contwindows  : stimulation windows of annulus contracting from periphery
-%           string, or cell string structure, e.g. 'checkerccw', or {'checkerccw','checkerexp'}
+%           string, or cell string structure, e.g. 'ccw', or {'ccw','exp'}
 %           length(exp_mode) should equal numel(acq_num)
 % acq_num : acquisition number, 1,2,3,...
 %
@@ -45,28 +45,28 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-26 10:39:01 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-11-29 13:52:44 ban (ban.hiroshi@gmail.com)"
 
 
 %% check input variables
 
-if nargin<3, help run_exp; return; end
+if nargin<3, help(mfilename()); return; end
 if size(exp_mode,1)==1 && ~iscell(exp_mode), exp_mode={exp_mode}; end
 if ~isempty(find(acq_num<1,1)), error('acq_num should be 1,2,3,... check input variable'); end
 if length(exp_mode)~=numel(acq_num), error('the numbers of exp_mode and acq_num mismatch. check input variable'); end
 
 for ii=1:1:length(exp_mode)
-  if ( ~strcmpi(exp_mode{ii},'checkerccw') && ~strcmpi(exp_mode{ii},'checkercw') && ...
-       ~strcmpi(exp_mode{ii},'checkerexp') && ~strcmpi(exp_mode{ii},'checkercont') && ...
-       ~strcmpi(exp_mode{ii},'checkerccwf') && ~strcmpi(exp_mode{ii},'checkercwf') && ...
-       ~strcmpi(exp_mode{ii},'checkerexpf') && ~strcmpi(exp_mode{ii},'checkercontf') && ...
+  if ( ~strcmpi(exp_mode{ii},'ccw') && ~strcmpi(exp_mode{ii},'cw') && ...
+       ~strcmpi(exp_mode{ii},'exp') && ~strcmpi(exp_mode{ii},'cont') && ...
+       ~strcmpi(exp_mode{ii},'ccwf') && ~strcmpi(exp_mode{ii},'cwf') && ...
+       ~strcmpi(exp_mode{ii},'expf') && ~strcmpi(exp_mode{ii},'contf') && ...
        ~strcmpi(exp_mode{ii},'HRF') && ...
        ~strcmpi(exp_mode{ii},'ccwwindows') && ~strcmpi(exp_mode{ii},'cwwindows') && ...
        ~strcmpi(exp_mode{ii},'expwindows') && ~strcmpi(exp_mode{ii},'contwindows') )
 
     message=sprintf('\ncan not run exp_mode: %s',exp_mode); disp(message);
-    message='exp_mode should be one of ''checkerccw'', ''checkercw'', ''checkerexp'', ''checkercont'','; disp(message);
-    message='                          ''checkerccwf'', ''checkercwf'', ''checkerexpf'', ''checkercontf'', ''hrf'','; disp(message);
+    message='exp_mode should be one of ''ccw'', ''cw'', ''exp'', ''cont'','; disp(message);
+    message='                          ''ccwf'', ''cwf'', ''expf'', ''contf'', ''hrf'','; disp(message);
     message='                          ''ccwwindows'', ''cwwindows'', ''expwindows'', ''contwindows'''; disp(message);
     message='check input variables'; disp(message);
 
@@ -83,21 +83,21 @@ run_fname=cell(length(exp_mode),1);
 stim_mode=cell(length(exp_mode),1);
 stim_fname=cell(length(exp_mode),1);
 for ii=1:1:length(exp_mode)
-  if strcmpi(exp_mode{ii},'checkerccw')
+  if strcmpi(exp_mode{ii},'ccw')
     run_fname{ii}='cretinotopy';  stim_mode{ii}='ccw';  stim_fname{ii}='c_pol';
-  elseif strcmpi(exp_mode{ii},'checkercw')
+  elseif strcmpi(exp_mode{ii},'cw')
     run_fname{ii}='cretinotopy';  stim_mode{ii}='cw';   stim_fname{ii}='c_pol';
-  elseif strcmpi(exp_mode{ii},'checkerexp')
+  elseif strcmpi(exp_mode{ii},'exp')
     run_fname{ii}='cretinotopy';  stim_mode{ii}='exp';  stim_fname{ii}='c_ecc';
-  elseif strcmpi(exp_mode{ii},'checkercont')
+  elseif strcmpi(exp_mode{ii},'cont')
     run_fname{ii}='cretinotopy';  stim_mode{ii}='cont'; stim_fname{ii}='c_ecc';
-  elseif strcmpi(exp_mode{ii},'checkerccwf')
+  elseif strcmpi(exp_mode{ii},'ccwf')
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='ccw';  stim_fname{ii}='c_pol';
-  elseif strcmpi(exp_mode{ii},'checkercwf')
+  elseif strcmpi(exp_mode{ii},'cwf')
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='cw';   stim_fname{ii}='c_pol';
-  elseif strcmpi(exp_mode{ii},'checkerexpf')
+  elseif strcmpi(exp_mode{ii},'expf')
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='exp';  stim_fname{ii}='c_ecc';
-  elseif strcmpi(exp_mode{ii},'checkercontf')
+  elseif strcmpi(exp_mode{ii},'contf')
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='cont'; stim_fname{ii}='c_ecc';
   elseif strcmpi(exp_mode{ii},'hrf')
     run_fname{ii}='chrf_fixtask';  stim_mode{ii}='hrf'; stim_fname{ii}='c_hrf';
