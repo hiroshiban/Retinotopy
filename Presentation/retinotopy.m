@@ -31,6 +31,9 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           (task -- luminance change detection on the central fixation for 4 modes below)
 %           - hrf          : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
 %                            to measure HRF responses and to test scanner sequence
+%           (task -- luminance change detection on the central fixation for 4 modes below)
+%           - localizer    : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                            to identify specific eccentricity corresponding regions
 %           (these are stimulus windows to generate pRF (population receptive field) model)
 %           - ccwwindows   : stimulation windows of wedge rotated counter-clockwisely
 %           - cwwindows    : stimulation windows of wedge rotated clockwisely
@@ -45,7 +48,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-29 13:52:44 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-12-02 17:19:44 ban (ban.hiroshi@gmail.com)"
 
 
 %% check input variables
@@ -60,13 +63,13 @@ for ii=1:1:length(exp_mode)
        ~strcmpi(exp_mode{ii},'exp') && ~strcmpi(exp_mode{ii},'cont') && ...
        ~strcmpi(exp_mode{ii},'ccwf') && ~strcmpi(exp_mode{ii},'cwf') && ...
        ~strcmpi(exp_mode{ii},'expf') && ~strcmpi(exp_mode{ii},'contf') && ...
-       ~strcmpi(exp_mode{ii},'HRF') && ...
+       ~strcmpi(exp_mode{ii},'HRF') && ~strcmpi(exp_mode{ii},'localizer') && ...
        ~strcmpi(exp_mode{ii},'ccwwindows') && ~strcmpi(exp_mode{ii},'cwwindows') && ...
        ~strcmpi(exp_mode{ii},'expwindows') && ~strcmpi(exp_mode{ii},'contwindows') )
 
     message=sprintf('\ncan not run exp_mode: %s',exp_mode); disp(message);
     message='exp_mode should be one of ''ccw'', ''cw'', ''exp'', ''cont'','; disp(message);
-    message='                          ''ccwf'', ''cwf'', ''expf'', ''contf'', ''hrf'','; disp(message);
+    message='                          ''ccwf'', ''cwf'', ''expf'', ''contf'', ''hrf'', ''localizer'''; disp(message);
     message='                          ''ccwwindows'', ''cwwindows'', ''expwindows'', ''contwindows'''; disp(message);
     message='check input variables'; disp(message);
 
@@ -101,6 +104,8 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='cont'; stim_fname{ii}='c_ecc';
   elseif strcmpi(exp_mode{ii},'hrf')
     run_fname{ii}='chrf_fixtask';  stim_mode{ii}='hrf'; stim_fname{ii}='c_hrf';
+  elseif strcmpi(exp_mode{ii},'localizer')
+    run_fname{ii}='clocalizer_fixtask';  stim_mode{ii}='localizer'; stim_fname{ii}='c_localizer';
   elseif strcmpi(exp_mode{ii},'ccwwindows')
     run_fname{ii}='gen_retinotopy_windows'; stim_mode{ii}='ccw'; stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwwindows')

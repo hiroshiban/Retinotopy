@@ -22,7 +22,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-29 15:14:47 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-12-02 17:52:20 ban (ban.hiroshi@gmail.com)"
 %
 %
 %
@@ -293,9 +293,9 @@ end
 
 % check the number of nargin
 if nargin <= 2
-  error('takes at least 3 arguments: chrf_fixtask_mono(subjID, exp_mode, acq, (:displayfile), (:stimulusfile))');
-elseif nargin > 5
-  error('takes at most 5 arguments: chrf_fixtask_mono(subjID, exp_mode, acq, (:displayfile), (:stimulusfile))');
+  error('takes at least 3 arguments: chrf_fixtask_mono(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
+elseif nargin > 6
+  error('takes at most 6 arguments: chrf_fixtask_mono(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
 else
   if nargin == 3
     useDisplayFile = false;
@@ -600,9 +600,7 @@ else
 end
 
 % number of patches
-if strcmpi(sparam.mode,'hrf')
-  sparam.npatches=sparam.nwedges*sparam.nrings;
-end
+sparam.npatches=sparam.nwedges*sparam.nrings;
 if sparam.npatches>255 % 256-background color
   error(['sparam.npatches should be less than 256 since number of elements',...
         ' in a color lookup table is limited to 256 due to OpenGL limitation.',...
@@ -623,11 +621,9 @@ end
 % .....
 % sparam.npatches = checker ID sparam.npatches
 % Each patch ID will be associated with a CLUT color of the same ID
-if strcmpi(sparam.mode,'hrf')
-  checkerboard=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
-                                          sparam.nwedges,sparam.nrings,sparam.phase);
-  checkerboard=checkerboard{1};
-end % if strcmpi(sparam.mode,'hrf')
+checkerboard=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
+                                        sparam.nwedges,sparam.nrings,sparam.phase);
+checkerboard=checkerboard{1};
 
 %% update number of patches and number of wedges, taking into an account of checkerboard phase shift
 
@@ -637,14 +633,12 @@ end % if strcmpi(sparam.mode,'hrf')
 % However, to decrease the number of 'if' statement after starting stimulus
 % presentation as much as I can, I will do adopt this circuitous procedures.
 
-if strcmpi(sparam.mode,'hrf')
-  % for hrf, the number of patches/wedges are same over time
-  tmp_checks=unique(checkerboard)';
-  true_npatches=numel(tmp_checks)-1; % -1 is to omit background id
-  true_nwedges=true_npatches/sparam.nrings;
-  patchids=tmp_checks;
-  patchids=patchids(2:end); % omit background id
-end
+% for hrf, the number of patches/wedges are same over time
+tmp_checks=unique(checkerboard)';
+true_npatches=numel(tmp_checks)-1; % -1 is to omit background id
+true_nwedges=true_npatches/sparam.nrings;
+patchids=tmp_checks;
+patchids=patchids(2:end); % omit background id
 clear tmp_checks;
 
 %% Make Checkerboard textures
@@ -1060,7 +1054,7 @@ experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
 event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        dparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration)/1000);
+        (dparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration)/1000);
 disp(' ');
 
 

@@ -15,7 +15,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-29 15:14:49 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-12-02 17:16:50 ban (ban.hiroshi@gmail.com)"
 %
 %
 %
@@ -292,9 +292,9 @@ end
 
 % check the number of nargin
 if nargin <= 2
-  error('takes at least 3 arguments: cretinotopy(subjID, exp_mode, acq, (:displayfile), (:stimulusfile))');
-elseif nargin > 5
-  error('takes at most 5 arguments: cretinotopy(subjID, exp_mode, acq, (:displayfile), (:stimulusfile))');
+  error('takes at least 3 arguments: cretinotopy(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
+elseif nargin > 6
+  error('takes at most 6 arguments: cretinotopy(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
 else
   if nargin == 3
     useDisplayFile = false;
