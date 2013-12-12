@@ -1,7 +1,7 @@
-function Update_Retinotopy_Docs()
+function update_Retinotopy_html_docs()
 
 % Updates all the HTML-based documents of Retinotopy.
-% function Update_Retinotopy_Docs()
+% function update_Retinotopy_html_docs()
 %
 % This function updates html-based documents of Retinotopy
 %
@@ -14,7 +14,7 @@ function Update_Retinotopy_Docs()
 %
 %
 % Created    : "2013-11-26 10:31:46 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-11-26 10:32:28 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2013-12-12 13:16:19 ban (ban.hiroshi@gmail.com)"
 
 % add path to m2html
 m2htmlpath=fullfile(fileparts(mfilename('fullpath')),'m2html');
@@ -37,6 +37,6 @@ disp(' ');
 disp('completed.');
 
 % remove path to m2html
-addpath(m2htmlpath);
+rmpath(m2htmlpath);
 
 return
