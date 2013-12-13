@@ -14,11 +14,11 @@ function BackupTarget(tgt,rm_str)
 %
 % [output]
 % no output variable
-% the backup file is stored as ~/backups/(yymmdd)/(tgt_dir).zip
+% the backup file is stored as ~/backups/(yymmdd)/(tgt_dir)
 %
 %
 % Created    : "2012-05-14 13:21:36 ban"
-% Last Update: "2013-12-13 14:27:51 ban"
+% Last Update: "2013-12-13 16:41:07 ban"
 
 % check input variables
 if nargin<1 || isempty(tgt), help(mfilename()); return; end
@@ -42,7 +42,7 @@ if iswin
   dos(sprintf('xcopy /I /S /Q %s %s',strrep(fullfile(pwd,tgt),' ','\ '),strrep(fullfile(save_dir,[tgtname,tgtext]),' ','\ ')));
 else
   eval(sprintf('!cp -rf %s %s',fullfile(pwd,tgt),fullfile(save_dir,[tgtname,tgtext])));
-  %copyfile(fullfile(pwd,tgt),fullfile(save_dir,[tgtname,tgtext]));
+  %copyfile(fullfile(pwd,tgt),fullfile(save_dir,[tgtname,tgtext]),'f');
 end
 disp('done.');
 
