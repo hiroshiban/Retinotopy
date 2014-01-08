@@ -25,7 +25,7 @@ sparam.phase       = 0;     % phase shift in deg
 sparam.rotangle    = 12;    % === SHOULD BE SAME WITH VALUE LISTED IN C_POL.m ===, rotation angle in deg
 sparam.startangle  = -sparam.width/2-90;     % presentation start angle in deg, from right-horizontal meridian, ccw
 
-sparam.maxRad      = 8;    % maximum radius of  annulus (degrees)
+sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
 sparam.minRad      = 0;  % minumum
 
 sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard

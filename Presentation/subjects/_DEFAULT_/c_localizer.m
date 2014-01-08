@@ -14,7 +14,7 @@ sparam.startangle  = 0;     % presentation start angle in deg, from right-horizo
 
 sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
 sparam.minRad      = 0;      % minimum
-sparam.tgtRad      = [3.5,5,5];  % target eccentricity
+sparam.tgtRad      = [2.7,3.8];  % target eccentricity
 
 sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
                        255,   0,   0; % the first row is background

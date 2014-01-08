@@ -16,11 +16,11 @@ dparam.ExpMode='mono';
 dparam.start_method=2;
 
 % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
-dparam.custom_trigger='t';
+dparam.custom_trigger=KbName(53);
 
 % keyboard settings
-dparam.Key1=51; % key 1 (left)
-dparam.Key2=52; % key 2 (right)
+dparam.Key1=49; % key 1 (left)
+dparam.Key2=50; % key 2 (right)
 
 % screen settings
 

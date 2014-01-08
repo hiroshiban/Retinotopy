@@ -21,7 +21,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-12-02 17:49:51 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-01-08 12:30:26 ban"
 %
 %
 %
@@ -497,7 +497,7 @@ resps.initialize(event); % initialize responselogger
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [user_answer,resps]=resps.wait_to_proceed();
-if ~user_answer, return; end
+if ~user_answer, diary off; return; end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

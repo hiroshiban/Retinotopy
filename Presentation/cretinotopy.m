@@ -15,7 +15,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-12-02 17:16:50 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-01-08 12:30:10 ban"
 %
 %
 %
@@ -490,7 +490,7 @@ resps.initialize(event); % initialize responselogger
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [user_answer,resps]=resps.wait_to_proceed();
-if ~user_answer, return; end
+if ~user_answer, diary off; return; end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
