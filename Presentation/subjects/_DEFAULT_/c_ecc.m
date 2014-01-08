@@ -43,7 +43,7 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
 %%% duration in msec for each cycle & repetitions
 sparam.cycle_duration=60000; % msec;
 sparam.rest_duration =10000; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
-sparam.numRepeats=5;
+sparam.numRepeats=6;
 
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
