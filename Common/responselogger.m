@@ -41,7 +41,7 @@ classdef responselogger
 %
 %
 % Created    : "2013-11-17 21:42:47 ban"
-% Last Update: "2013-11-28 13:59:33 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-01-08 11:38:35 ban"
 
 properties (Hidden)  %(SetAccess = protected)
   key_codes=[37,39]; % array of key codes, [1xn] matrix in which keycodes you want to check should be included.
@@ -156,8 +156,11 @@ methods
   function [pstart,obj]=wait_stimulus_presentation(obj,mode,start_key)
     if nargin>=2 && ~isempty(mode), obj.mode=mode; end
     if nargin==3 && ~isempty(start_key), obj.start_key=start_key; end
-    if isempty(intersect(obj.mode,0:1:3))
-      error('mode should be 0:enter/space, 1:left-mouse button, or 2:waiting the first MR trigger. check input variable.');
+    if isempty(intersect(obj.mode,0:1:4))
+      % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
+      % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,
+      % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
+      error('mode should be one of 0-4. check input variable.');
     end
 
     pstart=0;
