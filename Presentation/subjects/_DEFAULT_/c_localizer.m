@@ -38,7 +38,7 @@ sparam.numRepeats=6;
 % Here, I set the number as large as I can to minimize vertical cynching error.
 % the final 2 is for 2 times repetitions of flicker
 % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
-sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
 %sparam.waitframes = 1;
 
 %%% fixation size & color

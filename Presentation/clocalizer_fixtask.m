@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-01-08 12:30:08 ban"
+% Last Update: "2014-01-08 15:16:43 ban"
 %
 %
 %
@@ -582,7 +582,14 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 nframe_fixation=round(dparam.initial_fixation_time*dparam.fps/sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-nframe_flicker=round(sparam.waitframes/sparam.flickerrepetitions/2); % 2 is for compensation color flicker
+
+% !!!NOTICE!!!
+% Two lines below are from cretinotopy.m
+% nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
+% nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
+% nframe_flicker should be adjusted to match with these parameters.
+nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.ncolors/4) %60,0,30 are from CCW/CW parameters.
+
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
 %% initialize chackerboard parameters
@@ -978,9 +985,9 @@ for cc=1:1:sparam.numRepeats
 
       % draw a mask
       if ff<=nframe_cycle
-        Screen('DrawTexture',winPtr,targetMask,[],CenterRect(stimRect,winRect));
-      else
         Screen('DrawTexture',winPtr,compensatingMask,[],CenterRect(stimRect,winRect));
+      else
+        Screen('DrawTexture',winPtr,targetMask,[],CenterRect(stimRect,winRect));
       end
 
       % draw the central fixation with luminance detection task

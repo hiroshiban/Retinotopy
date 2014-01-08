@@ -13,7 +13,7 @@ dparam.ExpMode='mono';
 % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
 % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port
 % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
-dparam.start_method=2;
+dparam.start_method=4;
 
 % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
 dparam.custom_trigger=KbName(53);
@@ -38,4 +38,4 @@ dparam.ScrWidth=1280;
 
 %%% fixation period in msec before/after presenting the target stimuli, integer (16)
 % must set above 1 TR for initializing the frame counting.
-dparam.initial_fixation_time=16000;
+dparam.initial_fixation_time=4000;

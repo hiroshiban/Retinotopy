@@ -48,7 +48,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2013-12-02 17:19:44 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-01-08 13:54:35 ban"
 
 
 %% check input variables
@@ -67,7 +67,7 @@ for ii=1:1:length(exp_mode)
        ~strcmpi(exp_mode{ii},'ccwwindows') && ~strcmpi(exp_mode{ii},'cwwindows') && ...
        ~strcmpi(exp_mode{ii},'expwindows') && ~strcmpi(exp_mode{ii},'contwindows') )
 
-    message=sprintf('\ncan not run exp_mode: %s',exp_mode); disp(message);
+    message=sprintf('\ncan not run exp_mode: %s',exp_mode{ii}); disp(message);
     message='exp_mode should be one of ''ccw'', ''cw'', ''exp'', ''cont'','; disp(message);
     message='                          ''ccwf'', ''cwf'', ''expf'', ''contf'', ''hrf'', ''localizer'''; disp(message);
     message='                          ''ccwwindows'', ''cwwindows'', ''expwindows'', ''contwindows'''; disp(message);

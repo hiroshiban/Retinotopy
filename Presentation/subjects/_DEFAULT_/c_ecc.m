@@ -19,7 +19,7 @@
 
 %%% stimulus parameters
 sparam.nwedges     = 4;     % number of wedge subdivisions along polar angle
-sparam.nrings      = 1;     % number of ring subdivisions along eccentricity angle
+sparam.nrings      = 2;     % number of ring subdivisions along eccentricity angle
 sparam.width       = 48;    % === SHOULD BE SAME WITH VALUE LISTED IN C_POL.m ===, wedge width in deg along polar angle, for 'exp' & 'cont', this is only used for width calculation
 sparam.phase       = 0;     % phase shift in deg
 sparam.rotangle    = 12;    % === SHOULD BE SAME WITH VALUE LISTED IN C_POL.m ===, rotation angle in deg
@@ -43,7 +43,7 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
 %%% duration in msec for each cycle & repetitions
 sparam.cycle_duration=60000; % msec;
 sparam.rest_duration =10000; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
-sparam.numRepeats=6;
+sparam.numRepeats=5;
 
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
