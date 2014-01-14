@@ -15,7 +15,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-01-09 15:56:57 ban"
+% Last Update: "2014-01-14 10:11:10 ban"
 %
 %
 %
