@@ -22,7 +22,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-01-08 12:30:19 ban"
+% Last Update: "2014-01-09 15:57:18 ban"
 %
 %
 %
@@ -1054,7 +1054,7 @@ experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
 event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        (dparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration)/1000);
+        dparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration);
 disp(' ');
 
 
