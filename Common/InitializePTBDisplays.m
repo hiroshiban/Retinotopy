@@ -26,8 +26,8 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 % >> t=Screen('Flip', windowPtr);
 %
 % [input]
-% disp_mode : display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
-%             "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
+% disp_mode : display mode, one of "mono", "dual", "dualcross", "dualparallel", "cross", "parallel", "redgreen", "greenred",
+%             "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn".
 %             "mono" by default.
 % bgcolor   : background color, [r,g,b]. [127,127,127] by default.
 % flipping  : whther flipping displays, 0:none, 1:horizontal, 2:vertical, 3:horizontal & vertical. 0 by default.
@@ -52,7 +52,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2013-11-29 12:49:52 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-01-16 12:58:11 ban"
 
 % initialize
 winPtr=[];
@@ -80,7 +80,11 @@ try
   if strcmpi(disp_mode,'mono')
     display_mode=0; % mono display, no stereo at all.
   elseif strcmpi(disp_mode,'dual')
-    display_mode=10; % dual display mode
+    display_mode=10; % dual display mode (especially for Mac with Matrox DualHead setups)
+  elseif strcmpi(disp_mode,'dualcross')
+    display_mode=5; % dual displays + free cross fusion (lefteye=right, righteye=left)
+  elseif strcmpi(disp_mode,'dualparallel')
+    display_mode=4; % dual displays + free parallel fusion (lefteye=left, righteye=right)
   elseif strcmpi(disp_mode,'cross')
     display_mode=5; % free cross fusion (lefteye=right, righteye=left)
   elseif strcmpi(disp_mode,'parallel')
@@ -109,10 +113,13 @@ try
 
   % set window ID
   scrID1=max(Screen('Screens'));
-  if is_windows && (strcmpi(disp_mode,'cross') || strcmpi(disp_mode,'parallel')), scrID1=0; end
+
+  % Windows-Hack: If mode 4 or 5 is requested, we select screen zero as target screen: This will open a window
+  % that spans multiple monitors on multi-display setups, which is usually what one wants for this mode.
+  if is_windows && ( strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel') ), scrID1=0; end
 
   % check whether the computer is connected to two displays
-  if strcmpi(disp_mode,'dual')
+  if strcmpi(disp_mode,'dual') || strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel')
     if length(Screen('Screens'))<2
       warning('Not enough displays. Using screen 0 alone.'); %#ok
       disp_mode='mono';
