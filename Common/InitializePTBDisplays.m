@@ -52,7 +52,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2014-01-16 12:58:11 ban"
+% Last Update: "2014-01-19 15:29:06 ban"
 
 % initialize
 winPtr=[];
@@ -119,7 +119,7 @@ try
   if is_windows && ( strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel') ), scrID1=0; end
 
   % check whether the computer is connected to two displays
-  if strcmpi(disp_mode,'dual') || strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel')
+  if strcmpi(disp_mode,'dual')
     if length(Screen('Screens'))<2
       warning('Not enough displays. Using screen 0 alone.'); %#ok
       disp_mode='mono';
