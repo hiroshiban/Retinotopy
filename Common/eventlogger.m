@@ -38,7 +38,7 @@ classdef eventlogger
 %
 %
 % Created    : "2013-11-17 21:42:27 ban"
-% Last Update: "2013-11-22 18:53:00 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-01-20 18:13:11 ban"
 
 properties (Hidden) %(SetAccess = protected)
   eventcounter=1; % a counter for event logging
@@ -179,24 +179,26 @@ methods
       % check subject responses
       if strfind(obj.event{ii,2},'Task')
         idx=find(eventIDs==obj.event{ii,3});
-        numTasks(idx)=numTasks(idx)+1;
-        for jj=ii+1:1:length(obj.event)-1
-          if strfind(obj.event{jj,2},'Task') % check observer responses: whether observer responded before the next task event occured
-            RT{idx}=[RT{idx},NaN];
-            numErrors(idx)=numErrors(idx)+1;
-            break
-          elseif strcmp(obj.event{jj,2},'Response')
-            if strcmp(obj.event{jj,3},correct_events{idx}{2}) % correct response
-              RT{idx}=[RT{idx},obj.event{jj,1}-obj.event{ii,1}];
-              numHits(idx)=numHits(idx)+1;
-              break
-            else % incorrect response
+        if ~isempty(idx)
+          numTasks(idx)=numTasks(idx)+1;
+          for jj=ii+1:1:length(obj.event)-1
+            if strfind(obj.event{jj,2},'Task') % check observer responses: whether observer responded before the next task event occured
               RT{idx}=[RT{idx},NaN];
               numErrors(idx)=numErrors(idx)+1;
               break
+            elseif strcmp(obj.event{jj,2},'Response')
+              if strcmp(obj.event{jj,3},correct_events{idx}{2}) % correct response
+                RT{idx}=[RT{idx},obj.event{jj,1}-obj.event{ii,1}];
+                numHits(idx)=numHits(idx)+1;
+                break
+              else % incorrect response
+                RT{idx}=[RT{idx},NaN];
+                numErrors(idx)=numErrors(idx)+1;
+                break
+              end
             end
           end
-        end
+        end % if ~isempty(idx)
       end
     end
     
