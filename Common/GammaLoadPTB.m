@@ -29,7 +29,7 @@ if nargin<1 || isempty(gamma_table), gamma_table=(repmat(linspace(0.0,1.0,256),3
 
 % load matlab matrix if the input gamma_table is a file.
 if ischar(gamma_table)
-  if ~exist(fullfile(pwd,gamma_table),'file'), error('can not find gamma table file. check inptu variable.'); end
+  if ~exist(fullfile(pwd,gamma_table),'file'), error('can not find gamma table file. check input variable.'); end
   gamma_table=load(fullfile(pwd,gamma_table));
   gamma_table=gamma_table.gamma_table; % just to organize structure...
 end

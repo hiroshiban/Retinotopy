@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-01-09 15:57:06 ban"
+% Last Update: "2014-02-23 22:33:10 ban"
 %
 %
 %
@@ -295,7 +295,7 @@ end
 % check the number of nargin
 if nargin <= 2
   error('takes at least 3 arguments: clocalizer_fixtask_mono(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
-elseif nargin > 5
+elseif nargin > 6
   error('takes at most 6 arguments: clocalizer_fixtask_mono(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
 else
   if nargin == 3
@@ -316,7 +316,7 @@ else
       error(message);
     end
   end
-  if nargin == 5
+  if nargin >= 5
     % reading stimulus generation parameters from file
     if strcmp(stimulusfile(end-1:end),'.m')
       sfile = [fullfile(rootDir,'subjects',subjID) filesep() stimulusfile];
@@ -981,7 +981,9 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 
       % checkerboard with a specified CLUT, drawn by using OpenGL GLSL function
-      DrawTextureWithCLUT(winPtr,checkertexture,CLUT{1,color_id,compensate_id},[],CenterRect(stimRect,winRect));
+      if ff<=nframe_cycle
+        DrawTextureWithCLUT(winPtr,checkertexture,CLUT{1,color_id,compensate_id},[],CenterRect(stimRect,winRect));
+      end
 
       % draw a mask
       if ff<=nframe_cycle

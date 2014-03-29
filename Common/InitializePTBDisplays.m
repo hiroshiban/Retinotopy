@@ -52,7 +52,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2014-01-19 15:29:06 ban"
+% Last Update: "2014-03-06 13:10:08 ban"
 
 % initialize
 winPtr=[];
@@ -116,7 +116,7 @@ try
 
   % Windows-Hack: If mode 4 or 5 is requested, we select screen zero as target screen: This will open a window
   % that spans multiple monitors on multi-display setups, which is usually what one wants for this mode.
-  if is_windows && ( strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel') ), scrID1=0; end
+  if is_windows && ( strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel') ), scrID1=2; end
 
   % check whether the computer is connected to two displays
   if strcmpi(disp_mode,'dual')

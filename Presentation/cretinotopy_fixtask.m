@@ -21,7 +21,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-01-09 15:57:32 ban"
+% Last Update: "2014-02-12 12:49:28 ban"
 %
 %
 %
@@ -320,7 +320,7 @@ else
       error(message);
     end
   end
-  if nargin == 5
+  if nargin >= 5
     % reading stimulus generation parameters from file
     if strcmp(stimulusfile(end-1:end),'.m')
       sfile = [fullfile(rootDir,'subjects',subjID) filesep() stimulusfile];

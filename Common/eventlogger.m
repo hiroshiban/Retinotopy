@@ -38,7 +38,7 @@ classdef eventlogger
 %
 %
 % Created    : "2013-11-17 21:42:27 ban"
-% Last Update: "2014-01-20 18:13:11 ban"
+% Last Update: "2014-02-17 13:24:43 ban"
 
 properties (Hidden) %(SetAccess = protected)
   eventcounter=1; % a counter for event logging
@@ -131,18 +131,22 @@ methods
 
     % calculate Hit rate
     numTasks=0; numHits=0; numErrors=0; RT=[];
-    for ii=1:length(obj.event)-1
+    for ii=1:length(obj.event)
       % check subject responses
       if strfind(obj.event{ii,2},'Task')
         numTasks=numTasks+1;
-        for jj=ii+1:1:length(obj.event)-1
+        for jj=ii+1:1:length(obj.event)
           if strfind(obj.event{jj,2},'Task') % check observer responses: whether observer responded before the next task event occured
             RT(numTasks)=NaN; %#ok
             numErrors=numErrors+1;
             break
-          elseif ~isnumeric(obj.event{jj,3}) && ismember(obj.event{jj,3},correct_event)
+          elseif ismember(obj.event{jj,3},correct_event)
             RT(numTasks)=obj.event{jj,1}-obj.event{ii,1}; %#ok
             numHits=numHits+1;
+            break
+          elseif jj==length(obj.event) % reach to the end of the event array.
+            RT{idx}=[RT{idx},NaN];
+            numErrors=numErrors+1;
             break
           end
         end
@@ -175,13 +179,13 @@ methods
     numHits=zeros(1,length(correct_events));
     numErrors=zeros(1,length(correct_events));
     RT=cell(1,length(correct_events));
-    for ii=1:length(obj.event)-1
+    for ii=1:length(obj.event)
       % check subject responses
       if strfind(obj.event{ii,2},'Task')
         idx=find(eventIDs==obj.event{ii,3});
         if ~isempty(idx)
           numTasks(idx)=numTasks(idx)+1;
-          for jj=ii+1:1:length(obj.event)-1
+          for jj=ii+1:1:length(obj.event)
             if strfind(obj.event{jj,2},'Task') % check observer responses: whether observer responded before the next task event occured
               RT{idx}=[RT{idx},NaN];
               numErrors(idx)=numErrors(idx)+1;
@@ -192,10 +196,14 @@ methods
                 numHits(idx)=numHits(idx)+1;
                 break
               else % incorrect response
-                RT{idx}=[RT{idx},NaN];
+                RT{idx}=[RT{idx},obj.event{jj,1}-obj.event{ii,1}];%[RT{idx},NaN];
                 numErrors(idx)=numErrors(idx)+1;
                 break
               end
+            elseif jj==length(obj.event) % reach to the end of the event array.
+              RT{idx}=[RT{idx},NaN];
+              numErrors(idx)=numErrors(idx)+1;
+              break
             end
           end
         end % if ~isempty(idx)
