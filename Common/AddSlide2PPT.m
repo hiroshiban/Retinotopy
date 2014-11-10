@@ -31,7 +31,7 @@ classdef AddSlide2PPT
 %
 %
 % Created    : "2013-04-16 02:45:40 banh"
-% Last Update: "2013-11-22 18:22:29 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2014-10-01 11:47:25 ban"
 
 %layout types:
 % 1 - title
@@ -59,7 +59,7 @@ methods
     %2007 open first.
     try
       obj.app_handle = actxserver('PowerPoint.Application'); %open powerpoint
-    catch %#ok
+    catch
       obj.app_handle=[];
       return;
     end
@@ -187,9 +187,18 @@ methods
         top=(cH-2*margin-iH)/2+textH+margin+(crow-1)*cH;
 
         % add picture
-        Slide.Shapes.AddPicture(image_file{mm},'msoFalse','msoTrue',left,top,iW,iH);
+        opicture=Slide.Shapes.AddPicture(image_file{mm},'msoFalse','msoTrue',left,top,iW,iH);
 
-      end % for ii=1:1:length(image_file)
+        % NOTE: new PowerPoint doesn't allow us to directly use VBA or ActivX-object to insert
+        %       a picture at whatever size it'd come in at were we to do the same job manually.
+        if obj.app_handle.Version>15 % PowerPoint version 15.0 or above.
+          opicture.Left=left;
+          opicture.Top=top;
+          opicture.Width=iW;
+          opicture.Height=iH;
+        end
+
+      end % for mm=1:1:length(image_file)
 
     end
     end
