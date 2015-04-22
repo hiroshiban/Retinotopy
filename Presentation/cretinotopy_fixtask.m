@@ -21,7 +21,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-02-12 12:49:28 ban"
+% Last Update: "2015-04-22 16:27:27 ban"
 %
 %
 %
@@ -756,7 +756,7 @@ for nn=1:1:sparam.npositions, checkertexture{nn}=Screen('MakeTexture',winPtr,che
 % in exp/cont conditions are different over time especially when the annulus comes around the smallest/largest regions
 CLUT=cell(sparam.npositions,1);
 for nn=1:1:sparam.npositions
-  CLUT{nn}=cell(1+true_npatches{nn},sparam.ncolors,2); % 1+npatches is base + task CLUTs, 2 is for compensating patterns
+  CLUT{nn}=cell(sparam.ncolors,2); % 1+npatches is base + task CLUTs, 2 is for compensating patterns
 end
 
 % generate base CLUT
@@ -766,9 +766,9 @@ for nn=1:1:sparam.npositions
 
       % initialize, DrawTextureWithCLUT requires [256x4] color lookup table even when we do not use whole 256 colors
       % though DrawTextureWithCLUT does not support alpha transparency up to now...
-      CLUT{nn}{1,cc,pp}=zeros(256,4);
-      CLUT{nn}{1,cc,pp}(:,4)=1; % default alpha is 1 (no transparent)
-      CLUT{nn}{1,cc,pp}(1,:)=[sparam.colors(1,:) 0]; % background LUT, default alpha is 0 (invisible);
+      CLUT{nn}{cc,pp}=zeros(256,4);
+      CLUT{nn}{cc,pp}(:,4)=1; % default alpha is 1 (no transparent)
+      CLUT{nn}{cc,pp}(1,:)=[sparam.colors(1,:) 0]; % background LUT, default alpha is 0 (invisible);
 
       % the complex 'if' statements below are required to create valid checkerboards
       % with flexible sparam.startangle & sparam.phase parameters
@@ -776,22 +776,22 @@ for nn=1:1:sparam.npositions
         for vv=patchids{nn}
           if mod(ceil((vv-(min(patchids{nn})-1))/true_nwedges{nn}),2)
             if mod(vv,2)
-              CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
+              CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
             else
-              CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
+              CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
             end
           else
             if mod(true_nwedges{nn},2)
               if mod(vv,2)
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
               else
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
               end
             else
               if mod(vv,2)
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
               else
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
               end
             end
           end
@@ -800,22 +800,22 @@ for nn=1:1:sparam.npositions
         for vv=patchids{nn}
           if mod(ceil((vv-(min(patchids{nn})-1))/true_nwedges{nn}),2)
             if mod(vv,2)
-              CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
+              CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
             else
-              CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
+              CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
             end
           else
             if mod(true_nwedges{nn},2)
               if mod(vv,2)
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
               else
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
               end
             else
               if mod(vv,2)
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
               else
-                CLUT{nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
+                CLUT{nn}{cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
               end
             end
           end
@@ -849,7 +849,7 @@ if strfind(upper(subjID),'DEBUG')
     figure; hold on;
     imfig=imagesc(flipdim(checkerboard{nn},1),[0,true_npatches{nn}]);
     axis off; axis square;
-    colormap(CLUT{nn}{1,1,1}(1:true_npatches{nn}+1,1:3)./255);
+    colormap(CLUT{nn}{1,1}(1:true_npatches{nn}+1,1:3)./255);
     fname=sprintf('retinotopy_%s_pos%02d.png',sparam.mode,nn);
     save_dir=fullfile(pwd,'images');
     if ~exist(save_dir,'dir'), mkdir(save_dir); end
@@ -1101,7 +1101,7 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 
       % checkerboard with a specified CLUT, drawn by using OpenGL GLSL function
-      DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{stim_pos_id}{1,color_id,compensate_id},[],CenterRect(stimRect(stim_pos_id,:),winRect));
+      DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{stim_pos_id}{color_id,compensate_id},[],CenterRect(stimRect(stim_pos_id,:),winRect));
 
       % draw the central fixation with luminance detection task
       Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
