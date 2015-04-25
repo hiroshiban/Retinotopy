@@ -38,7 +38,7 @@ classdef eventlogger
 %
 %
 % Created    : "2013-11-17 21:42:27 ban"
-% Last Update: "2014-02-12 12:06:11 ban"
+% Last Update: "2015-04-22 11:23:00 ban"
 
 properties (Hidden) %(SetAccess = protected)
   eventcounter=1; % a counter for event logging
@@ -140,7 +140,7 @@ methods
             RT(numTasks)=NaN; %#ok
             numErrors=numErrors+1;
             break
-          elseif ismember(obj.event{jj,3},correct_event)
+          elseif ischar(obj.event{jj,3}) && ismember(obj.event{jj,3},correct_event)
             RT(numTasks)=obj.event{jj,1}-obj.event{ii,1}; %#ok
             numHits=numHits+1;
             break

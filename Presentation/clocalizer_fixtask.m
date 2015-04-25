@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2015-04-22 16:25:56 ban"
+% Last Update: "2015-04-25 17:46:49 ban"
 %
 %
 %
@@ -981,9 +981,7 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 
       % checkerboard with a specified CLUT, drawn by using OpenGL GLSL function
-      if ff<=nframe_cycle
-        DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
-      end
+      DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
 
       % draw a mask
       if ff<=nframe_cycle
