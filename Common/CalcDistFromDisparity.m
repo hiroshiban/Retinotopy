@@ -13,7 +13,7 @@ function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)
 % 
 % June 29 2009 Hiroshi Ban
 
-disp_rad = disparity / 60 * 2*pi / 360;
-zdist = (viewdist*viewdist*disp_rad) / (ipd - viewdist*disp_rad);
+disp_rad = disparity ./ 60 .* 2.*pi ./ 360;
+zdist = (viewdist.*viewdist.*disp_rad) ./ (ipd - viewdist.*disp_rad);
 
 return;

@@ -22,7 +22,7 @@ function GammaLoadPTB(gamma_table)
 %
 %
 % Created    : "12-08-22 02:52:30 ban"
-% Last Update: "2013-11-22 18:51:31 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2015-12-27 17:33:23 ban"
 
 % check input variable
 if nargin<1 || isempty(gamma_table), gamma_table=(repmat(linspace(0.0,1.0,256),3,1))'; end
@@ -31,7 +31,7 @@ if nargin<1 || isempty(gamma_table), gamma_table=(repmat(linspace(0.0,1.0,256),3
 if ischar(gamma_table)
   if ~exist(fullfile(pwd,gamma_table),'file'), error('can not find gamma table file. check input variable.'); end
   gamma_table=load(fullfile(pwd,gamma_table));
-  gamma_table=gamma_table.gamma_table; % just to organize structure...
+  gamma_table=gamma_table.gammatable; % just to organize structure...
 end
 
 if size(gamma_table,1)==3 && size(gamma_table,2)==256, gamma_table=permute(gamma_table,[2,1,3]); end

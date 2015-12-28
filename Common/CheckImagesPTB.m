@@ -1,7 +1,7 @@
-function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec)
+function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec,img_size)
 
 % Reads images in the target directory and presents them onto the PTB screen
-% function imgfiles=CheckImagesPTB(img_dir,:img_ext,:auto_msec)
+% function imgfiles=CheckImagesPTB(img_dir,:img_ext,:auto_msec,:img_size)
 % (: is optional)
 %
 % This function reads all the images in the target directory and display
@@ -21,6 +21,9 @@ function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec)
 % auto_msec : (optional) an interval in msec to present images automatically
 %             if 0, the image change will be done by the key pressing.
 %             0 by default.
+% img_size  : (optional) display image size, [row, col] (pixels)
+%             when this values are empty, the image size will be automatically
+%             adjusted. empty by default
 %
 % [output]
 % imgfiles : a list of the images in the img_dir, a cell structure
@@ -34,12 +37,13 @@ function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec)
 %
 %
 % Created    : "2015-07-18 16:14:34 ban"
-% Last Update: "2015-07-19 14:31:28 ban"
+% Last Update: "2015-07-29 15:08:37 ban"
 
 % check the input variables
 if nargin<1 || isempty(img_dir), help(mfilename()); return; end
 if nargin<2 || isempty(img_ext), img_ext=''; end
 if nargin<3 || isempty(auto_msec), auto_msec=0; end
+if nargin<4 || isempty(img_size), img_size=[]; end
 
 img_dir=fullfile(pwd,img_dir);
 if ~exist(img_dir,'dir'), error('can not find img_dir. check input variable.'); end
@@ -86,15 +90,51 @@ while 1
   if strcmpi(img_ext,'mpo')
     imgs=imreadmpo(imgfile,0);
     img=zeros(1,2); for pp=1:1:2, img(pp)=Screen('MakeTexture',winPtr,imgs{pp}); end
+
+    % display size adjustment
+    if isempty(img_size)
+      sz=size(imgs{pp});
+      sz=sz(1:2);
+      disp_size=sz;
+      if size(imgs{pp},1)>winRect(2) || size(imgs{pp},2)>winRect(1) % the image exceeds the screen size
+        scale_not=1;
+        weight=0.95;
+        while scale_not
+          disp_size=weight.*disp_size;
+          if disp_size(2)<=winRect(3) && disp_size(1)<=winRect(4), scale_not=0; end
+        end
+      end
+    else
+      disp_size=img_size;
+    end
+
     for nn=1:1:nScr
       Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-      Screen('DrawTexture',winPtr,img(nn),[],[]);
+      Screen('DrawTexture',winPtr,img(nn),[0,0,sz(2),sz(1)],CenterRect([0,0,disp_size(2),disp_size(1)],winRect));
     end
   else
     imgs=imread(imgfile);
     img=Screen('MakeTexture',winPtr,imgs);
+
+    % display size adjustment
+    if isempty(img_size)
+      sz=size(imgs);
+      sz=sz(1:2);
+      disp_size=sz;
+      if size(imgs,1)>winRect(2) || size(imgs,2)>winRect(1) % the image exceeds the screen size
+        scale_not=1;
+        weight=0.95;
+        while scale_not
+          disp_size=weight.*disp_size;
+          if disp_size(2)<=winRect(3) && disp_size(1)<=winRect(4), scale_not=0; end
+        end
+      end
+    else
+      disp_size=img_size;
+    end
+
     Screen('SelectStereoDrawBuffer',winPtr,0);
-    Screen('DrawTexture',winPtr,img,[],[]);
+    Screen('DrawTexture',winPtr,img,[0,0,sz(2),sz(1)],CenterRect([0,0,disp_size(2),disp_size(1)],winRect));
   end
 
   Screen('DrawingFinished',winPtr);

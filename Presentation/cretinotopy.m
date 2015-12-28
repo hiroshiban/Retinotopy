@@ -15,7 +15,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-02-12 12:49:07 ban"
+% Last Update: "2015-12-09 10:44:33 ban"
 %
 %
 %
@@ -937,7 +937,7 @@ stim_pos_id=1;
 % creating target and background images
 
 %%%% Creating background %%%
-patch_size=[30,30]; patch_num=[20,20];
+patch_size=[5,5]; patch_num=[30,30];
 %aperture_size=[500,500];
 
 % calculate the central aperture size of the background image
@@ -950,7 +950,8 @@ p_width=round((dparam.ScrWidth-edgeX)/patch_num(2)); % width in pix of patch_wid
 aperture_size(1)=2*( p_height*ceil(rmax*sparam.pix_per_deg/p_height) );
 aperture_size(2)=2*( p_width*ceil(rmax*sparam.pix_per_deg/p_width) );
 
-bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
+bgimg{1} = repmat(127,[dparam.ScrHeight,dparam.ScrWidth,3])
+%bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
 background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
