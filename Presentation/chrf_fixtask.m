@@ -22,7 +22,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2015-04-22 16:24:43 ban"
+% Last Update: "2016-03-24 10:42:58 ban"
 %
 %
 %
@@ -784,12 +784,6 @@ compensate_id=1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Creating background images
-%%%% and Preloading of functions
-%%%% Matlab M-Files and especially MEX files do have some additional delay on first invokation
-%%%% (Matlab needs to find and load them, compile or link them, they need to perform some
-%%%% internal initialization). This can be significant, e.g., multiple hundred milliseconds.
-%%%% For time critical studies, use each function once before your trial loop to "preload" the
-%%%% function before first use.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % creating target and background images
@@ -808,7 +802,8 @@ p_width=round((dparam.ScrWidth-edgeX)/patch_num(2)); % width in pix of patch_wid
 aperture_size(1)=2*( p_height*ceil(rmax*sparam.pix_per_deg/p_height) );
 aperture_size(2)=2*( p_width*ceil(rmax*sparam.pix_per_deg/p_width) );
 
-bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
+bgimg{1} = repmat(reshape(sparam.colors(1,:),[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
+%bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
 background = Screen('MakeTexture',winPtr,bgimg{1});
 
 

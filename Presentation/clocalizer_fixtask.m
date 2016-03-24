@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2015-04-25 17:46:49 ban"
+% Last Update: "2016-03-24 10:42:40 ban"
 %
 %
 %
@@ -810,12 +810,6 @@ compensate_id=1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Creating background images
-%%%% and Preloading of functions
-%%%% Matlab M-Files and especially MEX files do have some additional delay on first invokation
-%%%% (Matlab needs to find and load them, compile or link them, they need to perform some
-%%%% internal initialization). This can be significant, e.g., multiple hundred milliseconds.
-%%%% For time critical studies, use each function once before your trial loop to "preload" the
-%%%% function before first use.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % creating target and background images
@@ -834,7 +828,8 @@ p_width=round((dparam.ScrWidth-edgeX)/patch_num(2)); % width in pix of patch_wid
 aperture_size(1)=2*( p_height*ceil(rmax*sparam.pix_per_deg/p_height) );
 aperture_size(2)=2*( p_width*ceil(rmax*sparam.pix_per_deg/p_width) );
 
-bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
+bgimg{1} = repmat(reshape(sparam.colors(1,:),[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
+%bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
 background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
@@ -981,7 +976,9 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 
       % checkerboard with a specified CLUT, drawn by using OpenGL GLSL function
-      DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
+      if ff<=nframe_cycle
+        DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
+      end
 
       % draw a mask
       if ff<=nframe_cycle

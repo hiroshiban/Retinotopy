@@ -1,7 +1,7 @@
-function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains)
+function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains,custom_scrIDs)
 
 % Initializes PTB screen(s) for monocular/binocular presentations using PsychImaging() function.
-% function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(:disp_mode,:bgcolor,:flipping,:rgb_gains)
+% function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(:disp_mode,:bgcolor,:flipping,:rgb_gains,:custom_scrIDs)
 % (: is optional)
 %
 % Initialize PTB Screen settings for monocular/binocular viewing
@@ -33,6 +33,8 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 % flipping  : whther flipping displays, 0:none, 1:horizontal, 2:vertical, 3:horizontal & vertical. 0 by default.
 % rgb_gains : RGB phosphor gains, [2(left/right)x3(r,g,b)] matrix. [1,1,1;1,1,1] by default.
 %             if empty, the default parameters will be set. For details, see the codes below.
+% custom_scrIDs : scrIDs you want to force to use in displaying stimuli. [ID] or [ID(left-eye),ID(righteye)].
+%                 if empty, default value(s) (dependes on the display mode) will be applied. empty by default.
 %
 % [output]
 % winPtr         : target window pointer
@@ -52,7 +54,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2014-01-19 15:29:06 ban"
+% Last Update: "2016-01-26 10:49:05 ban"
 
 % initialize
 winPtr=[];
@@ -63,7 +65,8 @@ nScr=2; % use two screens by default, but if disp_mode=='mono', it will turn to 
 if nargin<1 || isempty(disp_mode), disp_mode='mono'; end
 if nargin<2 || isempty(bgcolor), bgcolor=[127,127,127]; end
 if nargin<3 || isempty(flipping), flipping=0; end
-if nargin<4, rgb_gains=[1,1,1;1,1,1]; end
+if nargin<4 || isempty(rgb_gains), rgb_gains=[1,1,1;1,1,1]; end
+if nargin<5, custom_scrIDs=[]; end
 
 if numel(bgcolor)==1, bgcolor=[bgcolor,bgcolor,bgcolor]; end
 if ~isempty(rgb_gains) && size(rgb_gains,2)==1, rgb_gains=[rgb_gains,rgb_gains,rgb_gains]; end
@@ -116,7 +119,13 @@ try
 
   % Windows-Hack: If mode 4 or 5 is requested, we select screen zero as target screen: This will open a window
   % that spans multiple monitors on multi-display setups, which is usually what one wants for this mode.
-  if is_windows && ( strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel') ), scrID1=0; end
+  if is_windows && ( strcmpi(disp_mode,'dualcross') || strcmpi(disp_mode,'dualparallel') )
+    if numel(Screen('Screens'))>1
+      scrID1=1;
+    else
+      scrID1=0;
+    end
+  end
 
   % check whether the computer is connected to two displays
   if strcmpi(disp_mode,'dual')
@@ -134,6 +143,9 @@ try
       scrID1=0;
     end
   end
+
+  % override the screen ID if it is specified
+  if ~isempty(custom_scrIDs), scrID1=custom_scrIDs(1); end
 
   % set the number of screens
   if strcmpi(disp_mode,'mono'), nScr=1; end
@@ -177,6 +189,8 @@ try
     else
       scrID2=1;
     end
+    % override the screen ID when it is specified
+    if numel(custom_scrIDs)==2, scrID2=custom_scrIDs(2); end
     Screen('OpenWindow',scrID2,bgcolor,[],[],[],display_mode); % slave window
   end
 
