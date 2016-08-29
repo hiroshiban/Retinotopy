@@ -38,7 +38,7 @@ classdef eventlogger
 %
 %
 % Created    : "2013-11-17 21:42:27 ban"
-% Last Update: "2015-04-22 18:39:03 ban"
+% Last Update: "2016-08-29 13:13:52 ban"
 
 properties (Hidden) %(SetAccess = protected)
   eventcounter=1; % a counter for event logging
@@ -131,11 +131,11 @@ methods
 
     % calculate Hit rate
     numTasks=0; numHits=0; numErrors=0; RT=[];
-    for ii=1:length(obj.event)-1
+    for ii=1:length(obj.event)
       % check subject responses
       if strfind(obj.event{ii,2},'Task')
         numTasks=numTasks+1;
-        for jj=ii+1:1:length(obj.event)-1
+        for jj=ii+1:1:length(obj.event)
           if strfind(obj.event{jj,2},'Task') % check observer responses: whether observer responded before the next task event occured
             RT(numTasks)=NaN; %#ok
             numErrors=numErrors+1;
@@ -143,6 +143,10 @@ methods
           elseif ischar(obj.event{jj,3}) && ismember(obj.event{jj,3},correct_event)
             RT(numTasks)=obj.event{jj,1}-obj.event{ii,1}; %#ok
             numHits=numHits+1;
+            break
+          elseif jj==length(obj.event) % reach to the end of the event array.
+            RT(numTasks)=NaN; %#ok
+            numErrors=numErrors+1;
             break
           end
         end
