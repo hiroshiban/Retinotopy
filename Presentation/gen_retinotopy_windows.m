@@ -11,7 +11,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2013-11-28 23:12:26 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2016-10-09 18:35:36 ban"
 %
 %
 % [input variables]
@@ -83,6 +83,10 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 % %% the resolution of the screen width
 % dparam.ScrWidth=1920;
+%
+% % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
+% % if non zero, the value is used as the screen frame rate.
+% dparam.force_frame_rate=60;
 %
 % % stimulus display durations in msec
 %

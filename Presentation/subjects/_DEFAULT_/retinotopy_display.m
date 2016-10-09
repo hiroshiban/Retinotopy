@@ -34,6 +34,10 @@ dparam.ScrHeight=1024;
 %% the resolution of the screen width
 dparam.ScrWidth=1280;
 
+% whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
+% if non zero, the value is used as the screen frame rate.
+dparam.force_frame_rate=60;
+
 % stimulus display durations in msec
 
 %%% fixation period in msec before/after presenting the target stimuli, integer (16)

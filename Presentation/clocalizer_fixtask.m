@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2016-03-24 10:42:40 ban"
+% Last Update: "2016-10-09 18:35:36 ban"
 %
 %
 %
@@ -116,6 +116,10 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 % %% the resolution of the screen width
 % dparam.ScrWidth=1920;
+%
+% % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
+% % if non zero, the value is used as the screen frame rate.
+% dparam.force_frame_rate=60;
 %
 % % stimulus display durations in msec
 %
@@ -506,6 +510,13 @@ if ~user_answer, diary off; return; end
 [winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[]);
 if ~initDisplay_OK, error('Display initialization error. Please check your exp_run parameter.'); end
 HideCursor();
+
+if isstructmember(dparam,'force_frame_rate') 
+  if dparam.force_frame_rate
+    dparam.fps=dparam.force_frame_rate;
+    dpara.ifi=1/dparam.fps;
+  end
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
