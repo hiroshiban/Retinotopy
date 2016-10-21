@@ -7,7 +7,7 @@ classdef eventlogger
 % >> [reference_time,event]=event.get_reference_time()               : get reference time point for the event logs
 % >> [event,eventcounter]=event.set_eventcounter(num)                : set the current event ID (num=1,2,3,...)
 % >> [eventcounter,event]=event.get_eventcounter()                   : get the current event ID
-% >> event=event.add_event(name,parameter)                           : add new event to the object
+% >> event=event.add_event(name,parameter,specific_time,display_flg) : add new event to the object
 % >> [all_event_cell,event]=event.get_event()                        : get event log from the object
 % >> [my_event_cell,event]=event.get_A_event(names_parameters)       : get event log(s) with name(s)/parameter(s) you want to extract
 % >> [numTasks,numHits,numErrors,numResponses,RT,event]=event.calc_accuracy(correct_event)    : calculate task accuracy
@@ -38,7 +38,7 @@ classdef eventlogger
 %
 %
 % Created    : "2013-11-17 21:42:27 ban"
-% Last Update: "2016-08-29 13:13:52 ban"
+% Last Update: "2016-10-21 16:20:32 ban"
 
 properties (Hidden) %(SetAccess = protected)
   eventcounter=1; % a counter for event logging
@@ -81,16 +81,23 @@ methods
   end
 
   % add new event to the eventlogger object
-  function obj=add_event(obj,name,parameter,specific_time)
+  function obj=add_event(obj,name,parameter,specific_time,display_flg)
     if nargin<2 || isempty(name), name=''; end
     if nargin<3 || isempty(parameter), parameter=[]; end
-    if nargin<4
+    if nargin<4 || isempty(specific_time)
       obj.event{obj.eventcounter,1}=GetSecs()-obj.ref_time;
     else
       obj.event{obj.eventcounter,1}=GetSecs()-specific_time;
     end
+    if nargin<5 || isempty(display_flg), display_flg=0; end
     obj.event{obj.eventcounter,2}=name;
     obj.event{obj.eventcounter,3}=parameter;
+    if display_flg
+      fprintf('[% 4.4f] %15s   %s\n',...
+              obj.event{obj.eventcounter,1},...
+              obj.event{obj.eventcounter,2}(1:min(15,numel(obj.event{obj.eventcounter,2}))),...
+              num2str(obj.event{obj.eventcounter,3}));
+    end
     obj.eventcounter=obj.eventcounter+1;
   end
 

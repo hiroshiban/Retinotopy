@@ -41,7 +41,7 @@ classdef responselogger
 %
 %
 % Created    : "2013-11-17 21:42:47 ban"
-% Last Update: "2014-01-08 11:38:35 ban"
+% Last Update: "2016-10-21 14:17:11 ban"
 
 properties (Hidden)  %(SetAccess = protected)
   key_codes=[37,39]; % array of key codes, [1xn] matrix in which keycodes you want to check should be included.
@@ -105,7 +105,7 @@ methods
   end
 
   % check participant's key responses and record them to the event log
-  function [obj,event,keyCode]=check_responses(obj,event,specific_time)
+  function [obj,event,keyCode]=check_responses(obj,event,specific_time,display_flg)
     [keyIsDown,keysecs,keyCode]=KbCheck();
     if keyIsDown
       if (keyCode(KbName('q'))==1 || keyCode(KbName('escape'))==1) && ~obj.quit_flg % quit events - Q key or ESC
@@ -114,6 +114,8 @@ methods
           event=event.add_event('Force quit',[]);
         elseif nargin==3
           event=event.add_event('Force quit',[],specific_time);
+        elseif nargin==4
+          event=event.add_event('Force quit',[],specific_time,display_flg);
         end
         obj.quit_flg=1;
         finish;
@@ -125,6 +127,8 @@ methods
             event=event.add_event('Response',sprintf('key%d',ii));
           elseif nargin==3
             event=event.add_event('Response',sprintf('key%d',ii),specific_time);
+          elseif nargin==4
+            event=event.add_event('Response',sprintf('key%d',ii),specific_time,display_flg);
           end
           obj.key_status(:)=0; obj.key_status(ii)=1;
         end
