@@ -15,7 +15,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2016-10-09 18:35:36 ban"
+% Last Update: "2018-05-14 19:33:44 ban"
 %
 %
 %
@@ -265,7 +265,7 @@ try
 
 % debug level, black screen during calibration
 Screen('Preference', 'VisualDebuglevel', 3);
-Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'SkipSyncTests', 0);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -502,14 +502,42 @@ if ~user_answer, diary off; return; end
 %%%% Initialization of Left & Right screens for binocular presenting/viewing mode
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[]);
+% % the codes  below is only for CiNet setup.
+% scrID=max(Screen('Screens'));
+% if numscr>1
+%   if numscr==3
+%     for nn=1:1:numscr-1
+%       res=Screen('Rect',nn);
+%       % CiNet 3D display resolution is one of 1024x768x2, 1280x1024x2, 1920x1080x2
+%       if (res(3)-res(1)==2048 && res(4)-res(2)==768)  || (res(3)-res(1)==2560 && res(4)-res(2)==1024) || (res(3)-res(1)==3840 && res(4)-res(2)==1080)
+%         scrID=nn; break; % overwite the display mode
+%       elseif (res(3)-res(1)==1024 && res(4)-res(2)==768)  || (res(3)-res(1)==1280 && res(4)-res(2)==1024)
+%         scrID=nn; break;
+%       else
+%         scrID=nn;
+%       end
+%     end
+%   elseif numscr==4
+%     scrID=2;
+%   else
+%     scrID=numscr-1;
+%   end
+% else
+%   scrID=0;
+% end
+% 
+% [winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],scrID);%max(Screen('Screens')));
+
+[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],1);%max(Screen('Screens')));
+%[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],2);%max(Screen('Screens')));
+%[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],max(Screen('Screens')));
 if ~initDisplay_OK, error('Display initialization error. Please check your exp_run parameter.'); end
 HideCursor();
 
-if isstructmember(dparam,'force_frame_rate') 
+if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dpara.ifi=1/dparam.fps;
+    dparam.ifi=1/dparam.fps;
   end
 end
 

@@ -21,7 +21,7 @@ function DisplayMessage2(message,bgcolor,winPtr,numScreens,drawing_font,drawing_
 % no output variable
 %
 % Created: Feb 04 2010 Hiroshi Ban
-% Last Update: "2013-11-22 22:53:07 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2017-11-23 14:26:57 ban"
 
 % input variable check
 if nargin < 3, help(mfilename()); end
@@ -40,7 +40,7 @@ for ii=1:1:numScreens
   Screen('SelectStereoDrawBuffer',winPtr,ii-1);
   greyScreen=Screen('MakeTexture',winPtr,grey_texture);
   Screen('DrawTexture',winPtr,greyScreen);
-  
+
   % set drawing options
   eval(sprintf('Screen(winPtr,''TextFont'',''%s'');',drawing_font));
   eval(sprintf('Screen(winPtr,''TextSize'',%d);',drawing_size));

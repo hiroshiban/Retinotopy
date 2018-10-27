@@ -41,7 +41,7 @@ classdef responselogger
 %
 %
 % Created    : "2013-11-17 21:42:47 ban"
-% Last Update: "2016-10-21 14:17:11 ban"
+% Last Update: "2017-12-29 15:52:32 ban"
 
 properties (Hidden)  %(SetAccess = protected)
   key_codes=[37,39]; % array of key codes, [1xn] matrix in which keycodes you want to check should be included.
@@ -118,7 +118,6 @@ methods
           event=event.add_event('Force quit',[],specific_time,display_flg);
         end
         obj.quit_flg=1;
-        finish;
       end
 
       for ii=1:1:numel(obj.key_codes)

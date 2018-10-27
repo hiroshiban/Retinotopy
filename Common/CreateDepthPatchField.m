@@ -1,7 +1,7 @@
-function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,basedisp,jitterdisp,nimg,fine_coefficient,rgb_flg)
+function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,basedisp,jitterdisp,nimg,fine_coefficient,rgb_flg,bgcolor)
 
 % Creates a plane of lattice depth patches
-% function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,:basedisp,:jitterdisp,:nimg,:fine_coefficient,:rgb_flg)
+% function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,:basedisp,:jitterdisp,:nimg,:fine_coefficient,:rgb_flg,:bgcolor)
 % (: is optional)
 %
 % This function creates a lattice consisted of small patch palnes with randomly assigned disparities.
@@ -23,13 +23,14 @@ function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,base
 %                    but comsumes much CPU power. [val] (default=1, as is, no tuning)
 % rgb_flg          : (optional) whether presenting the patch with RGB color or not, [0|1]
 %                    1 by default. when 0, grayscale image will be generated (faster)
+% bgcolor          : (optional) background RGB color, 128 or [128,128,128] by default.
 %
 % [output]
 % imgs             : output images, a cell structure, {nimg,2}, 2 = left/right images
 %
 %
 % Created
-% Last Update: "2015-08-25 18:38:59 ban"
+% Last Update: "2017-12-29 14:03:41 ban"
 
 % check input variables
 if nargin<5, help(mfilename()); imgs=[]; return; end
@@ -38,9 +39,17 @@ if nargin<7 || isempty(jitterdisp), jitterdisp=[-3,3]; end
 if nargin<8 || isempty(nimg), nimg=1; end
 if nargin<9 || isempty(fine_coefficient), fine_coefficient=1; end
 if nargin<10 || isempty(rgb_flg), rgb_flg=1; end
+if nargin<11 || isempty(bgcolor)
+  if rgb_flg
+    bgcolor=[128,128,128];
+  else
+    bgcolor=128;
+  end
+end
 
 if numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; end
 if numel(npatches)==1, npatches=[npatches,npatches]; end
+if rgb_flg & numel(bgcolor)==1, bgcolor=repmat(bgcolor,[1,3]); end
 
 % initialize random seed
 InitializeRandomSeed();
@@ -76,7 +85,12 @@ end
 
 % generating images
 imgs=cell(nimg,2);
-baseimg=zeros(wdims);
+if rgb_flg
+  baseimg=repmat(reshape(bgcolor,[1,1,3]),[wdims,1]);
+else
+  baseimg=bgcolor.*ones(wdims);
+end
+
 for ii=1:1:nimg
   imgs{ii,1}=baseimg;
   imgs{ii,2}=baseimg;
@@ -111,8 +125,10 @@ for ii=1:1:nimg
   for pp=1:1:numel(idx)
     for nn=1:1:2 % left and right
       for cc=1:1:size(colors,4) % RGB
-        imgs{ii,nn}(p_Ys(idx(pp))+1:p_Ye(idx(pp)),...
-                    p_Xs(idx(pp))+1+xshifts(nn,idx(pp))+baseshift(nn):p_Xe(idx(pp))+xshifts(nn,idx(pp))+baseshift(nn),cc)=colors(ii,yy(pp),xx(pp),cc);
+        imgs{ii,nn}(max(p_Ys(idx(pp))+1,1):min(p_Ye(idx(pp)),size(imgs{ii,nn},1)),...
+                    max(p_Xs(idx(pp))+1+xshifts(nn,idx(pp))+baseshift(nn),1):...
+                    min(p_Xe(idx(pp))+xshifts(nn,idx(pp))+baseshift(nn),...
+                    size(imgs{ii,nn},2)),cc)=colors(ii,yy(pp),xx(pp),cc);
       end
     end
   end

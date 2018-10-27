@@ -48,7 +48,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2014-01-08 13:54:35 ban"
+% Last Update: "2018-10-27 11:41:37 ban"
 
 
 %% check input variables
@@ -156,6 +156,15 @@ if ~exist(subj_dir,'dir')
   copyfile(fullfile(pwd,'subjects','_DEFAULT_'),subj_dir);
 end
 
+% ********************************************************************************************************
+% *** set gamma table. please change the line below to use the actual measuments of the display gamma. ***
+% ********************************************************************************************************
+
+% loading gamma_table
+%load(fullfile('..','gamma_table','ASUS_ROG_Swift_PG278Q','181003','cbs','gammatablePTB.mat'));
+%load(fullfile('..','gamma_table','ASUS_VG278HE','181003','cbs','gammatablePTB.mat'));
+%load(fullfile('..','gamma_table','MEG_B1','151225','cbs','gammatablePTB.mat'));
+gammatable=repmat(linspace(0.0,1.0,256),3,1)'; %#ok % a simple linear gamma
 
 %% present stimuli or generate stimulus windows
 for ii=1:1:length(exp_mode)
@@ -167,7 +176,7 @@ for ii=1:1:length(exp_mode)
     eval(main_exp_name);
   % display stimuli
   else
-    main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'');',...
+    main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'',gammatable);',...
                           run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii});
     eval(main_exp_name);
   end

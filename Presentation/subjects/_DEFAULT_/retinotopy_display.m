@@ -5,9 +5,9 @@
 % Programmed_by_Hiroshi_Ban___November_01_2013
 % ************************************************************
 
-% display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
+% display mode, one of "mono", "dual", "dualcross", "dualparallel", "cross", "parallel", "redgreen", "greenred",
 % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
-dparam.ExpMode='mono';
+dparam.ExpMode='mono';%'dualparallel';%'mono';
 
 % a method to start stimulus presentation
 % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
@@ -16,11 +16,11 @@ dparam.ExpMode='mono';
 dparam.start_method=4;
 
 % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
-dparam.custom_trigger=KbName(53);
+dparam.custom_trigger=KbName(84);
 
 % keyboard settings
-dparam.Key1=49; % key 1 (left)
-dparam.Key2=50; % key 2 (right)
+dparam.Key1=82; % key 1 'r'
+dparam.Key2=71; % key 2 'g'
 
 % screen settings
 
@@ -29,10 +29,10 @@ dparam.Key2=50; % key 2 (right)
 dparam.fullscr=false;
 
 %%% the resolution of the screen height
-dparam.ScrHeight=1024;
+dparam.ScrHeight=768;
 
 %% the resolution of the screen width
-dparam.ScrWidth=1280;
+dparam.ScrWidth=1024;
 
 % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
 % if non zero, the value is used as the screen frame rate.

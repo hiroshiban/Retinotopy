@@ -54,7 +54,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2016-01-26 10:49:05 ban"
+% Last Update: "2018-01-30 23:27:19 ban"
 
 % initialize
 winPtr=[];
@@ -65,7 +65,24 @@ nScr=2; % use two screens by default, but if disp_mode=='mono', it will turn to 
 if nargin<1 || isempty(disp_mode), disp_mode='mono'; end
 if nargin<2 || isempty(bgcolor), bgcolor=[127,127,127]; end
 if nargin<3 || isempty(flipping), flipping=0; end
-if nargin<4 || isempty(rgb_gains), rgb_gains=[1,1,1;1,1,1]; end
+if nargin<4 || isempty(rgb_gains)
+  if strcmpi(disp_mode,'redgreen')
+    rgb_gains(1,:)=[1.0,0.0,0.0];
+    rgb_gains(2,:)=[0.0,1.0,0.0];%[0.0,0.6,0.0];
+  elseif strcmpi(disp_mode,'greenred')
+    rgb_gains(1,:)=[0.0,1.0,0.0];%[0.0,0.6,0.0];
+    rgb_gains(2,:)=[1.0,0.0,0.0];
+  elseif strcmpi(disp_mode,'redblue')
+    rgb_gains(1,:)=[0.4,0.0,0.0];
+    rgb_gains(2,:)=[0.0,0.2,0.7];
+  elseif strcmpi(disp_mode,'bluered')
+    rgb_gains(1,:)=[0.0,0.2,0.7];
+    rgb_gains(2,:)=[0.4,0.0,0.0];
+  else % red green by default.
+    rgb_gains(1,:)=[1.0,0.0,0.0];
+    rgb_gains(2,:)=[0.0,1.0,0.0];
+  end
+end
 if nargin<5, custom_scrIDs=[]; end
 
 if numel(bgcolor)==1, bgcolor=[bgcolor,bgcolor,bgcolor]; end
@@ -130,7 +147,7 @@ try
   % check whether the computer is connected to two displays
   if strcmpi(disp_mode,'dual')
     if length(Screen('Screens'))<2
-      warning('Not enough displays. Using screen 0 alone.'); %#ok
+      warning('Not enough displays. Using screen 0 alone.');
       disp_mode='mono';
     end
   end
@@ -222,6 +239,7 @@ try
   % get screen refresh rate and inter-flip-interval
   fps=Screen('FrameRate',winPtr);
   ifi=Screen('GetFlipInterval',winPtr);
+  fps=60; ifi=1/60;
   if fps==0, fps=1/ifi; end
   %fps=Screen('FrameRate',winPtr);
   %if fps==0
