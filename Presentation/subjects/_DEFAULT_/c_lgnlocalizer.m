@@ -39,6 +39,10 @@ sparam.numRepeats=6;
 % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
 sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
 
+%%% fixation period in msec before/after presenting the target stimuli, integer
+% must set a value more than 1 TR for initializing the frame counting.
+sparam.initial_fixation_time=4000;
+
 %%% fixation size & color
 sparam.fixsize=4; % radius in pixels
 sparam.fixcolor=[255,255,255];
@@ -48,8 +52,8 @@ sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
 
 %%% RGB for background patches
 % 1x3 matrices
-sparam.color1=[255,255,255];
-sparam.color2=[0,0,0];
+sparam.patch_color1=[255,255,255];
+sparam.patch_color2=[0,0,0];
 
 %%% for converting degree to pixels
 %sparam.pix_per_cm=57.1429;

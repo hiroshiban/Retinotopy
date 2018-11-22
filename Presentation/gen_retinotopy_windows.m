@@ -1,17 +1,18 @@
 function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)
 
 % Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field) analysis.
-% function stim_windows=gen_retinotopy_windows(subjID, exp_mode, acq, :displayfile, ...
-%                                           :stimulusfile, :overwrite_pix_per_deg, :TR)
+% function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,:displayfile,:stimulusfile,:overwrite_pix_per_deg,:TR)
 % (: is optional)
 %
-% This function enerates stimulus windows corresponding to the color/luminance-defined
-% checkerboard retinotopy stimulus. The generated stimulus windows will be utilized to
-% generate pRF (population receptive field) model.
+% This function generates stimulus windows corresponding to the color/luminance-defined
+% checkerboard retinotopy stimuli. The generated stimulus windows will be utilized to
+% generate pRF (population receptive field) models.
+% reference: Population receptive field estimates in human visual cortex.
+%            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2016-10-09 18:35:36 ban"
+% Last Update: "2018-11-22 16:08:21 ban"
 %
 %
 % [input variables]
@@ -29,7 +30,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %  - exp   : checkerboard anuulus expanding from fovea
 %  - cont  : checkerboard annulus contracting from periphery
 % acq           : acquisition number (design file number),
-%                 a integer, such as 1, 2, 3, ...
+%                 an integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
 %                 *.m file, such as 'RetDepth_display_fmri.m'
 %                 the same display file for cretinotopy is acceptable
@@ -71,27 +72,18 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 % (an example of the displayfile)
 %
-% ************************************************************
-% This_is_the_display_file_for_gen_cretinotopy_windows
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___Dec_03_2011
-% ************************************************************
+% % ************************************************************
+% % This_is_the_display_file_for_gen_cretinotopy_windows
+% % Please_change_the_parameters_below.
+% % retinotopyDepthfMRI.m
+% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % ************************************************************
 %
 % %%% the resolution of the screen height
 % dparam.ScrHeight=1200;
 %
 % %% the resolution of the screen width
 % dparam.ScrWidth=1920;
-%
-% % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
-% % if non zero, the value is used as the screen frame rate.
-% dparam.force_frame_rate=60;
-%
-% % stimulus display durations in msec
-%
-% %%% fixation period in msec before/after presenting the target stimuli, integer (16)
-% dparam.initial_fixation_time=16000;
 %
 %
 % [About stimulusfile]
@@ -100,12 +92,12 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 % (an example of the stimulusfile)
 %
-% ************************************************************
-% This_is_the_stimulus_parameter_file_for_gen_cretinotopy_windows
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___Dec_03_2011
-%************************************************************
+% % ************************************************************
+% % This_is_the_stimulus_parameter_file_for_gen_cretinotopy_windows
+% % Please_change_the_parameters_below.
+% % retinotopyDepthfMRI.m
+% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"
 %
@@ -124,13 +116,17 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % sparam.rest_duration =0; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
 % sparam.numRepeats=6;
 %
+% %%% fixation period in msec before/after presenting the target stimuli, integer
+% % must set a value more than 1 TR for initializing the frame counting.
+% sparam.initial_fixation_time=4000;
+%
 % %%% fixation size & color
 % sparam.fixsize=12; % radius in pixels
 %
 % %%% for converting degree to pixels
+% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
 %
 %
 % [HOWTO create stimulus files]
@@ -149,30 +145,44 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear global; clear mex;
-if nargin < 3, help(mfilename()); return; end
+if nargin<3, help(mfilename()); return; end
+if nargin<4 || isempty(displayfile), displayfile=[]; end
+if nargin<5 || isempty(stimulusfile), stimulusfile=[]; end
+if nargin<6 || isempty(overwrite_pix_per_deg), overwrite_pix_per_deg=[]; end
+if nargin<7 || isempty(TR), TR=2; end
 
 % check the aqcuisition number. up to 10 design files can be used
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check input variable.'); end
+
+% check the experiment mode (stimulus type)
+if ~strcmpi(exp_mode,'ccw') && ~strcmpi(exp_mode,'cw') && ~strcmpi(exp_mode,'exp') && ~strcmpi(exp_mode,'cont')
+  error('exp_mode should be one of "ccw", "cw", "exp", and "cont". check the input variable.');
+end
+
+% check the subject directory
+if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
+
+rootDir=fileparts(mfilename('fullpath'));
+
+% check the display/stimulus files
+if ~isempty(displayfile)
+  if ~strcmpi(displayfile(end-1:end),'.m'), displayfile=[displayfile,'.m']; end
+  if ~exist(fullfile(rootDir,'subjects',subjID,displayfile),'file'), error('displayfile not found. check the input variable.'); end
+end
+
+if ~isempty(stimulusfile)
+  if ~strcmpi(stimulusfile(end-1:end),'.m'), stimulusfile=[stimulusfile,'.m']; end
+  if ~exist(fullfile(rootDir,'subjects',subjID,stimulusfile),'file'), error('stimulusfile not found. check the input variable.'); end
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Add paths to the subfunctions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear global; clear mex;
-
 % add paths to the subfunctions
-rootDir=fileparts(mfilename('fullpath'));
 addpath(genpath(fullfile(rootDir,'..','Common')));
 addpath(fullfile(rootDir,'..','Generation'));
-
-% set stimulus parameters
-sparam.mode=exp_mode;
-
-% difine constant variables
-display_flg=1;
-pause_dur=0.2;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -180,14 +190,14 @@ pause_dur=0.2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % get date
-today=strrep(datestr(now,'yy/mm/dd'),'/','');
+today=datestr(now,'yymmdd');
 
 % result directry & file
 resultDir=fullfile(rootDir,'subjects',num2str(subjID),'pRF',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=[resultDir filesep() num2str(subjID) '_stimulus_window_' sparam.mode '_run_' num2str(acq,'%02d'), '.log'];
+logfname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',exp_mode,'_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -197,127 +207,47 @@ try
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% 1. Check input variables,
-%%%% 2. Read a condition file,
-%%%% 3. Check the validity of input variables,
-%%%% 4. Store informascatio about directories & design file,
-%%%% 5. Load design & condition file.
+%%%% Validate dparam (displayfile) and sparam (stimulusfile) structures
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% check the number of nargin
-if nargin < 3
-  error('takes at least 3 arguments: gen_retinotopy_windows(subjID,exp_mode,acq,(:displayfile),(:stimulusfile),(:overwrite_pix_per_deg),(:TR))');
-elseif nargin > 7
-  error('takes at most 7 arguments: gen_retinotopy_windows(subjID,exp_mode,acq,(:displayfile),(:stimulusfile),(:overwrite_pix_per_deg),(:TR))');
-else
-  if nargin == 3
-    useDisplayFile = false;
-    useStimulusFile = false;
-  end
-  if nargin >= 4
-    % reading display (presentation) parameters from file
-    if strcmp(displayfile(end-1:end),'.m')
-      dfile = [fullfile(rootDir,'subjects',subjID) filesep() displayfile];
-    else
-      dfile = [fullfile(rootDir,'subjects',subjID) filesep() displayfile '.m'];
-    end
-    [is_exist, message] = IsExistYouWant(dfile,'file');
-    if is_exist
-      useDisplayFile = true;
-    else
-      error(message);
-    end
-  end
-  if nargin >= 5
-    % reading stimulus generation parameters from file
-    if strcmp(stimulusfile(end-1:end),'.m')
-      sfile = [fullfile(rootDir,'subjects',subjID) filesep() stimulusfile];
-    else
-      sfile = [fullfile(rootDir,'subjects',subjID) filesep() stimulusfile '.m'];
-    end
-    [is_exist, message] = IsExistYouWant(sfile,'file');
-    if is_exist
-      useStimulusFile = true;
-    else
-      error(message);
-    end
-  end
-end % if nargin
+% organize dparam
+dparam=struct(); % initialize
+if ~isempty(displayfile), run(fullfile(rootDir,'subjects',subjID,displayfile)); end % load specific dparam parameters configured for each of the participants
+dparam=ValidateStructureFields(dparam,... % validate fields and set the default values to missing field(s)
+         'ScrHeight',1200,...
+         'ScrWidth',1920);
 
-if nargin<6 || isempty(overwrite_pix_per_deg), overwrite_pix_per_deg=[]; end
-if nargin<7 || isempty(TR), TR=2; end
-
-% check the aqcuisition number. up to 10 design files can be used
-if acq<1, error('Acquistion number must be integer and greater than zero'); end
-
-% check condition files
-
-% set display parameters
-if useDisplayFile
-
-  % load displayfile
-  tdir=fullfile(rootDir,'subjects',subjID);
-  run(strcat(tdir,filesep(),displayfile));
-  clear tdir;
-
-  % change unit from msec to sec.
-  dparam.initial_fixation_time = dparam.initial_fixation_time/1000; %#ok
-
-else  % if useDisplayFile
-
-  % otherwise, set default variables
-  dparam.ScrHeight=1200;
-  dparam.ScrWidth=1920;
-  dparam.initial_fixation_time=16;
-
-end % if useDisplayFile
-
-% set stimulus parameters
+% organize sparam
+sparam=struct(); % initialize
 sparam.mode=exp_mode;
+if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
+sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
+         'width',48,...
+         'rotangle',12,...
+         'startangle',-48/2,...
+         'maxRad',8,...
+         'minRad',0,...
+         'cycle_duration',60000,...
+         'rest_duration',0,...
+         'numRepeats',6,...
+         'initial_fixation_time',16000,...
+         'fixsize',12,...
+         'pix_per_cm',57.1429,...
+         'vdist',65);
 
-if useStimulusFile
+% change unit from msec to sec.
+sparam.initial_fixation_time=sparam.initial_fixation_time./1000; %#ok
 
-  % load stimulusfile
-  tdir=fullfile(rootDir,'subjects',subjID);
-  run(strcat(tdir,filesep(),stimulusfile));
-  clear tdir;
+% change unit from msec to sec.
+sparam.cycle_duration = sparam.cycle_duration./1000;
+sparam.rest_duration  = sparam.rest_duration./1000;
 
-  % change unit from msec to sec.
-  sparam.cycle_duration = sparam.cycle_duration/1000;
-  sparam.rest_duration  = sparam.rest_duration/1000;
-
-else  % if useStimulusFile
-
-  % otherwise, set default variables
-
-  %%% stimulus parameters
-  sparam.width          = 48;
-  sparam.rotangle       = 12;
-  sparam.startangle     = -sparam.width/2;
-
-  sparam.maxRad         = 8;
-  sparam.minRad         = 0;
-
-  %%% duration in msec for each cycle & repetitions
-  sparam.cycle_duration = 60;
-  sparam.rest_duration  = 0;
-  sparam.numRepeats     = 6;
-
-  %%% fixation size & color
-  sparam.fixsize        = 12;
-
-  %%% for creating disparity & shadow
-  sparam.pix_per_cm     =57.1429;
-  sparam.vdist          =65;
-
-end % if useStimulusFile
-
+% set the other parameters
+dparam.RunScript = mfilename();
+sparam.RunScript = mfilename();
 
 %% check varidity of parameters
 disp('checking validity of stimulus generation/presentation parameters...');
-if ~strcmpi(sparam.mode,'ccw') && ~strcmpi(sparam.mode,'cw') && ~strcmpi(sparam.mode,'exp') && ~strcmpi(sparam.mode,'cont')
-  error('sparam.mode should be one of "ccw", "cw", "exp", and "cont". check input variables.');
-end
 if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check input variables.'); end
 if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
 disp('done.');
@@ -338,7 +268,7 @@ disp('*************** Screen Settings ****************');
 eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
 eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d'');',dparam.initial_fixation_time));
+eval(sprintf('disp(''Fixation Time(sec)     : %d'');',sparam.initial_fixation_time));
 eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
 eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
@@ -355,6 +285,10 @@ fprintf('\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fprintf('Initializing stimulus generation variables...');
+
+% difine constant variables
+display_flg=1;
+pause_dur=0.2;
 
 %% unit conversion
 
@@ -375,11 +309,11 @@ end
 
 sparam.TR=TR; % TR=2000ms by default
 
-nTR_fixation=round(dparam.initial_fixation_time/sparam.TR);
+nTR_fixation=round(sparam.initial_fixation_time/sparam.TR);
 nTR_cycle=round((sparam.cycle_duration-sparam.rest_duration)/sparam.TR);
 nTR_rest=round(sparam.rest_duration/sparam.TR);
 nTR_rotation=round((sparam.cycle_duration-sparam.rest_duration)/(360/sparam.rotangle)/sparam.TR);
-nTR_whole=round((dparam.initial_fixation_time*2+sparam.cycle_duration*sparam.numRepeats)/sparam.TR);
+nTR_whole=round((sparam.initial_fixation_time*2+sparam.cycle_duration*sparam.numRepeats)/sparam.TR);
 
 %% initialize chackerboard parameters
 rmin=sparam.minRad+sparam.fixsize/sparam.pix_per_deg; % omit the central fixation point
@@ -532,7 +466,7 @@ for cc=1:1:sparam.numRepeats
       end
     end
 
-  end % for ff=1:1:cycle_frames
+  end % for ff=TRcounter:1:counterend
 
   %% rest perioed
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')
@@ -578,7 +512,7 @@ close all;
 
 % saving the results
 fprintf('saving data...');
-savefname=[resultDir filesep() num2str(subjID) '_stimulus_window_' sparam.mode '_run_' num2str(acq,'%02d'), '.mat'];
+savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',sparam.mode,'_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
 disp('done.');
 
@@ -589,7 +523,7 @@ disp('done.');
 
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
-clear all; clear mex; clear global;
+%clear all; clear mex; clear global;
 diary off;
 
 
@@ -609,7 +543,7 @@ catch lasterror
   keyboard;
   rmpath(genpath(fullfile(rootDir,'..','Common')));
   rmpath(fullfile(rootDir,'..','Generation'));
-  clear global; clear mex; clear all; close all;
+  %clear global; clear mex; clear all; close all;
   return
 end % try..catch
 

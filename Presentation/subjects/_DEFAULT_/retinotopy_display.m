@@ -9,6 +9,8 @@
 % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
 dparam.ExpMode='mono';%'dualparallel';%'mono';
 
+dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup
+
 % a method to start stimulus presentation
 % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
 % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port
@@ -38,8 +40,5 @@ dparam.ScrWidth=1024;
 % if non zero, the value is used as the screen frame rate.
 dparam.force_frame_rate=60;
 
-% stimulus display durations in msec
-
-%%% fixation period in msec before/after presenting the target stimuli, integer (16)
-% must set above 1 TR for initializing the frame counting.
-dparam.initial_fixation_time=4000;
+% whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
+dparam.skip_sync_test=0;

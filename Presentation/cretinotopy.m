@@ -1,7 +1,7 @@
-function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
+function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
 % Color/luminance-defined Checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.
-% function cretinotopy(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table)
+% function cretinotopy(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % This function generates and presents color/luminance-defined checkerboard stimulus
@@ -11,11 +11,10 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %   to delineate retinotopic visual area borders (conventional retinotopy)
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
 % - Stimulus presentation timing are controled by vertical synch signals
-% - supports 2D stimulus presentation procedure only up to now
 %
 %
 % Created    : "2013-11-25 11:34:59 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2018-05-14 19:33:44 ban"
+% Last Update: "2018-11-22 16:27:30 ban"
 %
 %
 %
@@ -35,7 +34,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %  - exp   : checkerboard anuulus expanding from fovea
 %  - cont  : checkerboard annulus contracting from periphery
 % acq           : acquisition number (design file number),
-%                 a integer, such as 1, 2, 3, ...
+%                 an integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
 %                 *.m file, such as 'RetDepth_display_fmri.m'
 %                 the file should be located in ./subjects/(subj)/
@@ -51,6 +50,13 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %                 are different (e.g. you have 3 displays and 256x3x!2! gamma-tables), the last
 %                 gamma_table will be applied to the second and third displays.
 %                 if empty, normalized gamma table (repmat(linspace(0.0,1.0,256),3,1)) will be applied.
+% overwrite_flg : (optional) whether overwriting pre-existing result file. if 1, the previous result
+%                 file with the same acquisition number will be overwritten by the previous one.
+%                 if 0, the existing file will be backed-up by adding a prefix '_old' at the tail
+%                 of the file. 0 by default.
+% force_proceed_flag : (optional) whether proceeding stimulus presentatin without waiting for
+%                 the experimenter response (e.g. presesing the ENTER key) or a trigger.
+%                 if 1, the stimulus presentation will be automatically carried on.
 %
 % !!! NOTICE !!!!
 % displayfile & stimulusfile should be located at
@@ -78,16 +84,18 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 % (an example of the displayfile)
 %
-% ************************************************************
-% This_is_the_display_file_for_retinotopy_Checker_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___November_01_2013
-% ************************************************************
+% % ************************************************************
+% % This_is_the_display_file_for_retinotopy_Checker_experiment.
+% % Please_change_the_parameters_below.
+% % retinotopyDepthfMRI.m
+% % Programmed_by_Hiroshi_Ban___November_01_2013
+% % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
 % % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
 % dparam.ExpMode='mono';
+%
+% dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup
 %
 % % a method to start stimulus presentation
 % % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
@@ -118,11 +126,8 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 % % if non zero, the value is used as the screen frame rate.
 % dparam.force_frame_rate=60;
 %
-% % stimulus display durations in msec
-%
-% %%% fixation period in msec before/after presenting the target stimuli, integer (16)
-% % must set above 1 TR for initializing the frame counting.
-% dparam.initial_fixation_time=16000;
+% % whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
+% dparam.skip_sync_test=0;
 %
 %
 % [About stimulusfile]
@@ -131,12 +136,12 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 % (an example of the stimulusfile)
 %
-% ************************************************************
-% This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___April_11_2011
-%************************************************************
+% % ************************************************************
+% % This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
+% % Please_change_the_parameters_below.
+% % retinotopyDepthfMRI.m
+% % Programmed_by_Hiroshi_Ban___April_11_2011
+% % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"
 %
@@ -175,6 +180,10 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 % sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
 % % sparam.waitframes = 1;
 %
+% %%% fixation period in msec before/after presenting the target stimuli, integer
+% % must set a value more than 1 TR for initializing the frame counting.
+% sparam.initial_fixation_time=4000;
+%
 % %%% fixation size & color
 % sparam.fixsize=12; % radius in pixels
 % sparam.fixcolor=[255,255,255];
@@ -184,8 +193,8 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %
 % %%% RGB for background patches
 % % 1x3 matrices
-% sparam.color1=[255,255,255];
-% sparam.color2=[0,0,0];
+% sparam.patch_color1=[255,255,255];
+% sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
 % %sparam.pix_per_cm=57.1429;
@@ -215,11 +224,36 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear global; clear mex;
-if nargin < 3, help(mfilename()); return; end
+if nargin<3, help(mfilename()); return; end
+if nargin<4 || isempty(displayfile), displayfile=[]; end
+if nargin<5 || isempty(stimulusfile), stimulusfile=[]; end
+if nargin<6 || isempty(gamma_table), gamma_table=[]; end
+if nargin<7 || isempty(overwrite_flg), overwrite_flg=1; end
+if nargin<8 || isempty(force_proceed_flag), force_proceed_flag=0; end
 
-% check the aqcuisition number. up to 10 design files can be used
+% check the aqcuisition number
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check input variable.'); end
+
+% check the experiment mode (stimulus type)
+if ~strcmpi(exp_mode,'ccw') && ~strcmpi(exp_mode,'cw') && ~strcmpi(exp_mode,'exp') && ~strcmpi(exp_mode,'cont')
+  error('exp_mode should be one of "ccw", "cw", "exp", and "cont". check the input variable.');
+end
+
+% check the subject directory
+if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
+
+rootDir=fileparts(mfilename('fullpath'));
+
+% check the display/stimulus files
+if ~isempty(displayfile)
+  if ~strcmpi(displayfile(end-1:end),'.m'), displayfile=[displayfile,'.m']; end
+  if ~exist(fullfile(rootDir,'subjects',subjID,displayfile),'file'), error('displayfile not found. check the input variable.'); end
+end
+
+if ~isempty(stimulusfile)
+  if ~strcmpi(stimulusfile(end-1:end),'.m'), stimulusfile=[stimulusfile,'.m']; end
+  if ~exist(fullfile(rootDir,'subjects',subjID,stimulusfile),'file'), error('stimulusfile not found. check the input variable.'); end
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -227,12 +261,8 @@ if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj direc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % add paths to the subfunctions
-rootDir=fileparts(mfilename('fullpath'));
 addpath(genpath(fullfile(rootDir,'..','Common')));
 addpath(fullfile(rootDir,'..','Generation'));
-
-% set stimulus parameters
-sparam.mode=exp_mode;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -240,14 +270,14 @@ sparam.mode=exp_mode;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % get date
-today=strrep(datestr(now,'yy/mm/dd'),'/','');
+today=datestr(now,'yymmdd');
 
 % result directry & file
 resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=[resultDir filesep() num2str(subjID) '_cretinotopy_' sparam.mode '_results_run_' num2str(acq,'%02d') '.log'];
+logfname=fullfile(resultDir,[num2str(subjID),'_cretinotopy_',exp_mode,'_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -260,12 +290,11 @@ try
 %%%% Check the PTB version
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%PTB_OK=CheckPTBversion(3); % check wether the PTB version is 3
-%if ~PTB_OK, error('Wrong version of Psychtoolbox is running. ImagesShowPTB requires PTB ver.3'); end
+PTB_OK=CheckPTBversion(3); % check wether the PTB version is 3
+if ~PTB_OK, error('Wrong version of Psychtoolbox is running. %s requires PTB ver.3',mfilename()); end
 
 % debug level, black screen during calibration
 Screen('Preference', 'VisualDebuglevel', 3);
-Screen('Preference', 'SkipSyncTests', 0);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -279,7 +308,7 @@ InitializeRandomSeed();
 %%%% Reset display Gamma-function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if nargin<6 || isempty(gamma_table)
+if isempty(gamma_table)
   gamma_table=repmat(linspace(0.0,1.0,256),3,1); %#ok
   GammaResetPTB(1.0);
 else
@@ -288,154 +317,75 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% 1. Check input variables,
-%%%% 2. Read a condition file,
-%%%% 3. Check the validity of input variables,
-%%%% 4. Store informascatio about directories & design file,
-%%%% 5. Load design & condition file.
+%%%% Validate dparam (displayfile) and sparam (stimulusfile) structures
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% check the number of nargin
-if nargin <= 2
-  error('takes at least 3 arguments: cretinotopy(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
-elseif nargin > 6
-  error('takes at most 6 arguments: cretinotopy(subjID, exp_mode, acq, (:displayfile), (:stimulusfile), (:gamma_table))');
-else
-  if nargin == 3
-    useDisplayFile = false;
-    useStimulusFile = false;
-  end
-  if nargin >= 4
-    % reading display (presentation) parameters from file
-    if strcmp(displayfile(end-1:end),'.m')
-      dfile = [fullfile(rootDir,'subjects',subjID) filesep() displayfile];
-    else
-      dfile = [fullfile(rootDir,'subjects',subjID) filesep() displayfile '.m'];
-    end
-    [is_exist, message] = IsExistYouWant(dfile,'file');
-    if is_exist
-      useDisplayFile = true;
-    else
-      error(message);
-    end
-  end
-  if nargin >= 5
-    % reading stimulus generation parameters from file
-    if strcmp(stimulusfile(end-1:end),'.m')
-      sfile = [fullfile(rootDir,'subjects',subjID) filesep() stimulusfile];
-    else
-      sfile = [fullfile(rootDir,'subjects',subjID) filesep() stimulusfile '.m'];
-    end
-    [is_exist, message] = IsExistYouWant(sfile,'file');
-    if is_exist
-      useStimulusFile = true;
-    else
-      error(message);
-    end
-  end
-end % if nargin
+% organize dparam
+dparam=struct(); % initialize
+if ~isempty(displayfile), run(fullfile(rootDir,'subjects',subjID,displayfile)); end % load specific dparam parameters configured for each of the participants
+dparam=ValidateStructureFields(dparam,... % validate fields and set the default values to missing field(s)
+         'ExpMode','mono',...
+         'scrID',1,...
+         'start_method',0,...
+         'custom_trigger','t',...
+         'Key1',51,...
+         'Key2',52,...
+         'fullscr',false,...
+         'ScrHeight',1200,...
+         'ScrWidth',1920,...
+         'force_frame_rate',60,...
+         'skip_sync_test',0);
 
+% organize sparam
+sparam=struct(); % initialize
+sparam.mode=exp_mode;
+if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
+sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
+         'nwedges',4,...
+         'nrings',4,...
+         'width',48,...
+         'phase',0,...
+         'rotangle',12,...
+         'startangle',-48/2,...
+         'maxRad',8,...
+         'minRad',0,...
+         'colors',[ 128, 128, 128;
+                    255,   0,   0;
+                      0, 255,   0;
+                    255, 255,   0;
+                      0,   0, 255;
+                    255,   0, 255;
+                      0, 255, 255;
+                    255, 255, 255;
+                      0,   0,   0;
+                    255, 128,   0;
+                    128,   0, 255],...
+         'cycle_duration',60000,...
+         'rest_duration',0,...
+         'numRepeats',6,...
+         'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
+         'initial_fixation_time',16000,...
+         'fixsize',12,...
+         'fixcolor',[255,255,255],...
+         'bgcolor',[128,128,128],... % sparam.colors(1,:);
+         'patch_color1',[255,255,255],...
+         'patch_color2',[0,0,0],...
+         'pix_per_cm',57.1429,...
+         'vdist',65);
 
-% check the aqcuisition number. up to 10 design files can be used
-if acq<1, error('Acquistion number must be integer and greater than zero'); end
+% change unit from msec to sec.
+sparam.initial_fixation_time=sparam.initial_fixation_time./1000; %#ok
 
-% check condition files
+% change unit from msec to sec.
+sparam.cycle_duration = sparam.cycle_duration./1000;
+sparam.rest_duration  = sparam.rest_duration./1000;
 
-% set display parameters
-if useDisplayFile
-
-  % load displayfile
-  tdir=fullfile(rootDir,'subjects',subjID);
-  run(strcat(tdir,filesep(),displayfile));
-  clear tdir;
-
-  % change unit from msec to sec.
-  dparam.initial_fixation_time = dparam.initial_fixation_time/1000; %#ok
-
-else  % if useDisplayFile
-
-  % otherwise, set default variables
-  dparam.ExpMode='mono';
-  dparam.start_method=0;
-  dparam.custom_trigger='t';
-  dparam.Key1=51; % key 1 (left)
-  dparam.Key2=52; % key 2 (right)
-  dparam.fullscr='false';
-  dparam.ScrHeight=1200;
-  dparam.ScrWidth=1920;
-  dparam.initial_fixation_time=16;
-
-end % if useDisplayFile
-
-if useStimulusFile
-
-  % load stimulusfile
-  tdir=fullfile(rootDir,'subjects',subjID);
-  run(strcat(tdir,filesep(),stimulusfile));
-  clear tdir;
-
-  % change unit from msec to sec.
-  sparam.cycle_duration = sparam.cycle_duration/1000;
-  sparam.rest_duration  = sparam.rest_duration/1000;
-
-else  % if useStimulusFile
-
-  % otherwise, set default variables
-
-  %%% stimulus parameters
-  sparam.nwedges        = 4;
-  sparam.nrings         = 4;
-  sparam.width          = 48;
-  sparam.phase          = 0;
-  sparam.rotangle       = 12;
-  sparam.startangle     = -sparam.width/2;
-
-  sparam.maxRad         = 8;
-  sparam.minRad         = 0;
-
-  sparam.colors         = [ 128, 128, 128;
-                            255,   0,   0;
-                              0, 255,   0;
-                            255, 255,   0;
-                              0,   0, 255;
-                            255,   0, 255;
-                              0, 255, 255;
-                            255, 255, 255;
-                              0,   0,   0;
-                            255, 128,   0;
-                            128,   0, 255;];
-
-  %%% duration in msec for each cycle & repetitions
-  sparam.cycle_duration = 60;
-  sparam.rest_duration  = 0;
-  sparam.numRepeats     = 6;
-
-  %% set number of frames to flip the screen
-  sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
-
-  %%% fixation size & color
-  sparam.fixsize        = 12;
-  sparam.fixcolor       = [255,255,255];
-
-  %%% background color
-  sparam.bgcolor        = sparam.colors(1,:);
-
-  %%% RGB for background patches
-  % 1x3 matrices
-  sparam.color1         =[255,255,255];
-  sparam.color2         =[0,0,0];
-
-  %%% for creating disparity & shadow
-  sparam.pix_per_cm     =57.1429;
-  sparam.vdist          =65;
-
-end % if useStimulusFile
+% set the other parameters
+dparam.RunScript = mfilename();
+sparam.RunScript = mfilename();
 
 %% check varidity of parameters
 fprintf('checking validity of stimulus generation/presentation parameters...');
-if ~strcmpi(sparam.mode,'ccw') && ~strcmpi(sparam.mode,'cw') && ~strcmpi(sparam.mode,'exp') && ~strcmpi(sparam.mode,'cont')
-  error('sparam.mode should be one of "ccw", "cw", "exp", and "cont". check input variables.');
-end
 if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check input variables.'); end
 if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
 disp('done.');
@@ -463,12 +413,12 @@ disp('*************** Screen Settings ****************');
 eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
 eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation Periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d'');',dparam.initial_fixation_time));
+eval(sprintf('disp(''Fixation Time(sec)     : %d'');',sparam.initial_fixation_time));
 eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
 eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
 eval(sprintf('disp(''Frame Flip(per VerSync): %d'');',sparam.waitframes));
-eval(sprintf('disp(''Total Time (sec)       : %d'');',dparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration));
+eval(sprintf('disp(''Total Time (sec)       : %d'');',sparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration));
 disp('**************** Stimulus Type *****************');
 eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
 disp('************ Response key settings *************');
@@ -494,43 +444,19 @@ resps.initialize(event); % initialize responselogger
 %%%% Wait for user reponse to start
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[user_answer,resps]=resps.wait_to_proceed();
-if ~user_answer, diary off; return; end
+if ~force_proceed_flag
+  [user_answer,resps]=resps.wait_to_proceed();
+  if ~user_answer, diary off; return; end
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Initialization of Left & Right screens for binocular presenting/viewing mode
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% % the codes  below is only for CiNet setup.
-% scrID=max(Screen('Screens'));
-% if numscr>1
-%   if numscr==3
-%     for nn=1:1:numscr-1
-%       res=Screen('Rect',nn);
-%       % CiNet 3D display resolution is one of 1024x768x2, 1280x1024x2, 1920x1080x2
-%       if (res(3)-res(1)==2048 && res(4)-res(2)==768)  || (res(3)-res(1)==2560 && res(4)-res(2)==1024) || (res(3)-res(1)==3840 && res(4)-res(2)==1080)
-%         scrID=nn; break; % overwite the display mode
-%       elseif (res(3)-res(1)==1024 && res(4)-res(2)==768)  || (res(3)-res(1)==1280 && res(4)-res(2)==1024)
-%         scrID=nn; break;
-%       else
-%         scrID=nn;
-%       end
-%     end
-%   elseif numscr==4
-%     scrID=2;
-%   else
-%     scrID=numscr-1;
-%   end
-% else
-%   scrID=0;
-% end
-% 
-% [winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],scrID);%max(Screen('Screens')));
+if dparam.skip_sync_test, Screen('Preference','SkipSyncTests',1); end
 
-[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],1);%max(Screen('Screens')));
-%[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],2);%max(Screen('Screens')));
-%[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],max(Screen('Screens')));
+[winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=InitializePTBDisplays(dparam.ExpMode,sparam.bgcolor,0,[],dparam.scrID);
 if ~initDisplay_OK, error('Display initialization error. Please check your exp_run parameter.'); end
 HideCursor();
 
@@ -613,7 +539,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
-nframe_fixation=round(dparam.initial_fixation_time*dparam.fps/sparam.waitframes);
+nframe_fixation=round(sparam.initial_fixation_time*dparam.fps/sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
@@ -624,7 +550,7 @@ nframe_task=round(nframe_rotation/2);
 
 % adjust size ratio considering full-screen effect
 if dparam.fullscr
-  % here, use width information alone for simplification
+  % here, use width information alone, assuming that the pixel is square
   ratio_wid=( winRect(3)-winRect(1) )/dparam.ScrWidth;
   %ratio_hei=( winRect(4)-winRect(2) )/dparam.ScrHeight;
 
@@ -660,7 +586,7 @@ end
 % 2 = checker ID 2
 % 3 = checker ID 3
 % .....
-% sparam.npatches = checker ID sparam.npatches
+% sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
 if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
 
@@ -860,22 +786,13 @@ for nn=1:1:sparam.npositions
 end % for nn=1:1:sparam.npositions
 
 % copy the original CLUT to task CLUTs for initialization
+% and generate CLUT with task luminance
 for nn1=1:1:sparam.npositions
   for nn2=2:1:true_npatches{nn1}+1 % = number of task positions
     for cc=1:1:sparam.ncolors
       for pp=1:1:2
         CLUT{nn1}{nn2,cc,pp}=CLUT{nn1}{1,cc,pp};
-      end
-    end
-  end
-end
-
-% generate CLUT with task luminance
-for nn1=1:1:sparam.npositions
-  for nn2=1:1:true_npatches{nn1} % = number of task positions
-    for cc=1:1:sparam.ncolors
-      for pp=1:1:2 % compensating checkers
-        CLUT{nn1}{nn2+1,cc,pp}(nn2+1,1:3)=round(0.4*CLUT{nn1}{nn2+1,cc,pp}(nn2+1,1:3));
+        CLUT{nn1}{nn2,cc,pp}(nn2,1:3)=round(0.4*CLUT{nn1}{nn2,cc,pp}(nn2,1:3));
       end
     end
   end
@@ -985,7 +902,7 @@ aperture_size(1)=2*( p_height*ceil(rmax*sparam.pix_per_deg/p_height) );
 aperture_size(2)=2*( p_width*ceil(rmax*sparam.pix_per_deg/p_width) );
 
 bgimg{1} = repmat(reshape(sparam.colors(1,:),[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
-%bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.color1,sparam.color2,sparam.fixcolor,patch_num,0,0,0);
+%bgimg = CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,patch_size,sparam.bgcolor,sparam.patch_color1,sparam.patch_color2,sparam.fixcolor,patch_num,0,0,0);
 background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
@@ -1008,31 +925,28 @@ fcircle=Screen('MakeTexture',winPtr,fix);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if dparam.fullscr
-  ratio_wid=( winRect(3)-winRect(1) )/dparam.ScrWidth;
-  ratio_hei=( winRect(4)-winRect(2) )/dparam.ScrHeight;
-  bgSize = [size(bgimg{1},2)*ratio_wid size(bgimg{1},1)*ratio_hei];
-  stimSize=zeros(sparam.npositions,2);
-  for nn=1:1:sparam.npositions, stimSize(nn,:) = [size(checkerboard{nn},2)*ratio_wid size(checkerboard{nn},1)*ratio_hei]; end
-  fixSize = [2*sparam.fixsize*ratio_wid 2*sparam.fixsize*ratio_hei];
+  ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
+  ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
+  bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
+  stimSize = [size(checkerboard{1,1},2)*ratio_wid, size(checkerboard{1,1},1)*ratio_hei];
+  fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
-  bgSize = [dparam.ScrWidth dparam.ScrHeight];
-  stimSize=zeros(sparam.npositions,2);
-  for nn=1:1:sparam.npositions, stimSize(nn,:) = [size(checkerboard{nn},2) size(checkerboard{nn},1)]; end
-  fixSize = [2*sparam.fixsize 2*sparam.fixsize];
+  bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
+  stimSize = [size(checkerboard{1,1},2), size(checkerboard{1,1},1)];
+  fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
 % for some display modes in which one screen is splitted into two binocular displays
 if strcmpi(dparam.ExpMode,'cross') || strcmpi(dparam.ExpMode,'parallel') || ...
    strcmpi(dparam.ExpMode,'topbottom') || strcmpi(dparam.ExpMode,'bottomtop')
   bgSize=bgSize./2;
-  for nn=1:1:sparam.npositions, stimSize(nn,:) = stimSize(nn,:)./2; end
+  stimSize=stimSize./2;
   fixSize=fixSize./2;
 end
 
-bgRect = [0 0 bgSize]; % used to display background images;
-stimRect=zeros(sparam.npositions,4);
-for nn=1:1:sparam.npositions, stimRect(nn,:)=[0 0 stimSize(nn,:)]; end
-fixRect=[0 0 fixSize]; % used to display the central fixation point
+bgRect  = [0, 0, bgSize]; % used to display background images;
+stimRect= [0, 0, stimSize];
+fixRect = [0, 0, fixSize]; % used to display the central fixation point
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1072,10 +986,13 @@ Screen('DrawingFinished',winPtr);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % add time stamp (this also works to load add_event method in memory in advance of the actual displays)
-event=event.add_event('Experiment Start',strcat([strrep(datestr(now,'yy/mm/dd'),'/',''),' ',datestr(now,'HH:mm:ss')]),[]);
+fprintf('\nWaiting for the start...\n');
+event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),GetSecs());
 
 % waiting for stimulus presentation
 resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
+%PlaySound(1);
+fprintf('\nExperiment running...\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1085,6 +1002,7 @@ resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
 vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
 [event,the_experiment_start]=event.set_reference_time(GetSecs());
 event=event.add_event('Initial Fixation',[]);
+fprintf('\nfixation\n\n');
 
 % wait for the initial fixation
 for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
@@ -1107,6 +1025,7 @@ for cc=1:1:sparam.numRepeats
   % NOTE: as this event will be logged before the first flip in the trial,
   % it will be faster by sparam.waitframes in the record of the event. Please be careful.
   event=event.add_event(sprintf('Cycle: %d',cc),[],the_experiment_start-sparam.waitframes*dparam.ifi);
+  fprintf(sprintf('Cycle: %03d...\n',cc));
 
   %% rest perioed
 
@@ -1121,7 +1040,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+dparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       [resps,event]=resps.check_responses(event);
     end
   end
@@ -1140,9 +1059,9 @@ for cc=1:1:sparam.numRepeats
       if do_task(task_id) && ...
          ( ( task_flg(task_id)==1 && mod(ff,nframe_rotation)<=nframe_rotation/2 ) || ...
            ( task_flg(task_id)==2 && mod(ff,nframe_rotation)>nframe_rotation/2 ) )
-        DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{stim_pos_id}{task_pos{stim_pos_id}(task_id)+1,color_id,compensate_id});
+        DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{stim_pos_id}{task_pos{stim_pos_id}(task_id)+1,color_id,compensate_id},[],CenterRect(stimRect,winRect));
       else
-        DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{stim_pos_id}{1,color_id,compensate_id});
+        DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{stim_pos_id}{1,color_id,compensate_id},[],CenterRect(stimRect,winRect));
       end
 
       % the central fixation oval
@@ -1152,9 +1071,9 @@ for cc=1:1:sparam.numRepeats
     % flip the window
     Screen('DrawingFinished',winPtr);
     if strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont')
-      Screen('Flip',winPtr,vbl+dparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+sparam.rest_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+sparam.rest_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
     else
-      Screen('Flip',winPtr,vbl+dparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
     end
     if do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
 
@@ -1201,7 +1120,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+dparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+(sparam.cycle_duration-sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*sparam.cycle_duration+(sparam.cycle_duration-sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       [resps,event]=resps.check_responses(event);
     end
   end
@@ -1219,8 +1138,9 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+dparam.initial_fixation_time+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
 event=event.add_event('Final Fixation',[]);
+fprintf('\nfixation\n');
 
 % wait for the initial fixation
 for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
@@ -1230,7 +1150,7 @@ for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 i
     Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+dparam.initial_fixation_time+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
   [resps,event]=resps.check_responses(event);
 end
 
@@ -1243,7 +1163,7 @@ experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
 event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        dparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration);
+        sparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration);
 disp(' ');
 
 
@@ -1255,7 +1175,14 @@ disp(' ');
 fprintf('saving data...');
 
 % save data
-savefname=[resultDir filesep() num2str(subjID) '_cretinotopy_' sparam.mode '_results_run_' num2str(acq,'%02d') '.mat'];
+savefname=fullfile(resultDir,[num2str(subjID),'_cretinotopy_',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat']);
+
+% backup the old file(s)
+if ~overwrite_flg
+  BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
+                      [num2str(subjID),'_cretinotopy_',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+end
+
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
 disp('done.');
 
@@ -1266,6 +1193,13 @@ correct_event=cell(2,1); for ii=1:1:2, correct_event{ii}=sprintf('key%d',ii); en
 event=event.get_event(); % convert an event logger object to a cell data structure
 eval(sprintf('save -append %s event task;',savefname));
 disp('done.');
+
+% tell the experimenter that the measurements are completed
+try
+  for ii=1:1:3, Snd('Play',sin(2*pi*0.2*(0:900)),8000); end
+catch
+  % do nothing
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1286,7 +1220,7 @@ Priority(0);
 GammaResetPTB(1.0);
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
-clear all; clear mex; clear global;
+%clear all; clear mex; clear global;
 diary off;
 
 
@@ -1298,7 +1232,7 @@ catch lasterror
   % this "catch" section executes in case of an error in the "try" section
   % above.  Importantly, it closes the onscreen window if its open.
   Screen('CloseAll');
-  ShowCursor;
+  ShowCursor();
   Priority(0);
   GammaResetPTB(1.0);
   tmp=lasterror; %#ok
@@ -1312,7 +1246,7 @@ catch lasterror
   rmpath(genpath(fullfile(rootDir,'..','Common')));
   rmpath(fullfile(rootDir,'..','Generation'));
   %psychrethrow(psychlasterror);
-  clear global; clear mex; clear all; close all;
+  %clear global; clear mex; clear all; close all;
   return
 end % try..catch
 
