@@ -3,7 +3,7 @@ function [checkerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startang
 % Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.
 % function [checkerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase)
 %
-% This function generates 2 checkerboards (polar angle-based subdivision) with an individual ID number on each patch.
+% This function generates checkerboards (polar angle-based subdivision) with an individual ID number on each patch.
 % Each of two checkers have the compensating values of its counterpart.
 % Multiple start angles are acceptable and will be processed at once, saving computational time.
 %
@@ -30,7 +30,7 @@ function [checkerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startang
 % mask        : (optional) checkerboard regional mask, cell structure, logical
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2013-11-26 10:50:49 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2018-11-20 11:14:48 ban"
 
 
 %% check input variables
