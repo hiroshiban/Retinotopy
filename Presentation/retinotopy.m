@@ -55,8 +55,8 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 % OK      : (optional) flag, whether this script finished without any error [true/false]
 %
 %
-% Created    : "2013-11-25 10:14:26 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2018-11-22 16:39:25 ban"
+% Created    : "2013-11-25 10:14:26 ban"
+% Last Update: "2018-11-26 17:10:45 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

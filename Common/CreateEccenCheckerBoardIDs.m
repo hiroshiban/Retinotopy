@@ -1,34 +1,47 @@
-function [checkerboard,mask]=CreateEccenCheckerBoardIDs(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)
+function [checkerboard,bincheckerboard,mask]=CreateEccenCheckerBoardIDs(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)
 
-% Creates a annular-shaped checkerboard pattern each of whose patch has unique ID.
-% function [checkerboard,mask]=CreateEccenCheckerBoardIDs(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)
+% Generates checkerboard patterns (annulus-based subdivision) with an individual ID number on each patch.
+% function [checkerboard,bincheckerboard,mask]=CreateEccenCheckerBoardIDs(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)
 %
-% Generates annular-shaped checkerboard ID pattern. Multiple edges are acceptable
+% This function generates 2 checkerboards (annulus-based subdivision) with an individual ID number on each patch.
+% Each of two checkers have the compensating values of its counterpart.
+% Multiple start angles are acceptable and will be processed at once, saving computational time.
 %
 % [input]
-% edges       : checkerboard min/max radius along eccentricity in deg, [min,max]
-% width       : checker width along polar angle in deg, [val]
-% startangle  : checker board start angle, from right horizontal meridian, clockwise
-%               *** multiple start angles are acceptable ***
-%               e.g. [0,12,24,36,...]
-% pix_per_deg : pixels per degree, [val]
-% nwedges     : number of wedges, [val]
-% nrings      : number of rings, [val]
-% phase       : (optional) checker's phase
+% edges       : checkerboard min/max radius and width along eccentricity in deg, [3(min,max,ringwidth) x n]
+%               please see the codes below to check the default values.
+% width       : checker width along polar angle in deg, [val], 360 by default
+% startangle  : checker board start angle, from right horizontal meridian, clockwise, 0 by default.
+% pix_per_deg : pixels per degree, [val], 40 by default.
+% nwedges     : number of wedges, [val], 48 by default.
+% nrings      : number of rings, [val], 2 by default.
+% phase       : (optional) checker's phase, 0 by default.
 %
 % [output]
-% checkerboard : output grayscale checkerboard, cell structure, {numel(startangle)}
-%                each pixel shows each checker patch's ID or background
-% mask        : (optional) checkerboard regional mask, cell structure, logical
+% checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.
+%                  each pixel shows each checker patch's ID or background(0)
+% binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,
+%                  cell structure, {numel(startangle)}.
+% mask           : (optional) checkerboard regional mask, cell structure, logical
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2013-11-22 18:45:44 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2018-11-26 19:47:03 ban"
 
-
-%% check input variables
-if nargin<6, help CreateEccenCheckerBoardIDs; return; end
-if nargin<7, phase=0; end
+%% check the input variables
+if nargin<1 || isempty(edges)
+  edges=[0.00, 0.50, 1.00; 0.00, 0.75, 1.00; 0.00, 1.00, 1.00; 0.25, 1.25, 1.00; 0.50, 1.50, 1.00;
+         0.75, 1,75, 1,00; 1.00, 2.00, 1.00; 1.25, 2.25, 1.00; 1.50, 2.50, 1.00; 1.75, 2.75, 1.00;
+         2.00, 3.00, 1.00; 2.25, 3.25, 1.00; 2.50, 3.50, 1.00; 2.75, 3.75, 1.00; 3.00, 4.00, 1.00;
+         3.25, 4.25, 1.00; 3.50, 4.50, 1.00; 3.75, 4.75, 1.00; 4.00, 5.00, 1.00; 4.25, 5.25, 1.00;
+         4.50, 5.50, 1.00; 4.75, 5.75, 1.00; 5.00, 6.00, 1.00; 5.25, 6.00, 1.00; 5.50, 6.00, 1.00];
+end
+if nargin<2 || isempty(width), width=360; end
+if nargin<3 || isempty(startangle), startangle=0; end
+if nargin<4 || isempty(pix_per_deg), pix_per_deg=40; end
+if nargin<5 || isempty(nwedges), nwedges=48; end
+if nargin<6 || isempty(nrings), nrings=2; end
+if nargin<7 || isempty(phase), phase=0; end
 
 %% parameter adjusting
 
@@ -56,18 +69,19 @@ maxR=max(edges(:,2));
 r=sqrt(xx.^2+yy.^2); % radius
 
 % convert distance field to radians and degree fields
-%thetafield=atan2(yy,xx);
 thetafield=mod(atan2(yy,xx)-startangle+phase,2*pi);
 
 %% processing
 
 checkerboard=cell(size(edges,1),1);
-mask=cell(size(edges,1),1);
+if nargout>=2, bincheckerboard=cell(size(edges,1),1); end
+if nargout>=3, mask=cell(size(edges,1),1); end
 
 for rr=1:1:size(edges,1)
 
   rmin=edges(rr,1);
   rmax=edges(rr,2);
+  ringwidth=edges(rr,3);
 
   % calculate inner regions
   minlim=startangle;
@@ -75,7 +89,7 @@ for rr=1:1:size(edges,1)
   if minlim==maxlim % whole annulus
     inidx=find( (rmin<=r & r<=rmax) );
   elseif minlim>maxlim
-    inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield & thetafield<=2*pi) | (0<=thetafield & thetafield<=maxlim) ) );
+    inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield & thetafield<2*pi) | (0<=thetafield & thetafield<=maxlim) ) );
   else
     inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield) & (thetafield<=maxlim) ) );
   end
@@ -95,13 +109,12 @@ for rr=1:1:size(edges,1)
   %   true_nwedges=nwedges;
   % end
 
-  % calculate binary class (-1/1) along eccentricity for checkerboard (anuulus)
-  radii=linspace(rmin,rmax,nrings+1); radii(1)=[]; % annulus width
-  cid=zeros(size(xx)); % checker id, eccentricity
+  % calculate binary class (-1/1) along eccentricity for checkerboard (annulus)
+  radii=linspace(rmin,rmin+ringwidth,nrings+1); radii(1)=[]; % annulus width
+  cide=zeros(size(xx)); % checker id, eccentricity
   for i=length(radii):-1:1
-    cid(rmin<r & r<=radii(i))=i;
+    cide(rmin<r & r<=min(radii(i),rmax))=i;
   end
-  cide=cid;
 
   % generate checker's ID
   checkerboard{rr}=zeros(size(thetafield));
@@ -111,10 +124,22 @@ for rr=1:1:size(edges,1)
   % delete outliers
   checkerboard{rr}(checkerboard{rr}<0)=0;
 
-  % generate mask
-  if nargout>=2
-    mask{rr}=logical(checkerboard{rr});
+  % generate a binary (1/2=checker-patterns and 0=background) checkerboard
+  if nargin>=2
+    rings=zeros(size(cide));
+    rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class;
+
+    wedges=zeros(size(cidp));
+    wedges(inidx)=2*mod(cidp(inidx),2)-1; % -1/1 class
+
+    bincheckerboard{rr}=zeros(size(thetafield));
+    bincheckerboard{rr}(inidx)=wedges(inidx).*rings(inidx);
+    bincheckerboard{rr}(r>rmax)=0;
+    bincheckerboard{rr}(bincheckerboard{rr}<0)=2;
   end
+
+  % generate mask
+  if nargout>=3, mask{rr}=logical(checkerboard{rr}); end
 
 end % for rr=1:1:size(edges,1)
 

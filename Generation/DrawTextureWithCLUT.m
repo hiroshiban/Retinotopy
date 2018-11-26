@@ -18,7 +18,7 @@ function DrawTextureWithCLUT(win, src, newclut, srcRect, destRect, rotangle)
 %
 %
 % Created    : "2011-04-14 01:00:09 ban"
-% Last Update: "2013-11-26 10:51:24 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2018-11-26 18:36:46 ban"
 %
 % [input]
 % win_pointer  : PTB screen pointer

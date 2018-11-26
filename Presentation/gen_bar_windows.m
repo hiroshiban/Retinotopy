@@ -11,7 +11,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2018-11-22 16:16:08 ban"
+% Last Update: "2018-11-26 17:02:26 ban"
 %
 %
 % [input variables]
@@ -150,7 +150,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Check input variables
+%%%% Check the input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear global; clear mex;
@@ -332,9 +332,9 @@ disp(' ');
 fprintf('generating stimulus patterns...');
 
 %% generate checkerboard patterns
-[dummy,checkerboard]=bar_GenerateCheckerBar1D(sparam.fieldSize,sparam.width,sparam.rotangles,sparam.steps,...
-                                              sparam.pix_per_deg,sparam.ndivsL,sparam.ndivsS,sparam.phase);
-clear dummy;
+[dummy1,dummy2,checkerboard]=bar_GenerateCheckerBar1D(sparam.fieldSize,sparam.width,sparam.rotangles,sparam.steps,...
+                                                      sparam.pix_per_deg,sparam.ndivsL,sparam.ndivsS,sparam.phase);
+clear dummy1 dummy2;
 
 % % convert logical data to double format to process gaussian filter at the later stage
 % for aa=1:1:numel(sparam.rotangles)

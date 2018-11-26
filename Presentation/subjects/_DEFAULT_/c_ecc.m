@@ -28,6 +28,8 @@ sparam.startangle  = -sparam.width/2-90;     % presentation start angle in deg, 
 sparam.maxRad      = 6.0;    % maximum radius of  annulus (degrees)
 sparam.minRad      = 0;  % minumum
 
+sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
+
 sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
                        255,   0,   0; % the first row is background
                          0, 255,   0; % the second to end are patch colors

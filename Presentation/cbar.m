@@ -17,7 +17,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2018-11-22 16:27:53 ban"
+% Last Update: "2018-11-26 20:20:47 ban"
 %
 %
 %
@@ -168,6 +168,8 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 % sparam.steps       = 16; % steps in sweeping the visual field (from start to end)
 % sparam.fieldSize   = 12; % stimulation field size in deg, [row,col]. circular region with sparam.fieldSize is stimulated.
 %
+% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
+%
 % sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
 %                        255,   0,   0; % the first row is background
 %                          0, 255,   0; % the second to end are patch colors
@@ -232,7 +234,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Check input variables
+%%%% Check the input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear global; clear mex;
@@ -358,6 +360,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'rotangles',[0,45,90,135,180,225,270,315],...
          'steps',16,...
          'fieldSize',[12,12],...
+         'dimratio',0.4,...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
                       0, 255,   0;
@@ -565,14 +568,6 @@ else
   width=sparam.width;
 end
 
-% validate the number of patches (required as PTB3 can handle only 256 LUTs)
-sparam.npatches=sparam.ndivsL*sparam.ndivsS;
-if sparam.npatches>255 % 255=256-background color
-  error(['sparam.npatches should be less than 256 since number of elements',...
-        ' in a color lookup table is limited to 256 due to OpenGL limitation.',...
-        ' check input variable.']);
-end
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Generating checkerboard bar patterns
@@ -589,8 +584,8 @@ end
 % Each patch ID will be associated with a CLUT color of the same ID
 
 % generate the checker bar stimuli, checkerboard{rotangles,steps}
-checkerboard=bar_GenerateCheckerBar1D(fieldSize,width,sparam.rotangles,sparam.steps,...
-                                      sparam.pix_per_deg,sparam.ndivsL,sparam.ndivsS,sparam.phase);
+[checkerboardID,checkerboard]=bar_GenerateCheckerBar1D(fieldSize,width,sparam.rotangles,sparam.steps,...
+                                                       sparam.pix_per_deg,sparam.ndivsL,sparam.ndivsS,sparam.phase);
 
 %% update number of patches and number of wedges, taking into an account of checkerboard phase shift
 
@@ -608,7 +603,7 @@ patchids=cell(numel(sparam.rotangles),sparam.steps);
 % therefore, we have to re-compute the patches and the corresponding IDs here.
 for aa=1:1:numel(sparam.rotangles)
   for nn=1:1:sparam.steps
-    tmp_checks=unique(checkerboard{aa,nn})';
+    tmp_checks=unique(checkerboardID{aa,nn})';
     true_npatches{aa,nn}=numel(tmp_checks)-1; % -1 is to omit background id
     true_nwedges{aa,nn}=0;
     for pp=1:1:sparam.ndivsS
@@ -620,14 +615,6 @@ for aa=1:1:numel(sparam.rotangles)
 end
 clear tmp_checks;
 
-%% Make Checkerboard textures
-checkertexture=cell(numel(sparam.rotangles),sparam.steps);
-for aa=1:1:numel(sparam.rotangles)
-  for nn=1:1:sparam.steps
-    checkertexture{aa,nn}=Screen('MakeTexture',winPtr,checkerboard{aa,nn});
-  end
-end
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Initializing Color Lookup-Talbe (CLUT)
@@ -637,99 +624,33 @@ end
 % all checker color/luminance flickering is realized by just flipping CLUT generated here
 % to save memory and CPU power
 
-% generate CLUT for each checkerboard in each position
-% The procedure looks circuitous but I will do like that because the number of patches/wedges
-% in exp/cont conditions are different over time especially when the annulus comes around the smallest/largest regions
-CLUT=cell(numel(sparam.rotangles),sparam.steps);
-for aa=1:1:numel(sparam.rotangles)
-  for nn=1:1:sparam.steps
-    CLUT{aa,nn}=cell(1+true_npatches{aa,nn},sparam.ncolors,2); % 1+npatches is base + task CLUTs, 2 is for compensating patterns
-  end
-end
+CLUT=cell(sparam.ncolors,2); % 2 is for compensating patterns
 
 % generate base CLUT
-for aa=1:1:numel(sparam.rotangles)
-  for nn=1:1:sparam.steps
-    for cc=1:1:sparam.ncolors
-      for pp=1:1:2 % compensating checkers
+for cc=1:1:sparam.ncolors
+  for pp=1:1:2 % compensating checkers
 
-        % initialize, DrawTextureWithCLUT requires [256x4] color lookup table even when we do not use whole 256 colors
-        % though DrawTextureWithCLUT does not support alpha transparency up to now...
-        CLUT{aa,nn}{1,cc,pp}=zeros(256,4);
-        CLUT{aa,nn}{1,cc,pp}(:,4)=1; % default alpha is 1 (no transparent)
-        CLUT{aa,nn}{1,cc,pp}(1,:)=[sparam.colors(1,:) 0]; % background LUT, default alpha is 0 (invisible);
+    % initialize, DrawTextureWithCLUT requires [256x4] color lookup table even when we do not use whole 256 colors
+    % though DrawTextureWithCLUT does not support alpha transparency up to now...
+    CLUT{cc,pp}=zeros(256,4);
+    CLUT{cc,pp}(:,4)=1; % default alpha is 1 (no transparent)
 
-        % the complex 'if' statements below are required to create valid checkerboards
-        % with flexible sparam.startangle & sparam.phase parameters
-        if pp==1
-          for vv=patchids{aa,nn}
-            if mod(ceil(vv/sparam.ndivsL),2)
-              if mod(vv,2)
-                CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
-              else
-                CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
-              end
-            else
-              if ~mod(sparam.ndivsL,2)
-                if mod(vv,2)
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
-                else
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
-                end
-              else
-                if mod(vv,2)
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
-                else
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
-                end
-              end
-            end
-          end
-        else
-          for vv=patchids{aa,nn}
-            if mod(ceil(vv/sparam.ndivsL),2)
-              if mod(vv,2)
-                CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
-              else
-                CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
-              end
-            else
-              if ~mod(sparam.ndivsL,2)
-                if mod(vv,2)
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
-                else
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
-                end
-              else
-                if mod(vv,2)
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc+1,:);
-                else
-                  CLUT{aa,nn}{1,cc,pp}(vv+1,1:3)=sparam.colors(2*cc,:);
-                end
-              end
-            end
-          end
-        end
+    CLUT{cc,pp}(1,:)=[sparam.colors(1,:),0]; % background LUT, default alpha is 0 (invisible);
 
-      end % for pp=1:1:2 % compensating checkers
-    end % for cc=1:1:sparam.ncolors
-  end % for nn=1:1:sparam.steps
-end % for aa=1:1:numel(sparam.rotangles)
-
-% copy the original CLUT to task CLUTs for initialization
-for aa=1:1:numel(sparam.rotangles)
-  for nn1=1:1:sparam.steps
-    for nn2=2:1:true_npatches{aa,nn1}+1 % = number of task positions
-      for cc=1:1:sparam.ncolors
-        for pp=1:1:2 % compensating checkers
-          CLUT{aa,nn1}{nn2,cc,pp}=CLUT{aa,nn1}{1,cc,pp};
-          % in the code below, +1 is required as CLUT{x,x}{x,x,x}(1,:) is background LUT.
-          CLUT{aa,nn1}{nn2,cc,pp}(patchids{aa,nn1}(nn2-1)+1,1:3)=round(0.4*CLUT{aa,nn1}{nn2,cc,pp}(patchids{aa,nn1}(nn2-1)+1,1:3));
-        end
-      end
+    if ~mod(pp,2)
+      CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc,:);
+      CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc+1,:);
+      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
+      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
+    else
+      CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc+1,:);
+      CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc,:);
+      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
+      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
     end
-  end
-end
+
+  end % for pp=1:1:2 % compensating checkers
+end % for cc=1:1:sparam.ncolors
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -748,7 +669,7 @@ if strfind(upper(subjID),'DEBUG')
       figure; hold on;
       imfig=imagesc(flipdim(checkerboard{aa,nn},1),[0,true_npatches{aa,nn}]);
       axis off; axis square;
-      colormap(CLUT{aa,nn}{1,1,1}(1:true_npatches{aa,nn}+1,1:3)./255);
+      colormap(CLUT{1,1}(1:3,1:3)./255);
       fname=sprintf('bar_angle_%.2f_pos_%02d.png',sparam.rotangles(aa),nn);
       save_dir=fullfile(pwd,'images');
       if ~exist(save_dir,'dir'), mkdir(save_dir); end
@@ -791,7 +712,12 @@ task_id=1;
 task_pos=cell(numel(sparam.rotangles),sparam.steps);
 for aa=1:1:numel(sparam.rotangles)
   for nn=1:1:sparam.steps
-    task_pos{aa,nn}=randi(true_npatches{aa,nn},[round(sparam.numRepeats*numel(sparam.rotangles)*nframe_cycle/nframe_task),1]);
+    %task_pos{aa,nn}=randi(true_npatches{aa,nn},[round(sparam.numRepeats*numel(sparam.rotangles)*nframe_cycle/nframe_task),1]);
+    task_pos{aa,nn}=[];
+    for pp=1:1:round(sparam.numRepeats*numel(sparam.rotangles)*nframe_cycle/nframe_task)
+      tmp_id=shuffle(patchids{aa,nn});
+      task_pos{aa,nn}=[task_pos{aa,nn},tmp_id(1)];
+    end
   end
 end
 
@@ -963,31 +889,37 @@ for cc=1:1:sparam.numRepeats
     %% stimulus presentation loop
     for ff=1:1:nframe_cycle
 
+      % generate a checkerboard texture with/without a luminance detection task
+      if do_task(task_id) && ...
+        ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
+          ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) )
+        tidx=find(checkerboardID{aa,stim_pos_id}==task_pos{aa,stim_pos_id}(task_id));
+        checkerboard{aa,stim_pos_id}(tidx)=checkerboard{aa,stim_pos_id}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
+        checkertexture=Screen('MakeTexture',winPtr,checkerboard{aa,stim_pos_id});
+      else
+        tidx=[];
+        checkertexture=Screen('MakeTexture',winPtr,checkerboard{aa,stim_pos_id});
+      end
+
       %% display the current frame
       for nn=1:1:nScr
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-
-        % background
-        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-
-        % checkerboard with a specified CLUT, drawn by using OpenGL GLSL function
-        if do_task(task_id) && ...
-           ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
-             ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) )
-          DrawTextureWithCLUT(winPtr,checkertexture{aa,stim_pos_id},CLUT{aa,stim_pos_id}{task_pos{aa,stim_pos_id}(task_id)+1,color_id,compensate_id},[],CenterRect(stimRect,winRect));
-        else
-          DrawTextureWithCLUT(winPtr,checkertexture{aa,stim_pos_id},CLUT{aa,stim_pos_id}{1,color_id,compensate_id},[],CenterRect(stimRect,winRect));
-        end
-
-        % the central fixation oval
-        Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
+        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
+        DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
+        Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
+
+      % put the checkerboard ID back to the default
+      if ~isempty(tidx), checkerboard{aa,stim_pos_id}(tidx)=checkerboard{aa,stim_pos_id}(tidx)-2; end
 
       % flip the window
       Screen('DrawingFinished',winPtr);
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
              (aa-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       if do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+
+      % clean up
+      Screen('Close',checkertexture);
 
       %% exit from the loop if the final frame is displayed
 
@@ -999,6 +931,7 @@ for cc=1:1:sparam.numRepeats
       if ~mod(ff,nframe_flicker) % color reversal
         compensate_id=mod(compensate_id,2)+1;
       end
+
       if ~mod(ff,2*nframe_flicker) % color change
         color_id=color_id+1;
         if color_id>sparam.ncolors, color_id=1; end

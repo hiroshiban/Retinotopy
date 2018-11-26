@@ -1,7 +1,7 @@
-function [checkerboard,mask]=CreateCheckerBar1D(fieldSize,width,angles,steps,pix_per_deg,ndivsL,ndivsS,phase)
+function [checkerboard,bincheckerboard,mask]=CreateCheckerBar1D(fieldSize,width,angles,steps,pix_per_deg,ndivsL,ndivsS,phase)
 
 % Generates bar-shaped checkerboard patterns masked by a circular aperture (can be used for pRF stimuli) with an individual ID number on each patch.
-% function [checkerboard,mask]=CreateCheckerBar1D(:fieldSize,:width,:angles,:steps,:pix_per_deg,:ndivsL,:ndivsS,:phase)
+% function [checkerboard,bincheckerboard,mask]=CreateCheckerBar1D(:fieldSize,:width,:angles,:steps,:pix_per_deg,:ndivsL,:ndivsS,:phase)
 % (: is optional)
 %
 % This function generates bar-shaped checkerboards with an individual ID number on each patch, which sweeps the visual field.
@@ -22,12 +22,14 @@ function [checkerboard,mask]=CreateCheckerBar1D(fieldSize,width,angles,steps,pix
 %
 % [output]
 % checkerboard : output grayscale bar-shaped checkerboard at each of the visual field locations,
-%                cell structure, {numel(angles),numel(steps),2}
+%                cell structure, {numel(angles),numel(steps)}
 %                each pixel shows each checker patch's ID or background(0)
-% mask        : (optional) checkerboard regional mask, cell structure, logical
+% binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) bar-shaped checkerboard patterns,
+%                cell structure, {numel(angles),numel(steps)}.
+% mask         : (optional) checkerboard regional mask, cell structure, logical
 %
 % Created    : "2018-11-20 11:23:31 ban"
-% Last Update: "2018-11-21 19:00:19 ban"
+% Last Update: "2018-11-26 19:41:03 ban"
 
 %% check the input variables.
 if nargin<1 || isempty(fieldSize), fieldSize=12; end
@@ -64,7 +66,8 @@ imsize_ratio=1.01;
 r=sqrt(xx.^2+yy.^2);
 
 checkerboard=cell(numel(angles),steps);
-mask=cell(numel(angles),steps);
+if nargout>=2, bincheckerboard=cell(numel(angles),steps); end
+if nargout>=3, mask=cell(numel(angles),steps); end
 
 for aa=1:1:numel(angles)
 
@@ -94,9 +97,10 @@ for aa=1:1:numel(angles)
           checkerboard{aa,pp}=flipdim(flipdim(checkerboard{tt,pp},2),1);
         end
         if nargout>=2
-          for pp=1:1:size(checkerboard,2)
-            mask{aa,pp}=flipdim(flipdim(mask{tt,pp},2),1);
-          end
+          for pp=1:1:size(checkerboard,2), bincheckerboard{aa,pp}=flipdim(flipdim(bincheckerboard{tt,pp},2),1); end
+        end
+        if nargout>=3
+          for pp=1:1:size(checkerboard,2), mask{aa,pp}=flipdim(flipdim(mask{tt,pp},2),1); end
         end
         done_flag=1;
         break;
@@ -137,8 +141,22 @@ for aa=1:1:numel(angles)
       % mask the outer retions and delete outliers
       checkerboard{aa,pp}(r>fieldSize/2 | checkerboard{aa,pp}<0)=0;
 
+      % generate a binary (1/2=checker-patterns and 0=background) checkerboard
+      if nargin>=2
+        barL=zeros(size(cidl));
+        barL(inidx)=2*mod(cidl(inidx),2)-1; % -1/1 class;
+
+        barS=zeros(size(cids));
+        barS(inidx)=2*mod(cids(inidx),2)-1; % -1/1 class
+
+        bincheckerboard{aa,pp}=zeros(size(xxxx));
+        bincheckerboard{aa,pp}(inidx)=barS(inidx).*barL(inidx);
+        bincheckerboard{aa,pp}(r>fieldSize/2)=0;
+        bincheckerboard{aa,pp}(bincheckerboard{aa,pp}<0)=2;
+      end
+
       % generate mask
-      if nargout>=2, mask{aa,pp}=logical(checkerboard{aa,pp}); end
+      if nargout>=3, mask{aa,pp}=logical(checkerboard{aa,pp}); end
     end % for pp=1:1:size(pos,1)
 
   end % if ~done_flag

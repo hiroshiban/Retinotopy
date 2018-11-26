@@ -20,12 +20,18 @@ function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtwidth,start_angle,pix_p
 % [output]
 % mask        : mask image with 0 & 1, 2 cell structure, asis and its compensating
 %
-% !!! NOTICE !!!
-% for speeding up image generation process,
-% I will not put codes for nargin checks.
-% Please be careful.
-% 
-% July 24 2009 Hiroshi Ban
+%
+% Created    : "2009-07-24 12:20:15 ban"
+% Last Update: "2018-11-26 18:41:36 ban"
+
+% check the input variables
+if nargin<1 || isempty(rmin), rmin=0.0; end
+if nargin<2 || isempty(rmax), rmax=8.0; end
+if nargin<3 || isempty(tgtmin), tgtmin=2.0; end
+if nargin<4 || isempty(tgtmax), tgtmax=4.0; end
+if nargin<5 || isempty(tgtwidth), tgtwidth=360; end
+if nargin<6 || isempty(start_angle), start_angle=0; end
+if nargin<7 || isempty(pix_per_deg), pix_per_deg=40; end
 
 % convert deg to pixels
 rmin=rmin*pix_per_deg;

@@ -12,7 +12,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2018-11-22 16:08:21 ban"
+% Last Update: "2018-11-26 17:02:35 ban"
 %
 %
 % [input variables]
@@ -141,7 +141,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Check input variables
+%%%% Check the input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear global; clear mex;
@@ -339,8 +339,8 @@ if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
   startangles=zeros(sparam.npositions,1);
   for nn=1:1:sparam.npositions, startangles(nn)=sparam.startangle+(nn-1)*sparam.rotangle; end
 
-  [dummy,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,startangles,sparam.pix_per_deg,1,1,0);
-  clear dummy;
+  [dummy1,dummy2,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,startangles,sparam.pix_per_deg,1,1,0);
+  clear dummy1 dummy2;
 
 elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
 
@@ -362,8 +362,8 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
     ecclims(nn,:)=[minlim,maxlim,eccwidth];
   end
 
-  [dummy,checkerboard]=ecc_GenerateCheckerBoard1D(ecclims,360,sparam.startangle,sparam.pix_per_deg,1,1,0);
-  clear dummy;
+  [dummy1,dummy2,checkerboard]=ecc_GenerateCheckerBoard1D(ecclims,360,sparam.startangle,sparam.pix_per_deg,1,1,0);
+  clear dummy1 dummy2;
 
 end % if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
 
