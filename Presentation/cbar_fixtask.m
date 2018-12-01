@@ -23,7 +23,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2018-11-26 18:24:47 ban"
+% Last Update: "2018-11-29 21:41:47 ban"
 %
 %
 %
@@ -77,7 +77,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_fmri_exp1_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_cbar_fixtask_results_run_(run_num).mat
 %
 %
 % [example]
@@ -200,7 +200,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
-% sparam.initial_fixation_time=4000;
+% sparam.initial_fixation_time=[4000,4000];
 %
 % %%% fixation size & color
 % sparam.fixsize=4; % radius in pixels
@@ -228,7 +228,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % [about stimuli and task]
-% One of checkerboard patches sometimes (randomly) becomes darker.
+% The central fixation point sometimes changes its color from white to gray.
 % If you find this contrast difference, press any key.
 % Response kes are difined in display file.
 %
@@ -293,7 +293,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_cbar_ftask_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_cbar_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -379,7 +379,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'rest_duration',8000,...
          'numRepeats',1,...
          'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
-         'initial_fixation_time',4000,...
+         'initial_fixation_time',[4000,4000],...
          'fixsize',4,...
          'fixcolor',[255,255,255],...
          'bgcolor',[128,128,128],... % sparam.colors(1,:);
@@ -422,12 +422,12 @@ disp('*************** Screen Settings ****************');
 eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
 eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation Periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d'');',sparam.initial_fixation_time));
+eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),,sparam.initial_fixation_time(2)));
 eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
 eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
 eval(sprintf('disp(''Frame Flip(per VerSync): %d'');',sparam.waitframes));
-eval(sprintf('disp(''Total Time (sec)       : %d'');',sparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration*numel(sparam.rotangles)));
+eval(sprintf('disp(''Total Time (sec)       : %d'');',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration*numel(sparam.rotangles)));
 disp('**************** Stimulus Type *****************');
 eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
 disp('************ Response key settings *************');
@@ -548,7 +548,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
-nframe_fixation=round(sparam.initial_fixation_time*dparam.fps/sparam.waitframes);
+nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.steps/sparam.waitframes);
@@ -696,7 +696,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=2*max(nframe_fixation,1)+numel(sparam.rotangles)*(nframe_cycle+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+numel(sparam.rotangles)*(nframe_cycle+nframe_rest)*sparam.numRepeats;
 num_tasks=round(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -863,7 +863,7 @@ fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -907,7 +907,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
              (aa-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       cur_frames=cur_frames+1;
 
@@ -952,7 +952,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
              aa*sparam.cycle_duration-sparam.rest_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       cur_frames=cur_frames+1;
 
@@ -976,20 +976,20 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
 cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
@@ -1007,7 +1007,7 @@ experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
 event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        sparam.initial_fixation_time*2+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
+        sum(sparam.initial_fixation_time)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
 disp(' ');
 
 
@@ -1019,12 +1019,12 @@ disp(' ');
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_cbar_ftask_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_cbar_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_cbar_ftask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_cbar_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));

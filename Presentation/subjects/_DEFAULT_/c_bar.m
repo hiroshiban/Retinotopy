@@ -8,8 +8,10 @@
 % "sparam" means "stimulus generation parameters"
 
 %%% stimulus parameters
-sparam.ndivsL      = 24;  % number of bar subdivisions along bar's long axis
-sparam.ndivsS      = 3;   % number of bar subdivisions along bar's short axis
+sparam.fieldSize   = 15; % stimulation field size in deg. circular region with sparam.fieldSize is stimulated.
+
+sparam.ndivsL      = 18;  % number of bar subdivisions along bar's long axis
+sparam.ndivsS      = 2;   % number of bar subdivisions along bar's short axis
 sparam.width       = 1.5; % bar width in deg
 sparam.phase       = 0;   % phase shift in deg, along bar's short axis
 
@@ -26,10 +28,9 @@ sparam.phase       = 0;   % phase shift in deg, along bar's short axis
 % 4. sparam.rotangles(4)=135 : upper left to lower right at 45 deg direction, then rest for sparam.rest_duration
 % ...
 % ... to sparam.rotangles(end)
-sparam.rotangles   = [0,45,90,135,180,225,270,315];
+sparam.rotangles   = [0,45,90,135,180,225,270,315,0];
 
 sparam.steps       = 16; % steps in sweeping the visual field (from start to end)
-sparam.fieldSize   = 12; % stimulation field size in deg. circular region with sparam.fieldSize is stimulated.
 
 sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 
@@ -59,7 +60,7 @@ sparam.waitframes = 60*(sparam.cycle_duration./1000) / sparam.steps / ( (size(sp
 
 %%% fixation period in msec before/after presenting the target stimuli, integer
 % must set a value more than 1 TR for initializing the frame counting.
-sparam.initial_fixation_time=4000;
+sparam.initial_fixation_time=[4000,4000];
 
 %%% fixation size & color
 sparam.fixsize=4; % radius in pixels

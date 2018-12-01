@@ -41,7 +41,7 @@ sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sp
 
 %%% fixation period in msec before/after presenting the target stimuli, integer
 % must set a value more than 1 TR for initializing the frame counting.
-sparam.initial_fixation_time=4000;
+sparam.initial_fixation_time=[4000,4000];
 
 %%% fixation size & color
 sparam.fixsize=4; % radius in pixels
@@ -56,6 +56,6 @@ sparam.patch_color1=[255,255,255];
 sparam.patch_color2=[0,0,0];
 
 %%% for converting degree to pixels
+run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
 %sparam.pix_per_cm=57.1429;
 %sparam.vdist=65;
-run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);

@@ -10,9 +10,14 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %     2. cretinotopy_fixtask   : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for phase-encoded analysis
 %     3. cbar                  : color/luminance-defined checkerboard bar stimuli with a checker-pattern luminance detection task, for pRF analysis
 %     4. cbar_fixtask          : color/luminance-defined checkerboard bar stimuli with a fixation luminance detection task, for pRF analysis
-%     5. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for HRF shape estimation
-%     6. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for localizing LGN
-%     7. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for identify retinotopic subregions
+%     5. cmultifocal           : color/luminance-defined multifocal retinotopy checkerboard stimuli with a checker-pattern luminance detection task, for GLM or pRF analysis
+%     6. cmultifocal_fixtask   : color/luminance-defined multifocal retinotopy checkerboard stimuli with a fixation luminance detection task, for GLM or pRF analysis
+%     7. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for HRF shape estimation
+%     8. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for localizing LGN
+%     9. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance detection task, for identify retinotopic subregions
+%    10. gen_retinotopy_windows: a script for generating phase-encoded stimulus windows of ccw/cw/exp/cont, for pRF analysis
+%    11. gen_bar_windows       : a script for generating a standard pRF bar stimulus windows, for pRF analysis
+%    12. gen_multifocal_windows: a script for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
 % For details, see each function's help.
 %
 % [example]
@@ -23,22 +28,24 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 % [input]
 % subj    : subject's name, e.g. 'HB'
 % exp_mode: experiment mode that you want to run, one of
-%           (task -- luminance change detection on the checkerboard for 4 modes below)
+%           (task -- luminance change detection on the checkerboard)
 %           - ccw   : color/luminance-defined checkerboard wedge rotated counter-clockwisely
 %           - cw    : color/luminance-defined checkerboard wedge rotated clockwisely
 %           - exp   : color/luminance-defined checkerboard anuulus expanding from fovea
 %           - cont  : color/luminance-defined checkerboard annulus contracting from periphery
 %           - bar   : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
-%           (task -- luminance change detection on the central fixation for 4 modes below)
+%           - multifocal : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
+%           (task -- luminance change detection on the central fixation)
 %           - ccwf  : color/luminance-defined checkerboard wedge rotated counter-clockwisely
 %           - cwf   : color/luminance-defined checkerboard wedge rotated clockwisely
 %           - expf  : color/luminance-defined checkerboard anuulus expanding from fovea
 %           - contf : color/luminance-defined checkerboard annulus contracting from periphery
 %           - barf  : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
-%           (task -- luminance change detection on the central fixation for 4 modes below)
+%           - multifocalf : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
+%           (task -- luminance change detection on the central fixation)
 %           - hrf          : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
 %                            to measure HRF responses and to test scanner sequence
-%           (task -- luminance change detection on the central fixation for 4 modes below)
+%           (task -- luminance change detection on the central fixation)
 %           - localizer    : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
 %                            to identify specific eccentricity corresponding regions
 %           (these are stimulus windows to generate pRF (population receptive field) model)
@@ -47,6 +54,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           - expwindows   : stimulation windows of annulus expanding from fovea
 %           - contwindows  : stimulation windows of annulus contracting from periphery
 %           - barwindows   : stimulation windows of a standard pRF bar
+%           - multifocalwindows : stimulation windows of a standard multifocal retinotopy stimulus
 %           string, or cell string structure, e.g. 'ccw', or {'ccw','exp'}
 %           length(exp_mode) should equal numel(acq_num)
 % acq_num : acquisition number, 1,2,3,...
@@ -56,7 +64,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2018-11-26 17:10:45 ban"
+% Last Update: "2018-12-01 13:56:15 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,14 +81,17 @@ for ii=1:1:length(exp_mode)
        ~strcmpi(exp_mode{ii},'exp') && ~strcmpi(exp_mode{ii},'cont') && ~strcmpi(exp_mode{ii},'bar') && ...
        ~strcmpi(exp_mode{ii},'ccwf') && ~strcmpi(exp_mode{ii},'cwf') && ...
        ~strcmpi(exp_mode{ii},'expf') && ~strcmpi(exp_mode{ii},'contf') && ~strcmpi(exp_mode{ii},'barf') &&...
+       ~strcmpi(exp_mode{ii},'multifocal') && ~strcmpi(exp_mode{ii},'multifocalf') && ...
        ~strcmpi(exp_mode{ii},'HRF') && ~strcmpi(exp_mode{ii},'localizer') && ...
        ~strcmpi(exp_mode{ii},'ccwwindows') && ~strcmpi(exp_mode{ii},'cwwindows') && ...
-       ~strcmpi(exp_mode{ii},'expwindows') && ~strcmpi(exp_mode{ii},'contwindows') && ~strcmpi(exp_mode{ii},'barwindows') )
+       ~strcmpi(exp_mode{ii},'expwindows') && ~strcmpi(exp_mode{ii},'contwindows') && ...
+       ~strcmpi(exp_mode{ii},'barwindows') && ~strcmpi(exp_mode{ii},'multifocalwindows') )
 
     message=sprintf('\ncan not run exp_mode: %s',exp_mode{ii}); disp(message);
-    message='exp_mode should be one of ''ccw'', ''cw'', ''exp'', ''cont'', ''bar'','; disp(message);
-    message='                          ''ccwf'', ''cwf'', ''expf'', ''contf'', ''barf'', ''hrf'', ''localizer'','; disp(message);
-    message='                          ''ccwwindows'', ''cwwindows'', ''expwindows'', ''contwindows'', ''barwindows'''; disp(message);
+    message='exp_mode should be one of ''ccw'', ''cw'', ''exp'', ''cont'', ''bar'', ''multifocal'','; disp(message);
+    message='                          ''ccwf'', ''cwf'', ''expf'', ''contf'', ''barf'', ''multifocalf'', ''hrf'', ''localizer'','; disp(message);
+    message='                          ''ccwwindows'', ''cwwindows'', ''expwindows'', ''contwindows'', ''barwindows'','; disp(message);
+    message='                          ''multifocalwindows'''; disp(message);
     message='check the input variables'; disp(message);
 
     if nargout, OK=false; end
@@ -109,6 +120,8 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='cretinotopy';  stim_mode{ii}='cont'; stim_fname{ii}='c_ecc';
   elseif strcmpi(exp_mode{ii},'bar')
     run_fname{ii}='cbar';  stim_mode{ii}='bar'; stim_fname{ii}='c_bar';
+  elseif strcmpi(exp_mode{ii},'multifocal')
+    run_fname{ii}='cmultifocal';  stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
   elseif strcmpi(exp_mode{ii},'ccwf')
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='ccw';  stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwf')
@@ -119,6 +132,8 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='cretinotopy_fixtask';  stim_mode{ii}='cont'; stim_fname{ii}='c_ecc';
   elseif strcmpi(exp_mode{ii},'barf')
     run_fname{ii}='cbar_fixtask';  stim_mode{ii}='bar'; stim_fname{ii}='c_bar';
+  elseif strcmpi(exp_mode{ii},'multifocalf')
+    run_fname{ii}='cmultifocal_fixtask';  stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
   elseif strcmpi(exp_mode{ii},'hrf')
     run_fname{ii}='chrf_fixtask';  stim_mode{ii}='hrf'; stim_fname{ii}='c_hrf';
   elseif strcmpi(exp_mode{ii},'localizer')
@@ -133,6 +148,8 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='gen_retinotopy_windows'; stim_mode{ii}='cont'; stim_fname{ii}='c_ecc';
   elseif strcmpi(exp_mode{ii},'barwindows')
     run_fname{ii}='gen_bar_windows'; stim_mode{ii}='bar'; stim_fname{ii}='c_bar';
+  elseif strcmpi(exp_mode{ii},'multifocalwindows')
+    run_fname{ii}='gen_multifocal_windows'; stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
   end
 end
 
@@ -140,8 +157,8 @@ end
 for ii=1:1:length(exp_mode)
   if ( strcmpi(exp_mode{ii},'ccwwindows') || strcmpi(exp_mode{ii},'cwwindows') || ...
        strcmpi(exp_mode{ii},'expwindows') || strcmpi(exp_mode{ii},'contwindows') || ...
-       strcmpi(exp_mode{ii},'barwindows') )
-    overwrite_pix_per_deg=10;
+       strcmpi(exp_mode{ii},'barwindows') || strcmpi(exp_mode{ii},'multifocalwindows') )
+    overwrite_pix_per_deg=20;
     TR=2;
   end
 end
@@ -200,17 +217,16 @@ for ii=1:1:length(exp_mode)
   % generate stimulus windows
   if ( strcmpi(exp_mode{ii},'ccwwindows') || strcmpi(exp_mode{ii},'cwwindows') || ...
        strcmpi(exp_mode{ii},'expwindows') || strcmpi(exp_mode{ii},'contwindows') || ...
-       strcmpi(exp_mode{ii},'barwindows') )
+       strcmpi(exp_mode{ii},'barwindows') || strcmpi(exp_mode{ii},'multifocalwindows') )
     main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'',%d,%d);',...
                           run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii},overwrite_pix_per_deg,TR);
-    eval(main_exp_name);
-
   % stimulus presentation
   else
     main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'',gammatable);',...
                           run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii});
-    eval(main_exp_name);
   end
+
+  eval(main_exp_name);
 end
 
 if nargout, OK=true; end

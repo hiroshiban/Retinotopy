@@ -21,7 +21,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2018-11-26 18:25:27 ban"
+% Last Update: "2018-11-29 12:24:13 ban"
 %
 %
 %
@@ -75,7 +75,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_lgn_localizer_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_lgn_localizer_fixtask_results_run_(run_num).mat
 %
 %
 % [example]
@@ -183,7 +183,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
-% sparam.initial_fixation_time=4000;
+% sparam.initial_fixation_time=[4000,4000];
 %
 % %%% fixation size & color
 % sparam.fixsize=12; % radius in pixels
@@ -276,7 +276,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_',exp_mode,'_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -363,7 +363,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'rest_duration',16000,...
          'numRepeats',6,...
          'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
-         'initial_fixation_time',16000,...
+         'initial_fixation_time',[4000,4000],...
          'fixsize',12,...
          'fixcolor',[255,255,255],...
          'bgcolor',[128,128,128],... % sparam.colors(1,:);
@@ -534,7 +534,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
-nframe_fixation=round(sparam.initial_fixation_time*dparam.fps/sparam.waitframes);
+nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 
@@ -667,7 +667,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=sum(nframe_fixation)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
 num_tasks=round(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -834,7 +834,7 @@ fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -924,7 +924,7 @@ event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -961,12 +961,12 @@ disp(' ');
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_lgn_localizer_',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_lgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));

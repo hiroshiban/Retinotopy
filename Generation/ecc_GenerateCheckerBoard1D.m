@@ -26,7 +26,7 @@ function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,wi
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-11-26 19:28:26 ban"
+% Last Update: "2018-11-27 09:15:57 ban"
 
 %% check the input variables
 if nargin<1 || isempty(edges)
@@ -127,7 +127,7 @@ for rr=1:1:size(edges,1)
   % generate a binary (1/2=checker-patterns and 0=background) checkerboard
   if nargin>=2
     rings=zeros(size(cide));
-    rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class;
+    rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class
 
     wedges=zeros(size(cidp));
     wedges(inidx)=2*mod(cidp(inidx),2)-1; % -1/1 class

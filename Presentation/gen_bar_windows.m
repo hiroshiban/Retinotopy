@@ -11,7 +11,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2018-11-26 17:02:26 ban"
+% Last Update: "2018-12-01 13:25:27 ban"
 %
 %
 % [input variables]
@@ -32,14 +32,14 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 % stimulusfile  : (optional) stimulus condition file,
 %                 *.m file, such as 'RetDepth_stimulus_exp1.m'
 %                 the same stimulus file for cretinotopy is acceptable
-% overwrite_pix_per_deg : pixels-per-deg value to overwrite the sparam.pix_per_deg
+% overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg
 %                 if not specified, sparam.pix_per_deg is used to reconstruct
 %                 stim_windows.
 %                 This is useful to reconstruct stim_windows with less memory space
 %                 1/pix_per_deg = spatial resolution of the generated visual field,
 %                 e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
 %                 empty (use sparam.pix_per_deg) by default
-% TR            : TR used in fMRI scans, in sec, 2 by default
+% TR            : (optional) TR used in fMRI scans, in sec, 2 by default
 %
 % !!! NOTICE !!!!
 % displayfile & stimulusfile should be located at
@@ -55,11 +55,12 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/pRF/(date)
-%    as ./subjects/(subjID)/pRF/(date)/(subjID)_stimulus_window_(exp_mode)_run_XX.mat
+%    as ./subjects/(subjID)/pRF/(date)/(subjID)_stimulus_window_bar_run_XX.mat
 %
 %
 % [example]
 % >> stim_windows=gen_bar_windows('HB','bar',1,'bar_display.m','bar_stimuli.m',10,2);
+%
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -127,7 +128,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
-% sparam.initial_fixation_time=4000;
+% sparam.initial_fixation_time=[4000,4000];
 %
 % %%% fixation size & color
 % sparam.fixsize=4; % radius in pixels
@@ -239,7 +240,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'cycle_duration',40000,...
          'rest_duration',8000,...
          'numRepeats',1,...
-         'initial_fixation_time',4000,...
+         'initial_fixation_time',[4000,4000],...
          'fixsize',4,...
          'pix_per_cm',57.1429,...
          'vdist',65);
@@ -271,7 +272,7 @@ disp('*************** Screen Settings ****************');
 eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
 eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d'');',sparam.initial_fixation_time));
+eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
 eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
 eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
@@ -312,11 +313,11 @@ end
 
 sparam.TR=TR; % TR=2000ms by default
 
-nTR_fixation=round(sparam.initial_fixation_time/sparam.TR);
+nTR_fixation=round(sparam.initial_fixation_time./sparam.TR);
 nTR_cycle=round((sparam.cycle_duration-sparam.rest_duration)/sparam.TR);
 nTR_rest=round(sparam.rest_duration/sparam.TR);
 nTR_movement=round((sparam.cycle_duration-sparam.rest_duration)/sparam.steps/sparam.TR);
-nTR_whole=round((sparam.initial_fixation_time*2+sparam.cycle_duration*numel(sparam.rotangles)*sparam.numRepeats)/sparam.TR);
+nTR_whole=round((sum(sparam.initial_fixation_time)+sparam.cycle_duration*numel(sparam.rotangles)*sparam.numRepeats)/sparam.TR);
 
 % variable to store the current rotation/disparity id
 stim_pos_id=1;
@@ -370,7 +371,7 @@ disp('storing stimulus patterns...');
 fprintf('Frames(TR):\n');
 
 % generate images in the fixation periods
-counterend=TRcounter+nTR_fixation-1;
+counterend=TRcounter+nTR_fixation(1)-1;
 for ff=TRcounter:1:counterend
   stim_windows(:,:,ff)=0;
   TRcounter=TRcounter+1;
@@ -434,7 +435,7 @@ end % for cc=1:1:sparam.numRepeats
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % generate images in the fixation periods
-counterend=TRcounter+nTR_fixation-1;
+counterend=TRcounter+nTR_fixation(2)-1;
 for ff=TRcounter:1:counterend
   stim_windows(:,:,ff)=0;
   TRcounter=TRcounter+1;

@@ -1,7 +1,7 @@
 function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
 % Color/luminance-defined Checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.
-% function cretinotopy(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% function cbar(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % This function generates and presents color/luminance-defined checkerboard bar stimulus
@@ -17,7 +17,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2018-11-26 20:20:47 ban"
+% Last Update: "2018-11-29 18:12:32 ban"
 %
 %
 %
@@ -71,7 +71,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_fmri_exp1_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_cbar_results_run_(run_num).mat
 %
 %
 % [example]
@@ -145,6 +145,8 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 % % "sparam" means "stimulus generation parameters"
 %
 % %%% stimulus parameters
+% sparam.fieldSize   = 12; % stimulation field size in deg. circular region with sparam.fieldSize is stimulated.
+%
 % sparam.ndivsL      = 24;  % number of bar subdivisions along the bar's long axis
 % sparam.ndivsS      = 3;   % number of bar subdivisions along the bar's  short axis
 % sparam.width       = 1.5; % bar width in deg
@@ -166,7 +168,6 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 % sparam.rotangles   = [0,45,90,135,180,225,270,315];
 %
 % sparam.steps       = 16; % steps in sweeping the visual field (from start to end)
-% sparam.fieldSize   = 12; % stimulation field size in deg, [row,col]. circular region with sparam.fieldSize is stimulated.
 %
 % sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 %
@@ -196,7 +197,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
-% sparam.initial_fixation_time=4000;
+% sparam.initial_fixation_time=[4000,4000];
 %
 % %%% fixation size & color
 % sparam.fixsize=4; % radius in pixels
@@ -353,13 +354,13 @@ sparam=struct(); % initialize
 sparam.mode=exp_mode;
 if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
 sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
+         'fieldSize',12,...
          'ndivsL',24,...
          'ndivsS',3,...
          'width',1.5,...
          'phase',0,...
          'rotangles',[0,45,90,135,180,225,270,315],...
          'steps',16,...
-         'fieldSize',[12,12],...
          'dimratio',0.4,...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
@@ -376,7 +377,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'rest_duration',8000,...
          'numRepeats',1,...
          'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
-         'initial_fixation_time',4000,...
+         'initial_fixation_time',[4000,4000],...
          'fixsize',4,...
          'fixcolor',[255,255,255],...
          'bgcolor',[128,128,128],... % sparam.colors(1,:);
@@ -419,12 +420,12 @@ disp('*************** Screen Settings ****************');
 eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
 eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation Periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d'');',sparam.initial_fixation_time));
+eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
 eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
 eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
 eval(sprintf('disp(''Frame Flip(per VerSync): %d'');',sparam.waitframes));
-eval(sprintf('disp(''Total Time (sec)       : %d'');',sparam.initial_fixation_time*2+sparam.numRepeats*sparam.cycle_duration*numel(sparam.rotangles)));
+eval(sprintf('disp(''Total Time (sec)       : %d'');',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration*numel(sparam.rotangles)));
 disp('**************** Stimulus Type *****************');
 eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
 disp('************ Response key settings *************');
@@ -545,7 +546,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
-nframe_fixation=round(sparam.initial_fixation_time*dparam.fps/sparam.waitframes);
+nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.steps/sparam.waitframes);
@@ -712,7 +713,6 @@ task_id=1;
 task_pos=cell(numel(sparam.rotangles),sparam.steps);
 for aa=1:1:numel(sparam.rotangles)
   for nn=1:1:sparam.steps
-    %task_pos{aa,nn}=randi(true_npatches{aa,nn},[round(sparam.numRepeats*numel(sparam.rotangles)*nframe_cycle/nframe_task),1]);
     task_pos{aa,nn}=[];
     for pp=1:1:round(sparam.numRepeats*numel(sparam.rotangles)*nframe_cycle/nframe_task)
       tmp_id=shuffle(patchids{aa,nn});
@@ -860,7 +860,7 @@ event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -914,7 +914,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
              (aa-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       if do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
 
@@ -963,7 +963,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
              aa*sparam.cycle_duration-sparam.rest_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
       [resps,event]=resps.check_responses(event);
     end
@@ -982,19 +982,19 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
   [resps,event]=resps.check_responses(event);
 end
 
@@ -1007,7 +1007,7 @@ experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
 event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        sparam.initial_fixation_time*2+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
+        sum(sparam.initial_fixation_time)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
 disp(' ');
 
 

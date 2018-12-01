@@ -1,34 +1,31 @@
-function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)
+function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)
 
-% Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field) analysis.
-% function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,:displayfile,:stimulusfile,:overwrite_pix_per_deg,:TR)
+% Generates multi-focal retinotopy stimulus windows for GLM modeling or pRF (population receptive field) analysis.
+% function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,:displayfile,:stimulusfile,:overwrite_pix_per_deg,:TR)
 % (: is optional)
 %
 % This function generates stimulus windows corresponding to the color/luminance-defined
-% checkerboard retinotopy stimuli. The generated stimulus windows will be utilized to
-% generate pRF (population receptive field) models.
-% reference: Population receptive field estimates in human visual cortex.
-%            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
+% multifocal retinotopy checkerboard stimuli. The generated stimulus windows will be utilized
+% to generate GLM or pRF (population receptive field) models.
+% reference: Multifocal fMRI mapping of visual cortical areas.
+%            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
 %
-%
-% Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2018-11-30 14:13:33 ban"
+% Created    : "2018-11-29 12:27:34 ban"
+% Last Update: "2018-12-01 13:37:12 ban"
 %
 %
 % [input variables]
 % sujID         : ID of subject, string, such as 's01'
+%                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %                 !!! if 'debug' (case insensitive) is included          !!!
 %                 !!! in subjID string, this program runs as DEBUG mode; !!!
 %                 !!! stimulus images are saved as *.png format at       !!!
-%                 !!! ~/CurvatureShading/Presentation/images             !!!
+%                 !!! ~/Retinotopy/Presentation/images                   !!!
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %
-% exp_mode      : experiment mode that you want to run, one of
-%  - ccw   : checkerboard wedge rotated counter-clockwise
-%  - cw    : checkerboard wedge rotated clockwise
-%  - exp   : checkerboard anuulus expanding from fovea
-%  - cont  : checkerboard annulus contracting from periphery
+% exp_mode      : experiment mode acceptable in this script is only "multifocal"
+%                 this variable is set just to make the input formats similar with the other functions.
 % acq           : acquisition number (design file number),
 %                 an integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
@@ -37,9 +34,9 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % stimulusfile  : (optional) stimulus condition file,
 %                 *.m file, such as 'RetDepth_stimulus_exp1.m'
 %                 the same stimulus file for cretinotopy is acceptable
-% overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg
-%                 if not specified, sparam.pix_per_deg is used to reconstruct
-%                 stim_windows.
+% overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the
+%                 sparam.pix_per_deg. if not specified, sparam.pix_per_deg is
+%                 used to reconstruct stim_windows.
 %                 This is useful to reconstruct stim_windows with less memory space
 %                 1/pix_per_deg = spatial resolution of the generated visual field,
 %                 e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
@@ -60,11 +57,12 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/pRF/(date)
-%    as ./subjects/(subjID)/pRF/(date)/(subjID)_stimulus_window_(exp_mode)_run_XX.mat
+%    as ./subjects/(subjID)/pRF/(date)/(subjID)_stimulus_window_multifocal_run_XX.mat
 %
 %
 % [example]
-% >> stim_windows=gen_retinotopy_windows('HB','ccw',1,'retinotopy_display.m','c_pol.m',10,2);
+% >> stim_windows=gen_multifocal_windows('HB','bar',1,'multifocal_display.m','multifocal_stimuli.m',10,2);
+%
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -73,17 +71,49 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_gen_cretinotopy_windows
+% % This_is_the_display_file_for_retinotopy_Checker_experiment.
 % % Please_change_the_parameters_below.
 % % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % Programmed_by_Hiroshi_Ban___November_01_2013
 % % ************************************************************
+%
+% % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
+% % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
+% dparam.ExpMode='mono';
+%
+% dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup
+%
+% % a method to start stimulus presentation
+% % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
+% % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,
+% % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
+% dparam.start_method=2;
+%
+% % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
+% dparam.custom_trigger='t';
+%
+% % keyboard settings
+% dparam.Key1=51; % key 1 (left)
+% dparam.Key2=52; % key 2 (right)
+%
+% % screen settings
+%
+% %%% whether displaying the stimuli in full-screen mode or
+% %%% as is (the precise resolution), 'true' or 'false' (true)
+% dparam.fullscr=false;
 %
 % %%% the resolution of the screen height
 % dparam.ScrHeight=1200;
 %
 % %% the resolution of the screen width
 % dparam.ScrWidth=1920;
+%
+% % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
+% % if non zero, the value is used as the screen frame rate.
+% dparam.force_frame_rate=60;
+%
+% % whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
+% dparam.skip_sync_test=0;
 %
 %
 % [About stimulusfile]
@@ -93,35 +123,102 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_gen_cretinotopy_windows
+% % This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
 % % Please_change_the_parameters_below.
 % % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % Programmed_by_Hiroshi_Ban___November_29_2018
 % % ************************************************************
 %
-% % "sparam" means "stimulus generation parameters"
-%
 % %%% stimulus parameters
-% sparam.nwedges     = 4;     % number of wedge subdivisions along polar angle
-% sparam.nrings      = 4;     % number of ring subdivisions along eccentricity angle
-% sparam.width       = 48;    % wedge width in deg along polar angle
-% sparam.rotangle    = 12;    % rotation angle in deg
-% sparam.startangle  = -sparam.width/2;     % presentation start angle in deg, from right-horizontal meridian, ccw
+% sparam.nwedges     = 36;   % number of wedge subdivisions along polar angle
+% sparam.nrings      = 9;    % number of ring subdivisions along eccentricity angle
+% sparam.width       = 360;  % wedge width in deg along polar angle
+% sparam.ndivsP      = 12;   % number of visual field subdivisions along polar angle
+% sparam.ndivsE      = 3;    % number of visual field subdivisions along eccentricity
+% sparam.phase       = 0;    % phase shift in deg
+% sparam.startangle  = 0;    % presentation start angle in deg, from right-horizontal meridian, ccw
 %
-% sparam.maxRad      = 8;    % maximum radius of  annulus (degrees)
+% sparam.maxRad      = 6.0;  % maximum radius of  annulus (degrees)
 % sparam.minRad      = 0;    % minumum
 %
-% %%% duration in msec for each cycle & repetitions
-% sparam.cycle_duration=60000; % msec
-% sparam.rest_duration =0; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
-% sparam.numRepeats=6;
+% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
+%
+% sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
+%                        255,   0,   0; % the first row is background
+%                          0, 255,   0; % the second to end are patch colors
+%                        255, 255,   0;
+%                          0,   0, 255;
+%                        255,   0, 255;
+%                          0, 255, 255;
+%                        255, 255, 255;
+%                          0,   0,   0;
+%                        255, 128,   0;
+%                        128,   0, 255;];
+%
+% %%% generate stimulus presentation design
+%
+% % generating 0/1 sequence using m-sequence generation algorithm
+% % ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps).
+% % here, shift and whichSeq should be set if you want to use a specific stimulus presentation order.
+% % if these values are not set, shift=1 and whichSeq=ceil(rand(1)*length(tap)) are used as defult,
+% % which means the different m-sequences are generated each time when the mseq() function is called.
+% % or if you want to provide a specific stimulus presentation order, please set sparam.design as a
+% % fixed matrix as below (sparam.design should be [ndivsE*ndivsP,numel(mseq(2,8))]).
+% %
+% % % sparam.design=[
+% %     0,1,1,0,1,1,1,1,0,1,...;
+% %     1,1,0,0,0,0,0,0,1,1,...;
+% %     1,1,0,1,1,1,1,0,1,1,...];
+%
+% tmp_design=mseq(2,8,1,1); % to provide a specific stimulation order, the third and fourth variables are explicitly given.
+% tmp_shift=[1:sparam.ndivsP*sparam.ndivsE];
+% shift=zeros(numel(tmp_shift),1);
+% shift_counter=1;
+% while ~isempty(tmp_shift)
+%   if mod(shift_counter,2)
+%     shift(shift_counter)=tmp_shift(1);
+%     tmp_shift(1)=[];
+%   else
+%     shift(shift_counter)=tmp_shift(floor(numel(tmp_shift/2)));
+%     tmp_shift(floor(numel(tmp_shift/2)))=[];
+%   end
+%   shift_counter=shift_counter+1;
+% end
+%
+% sparam.design=zeros(numel(shift),numel(tmp_design));
+% for mmmm=1:1:numel(shift), sparam.design(mmmm,:)=tmp_design([shift(mmmm):end,1:shift(mmmm)-1]); end
+%
+% clear tmp_design tmp_shift shift shift_counter mmmm;
+%
+% %%% duration in msec for each trial
+% sparam.trial_duration=2000; % msec
+% sparam.rest_duration=0;
+%
+% sparam.numTrials=size(sparam.design,2);
+%
+% %%% set number of frames to flip the screen
+% % Here, I set the number as large as I can to minimize vertical cynching error.
+% % the final 2 is for 2 times repetitions of flicker
+% % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
+% %sparam.waitframes = Screen('FrameRate',0)*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+% sparam.waitframes = 60*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+% %sparam.waitframes = 1;
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
 % sparam.initial_fixation_time=[4000,4000];
 %
 % %%% fixation size & color
-% sparam.fixsize=12; % radius in pixels
+% sparam.fixsize=4; % radius in pixels
+% sparam.fixcolor=[255,255,255];
+%
+% %%% background color
+% sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
+%
+% %%% RGB for background patches
+% % 1x3 matrices
+% sparam.patch_color1=[255,255,255];
+% sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
 % run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
@@ -151,13 +248,11 @@ if nargin<5 || isempty(stimulusfile), stimulusfile=[]; end
 if nargin<6 || isempty(overwrite_pix_per_deg), overwrite_pix_per_deg=[]; end
 if nargin<7 || isempty(TR), TR=2; end
 
-% check the aqcuisition number. up to 10 design files can be used
+% check the aqcuisition number
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
 
 % check the experiment mode (stimulus type)
-if ~strcmpi(exp_mode,'ccw') && ~strcmpi(exp_mode,'cw') && ~strcmpi(exp_mode,'exp') && ~strcmpi(exp_mode,'cont')
-  error('exp_mode should be one of "ccw", "cw", "exp", and "cont". check the input variable.');
-end
+if ~strcmpi(exp_mode,'multifocal'), error('exp_mode acceptable in this script is only "multifocal". check the input variable.'); end
 
 % check the subject directory
 if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
@@ -197,7 +292,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'pRF',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',exp_mode,'_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_multifocal_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -214,43 +309,93 @@ try
 dparam=struct(); % initialize
 if ~isempty(displayfile), run(fullfile(rootDir,'subjects',subjID,displayfile)); end % load specific dparam parameters configured for each of the participants
 dparam=ValidateStructureFields(dparam,... % validate fields and set the default values to missing field(s)
+         'ExpMode','mono',...
+         'scrID',1,...
+         'start_method',0,...
+         'custom_trigger','t',...
+         'Key1',51,...
+         'Key2',52,...
+         'fullscr',false,...
          'ScrHeight',1200,...
-         'ScrWidth',1920);
+         'ScrWidth',1920,...
+         'force_frame_rate',60,...
+         'skip_sync_test',0);
 
 % organize sparam
 sparam=struct(); % initialize
 sparam.mode=exp_mode;
 if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
 sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
-         'width',48,...
-         'rotangle',12,...
-         'startangle',-48/2,...
+         'nwedges',36,...
+         'nrings',9,...
+         'width',360,...
+         'ndivsP',12,...
+         'ndivsE',3,...
+         'phase',0,...
+         'startangle',0,...
          'maxRad',8,...
          'minRad',0,...
-         'cycle_duration',60000,...
+         'dimratio',0.4,...
+         'colors',[ 128, 128, 128;
+                    255,   0,   0;
+                      0, 255,   0;
+                    255, 255,   0;
+                      0,   0, 255;
+                    255,   0, 255;
+                      0, 255, 255;
+                    255, 255, 255;
+                      0,   0,   0;
+                    255, 128,   0;
+                    128,   0, 255],...
+         'trial_duration',2000,...
          'rest_duration',0,...
-         'numRepeats',6,...
+         'rest_duration',0,...
+         'numTrials',255,...
+         'waitframes',6,... % Screen('FrameRate',0)*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
          'initial_fixation_time',[4000,4000],...
          'fixsize',12,...
+         'fixcolor',[255,255,255],...
+         'bgcolor',[128,128,128],... % sparam.colors(1,:);
+         'patch_color1',[255,255,255],...
+         'patch_color2',[0,0,0],...
          'pix_per_cm',57.1429,...
          'vdist',65);
+
+% set the stimulus presentation design based on M-sequences
+if ~isstructmember(sparam,'design') || isempty(sparam.design)
+  tmp_design=mseq(2,8,1,1); % to provide a specific stimulation order, the third and fourth variables are explicitly given.
+  tmp_shift=[1:sparam.ndivsP*sparam.ndivsE];
+  shift=zeros(numel(tmp_shift),1);
+  shift_counter=1;
+  while ~isempty(tmp_shift)
+    if mod(shift_counter,2)
+      shift(shift_counter)=tmp_shift(1);
+      tmp_shift(1)=[];
+    else
+      shift(shift_counter)=tmp_shift(floor(numel(tmp_shift/2)));
+      tmp_shift(floor(numel(tmp_shift/2)))=[];
+    end
+    shift_counter=shift_counter+1;
+  end
+
+  sparam.design=zeros(numel(shift),numel(tmp_design));
+  for mmmm=1:1:numel(shift), sparam.design(mmmm,:)=tmp_design([shift(mmmm):end,1:shift(mmmm)-1]); end
+
+  sparam.numTrials=size(sparam.design,2);
+
+  clear tmp_design tmp_shift shift shift_counter mmmm;
+end
 
 % change unit from msec to sec.
 sparam.initial_fixation_time=sparam.initial_fixation_time./1000; %#ok
 
 % change unit from msec to sec.
-sparam.cycle_duration = sparam.cycle_duration./1000;
+sparam.trial_duration = sparam.trial_duration./1000;
 sparam.rest_duration  = sparam.rest_duration./1000;
 
 % set the other parameters
 dparam.RunScript = mfilename();
 sparam.RunScript = mfilename();
-
-%% check varidity of parameters
-disp('checking validity of stimulus generation/presentation parameters...');
-if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check input variables.'); end
-if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
-disp('done.');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -269,9 +414,9 @@ eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
 eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation periods etc. ***********');
 eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
-eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
+eval(sprintf('disp(''Trial Duration(sec)    : %d'');',sparam.trial_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
-eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
+eval(sprintf('disp(''#Trials                : %d'');',sparam.numTrials));
 disp('******** The number of experiment, imgs ********');
 eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
 disp('************************************************');
@@ -310,17 +455,13 @@ end
 sparam.TR=TR; % TR=2000ms by default
 
 nTR_fixation=round(sparam.initial_fixation_time./sparam.TR);
-nTR_cycle=round((sparam.cycle_duration-sparam.rest_duration)/sparam.TR);
+nTR_trial=round((sparam.trial_duration-sparam.rest_duration)/sparam.TR);
 nTR_rest=round(sparam.rest_duration/sparam.TR);
-nTR_rotation=round((sparam.cycle_duration-sparam.rest_duration)/(360/sparam.rotangle)/sparam.TR);
-nTR_whole=round((sum(sparam.initial_fixation_time)+sparam.cycle_duration*sparam.numRepeats)/sparam.TR);
+nTR_whole=round((sum(sparam.initial_fixation_time)+sparam.trial_duration*sparam.numTrials)/sparam.TR);
 
 %% initialize chackerboard parameters
 rmin=sparam.minRad+sparam.fixsize/sparam.pix_per_deg; % omit the central fixation point
 rmax=sparam.maxRad;
-
-% variable to store the current rotation/disparity id
-stim_pos_id=1;
 
 disp('done.');
 disp(' ');
@@ -332,51 +473,29 @@ disp(' ');
 
 fprintf('generating stimulus patterns...');
 
-%% generate checkerboard patterns
-if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
+% [note]
+% After this processing, each checkerboard image has checker elements with values as shown below
+% 0 = background
+% 1 = checker ID 1
+% 2 = checker ID 2
+% 3 = checker ID 3
+% .....
+% sparam.npatches = checker ID
+% Each patch ID will be associated with a CLUT color of the same ID
 
-  sparam.npositions=360/sparam.rotangle;
-  startangles=zeros(sparam.npositions,1);
-  for nn=1:1:sparam.npositions, startangles(nn)=sparam.startangle+(nn-1)*sparam.rotangle; end
+% generate the base of the multifocal checkerboard
+[dummy1,dummy2,mfcheckerboard]=mf_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.ndivsP,sparam.ndivsE,...
+                                                     sparam.startangle,sparam.pix_per_deg,sparam.nwedges,sparam.nrings,sparam.phase);
+clear dummy1 dummy2;
 
-  [dummy1,dummy2,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,startangles,sparam.pix_per_deg,1,1,0);
-  clear dummy1 dummy2;
-
-elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
-
-  sparam.npositions=(sparam.cycle_duration-sparam.rest_duration)/(sparam.cycle_duration/(360/sparam.rotangle));
-  eccedge=(rmax-rmin)/( sparam.npositions-1 );
-  eccwidth=eccedge*(sparam.width/sparam.rotangle);
-
-  %% !!! NOTICE !!!
-  % update some parameters here for 'exp' or 'cont' mode
-  nTR_rotation=round((sparam.cycle_duration-sparam.rest_duration)/sparam.npositions/sparam.TR);
-
-  % get annuli's min/max lims
-  ecclims=zeros(sparam.npositions,3);
-  for nn=1:1:sparam.npositions %1:1:sparam.npositions
-    minlim=rmin+(nn-1)*eccedge-eccwidth/2;
-    if minlim<rmin, minlim=rmin; end
-    maxlim=rmin+(nn-1)*eccedge+eccwidth/2;
-    if maxlim>rmax, maxlim=rmax; end
-    ecclims(nn,:)=[minlim,maxlim,eccwidth];
-  end
-
-  [dummy1,dummy2,checkerboard]=ecc_GenerateCheckerBoard1D(ecclims,360,sparam.startangle,sparam.pix_per_deg,1,1,0);
-  clear dummy1 dummy2;
-
-end % if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
-
-%% flip all data for ccw/cont
-if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cont')
-  tmp_checkerboard=cell(sparam.npositions,1);
-  for nn=1:1:sparam.npositions, tmp_checkerboard{nn}=checkerboard{sparam.npositions-(nn-1)}; end
-  checkerboard=tmp_checkerboard;
-  clear tmp_checkerboard;
+% generate all the multifocal checkerboards
+checkerboard=cell(sparam.numTrials,1);
+for cc=1:1:sparam.numTrials
+  checkerboard{cc}=zeros(size(mfcheckerboard));
+  mask_idx=find(sparam.design(:,cc)==1);
+  for mm=1:1:numel(mask_idx), checkerboard{cc}(mfcheckerboard==mask_idx(mm))=1; end
 end
-
-%% convert logical data to double format to process gaussian filter at the later stage
-%for nn=1:1:sparam.npositions, checkerboard{nn}=double(checkerboard{nn}); end
+clear mask_idx mfcheckerboard;
 
 %% initialize stimulus windows
 %stim_windows=zeros([round(size(checkerboard{1})),nTR_whole]);
@@ -420,70 +539,35 @@ end
 %%%% The Trial Loop
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-for cc=1:1:sparam.numRepeats
-
-  %% rest perioed
-  if strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont')
-    if nTR_rest~=0
-      counterend=TRcounter+nTR_rest-1;
-      for ff=TRcounter:1:counterend
-        stim_windows(:,:,ff)=0;
-        TRcounter=TRcounter+1;
-        fprintf('%03d ',ff); if mod(ff,20)==0, fprintf('\n'); end
-        if display_flg
-          imagesc(stim_windows(:,:,ff),[0,1]); title(sprintf('Frame(TR): %03d',ff)); colormap(gray); axis equal; axis off; drawnow; pause(pause_dur);
-        end
-      end
-    end
-  end
+for cc=1:1:sparam.numTrials
 
   %% stimulus presentation loop
-  counterend=TRcounter+nTR_cycle-1;
+  counterend=TRcounter+nTR_trial-1;
   for ff=TRcounter:1:counterend
-
     % set the current checkerboard
-    stim_windows(:,:,ff)=checkerboard{stim_pos_id};
+    stim_windows(:,:,ff)=checkerboard{cc};
 
     TRcounter=TRcounter+1;
     fprintf('%03d ',ff); if mod(ff,20)==0, fprintf('\n'); end
     if display_flg
       imagesc(stim_windows(:,:,ff),[0,1]); title(sprintf('Frame(TR): %03d',ff)); colormap(gray); axis equal; axis off; drawnow; pause(pause_dur);
     end
-
-    % exit from the loop if the final frame is displayed
-    if ff==counterend && cc==sparam.numRepeats, continue; end
-
-    % stimulus position id for the next presentation
-    if strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont')
-      if ~mod(ff-nTR_rest*cc,nTR_rotation)
-        stim_pos_id=stim_pos_id+1;
-        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
-      end
-    else
-      if ~mod(ff-nTR_rest*(cc-1),nTR_rotation)
-        stim_pos_id=stim_pos_id+1;
-        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
-      end
-    end
-
   end % for ff=TRcounter:1:counterend
 
   %% rest perioed
-  if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')
-    if nTR_rest~=0
-      counterend=TRcounter+nTR_rest-1;
-      for ff=TRcounter:1:counterend
-        stim_windows(:,:,ff)=0;
-        TRcounter=TRcounter+1;
-        fprintf('%03d ',ff); if mod(ff,20)==0, fprintf('\n'); end
-        if display_flg
-          imagesc(stim_windows(:,:,ff),[0,1]); title(sprintf('Frame(TR): %03d',ff)); colormap(gray); axis equal; axis off; drawnow; pause(pause_dur);
-        end
+  if nTR_rest~=0
+    counterend=TRcounter+nTR_rest-1;
+    for ff=TRcounter:1:counterend
+      stim_windows(:,:,ff)=0;
+      TRcounter=TRcounter+1;
+      fprintf('%03d ',ff); if mod(ff,20)==0, fprintf('\n'); end
+      if display_flg
+        imagesc(stim_windows(:,:,ff),[0,1]); title(sprintf('Frame(TR): %03d',ff)); colormap(gray); axis equal; axis off; drawnow; pause(pause_dur);
       end
     end
   end
 
-end % for cc=1:1:sparam.numRepeats
+end % for cc=1:1:sparam.numTrials
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -491,7 +575,7 @@ end % for cc=1:1:sparam.numRepeats
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % generate images in the fixation periods
-counterend=TRcounter+nTR_fixation(1)-1;
+counterend=TRcounter+nTR_fixation(2)-1;
 for ff=TRcounter:1:counterend
   stim_windows(:,:,ff)=0;
   TRcounter=TRcounter+1;
@@ -512,7 +596,7 @@ close all;
 
 % saving the results
 fprintf('saving data...');
-savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',sparam.mode,'_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_multifocal_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
 disp('done.');
 
@@ -552,4 +636,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function gen_retinotopy_window
+% end % function gen_bar_windows
