@@ -64,7 +64,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2018-12-01 13:56:15 ban"
+% Last Update: "2018-12-03 09:59:05 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -158,7 +158,7 @@ for ii=1:1:length(exp_mode)
   if ( strcmpi(exp_mode{ii},'ccwwindows') || strcmpi(exp_mode{ii},'cwwindows') || ...
        strcmpi(exp_mode{ii},'expwindows') || strcmpi(exp_mode{ii},'contwindows') || ...
        strcmpi(exp_mode{ii},'barwindows') || strcmpi(exp_mode{ii},'multifocalwindows') )
-    overwrite_pix_per_deg=20;
+    overwrite_pix_per_deg=10;
     TR=2;
   end
 end
