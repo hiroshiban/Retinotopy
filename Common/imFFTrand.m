@@ -1,11 +1,10 @@
-function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg)
+function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg,fullrand_flg)
 
 % Randomizes FFT amplitudes/phases of the input images.
-% function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,...
-%                                 :img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg,:randseed_flg)
+% function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg,:randseed_flg,:fullrand_flg)
 % (: is optional)
 %
-% This function reads grayscale images and randomize their amplitudes and/or phases in Fourier domain.
+% This function reads grayscale/RGB images and randomizes their amplitudes and/or phases in Fourier domain.
 %
 % [input]
 % tgt_dir        : target directory that includes images you want to process.
@@ -18,8 +17,10 @@ function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,im
 % img_exc_prefix : image file prefix(s) that is to be excluded from processing,
 %                  cell structure or string, empty by default.
 % display_flg    : whether displaying the converted image [0|1]. 0 by default.
-% save_flg       : whether saving the converted image [0|1]. 0 by default.
+% save_flg       : whether saving the converted image, [0|1]. 0 by default.
 % randseed_flg   : whether initializing random seed, [0|1]. 1 by default.
+% fullrand_flg   : whether randomizing phase/amplitudes fully over the RGB layers, [0|1].
+%                  only valid when the input images are in the RGB format. 0 by default.
 %
 % [output]
 % img            : converted Fourier-phase/power randomized images, cell structure
@@ -27,7 +28,7 @@ function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,im
 %
 %
 % Created    : "2013-11-13 15:36:11 ban"
-% Last Update: "2013-11-22 23:25:22 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2018-12-11 17:02:22 ban"
 
 % check input variables
 if nargin<1 || isempty(tgt_dir), help(mfilename()); return; end
@@ -39,6 +40,7 @@ if nargin<6 || isempty(img_exc_prefix), img_exc_prefix=''; end
 if nargin<7 || isempty(display_flg), display_flg=0; end
 if nargin<8 || isempty(save_flg), save_flg=0; end
 if nargin<9 || isempty(randseed_flg), randseed_flg=1; end
+if nargin<10 || isempty(fullrand_flg), fullrand_flg=0; end
 
 if ~iscell(img_ext), img_ext={img_ext}; end
 if ~iscell(img_inc_prefix), img_inc_prefix={img_inc_prefix}; end
@@ -72,7 +74,7 @@ for ii=1:1:length(img_ext)
       % check whether the target image is excluded from processing
       exc_flg=0;
       for mm=1:1:length(img_exc_prefix)
-        if ~isempty(img_exc_prefix{mm}) && strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; break; end
+        if ~isempty(img_exc_prefix{mm}) & strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; break; end
       end
       if exc_flg, continue; end
 
@@ -110,9 +112,99 @@ for ii=1:1:length(img_ext)
         img{img_counter}=uint8(ifft2(ifftshift(fftimg))); % reset FFT map to raw format
         fnames{img_counter}=tmpfnames{kk};
       else
-        [dummy,fname,ext]=fileparts(tmpfnames{kk});
-        fprintf('\nimage:%s%s is RGB image. skipping.\n',fname,ext);
-        clear dummy fname ext;
+        img_counter=img_counter+1;
+
+        %% 2D FFT for the first (R of the RGB) layer
+        fftimg{1}=fft2(double(timg(:,:,1)));
+        fftimg{1}=fftshift(fftimg{1}); % set DC component to the center, point symmetric
+                                 % preserve DC component to recover image mean intensity later
+        sz=ceil(size(fftimg{1})./2);
+        DC=fftimg{1}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+
+        %% phase shuffling
+        phase=angle(fftimg{1});
+        tidx_phase=randperm(numel(fftimg{1}));
+        idx1_phase=tidx_phase(1:round(numel(tidx_phase)*phase_shuffle_ratio));
+        idx2_phase=sort(idx1_phase,'ascend');
+        phase(idx2_phase)=phase(idx1_phase);
+
+        %% amplitude shuffling
+        amp=abs(fftimg{1});
+        tidx_amp=randperm(numel(fftimg{1}));
+        idx1_amp=tidx_amp(1:round(numel(tidx_amp)*amp_shuffle_ratio));
+        idx2_amp=sort(idx1_amp,'ascend');
+        amp(idx2_amp)=amp(idx1_amp);
+
+        %% recreate FFT map
+        fftimg{1}=complex(amp.*cos(phase),amp.*sin(phase));
+        % recover DC component
+        fftimg{1}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+        
+        %% 2D FFT for the G layer
+        fftimg{2}=fft2(double(timg(:,:,2)));
+        fftimg{2}=fftshift(fftimg{2}); % set DC component to the center, point symmetric
+                                 % preserve DC component to recover image mean intensity later
+        DC=fftimg{2}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+
+        %% phase shuffling
+        phase=angle(fftimg{2});
+        if fullrand_flg
+          tidx_phase=randperm(numel(fftimg{2}));
+          idx1_phase=tidx_phase(1:round(numel(tidx_phase)*phase_shuffle_ratio));
+          idx2_phase=sort(idx1_phase,'ascend');
+        end
+        phase(idx2_phase)=phase(idx1_phase);
+
+        %% amplitude shuffling
+        amp=abs(fftimg{2});
+        if fullrand_flg
+          tidx_amp=randperm(numel(fftimg{2}));
+          idx1_amp=tidx_amp(1:round(numel(tidx_amp)*amp_shuffle_ratio));
+          idx2_amp=sort(idx1_amp,'ascend');
+        end
+        amp(idx2_amp)=amp(idx1_amp);
+
+        %% recreate FFT map
+        fftimg{2}=complex(amp.*cos(phase),amp.*sin(phase));
+        % recover DC component
+        fftimg{2}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+
+        %% 2D FFT for the B layer
+        fftimg{3}=fft2(double(timg(:,:,3)));
+        fftimg{3}=fftshift(fftimg{3}); % set DC component to the center, point symmetric
+                                 % preserve DC component to recover image mean intensity later
+        DC=fftimg{3}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+
+        %% phase shuffling
+        phase=angle(fftimg{3});
+        if fullrand_flg
+          tidx_phase=randperm(numel(fftimg{3}));
+          idx1_phase=tidx_phase(1:round(numel(tidx_phase)*phase_shuffle_ratio));
+          idx2_phase=sort(idx1_phase,'ascend');
+        end
+        phase(idx2_phase)=phase(idx1_phase);
+
+        %% amplitude shuffling
+        amp=abs(fftimg{3});
+        if fullrand_flg
+          tidx_amp=randperm(numel(fftimg{3}));
+          idx1_amp=tidx_amp(1:round(numel(tidx_amp)*amp_shuffle_ratio));
+          idx2_amp=sort(idx1_amp,'ascend');
+        end
+        amp(idx2_amp)=amp(idx1_amp);
+
+        %% recreate FFT map
+        fftimg{3}=complex(amp.*cos(phase),amp.*sin(phase));
+        % recover DC component
+        fftimg{3}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+
+        % inverse FFT
+        tmpimg=uint8(zeros([size(fftimg{1}),3]));
+        warning off;
+        for mm=1:1:3, tmpimg(:,:,mm)=uint8(ifft2(ifftshift(fftimg{mm}))); end
+        warning on;
+        img{img_counter}=tmpimg; % reset FFT map to raw format
+        fnames{img_counter}=tmpfnames{kk};
       end % if numel(size(img{img_counter}))~=3
 
     end
@@ -124,8 +216,10 @@ disp('done.');
 if display_flg
   fprintf('displaying the converted images...');
   for ii=1:1:length(img)
-    figure;
+    f1=figure;
     imshow(img{ii});
+    pause(0.2);
+    close(f1);
   end
   disp('done.');
 end

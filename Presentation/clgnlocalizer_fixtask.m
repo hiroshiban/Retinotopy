@@ -21,7 +21,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2018-11-29 12:24:13 ban"
+% Last Update: "2018-12-12 12:25:30 ban"
 %
 %
 %
@@ -686,7 +686,7 @@ task_flg=task_flg(:);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing checkerboard management parameters
+%%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id

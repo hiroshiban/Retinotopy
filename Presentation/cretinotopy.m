@@ -1,6 +1,6 @@
 function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined Checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.
+% Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.
 % function cretinotopy(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -14,7 +14,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2018-11-29 12:18:04 ban"
+% Last Update: "2018-12-12 11:59:13 ban"
 %
 %
 %
@@ -1036,7 +1036,7 @@ for cc=1:1:sparam.numRepeats
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:cycle_frames
+  end % for ff=1:1:nframe_cycle
 
   %% rest perioed
 

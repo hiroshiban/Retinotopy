@@ -1,6 +1,6 @@
 function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined Checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.
+% Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.
 % function cbar(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -17,7 +17,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2018-11-29 18:12:32 ban"
+% Last Update: "2018-12-12 12:24:28 ban"
 %
 %
 %
@@ -721,16 +721,19 @@ for aa=1:1:numel(sparam.rotangles)
   end
 end
 
-%% set some flags
+% flag to index the first task frame
+firsttask_flg=0;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Initializing checkerboard color management parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id
 color_id=1;
 
 % checkerboard compensating color id
 compensate_id=1;
-
-% flag to index the first task frame
-firsttask_flg=0;
 
 % variable to store the current rotation/disparity id
 stim_pos_id=1;

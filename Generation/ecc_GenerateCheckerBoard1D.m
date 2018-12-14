@@ -1,7 +1,8 @@
 function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)
 
 % Generates checkerboard patterns (annulus-based subdivision) with an individual ID number on each patch.
-% function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)
+% function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(:edges,:width,:startangle,:pix_per_deg,:nwedges,:nrings,:phase)
+% (: is optional)
 %
 % This function generates 2 checkerboards (annulus-based subdivision) with an individual ID number on each patch.
 % Each of two checkers have the compensating values of its counterpart.
@@ -15,7 +16,7 @@ function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,wi
 % pix_per_deg : pixels per degree, [val], 40 by default.
 % nwedges     : number of wedges, [val], 48 by default.
 % nrings      : number of rings, [val], 2 by default.
-% phase       : (optional) checker's phase, 0 by default.
+% phase       : checker's phase, 0 by default.
 %
 % [output]
 % checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.
@@ -26,7 +27,7 @@ function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,wi
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-11-27 09:15:57 ban"
+% Last Update: "2018-12-11 18:14:44 ban"
 
 %% check the input variables
 if nargin<1 || isempty(edges)
@@ -125,7 +126,7 @@ for rr=1:1:size(edges,1)
   checkerboard{rr}(checkerboard{rr}<0)=0;
 
   % generate a binary (1/2=checker-patterns and 0=background) checkerboard
-  if nargin>=2
+  if nargout>=2
     rings=zeros(size(cide));
     rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class
 

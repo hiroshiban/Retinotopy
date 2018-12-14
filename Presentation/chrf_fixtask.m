@@ -22,7 +22,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2018-11-29 12:26:10 ban"
+% Last Update: "2018-12-12 12:25:13 ban"
 %
 %
 %
@@ -677,7 +677,7 @@ task_flg=task_flg(:);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing checkerboard management parameters
+%%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id

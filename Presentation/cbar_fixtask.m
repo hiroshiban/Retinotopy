@@ -1,6 +1,6 @@
 function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined Checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.
+% Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.
 % function cretinotopy(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -23,7 +23,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2018-11-29 21:41:47 ban"
+% Last Update: "2018-12-12 12:24:59 ban"
 %
 %
 %
@@ -715,7 +715,7 @@ task_flg=task_flg(:);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing checkerboard management parameters
+%%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id

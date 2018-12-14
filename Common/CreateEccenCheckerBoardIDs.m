@@ -26,7 +26,7 @@ function [checkerboard,bincheckerboard,mask]=CreateEccenCheckerBoardIDs(edges,wi
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-11-26 19:47:03 ban"
+% Last Update: "2018-12-11 17:42:37 ban"
 
 %% check the input variables
 if nargin<1 || isempty(edges)
@@ -125,7 +125,7 @@ for rr=1:1:size(edges,1)
   checkerboard{rr}(checkerboard{rr}<0)=0;
 
   % generate a binary (1/2=checker-patterns and 0=background) checkerboard
-  if nargin>=2
+  if nargout>=2
     rings=zeros(size(cide));
     rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class;
 

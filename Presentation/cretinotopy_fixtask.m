@@ -1,6 +1,6 @@
 function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined Checkerboard retinotopy stimulus with fixation luminance change-detection tasks.
+% Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.
 % function cretinotopy_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -20,7 +20,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2018-11-29 12:28:29 ban"
+% Last Update: "2018-12-12 12:35:45 ban"
 %
 %
 %
@@ -786,7 +786,7 @@ task_flg=task_flg(:);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing checkerboard management parameters
+%%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id
@@ -1115,12 +1115,12 @@ disp(' ');
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_cretinotopy_fixtask',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_cretinotopy_fixtask_',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_cretinotopy_fixtask',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_cretinotopy_fixtask_',sparam.mode,'_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));

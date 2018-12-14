@@ -27,7 +27,7 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2018-11-29 21:41:56 ban"
-% Last Update: "2018-11-29 22:15:13 ban"
+% Last Update: "2018-12-12 12:37:07 ban"
 %
 %
 %
@@ -308,7 +308,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_cmultifocal_fix_task_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_cmultifocal_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -759,7 +759,7 @@ task_flg=task_flg(:);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing checkerboard management parameters
+%%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id

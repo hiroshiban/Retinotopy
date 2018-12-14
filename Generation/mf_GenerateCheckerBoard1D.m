@@ -1,14 +1,14 @@
 function [checkerboard,bincheckerboard,mfcheckerboard,mask]=mf_GenerateCheckerBoard1D(rmin,rmax,width,ndivsP,ndivsE,startangle,pix_per_deg,nwedges,nrings,phase)
 
 % Generates multi-focal checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.
-% function [checkerboard,bincheckerboard,mfcheckerboard,mask]=mf_GenerateCheckerBoard1D(rmin,rmax,width,ndivsP,ndivsE,startangle,pix_per_deg,nwedges,nrings,phase)
+% function [checkerboard,bincheckerboard,mfcheckerboard,mask]=mf_GenerateCheckerBoard1D(:rmin,:rmax,:width,:ndivsP,:ndivsE,:startangle,:pix_per_deg,:nwedges,:nrings,:phase)
+% (: is optional)
 %
 % This function generates multi-focal checkerboards (polar-angle and eccentricity-based subdivisions)
 % with an individual ID number on each patch.
 % Each of two checkers have the compensating values of its counterpart.
 % reference: Multifocal fMRI mapping of visual cortical areas.
 %            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
-
 %
 % [input]
 % rmin        : checkerboard's minimum radius in deg, [val], 0 by default.
@@ -37,7 +37,7 @@ function [checkerboard,bincheckerboard,mfcheckerboard,mask]=mf_GenerateCheckerBo
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-11-29 17:52:02 ban"
+% Last Update: "2018-12-11 18:16:38 ban"
 
 %% check the input variables
 if nargin<1 || isempty(rmin), rmin=0; end
@@ -122,7 +122,7 @@ checkerboard(checkerboard<0)=0;
 
 %% generate a binary (1/2=checker-patterns and 0=background) checkerboard
 
-if nargin>=2
+if nargout>=2
   rings=zeros(size(cid));
   rings(inidx)=2*mod(cid(inidx),2)-1; % -1/1 class;
 

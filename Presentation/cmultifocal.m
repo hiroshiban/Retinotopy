@@ -27,7 +27,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2018-12-01 13:29:14 ban"
+% Last Update: "2018-12-12 12:23:26 ban"
 %
 %
 %
@@ -783,16 +783,19 @@ for cc=1:1:sparam.numTrials
   end
 end
 
-%% set some flags
+% flag to index the first task frame
+firsttask_flg=0;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Initializing checkerboard color management parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id
 color_id=1;
 
 % checkerboard compensating color id
 compensate_id=1;
-
-% flag to index the first task frame
-firsttask_flg=0;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

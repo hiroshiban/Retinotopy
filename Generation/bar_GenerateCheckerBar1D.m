@@ -29,7 +29,7 @@ function [checkerboard,bincheckerboard,mask]=bar_GenerateCheckerBar1D(fieldSize,
 % mask         : (optional) checkerboard regional mask, cell structure, logical
 %
 % Created    : "2018-11-20 11:23:31 ban"
-% Last Update: "2018-11-26 19:37:05 ban"
+% Last Update: "2018-12-11 17:30:04 ban"
 
 %% check the input variables.
 if nargin<1 || isempty(fieldSize), fieldSize=12; end
@@ -142,7 +142,7 @@ for aa=1:1:numel(angles)
       checkerboard{aa,pp}(r>fieldSize/2 | checkerboard{aa,pp}<0)=0;
 
       % generate a binary (1/2=checker-patterns and 0=background) checkerboard
-      if nargin>=2
+      if nargout>=2
         barL=zeros(size(cidl));
         barL(inidx)=2*mod(cidl(inidx),2)-1; % -1/1 class;
 

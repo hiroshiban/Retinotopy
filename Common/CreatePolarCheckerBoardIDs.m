@@ -28,7 +28,7 @@ function [checkerboard,bincheckerboard,mask]=CreatePolarCheckerBoardIDs(rmin,rma
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-11-26 19:47:48 ban"
+% Last Update: "2018-12-11 17:42:41 ban"
 
 %% check the input variables
 if nargin<1 || isempty(rmin), rmin=0; end
@@ -154,7 +154,7 @@ for aa=1:1:numel(startangle)
     checkerboard{aa}(checkerboard{aa}<0)=0;
 
     % generate a binary (1/2=checker-patterns and 0=background) checkerboard
-    if nargin>=2
+    if nargout>=2
       rings=zeros(size(cide));
       rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class;
 

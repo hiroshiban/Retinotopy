@@ -1,7 +1,8 @@
-function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase)
+function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase,dual_flg)
 
 % Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.
-% function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase)
+% function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(:rmin,:rmax,:width,:startangle,:pix_per_deg,:nwedges,:nrings,:phase,:dual_flg)
+% (: is optional)
 %
 % This function generates checkerboards (polar angle-based subdivision) with an individual ID number on each patch.
 % Each of two checkers have the compensating values of its counterpart.
@@ -17,7 +18,12 @@ function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rma
 % pix_per_deg : pixels per degree, [val], 40 by default.
 % nwedges     : number of wedges, [val], 4 by default.
 % nrings      : number of rings, [val], 8 by default.
-% phase       : (optional) checker's phase, 0 by default.
+% phase       : checker's phase, 0 by default.
+% dual_flg    : whether generating a dual-wedge checkerboard pattern [0|1]. 0 by default.
+%               NOTE: even without proper full polar and eccentricity phase-encoded stimuli,
+%               from fMRI time series evoked by the checkerboards generated with dual_flg=1
+%               presented along the horizontal or vertical meridians alternatively, we can
+%               get reliable landmarks to delineate retinotopy borders along the visual areas.
 %
 % [output]
 % checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.
@@ -28,7 +34,7 @@ function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rma
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-11-26 19:19:18 ban"
+% Last Update: "2018-12-14 12:30:28 ban"
 
 %% check the input variables
 if nargin<1 || isempty(rmin), rmin=0; end
@@ -39,6 +45,7 @@ if nargin<5 || isempty(pix_per_deg), pix_per_deg=40; end
 if nargin<6 || isempty(nwedges), nwedges=4; end
 if nargin<7 || isempty(nrings), nrings=8; end
 if nargin<8 || isempty(phase), phase=0; end
+if nargin<9 || isempty(dual_flg), dual_flg=0; end
 
 %% parameter adjusting
 
@@ -69,9 +76,9 @@ thetafield=mod(atan2(yy,xx),2*pi);
 % calculate binary class (-1/1) along eccentricity for checkerboard (anuulus)
 radii=linspace(rmin,rmax,nrings+1); radii(1)=[]; % annulus width
 r=sqrt(xx.^2+yy.^2); % radius
-cid=zeros(size(xx)); % checker id, eccentricity
+cide=zeros(size(xx)); % checker id, eccentricity
 for i=length(radii):-1:1
-  cid(rmin<r & r<=radii(i))=i;
+  cide(rmin<r & r<=radii(i))=i;
 end
 
 % calculate binary class (-1/1) along polar angle for checkerboard (wedge)
@@ -118,12 +125,48 @@ for aa=1:1:numel(startangle)
     % calculate inner regions
     minlim=startangle(aa);
     maxlim=mod(startangle(aa)+width,2*pi);
-    if minlim==maxlim % whole annulus
-      inidx=find( (rmin<=r & r<=rmax) );
-    elseif minlim>maxlim
-      inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield & thetafield<2*pi) | (0<=thetafield & thetafield<=maxlim) ) );
-    else
-      inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield) & (thetafield<=maxlim) ) );
+    if dual_flg % dual wedges
+      if minlim==maxlim % whole annulus
+        inidx=find( (rmin<=r & r<=rmax) );
+      elseif minlim>maxlim
+        inidx1=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield & thetafield<2*pi) | (0<=thetafield & thetafield<=maxlim) ) );
+
+        % generating the second wedge, considering the overflow of the cyclic data (angles)
+        minlim2=mod(minlim+pi,2*pi);
+        maxlim2=mod(maxlim+pi,2*pi);
+        if minlim2==maxlim2
+          inidx2=find( (rmin<=r & r<=rmax) );
+        elseif minlim2>maxlim2
+          inidx2=find( (rmin<=r & r<=rmax) & ( (minlim2<=thetafield & thetafield<2*pi) | (0<=thetafield & thetafield<=maxlim2) ) );
+        else
+          inidx2=find( (rmin<=r & r<=rmax) & ( (minlim2<=thetafield) & (thetafield<=maxlim2) ) );
+        end
+
+        inidx=[inidx1;inidx2];
+      else
+        inidx1=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield) & (thetafield<=maxlim) ) );
+
+        % generating the second wedge, considering the overflow of the cyclic data (angles)
+        minlim2=mod(minlim+pi,2*pi);
+        maxlim2=mod(maxlim+pi,2*pi);
+        if minlim2==maxlim2
+          inidx2=find( (rmin<=r & r<=rmax) );
+        elseif minlim2>maxlim2
+          inidx2=find( (rmin<=r & r<=rmax) & ( (minlim2<=thetafield & thetafield<2*pi) | (0<=thetafield & thetafield<=maxlim2) ) );
+        else
+          inidx2=find( (rmin<=r & r<=rmax) & ( (minlim2<=thetafield) & (thetafield<=maxlim2) ) );
+        end
+
+        inidx=[inidx1;inidx2];
+      end
+    else % if ~dual_flg : a single wedge
+      if minlim==maxlim % whole annulus
+        inidx=find( (rmin<=r & r<=rmax) );
+      elseif minlim>maxlim
+        inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield & thetafield<2*pi) | (0<=thetafield & thetafield<=maxlim) ) );
+      else
+        inidx=find( (rmin<=r & r<=rmax) & ( (minlim<=thetafield) & (thetafield<=maxlim) ) );
+      end
     end
 
     % calculate wedge IDs
@@ -142,9 +185,6 @@ for aa=1:1:numel(startangle)
       true_nwedges=nwedges;
     end
 
-    % calcuate ring IDs
-    cide=cid;
-
     % generate checker's ID
     checkerboard{aa}=zeros(size(thetafield));
     checkerboard{aa}(inidx)=cidp(inidx)+(cide(inidx)-1)*true_nwedges;
@@ -154,9 +194,15 @@ for aa=1:1:numel(startangle)
     checkerboard{aa}(checkerboard{aa}<0)=0;
 
     % generate a binary (1/2=checker-patterns and 0=background) checkerboard
-    if nargin>=2
-      rings=zeros(size(cide));
-      rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class;
+    if nargout>=2
+      if dual_flg && minlim~=maxlim % dual wedges
+        rings=zeros(size(cide));
+        rings(inidx1)=2*mod(cide(inidx1),2)-1; % -1/1 class
+        rings(inidx2)=-1.*(2*mod(cide(inidx2),2)-1); % 1/-1 class
+      else % if ~dual_flg : a single wedge
+        rings=zeros(size(cide));
+        rings(inidx)=2*mod(cide(inidx),2)-1; % -1/1 class
+      end
 
       wedges=zeros(size(cidp));
       wedges(inidx)=2*mod(cidp(inidx),2)-1; % -1/1 class

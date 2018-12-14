@@ -1,7 +1,8 @@
 function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtwidth,start_angle,pix_per_deg)
 
 % Creates a wedge-shaped mask with 0 & 1 values.
-% function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtrad,start_angle,pix_per_deg)
+% function mask=CreateWedgeMask(:rmin,:rmax,:tgtmin,:tgtmax,:tgtrad,:start_angle,:pix_per_deg)
+% (: is optional)
 %
 % This function creates a wedge-shaped mask. The generated mask will be useful to hide specific region
 % of the checkerboard etc.
@@ -22,7 +23,7 @@ function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtwidth,start_angle,pix_p
 %
 %
 % Created    : "2009-07-24 12:20:15 ban"
-% Last Update: "2018-11-26 18:41:36 ban"
+% Last Update: "2018-12-11 18:15:31 ban"
 
 % check the input variables
 if nargin<1 || isempty(rmin), rmin=0.0; end

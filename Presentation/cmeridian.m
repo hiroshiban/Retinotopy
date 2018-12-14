@@ -1,19 +1,15 @@
-function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
+function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus for localizing specific retinotopic (eccentricity) regions.
-% function clocalizer_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.
+% function cmeridian(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% Color/Luminance-defined checkerboard stimulus for measuring/estimating
-% a cannonical hemodynamic response function shape subject-by-subject.
-% You can also use this script for checking BOLD signal and fMR-image quality.
-%
-% [note]
-% Behavioral task of chrf_fixtask is to detect changes of luminance of the central
-% fixation period, whereas tasks in cretinotopy and cretinotopy_mono etc is to detect
-% changes of luminance of one of the patches in the checkerboard stimuli.
-% The central fixation task will be suitable for naive participants as it can minimize
-% eye movement of untrained observers.
+% This function generates and presents color/luminance-defined dual checkerboard stimulus
+% to measure cortical retinotopy and to delineate retinotopic borders.
+% Unlike the standard phase-encoded visual stimulation, this fucntion present the checkerboards
+% alond the horizontal or vertical visual meridians alternatively. The corresponding fMRI signals
+% evoked by the stimuli can be reliably used to identify the delineating borders of retinotopic
+% visual areas.
 %
 % - Acquired fMRI data evoked by this stimulus will be utilized
 %   to delineate retinotopic visual area borders (conventional retinotopy)
@@ -21,8 +17,8 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % - Stimulus presentation timing are controled by vertical synch signals
 %
 %
-% Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2018-12-12 12:21:47 ban"
+% Created    : "2018-12-11 19:10:32 ban"
+% Last Update: "2018-12-14 12:31:42 ban"
 %
 %
 %
@@ -36,7 +32,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %                 !!! ~/Retinotopy/Presentation/images                   !!!
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %
-% exp_mode      : experiment mode acceptable in this script is only "localizer"
+% exp_mode      : experiment mode acceptable in this script is only "meridian"
 % acq           : acquisition number (design file number),
 %                 an integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
@@ -76,11 +72,11 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_clocalizer_fixtask_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_cmeridian_results_run_(run_num).mat
 %
 %
 % [example]
-% >> clocalizer_fixtask('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> cmeridian('HB','meridian',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -92,7 +88,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % % This_is_the_display_file_for_retinotopy_Checker_experiment.
 % % Please_change_the_parameters_below.
 % % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___April_01_2011
+% % Programmed_by_Hiroshi_Ban___November_01_2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -141,22 +137,24 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
+% % This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
 % % Please_change_the_parameters_below.
 % % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___April_01_2011
+% % Programmed_by_Hiroshi_Ban___Dec_12_2018
 % % ************************************************************
 %
-% %%% stimulus parameters
-% sparam.nwedges     = 30;     % number of wedge subdivisions along polar angle
-% sparam.nrings      = 8;     % number of ring subdivisions along eccentricity angle
-% sparam.width       = 360;    % wedge width in deg along polar angle
-% sparam.phase       = 0;    % phase shift in deg
-% sparam.startangle  = 0;     % presentation start angle in deg, from right-horizontal meridian, ccw
+% % "sparam" means "stimulus generation parameters"
 %
-% sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
-% sparam.minRad      = 0;      % minimum
-% sparam.tgtRad      = [3.5,5,5];  % target eccentricity, [min,max]
+% %%% stimulus parameters
+% sparam.nwedges     = 4;     % number of wedge subdivisions along polar angle
+% sparam.nrings      = 4;     % number of ring subdivisions along eccentricity angle
+% sparam.width       = 24;    % wedge width in deg along polar angle
+% sparam.phase       = 0;     % phase shift in deg
+%
+% sparam.maxRad      = 8;     % maximum radius of  annulus (degrees)
+% sparam.minRad      = 0;     % minumum
+%
+% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 %
 % sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
 %                        255,   0,   0; % the first row is background
@@ -169,19 +167,18 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %                          0,   0,   0;
 %                        255, 128,   0;
 %                        128,   0, 255;];
-% sparam.flickerrepetitions=2; % repetitions of flicker in a second
 %
 % %%% duration in msec for each cycle & repetitions
 % sparam.cycle_duration=32000; % msec
-% sparam.rest_duration =16000; % msec, rest (compensating pattern) after each cycle, stimulation = cycle_duration-eccrest
+% sparam.block_duration=16000; % msec, a block duration in which the wedge along the horizontal or vertical meridian is presented, rest_duration = spara.cycle_duration-2*sparam.block_duration
 % sparam.numRepeats=6;
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
 % % the final 2 is for 2 times repetitions of flicker
 % % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
-% sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
-% %sparam.waitframes = 1;
+% sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (sparam.cycle_duration/1000) / ( (size(sparam.colors,1)-1)*2 );
+% % sparam.waitframes = 1;
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
@@ -213,7 +210,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % [about stimuli and task]
-% The central fixation point sometimes changes its color from white to gray.
+% One of checkerboard patches sometimes (randomly) becomes darker.
 % If you find this contrast difference, press any key.
 % Response kes are difined in display file.
 %
@@ -234,11 +231,11 @@ if nargin<6 || isempty(gamma_table), gamma_table=[]; end
 if nargin<7 || isempty(overwrite_flg), overwrite_flg=1; end
 if nargin<8 || isempty(force_proceed_flag), force_proceed_flag=0; end
 
-% check the aqcuisition number. up to 10 design files can be used
+% check the aqcuisition number
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
 
 % check the experiment mode (stimulus type)
-if ~strcmpi(exp_mode,'localizer'), error('exp_mode acceptable in this script is only "localizer". check the input variable.'); end
+if ~strcmpi(exp_mode,'meridian'), error('exp_mode acceptable in this script is only "meridian". check the input variable.'); end
 
 % check the subject directory
 if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
@@ -258,7 +255,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Add paths to the subfunctions
+%%%% Add path to the subfunctions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % add paths to the subfunctions
@@ -267,7 +264,7 @@ addpath(fullfile(rootDir,'..','Generation'));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% For a log file
+%%%% For log file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % get date
@@ -278,7 +275,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_clocalizer_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_cmeridian_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -342,14 +339,13 @@ sparam=struct(); % initialize
 sparam.mode=exp_mode;
 if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
 sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
-         'nwedges',24,...
-         'nrings',8,...
-         'width',360,...
+         'nwedges',4,...
+         'nrings',4,...
+         'width',48,...
          'phase',0,...
-         'startangle',0,...
          'maxRad',8,...
          'minRad',0,...
-         'tgtRad',[3.5,5.5],...
+         'dimratio',0.4,...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
                       0, 255,   0;
@@ -361,11 +357,10 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
                       0,   0,   0;
                     255, 128,   0;
                     128,   0, 255],...
-         'flickerrepetitions',2,...
          'cycle_duration',32000,...
-         'rest_duration',16000,...
+         'block_duration',32000,...
          'numRepeats',6,...
-         'waitframes',4,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+         'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (sparam.cycle_duration/1000) / ( (size(sparam.colors,1)-1)*2 );
          'initial_fixation_time',[4000,4000],...
          'fixsize',12,...
          'fixcolor',[255,255,255],...
@@ -376,22 +371,30 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'vdist',65);
 
 % change unit from msec to sec.
-sparam.initial_fixation_time = sparam.initial_fixation_time./1000; %#ok
+sparam.initial_fixation_time=sparam.initial_fixation_time./1000; %#ok
 
 % change unit from msec to sec.
 sparam.cycle_duration = sparam.cycle_duration./1000;
-sparam.rest_duration  = sparam.rest_duration./1000;
+sparam.block_duration = sparam.block_duration./1000;
+sparam.rest_duration  = sparam.cycle_duration - 2*sparam.block_duration;
 
 % set the other parameters
 dparam.RunScript = mfilename();
 sparam.RunScript = mfilename();
+
+%% check varidity of parameters
+fprintf('checking validity of stimulus generation/presentation parameters...');
+if sparam.cycle_duration<2*sparam.block_duration
+ error('sparam.cycle_duration should be larger than 2*sparam.block_duration. check the input variables.');
+ end
+disp('done.');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Displaying the presentation parameters you set
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fprintf('The Presentation Parameters are as below.');
+disp('The Presentation Parameters are as below.');
 fprintf('\n');
 disp('************************************************');
 disp('****** Script, Subject, Acquistion Number ******');
@@ -411,6 +414,7 @@ eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
 disp('*********** Stimulation Periods etc. ***********');
 eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
 eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
+eval(sprintf('disp(''Block Duration(sec)    : %d x 2 (H/V)'');',sparam.block_duration));
 eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
 eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
 eval(sprintf('disp(''Frame Flip(per VerSync): %d'');',sparam.waitframes));
@@ -459,7 +463,7 @@ HideCursor();
 if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dpara.ifi=1/dparam.fps;
+    dparam.ifi=1/dparam.fps;
   end
 end
 
@@ -529,7 +533,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 
 % deg to radian
 % do not convert!
-% sparam.width, sparam.phase, and sparam.startangle are used in deg formats
+% sparam.width, sparam.phase, sparam.startangle, sparam.rotangle are used in deg formats
 
 % number of checkerboard color
 sparam.ncolors=(size(sparam.colors,1)-1)/2;
@@ -537,16 +541,16 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
+nframe_block=round(sparam.block_duration*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 
 % !!!NOTICE!!!
 % Two lines below are from cretinotopy.m
 % nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
 % nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
-% nframe_flicker should be adjusted to match with these parameters.
+% nframe_flicker (and nframe_task) should be adjusted to match with these parameters.
 nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.ncolors/4); %60,0,30 are from CCW/CW parameters.
-
-nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
+nframe_task=round(nframe_flicker*sparam.ncolors*4/2);
 
 %% initialize chackerboard parameters
 
@@ -559,11 +563,9 @@ if dparam.fullscr
   % min/max radius of annulus
   rmin=sparam.minRad*ratio_wid; % !!! degree, not pixel or cm !!!
   rmax=sparam.maxRad*ratio_wid;
-  rtgt=sparam.tgtRad.*ratio_wid;
 else
   rmin=sparam.minRad;
   rmax=sparam.maxRad;
-  rtgt=sparam.tgtRad;
 end
 
 
@@ -580,10 +582,11 @@ end
 % .....
 % sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
-[checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
-                                        sparam.nwedges,sparam.nrings,sparam.phase);
-checkerboardID=checkerboardID{1};
-checkerboard=checkerboard{1};
+
+% generate a dual wedge checkerboard pattern
+sparam.startangles=[0-sparam.width/2,0-sparam.width/2+90];
+[checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangles,sparam.pix_per_deg,...
+                                                         sparam.nwedges,sparam.nrings,sparam.phase,1);
 
 %% update number of patches and number of wedges, taking into an account of checkerboard phase shift
 
@@ -591,33 +594,19 @@ checkerboard=checkerboard{1};
 % This looks circuitous, duplicating procedures, and it consumes more CPU and memory.
 % 'if' statements may be better.
 % However, to decrease the number of 'if' statement after starting stimulus
-% presentation as much as I can, I will do adopt this circuitous procedures.
+% presentation as possible as I can, I will do adopt this circuitous procedures.
+true_npatches=cell(numel(sparam.startangles),1);
+true_nwedges=cell(numel(sparam.startangles),1);
+patchids=cell(numel(sparam.startangles),1);
 
-% for hrf, the number of patches/wedges are same over time
-tmp_checks=unique(checkerboardID)';
-true_npatches=numel(tmp_checks)-1; % -1 is to omit background id
-true_nwedges=true_npatches/sparam.nrings;
-patchids=tmp_checks;
-patchids=patchids(2:end); % omit background id
+tmp_checks=unique(checkerboardID{1})';
+for nn=1:1:numel(sparam.startangles)
+  true_npatches{nn}=numel(tmp_checks)-1; % -1 is to omit background id
+  true_nwedges{nn}=true_npatches{nn}/sparam.nrings;
+  patchids{nn}=tmp_checks;
+  patchids{nn}=patchids{nn}(2:end); % omit background id
+end
 clear tmp_checks;
-
-% make the checkerboard texture
-checkertexture=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Generating two compensating masks
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-tmpmask=CreateWedgeMask(rmin,rmax,rtgt(1),rtgt(2),sparam.width,sparam.startangle,sparam.pix_per_deg);
-tmpmask{1}(tmpmask{1}>0)=255; tmpmask{2}(tmpmask{2}>0)=255;
-
-mask=ones([size(tmpmask{1}),4]); for ii=1:1:3, mask(:,:,ii)=sparam.bgcolor(ii)*mask(:,:,ii); end
-mask(:,:,4)=tmpmask{1};
-targetMask=Screen('MakeTexture',winPtr,mask);
-mask(:,:,4)=tmpmask{2};
-compensatingMask=Screen('MakeTexture',winPtr,mask);
-clear tmpmask mask;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -644,9 +633,13 @@ for cc=1:1:sparam.ncolors
     if ~mod(pp,2)
       CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc,:);
       CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc+1,:);
+      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
+      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
     else
       CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc+1,:);
       CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc,:);
+      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
+      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
     end
 
   end % for pp=1:1:2 % compensating checkers
@@ -659,18 +652,21 @@ end % for cc=1:1:sparam.ncolors
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % %%%%%% DEBUG codes start here
+% note: debug stimuli have no jitters of binocular disparity
 if strfind(upper(subjID),'DEBUG')
 
   % just to get stimulus figures
   Screen('CloseAll');
-  figure; hold on;
-  imfig=imagesc(flipdim(checkerboard,1),[0,true_npatches]);
-  axis off; axis square;
-  colormap(CLUT{1,1}(1:3,1:3)./255);
-  fname=sprintf('checkerboard_%s.png',sparam.mode);
-  save_dir=fullfile(pwd,'images');
-  if ~exist(save_dir,'dir'), mkdir(save_dir); end
-  saveas(imfig,[save_dir,filesep(),fname,'.png'],'png');
+  for nn=1:1:numel(sparam.startangles)
+    figure; hold on;
+    imfig=imagesc(flipdim(checkerboard{nn},1),[0,true_npatches{nn}]);
+    axis off; axis square;
+    colormap(CLUT{1,1}(1:3,1:3)./255);
+    fname=sprintf('retinotopy_%s_pos%02d.png',sparam.mode,nn);
+    save_dir=fullfile(pwd,'images');
+    if ~exist(save_dir,'dir'), mkdir(save_dir); end
+    saveas(imfig,[save_dir,filesep(),fname,'.png'],'png');
+  end
   save([save_dir,filesep(),sprintf('checkerboard_%s.mat',sparam.mode)],'checkerboard','sparam','dparam','CLUT');
   keyboard;
 
@@ -679,27 +675,38 @@ end % if strfind(upper(subjID),'DEBUG')
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Generating fixation detection task parameters
+%%%% Generating contrast detection task parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% set task variables
-% flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
-num_tasks=round(totalframes/nframe_task);
-task_flg=ones(1,num_tasks);
-for nn=2:1:num_tasks
-  if task_flg(nn-1)==2
-    task_flg(nn)=1;
+% flag to decide in which period (first half or second half) the disparity task is applied
+% about task_flg:
+% 1, task is added in the first half period
+% 2, task is added in the second half period
+task_flg=randi(2,[round(sparam.numRepeats*nframe_cycle/nframe_task),1]);
+
+% flag whether presenting disparity task
+do_task=zeros(round(sparam.numRepeats*nframe_cycle/nframe_task),1);
+do_task(1)=0; % no task for the first presentation
+for ii=2:1:round(sparam.numRepeats*nframe_cycle/nframe_task)
+  if do_task(ii-1)==1
+    do_task(ii)=0;
   else
-    if mod(randi(4,1),4)==0 % this is arbitral, but I put these lines just to reduce the number of tasks
-      task_flg(nn)=round(rand(1,1))+1;
-    else
-      task_flg(nn)=1;
-    end
+    do_task(ii)=round(rand(1,1));
   end
 end
-task_flg=repmat(task_flg,nframe_task,1);
-task_flg=task_flg(:);
+
+% variable to store the current task array order
+task_id=1;
+
+% variable to store task position
+task_pos=cell(numel(sparam.startangles),1);
+for nn=1:1:numel(sparam.startangles)
+  task_pos{nn}=randi(true_npatches{nn},[round(sparam.numRepeats*nframe_cycle/nframe_task),1]);
+end
+
+% flag to index the first task frame
+firsttask_flg=0;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -720,7 +727,7 @@ compensate_id=1;
 % creating target and background images
 
 %%%% Creating background %%%
-patch_size=[30,30]; patch_num=[20,20];
+patch_size=[5,5]; patch_num=[30,30];
 %aperture_size=[500,500];
 
 % calculate the central aperture size of the background image
@@ -742,16 +749,14 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 %%%% Creating the central fixation, cross images (left/right)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% create fixation cross images, first larger fixations are generated, then they are antialiased
-% This is required to present a beautiful circle
+% create fixation cross images
 fix=CreateFixationImgCircular(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*sparam.fixsize,0,0);
-dark_fix=CreateFixationImgCircular(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*sparam.fixsize,0,0);
+wait_fix=CreateFixationImgCircular(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*sparam.fixsize,0,0);
 fix=imresize(fix,0.25);
-dark_fix=imresize(dark_fix,0.25);
+wait_fix=imresize(wait_fix,0.25);
 
-fcircle=cell(2,1); % 1 is for default fixation, 2 is for darker fixation (luminance detection task)
-fcircle{1}=Screen('MakeTexture',winPtr,fix);
-fcircle{2}=Screen('MakeTexture',winPtr,dark_fix);
+wait_fcircle=Screen('MakeTexture',winPtr,wait_fix);
+fcircle=Screen('MakeTexture',winPtr,fix);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -762,11 +767,11 @@ if dparam.fullscr
   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
-  stimSize = [size(checkerboard,2)*ratio_wid, size(checkerboard,1)*ratio_hei];
+  stimSize = [size(checkerboard{1,1},2)*ratio_wid, size(checkerboard{1,1},1)*ratio_hei];
   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
-  stimSize = [size(checkerboard,2), size(checkerboard,1)];
+  stimSize = [size(checkerboard{1,1},2), size(checkerboard{1,1},1)];
   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
@@ -781,14 +786,6 @@ end
 bgRect  = [0, 0, bgSize]; % used to display background images;
 stimRect= [0, 0, stimSize];
 fixRect = [0, 0, fixSize]; % used to display the central fixation point
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initialize functions and variables for trial loop
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% initialize variables that we will use during the experiment (faster)
-cur_frames=0;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -809,7 +806,7 @@ ttime=GetSecs(); while (GetSecs()-ttime < 0.5), end  % run up the clock.
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fcircle{2},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,wait_fcircle,[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip', winPtr,[],[],[],1);
@@ -818,7 +815,7 @@ Screen('Flip', winPtr,[],[],[],1);
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fcircle{1},[],CenterRect(fixRect,winRect)); % fcircle{1} is valis as no task in the first period
+  Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
 
@@ -845,22 +842,16 @@ vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
 [event,the_experiment_start]=event.set_reference_time(GetSecs());
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
-cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-    Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+    Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
   Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-  cur_frames=cur_frames+1;
-
-  % update task
-  if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
   [resps,event]=resps.check_responses(event);
 end
 
@@ -872,38 +863,47 @@ end
 for cc=1:1:sparam.numRepeats
   % NOTE: as this event will be logged before the first flip in the trial,
   % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-  event=event.add_event(sprintf('Cycle: %d',cc),[],the_experiment_start-sparam.waitframes*dparam.ifi);
+  event=event.add_event(sprintf('Cycle: %d',cc),[]);
   fprintf(sprintf('Cycle: %03d...\n',cc));
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_cycle+nframe_rest
+  stim_id=1;
+  for ff=1:1:nframe_cycle
+
+    % generate a checkerboard texture with/without a luminance detection task
+    if do_task(task_id) && ...
+      ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
+        ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
+      tidx=find(checkerboardID{stim_id}==task_pos{stim_id}(task_id));
+      checkerboard{stim_id}(tidx)=checkerboard{stim_id}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
+      checkertexture=Screen('MakeTexture',winPtr,checkerboard{stim_id});
+    else
+      tidx=[];
+      checkertexture=Screen('MakeTexture',winPtr,checkerboard{stim_id});
+    end
 
     %% display the current frame
     for nn=1:1:nScr
       Screen('SelectStereoDrawBuffer',winPtr,nn-1);
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
-      if ff<=nframe_cycle % checkerboard
-        DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
-      end
-      if ff<=nframe_cycle % mask
-        Screen('DrawTexture',winPtr,compensatingMask,[],CenterRect(stimRect,winRect));
-      else
-        Screen('DrawTexture',winPtr,targetMask,[],CenterRect(stimRect,winRect));
-      end
-      Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
+      DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
+      Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect)); % the central fixation oval
     end
+
+    % put the checkerboard ID back to the default
+    if ~isempty(tidx), checkerboard{stim_id}(tidx)=checkerboard{stim_id}(tidx)-2; end
 
     % flip the window
     Screen('DrawingFinished',winPtr);
     Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-    cur_frames=cur_frames+1;
+    if do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
 
-    % update task
-    if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
+    % clean up
+    Screen('Close',checkertexture);
 
     %% exit from the loop if the final frame is displayed
 
-    if ff==nframe_cycle+nframe_rest && cc==sparam.numRepeats, continue; end
+    if ff==nframe_cycle && cc==sparam.numRepeats, continue; end
 
     %% update IDs
 
@@ -917,10 +917,33 @@ for cc=1:1:sparam.numRepeats
       if color_id>sparam.ncolors, color_id=1; end
     end
 
+    % stimulus id for the next presentation, after the nframe_block, the stimulus changed from vertical to horizontal
+    if ff==nframe_block, stim_id=stim_id+1; end
+
+    %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
+    if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
+    firsttask_flg=firsttask_flg+1;
+
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:cycle_frames+nframe_rest
+  end % for ff=1:1:nframe_cycle
+
+  %% rest perioed
+
+  for ff=1:1:nframe_rest
+    for nn=1:1:nScr
+      Screen('SelectStereoDrawBuffer',winPtr,nn-1);
+      % background & the central fixation
+      Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
+      Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
+    end
+
+    % flip the window
+    Screen('DrawingFinished',winPtr);
+    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+(sparam.cycle_duration-sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+    [resps,event]=resps.check_responses(event);
+  end
 
 end % for cc=1:1:sparam.numRepeats
 
@@ -932,28 +955,22 @@ end % for cc=1:1:sparam.numRepeats
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip;
-cur_frames=cur_frames+1;
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-    Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+    Screen('DrawTexture',winPtr,fcircle,[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
   Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-  cur_frames=cur_frames+1;
-
-  % update task
-  if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
   [resps,event]=resps.check_responses(event);
 end
 
@@ -978,12 +995,12 @@ disp(' ');
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_clocalizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_cmeridian_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_clocalizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_cmeridian_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
@@ -1058,4 +1075,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function clocalizer_fixtask
+% end % function cmeridian
