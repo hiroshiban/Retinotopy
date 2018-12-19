@@ -17,7 +17,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2018-12-12 12:24:28 ban"
+% Last Update: "2018-12-19 16:56:09 ban"
 %
 %
 %
@@ -212,7 +212,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 % sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
+% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
 %

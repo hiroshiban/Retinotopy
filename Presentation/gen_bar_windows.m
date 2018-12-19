@@ -11,7 +11,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2018-12-01 13:25:27 ban"
+% Last Update: "2018-12-19 16:54:21 ban"
 %
 %
 % [input variables]
@@ -134,7 +134,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 % sparam.fixsize=4; % radius in pixels
 %
 % %%% for converting degree to pixels
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
+% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
 %

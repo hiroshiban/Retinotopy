@@ -27,7 +27,7 @@ function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,wi
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-12-11 18:14:44 ban"
+% Last Update: "2018-12-19 14:19:41 ban"
 
 %% check the input variables
 if nargin<1 || isempty(edges)
@@ -56,7 +56,7 @@ width=width*pi/180;
 phase=phase*pi/180;
 
 % add small lim in checkerboard image, this is to avoid unwanted juggy edges
-imsize_ratio=1.02;
+imsize_ratio=1.01;
 
 %% generate base angle (radian) image
 

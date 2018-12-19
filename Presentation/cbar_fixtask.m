@@ -23,7 +23,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2018-12-12 12:24:59 ban"
+% Last Update: "2018-12-19 16:55:57 ban"
 %
 %
 %
@@ -215,7 +215,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
+% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
 %

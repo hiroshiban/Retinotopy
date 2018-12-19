@@ -20,7 +20,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2018-12-12 12:35:45 ban"
+% Last Update: "2018-12-19 16:54:42 ban"
 %
 %
 %
@@ -203,9 +203,9 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
+% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
 %
 %
 % [HOWTO create stimulus files]

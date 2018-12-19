@@ -60,6 +60,6 @@ sparam.patch_color1=[255,255,255];
 sparam.patch_color2=[0,0,0];
 
 %%% for converting degree to pixels
-run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
+run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 %sparam.pix_per_cm=57.1429;
 %sparam.vdist=65;

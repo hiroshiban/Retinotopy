@@ -27,7 +27,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2018-12-12 12:23:26 ban"
+% Last Update: "2018-12-19 16:55:20 ban"
 %
 %
 %
@@ -244,7 +244,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 % sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
+% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
 %

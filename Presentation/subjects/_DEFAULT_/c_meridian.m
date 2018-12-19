@@ -9,7 +9,7 @@
 
 %%% stimulus parameters
 sparam.nwedges     = 4;     % number of wedge subdivisions along polar angle
-sparam.nrings      = 4;     % number of ring subdivisions along eccentricity angle
+sparam.nrings      = 8;     % number of ring subdivisions along eccentricity angle
 sparam.width       = 24;    % wedge width in deg along polar angle
 sparam.phase       = 0;     % phase shift in deg
 
@@ -31,15 +31,21 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
                        128,   0, 255;];
 
 %%% duration in msec for each cycle & repetitions
-sparam.cycle_duration=32000; % msec
-sparam.block_duration=16000; % msec, a block duration in which the wedge along the horizontal or vertical meridian is presented, rest_duration = spara.cycle_duration-2*sparam.block_duration
+% Here, the stimulus presentation protocol is defined as below.
+% initial_fixation_time(1) ---> block_duration (the wedge along the horizontal visual meridian) ---> rest_duration (blank) --->
+%   block_duration (the wedge along the vertical) ---> rest_duration (blank) ---> block_duration (the wedge along the horizontal) --->
+%     rest_duration (blank) ---> block_duration (the wedge along the vertical) ---> ... (repeated numRepeats in total) ---> initial_fixation_time(2)
+% Therefore, one_stimulation_cycle = (block_duration + rest_duration) x 2
+
+sparam.block_duration=16000; % msec
+sparam.rest_duration =0; % msec, rest after each block
 sparam.numRepeats=6;
 
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
 % the final 2 is for 2 times repetitions of flicker
 % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
-sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (sparam.cycle_duration/1000) / ( (size(sparam.colors,1)-1)*2 );
+sparam.waitframes = Screen('FrameRate',0)*((sparam.block_duration+sparam.rest_duration)/1000) / ((sparam.block_duration+sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
 % sparam.waitframes = 1;
 
 %%% fixation period in msec before/after presenting the target stimuli, integer
@@ -59,6 +65,6 @@ sparam.patch_color1=[255,255,255];
 sparam.patch_color2=[0,0,0];
 
 %%% for converting degree to pixels
+run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 %sparam.pix_per_cm=57.1429;
 %sparam.vdist=65;
-run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);

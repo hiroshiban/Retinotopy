@@ -11,7 +11,7 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 %            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2018-12-01 13:37:12 ban"
+% Last Update: "2018-12-19 16:54:12 ban"
 %
 %
 % [input variables]
@@ -221,7 +221,7 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 % sparam.patch_color2=[0,0,0];
 %
 % %%% for converting degree to pixels
-% run([fileparts(mfilename('fullpath')) filesep() 'sizeparams']);
+% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
 %
