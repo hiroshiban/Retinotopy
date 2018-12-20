@@ -22,7 +22,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2018-12-19 16:55:44 ban"
+% Last Update: "2018-12-20 09:15:02 ban"
 %
 %
 %
@@ -168,7 +168,6 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %                          0,   0,   0;
 %                        255, 128,   0;
 %                        128,   0, 255;];
-% sparam.flickerrepetitions=2; % repetitions of flicker in a second
 %
 % %%% duration in msec for each cycle & repetitions
 % sparam.cycle_duration=32000; % msec
@@ -359,7 +358,6 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
                       0,   0,   0;
                     255, 128,   0;
                     128,   0, 255],...
-         'flickerrepetitions',2,...
          'cycle_duration',32000,...
          'rest_duration',16000,...
          'numRepeats',6,...
@@ -389,39 +387,36 @@ sparam.RunScript=mfilename();
 %%%% Displaying the presentation parameters you set
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fprintf('The Presentation Parameters are as below.');
-fprintf('\n');
-disp('************************************************');
-disp('****** Script, Subject, Acquistion Number ******');
-eval(sprintf('disp(''Running Script Name    : %s'');',mfilename()));
-eval(sprintf('disp(''Subject ID             : %s'');',subjID));
-eval(sprintf('disp(''Acquisition Number     : %d'');',acq));
-disp('********* Run Type, Display Image Type *********');
-eval(sprintf('disp(''Display Mode           : %s'');',dparam.ExpMode));
-eval(sprintf('disp(''use Full Screen Mode   : %d'');',dparam.fullscr));
-eval(sprintf('disp(''Start Method           : %d'');',dparam.start_method));
+fprintf('The Presentation Parameters are as below.\n\n');
+fprintf('************************************************\n');
+fprintf('****** Script, Subject, Acquistion Number ******\n');
+fprintf('Running Script Name    : %s\n',mfilename());
+fprintf('Subject ID             : %s\n',subjID);
+fprintf('Acquisition Number     : %d\n',acq);
+fprintf('********* Run Type, Display Image Type *********\n');
+fprintf('Display Mode           : %s\n',dparam.ExpMode);
+fprintf('use Full Screen Mode   : %d\n',dparam.fullscr);
+fprintf('Start Method           : %d\n',dparam.start_method);
 if dparam.start_method==4
-  eval(sprintf('disp(''Custom Trigger         : %d'');',dparam.custom_trigger));
+  fprintf('Custom Trigger         : %d\n',dparam.custom_trigger));
 end
-disp('*************** Screen Settings ****************');
-eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
-eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
-disp('*********** Stimulation Periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
-eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
-eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
-eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
-eval(sprintf('disp(''Frame Flip(per VerSync): %d'');',sparam.waitframes));
-eval(sprintf('disp(''Total Time (sec)       : %d'');',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration));
-disp('**************** Stimulus Type *****************');
-eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
-disp('************ Response key settings *************');
-eval(sprintf('disp(''Reponse Key #1         : %d = %s'');',dparam.Key1,KbName(dparam.Key1)));
-eval(sprintf('disp(''Reponse Key #2         : %d = %s'');',dparam.Key2,KbName(dparam.Key2)));
-disp('************************************************');
-fprintf('\n');
-disp('Please carefully check before proceeding.');
-fprintf('\n');
+fprintf('*************** Screen Settings ****************\n');
+fprintf('Screen Height          : %d\n',dparam.ScrHeight);
+fprintf('Screen Width           : %d\n',dparam.ScrWidth);
+fprintf('*********** Stimulation Periods etc. ***********\n');
+fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
+fprintf('Cycle Duration(sec)    : %d\n',sparam.cycle_duration);
+fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
+fprintf('Repetitions(cycles)    : %d\n',sparam.numRepeats);
+fprintf('Frame Flip(per VerSync): %d\n',sparam.waitframes);
+fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);
+fprintf('**************** Stimulus Type *****************\n');
+fprintf('Experiment Mode        : %s\n',sparam.mode);
+fprintf('************ Response key settings *************\n');
+fprintf('Reponse Key #1         : %d = %s\n',dparam.Key1,KbName(dparam.Key1));
+fprintf('Reponse Key #2         : %d = %s\n',dparam.Key2,KbName(dparam.Key2));
+fprintf('************************************************\n\n');
+fprintf('Please carefully check before proceeding.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -536,7 +531,7 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-nframe_flicker=round(sparam.waitframes/sparam.flickerrepetitions/2); % 2 is for compensation color flicker
+nframe_flicker=round(sparam.waitframes/2/2); % the first 2 = 2 cycles of color flickering, the second 2 is for compensation colors (e.g. RG and GR)
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
 %% initialize chackerboard parameters

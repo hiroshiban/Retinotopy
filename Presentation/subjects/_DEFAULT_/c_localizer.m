@@ -27,7 +27,6 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
                          0,   0,   0;
                        255, 128,   0;
                        128,   0, 255;];
-sparam.flickerrepetitions=2; % repetitions of flicker in a second
 
 %%% duration in msec for each cycle & repetitions
 % Here, the stimulus presentation protocol is defined as below.

@@ -12,7 +12,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2018-12-19 16:56:18 ban"
+% Last Update: "2018-12-20 09:33:19 ban"
 %
 %
 % [input variables]
@@ -257,27 +257,24 @@ disp('done.');
 %%%% Displaying the presentation parameters you set
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('The Presentation Parameters are as below.');
-fprintf('\n');
-disp('************************************************');
-disp('*************** Script, Subject ****************');
-eval(sprintf('disp(''Running Script Name    : %s'');',mfilename()));
-eval(sprintf('disp(''Subject ID             : %s'');',subjID));
-eval(sprintf('disp(''Acquisition Number     : %d'');',acq));
-disp('*************** Screen Settings ****************');
-eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
-eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
-disp('*********** Stimulation periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
-eval(sprintf('disp(''Cycle Duration(sec)    : %d'');',sparam.cycle_duration));
-eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
-eval(sprintf('disp(''Repetitions(cycles)    : %d'');',sparam.numRepeats));
-disp('******** The number of experiment, imgs ********');
-eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
-disp('************************************************');
-fprintf('\n');
-disp('Please carefully check before proceeding.');
-fprintf('\n');
+fprintf('The Presentation Parameters are as below.\n\n');
+fprintf('************************************************\n');
+fprintf('*************** Script, Subject ****************\n');
+fprintf('Running Script Name    : %s'');',mfilename());
+fprintf('Subject ID             : %s'');',subjID);
+fprintf('Acquisition Number     : %d'');',acq);
+fprintf('*************** Screen Settings ****************\n');
+fprintf('Screen Height          : %d'');',dparam.ScrHeight);
+fprintf('Screen Width           : %d'');',dparam.ScrWidth);
+fprintf('*********** Stimulation periods etc. ***********\n');
+fprintf('Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
+fprintf('Cycle Duration(sec)    : %d'');',sparam.cycle_duration);
+fprintf('Rest  Duration(sec)    : %d'');',sparam.rest_duration);
+fprintf('Repetitions(cycles)    : %d'');',sparam.numRepeats);
+fprintf('******** The number of experiment, imgs ********\n');
+fprintf('Experiment Mode        : %s'');',sparam.mode);
+fprintf('************************************************\n\n');
+fprintf('Please carefully check before proceeding.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

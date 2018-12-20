@@ -11,7 +11,7 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 %            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2018-12-19 16:54:12 ban"
+% Last Update: "2018-12-20 09:14:48 ban"
 %
 %
 % [input variables]
@@ -402,27 +402,24 @@ sparam.RunScript = mfilename();
 %%%% Displaying the presentation parameters you set
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('The Presentation Parameters are as below.');
-fprintf('\n');
-disp('************************************************');
-disp('*************** Script, Subject ****************');
-eval(sprintf('disp(''Running Script Name    : %s'');',mfilename()));
-eval(sprintf('disp(''Subject ID             : %s'');',subjID));
-eval(sprintf('disp(''Acquisition Number     : %d'');',acq));
-disp('*************** Screen Settings ****************');
-eval(sprintf('disp(''Screen Height          : %d'');',dparam.ScrHeight));
-eval(sprintf('disp(''Screen Width           : %d'');',dparam.ScrWidth));
-disp('*********** Stimulation periods etc. ***********');
-eval(sprintf('disp(''Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2)));
-eval(sprintf('disp(''Trial Duration(sec)    : %d'');',sparam.trial_duration));
-eval(sprintf('disp(''Rest  Duration(sec)    : %d'');',sparam.rest_duration));
-eval(sprintf('disp(''#Trials                : %d'');',sparam.numTrials));
-disp('******** The number of experiment, imgs ********');
-eval(sprintf('disp(''Experiment Mode        : %s'');',sparam.mode));
-disp('************************************************');
-fprintf('\n');
-disp('Please carefully check before proceeding.');
-fprintf('\n');
+fprintf('The Presentation Parameters are as below.\n\n');
+fprintf('************************************************\n');
+fprintf('*************** Script, Subject ****************\n');
+fprintf('Running Script Name    : %s\n',mfilename());
+fprintf('Subject ID             : %s\n',subjID);
+fprintf('Acquisition Number     : %d\n',acq);
+fprintf('*************** Screen Settings ****************\n');
+fprintf('Screen Height          : %d\n',dparam.ScrHeight);
+fprintf('Screen Width           : %d\n',dparam.ScrWidth);
+fprintf('*********** Stimulation periods etc. ***********\n');
+fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
+fprintf('Trial Duration(sec)    : %d\n',sparam.trial_duration);
+fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
+fprintf('#Trials                : %d\n',sparam.numTrials);
+fprintf('******** The number of experiment, imgs ********\n');
+fprintf('Experiment Mode        : %s\n',sparam.mode);
+fprintf('************************************************\n\n');
+fprintf('Please carefully check before proceeding.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
