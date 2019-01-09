@@ -5,7 +5,7 @@
 % Programmed_by_Hiroshi_Ban___April_01_2011
 % ************************************************************
 
-% !!!IMPORTANT NOTICE!!!
+% !!! IMPORTANT NOTE !!!
 % As for exp/cont mode, some of parameters should match with parameters listed in ccw/cw stimulus files.
 % For example, sparam.width shoud not set to 360 but match to value listed in ccw/cw stimulus files.
 % This is required to calculate valid annular width in exp/cont modes so that its stimulation duration
@@ -23,7 +23,7 @@ sparam.nrings      = 2;     % number of ring subdivisions along eccentricity ang
 sparam.width       = 48;    % === SHOULD BE SAME WITH VALUE LISTED IN C_POL.m ===, wedge width in deg along polar angle, for 'exp' & 'cont', this is only used for width calculation
 sparam.phase       = 0;     % phase shift in deg
 sparam.rotangle    = 12;    % === SHOULD BE SAME WITH VALUE LISTED IN C_POL.m ===, rotation angle in deg
-sparam.startangle  = -sparam.width/2-90;     % presentation start angle in deg, from right-horizontal meridian, ccw
+sparam.startangle  = -sparam.width/2-90;  % presentation start angle in deg, from right-horizontal meridian, ccw (actually this value is not used for the eccentricity stimuli (exp and cont))
 
 sparam.maxRad      = 6.0;    % maximum radius of  annulus (degrees)
 sparam.minRad      = 0;  % minumum

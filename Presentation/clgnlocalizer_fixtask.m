@@ -21,7 +21,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2018-12-20 09:15:08 ban"
+% Last Update: "2019-01-09 18:05:01 ban"
 %
 %
 %
@@ -580,22 +580,6 @@ end
 checkerboardID=checkerboardID{1};
 checkerboard=checkerboard{1};
 
-%% update number of patches and number of wedges, taking into an account of checkerboard phase shift
-
-% here, alll parameters are generated for each checkerboard
-% This looks circuitous, duplicating procedures, and it consumes more CPU and memory.
-% 'if' statements may be better.
-% However, to decrease the number of 'if' statement after starting stimulus
-% presentation as much as I can, I will do adopt this circuitous procedures.
-
-% for hrf, the number of patches/wedges are same over time
-tmp_checks=unique(checkerboardID)';
-true_npatches=numel(tmp_checks)-1; % -1 is to omit background id
-true_nwedges=true_npatches/sparam.nrings;
-patchids=tmp_checks;
-patchids=patchids(2:end); % omit background id
-clear tmp_checks;
-
 % make checkerboard textures
 checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
 checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard,2)); % a checkerboard in the right visual hemifield (left LGN localizer)
@@ -645,7 +629,7 @@ if strfind(upper(subjID),'DEBUG')
   % just to get stimulus figures
   Screen('CloseAll');
   figure; hold on;
-  imfig=imagesc(flipdim(checkerboard,1),[0,true_npatches]);
+  imfig=imagesc(flipdim(checkerboard,1),[0,numel(unique(checkerboardID))-1]);
   axis off; axis square;
   colormap(CLUT{1,1}(1:3,1:3)./255);
   fname=sprintf('checkerboard_%s.png',sparam.mode);
@@ -832,7 +816,7 @@ fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(1)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -856,7 +840,7 @@ end
 for cc=1:1:sparam.numRepeats
   % NOTE: as this event will be logged before the first flip in the trial,
   % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-  event=event.add_event(sprintf('Cycle: %d',cc),[],the_experiment_start-sparam.waitframes*dparam.ifi);
+  event=event.add_event(sprintf('Cycle: %d',cc),[]);
   fprintf(sprintf('Cycle: %03d...\n',cc));
 
   %% stimulus presentation loop
@@ -926,7 +910,7 @@ event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(2)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -947,8 +931,8 @@ end
 %%%% Experiment & scanner end here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
-event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
+experimentDuration=GetSecs()-the_experiment_start;
+event=event.add_event('End',[]);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration));

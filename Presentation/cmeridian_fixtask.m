@@ -18,7 +18,7 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2018-12-12 12:13:50 ban"
-% Last Update: "2018-12-20 09:15:20 ban"
+% Last Update: "2019-01-09 18:01:59 ban"
 %
 %
 %
@@ -583,26 +583,6 @@ sparam.startangles=[0-sparam.width/2,0-sparam.width/2+90];
 [checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangles,sparam.pix_per_deg,...
                                                          sparam.nwedges,sparam.nrings,sparam.phase,1);
 
-%% update number of patches and number of wedges, taking into an account of checkerboard phase shift
-
-% here, alll parameters are generated for each checkerboard
-% This looks circuitous, duplicating procedures, and it consumes more CPU and memory.
-% 'if' statements may be better.
-% However, to decrease the number of 'if' statement after starting stimulus
-% presentation as possible as I can, I will do adopt this circuitous procedures.
-true_npatches=cell(numel(sparam.startangles),1);
-true_nwedges=cell(numel(sparam.startangles),1);
-patchids=cell(numel(sparam.startangles),1);
-
-tmp_checks=unique(checkerboardID{1})';
-for nn=1:1:numel(sparam.startangles)
-  true_npatches{nn}=numel(tmp_checks)-1; % -1 is to omit background id
-  true_nwedges{nn}=true_npatches{nn}/sparam.nrings;
-  patchids{nn}=tmp_checks;
-  patchids{nn}=patchids{nn}(2:end); % omit background id
-end
-clear tmp_checks;
-
 % make the checkerboard texture
 checkertexture=cell(numel(sparam.startangles),1);
 for ii=1:1:numel(sparam.startangles), checkertexture{ii}=Screen('MakeTexture',winPtr,checkerboard{ii}); end
@@ -654,7 +634,7 @@ if strfind(upper(subjID),'DEBUG')
   Screen('CloseAll');
   for nn=1:1:numel(sparam.startangles)
     figure; hold on;
-    imfig=imagesc(flipdim(checkerboard{nn},1),[0,true_npatches{nn}]);
+    imfig=imagesc(flipdim(checkerboard{nn},1),[0,numel(unique(checkerboardID{nn}))-1]);
     axis off; axis square;
     colormap(CLUT{1,1}(1:3,1:3)./255);
     fname=sprintf('retinotopy_%s_pos%02d.png',sparam.mode,nn);
@@ -839,7 +819,7 @@ fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(1)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -933,7 +913,7 @@ event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above
+for ff=1:1:nframe_fixation(2)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -955,7 +935,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
-event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
+event=event.add_event('End',[]);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration));

@@ -14,7 +14,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2018-12-20 09:18:11 ban"
+% Last Update: "2019-01-09 17:53:49 ban"
 %
 %
 %
@@ -389,8 +389,8 @@ sparam.RunScript = mfilename();
 
 %% check varidity of parameters
 fprintf('checking validity of stimulus generation/presentation parameters...');
-if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check input variables.'); end
-if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
+if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check the input variables.'); end
+if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check the input variables.'); end
 disp('done.');
 
 
@@ -613,53 +613,6 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
 
 end % if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
 
-%% update number of patches and number of wedges, taking into an account of checkerboard phase shift
-
-% here, alll parameters are generated for each checkerboard
-% This looks circuitous, duplicating procedures, and it consumes more CPU and memory.
-% 'if' statements may be better.
-% However, to decrease the number of 'if' statement after starting stimulus
-% presentation as possible as I can, I will do adopt this circuitous procedures.
-true_npatches=cell(sparam.npositions,1);
-true_nwedges=cell(sparam.npositions,1);
-patchids=cell(sparam.npositions,1);
-
-if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cw')
-  % for ccw & cw, the number of patches/wedges are same over time
-  tmp_checks=unique(checkerboardID{1})';
-  for nn=1:1:sparam.npositions
-    true_npatches{nn}=numel(tmp_checks)-1; % -1 is to omit background id
-    true_nwedges{nn}=true_npatches{nn}/sparam.nrings;
-    patchids{nn}=tmp_checks;
-    patchids{nn}=patchids{nn}(2:end); % omit background id
-  end
-  clear tmp_checks;
-else
-  % for exp & cont, the number of patches/wedges are different over time especially
-  % when the annulus comes around the smallest/largest regions
-  if sparam.nrings==1
-    tmp_checks=unique(checkerboardID{1})';
-    tmp_npatches=numel(tmp_checks)-1; % -1 is to omit background id
-    tmp_nwedges=360/(sparam.width/sparam.nwedges);
-    tmp_ids=tmp_checks(2:end);
-    for nn=1:1:sparam.npositions
-      true_npatches{nn}=tmp_npatches;
-      true_nwedges{nn}=tmp_nwedges;
-      patchids{nn}=tmp_ids; % omit background id;
-    end
-    clear tmp_checks tmp_npatches tmp_nwedges tmp_ids;
-  else
-    for nn=1:1:sparam.npositions
-      tmp_checks=unique(checkerboardID{nn})';
-      true_npatches{nn}=numel(tmp_checks)-1; % -1 is to omit background id
-      true_nwedges{nn}=360/(sparam.width/sparam.nwedges);
-      patchids{nn}=tmp_checks;
-      patchids{nn}=patchids{nn}(2:end); % omit background id;
-    end
-    clear tmp_checks;
-  end
-end
-
 %% flip all data for ccw/cont
 if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cont')
 
@@ -672,21 +625,6 @@ if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'cont')
   for nn=1:1:sparam.npositions, tmp_checkerboard{nn}=checkerboard{sparam.npositions-(nn-1)}; end
   checkerboard=tmp_checkerboard;
   clear tmp_checkerboard;
-
-  tmp_true_npatches=cell(sparam.npositions,1);
-  for nn=1:1:sparam.npositions, tmp_true_npatches{nn}=true_npatches{sparam.npositions-(nn-1)}; end
-  true_npatches=tmp_true_npatches;
-  clear tmp_true_npatches;
-
-  tmp_true_nwedges=cell(sparam.npositions,1);
-  for nn=1:1:sparam.npositions, tmp_true_nwedges{nn}=true_nwedges{sparam.npositions-(nn-1)}; end
-  true_nwedges=tmp_true_nwedges;
-  clear tmp_true_nwedges;
-
-  tmp_patchids=cell(sparam.npositions,1);
-  for nn=1:1:sparam.npositions, tmp_patchids{nn}=patchids{sparam.npositions-(nn-1)}; end
-  patchids=tmp_patchids;
-  clear tmp_patchids;
 
 end
 
@@ -741,7 +679,7 @@ if strfind(upper(subjID),'DEBUG')
   Screen('CloseAll');
   for nn=1:1:sparam.npositions
     figure; hold on;
-    imfig=imagesc(flipdim(checkerboard{nn},1),[0,true_npatches{nn}]);
+    imfig=imagesc(flipdim(checkerboard{nn},1),[0,numel(unique(checkerboardID{nn}))-1]);
     axis off; axis square;
     colormap(CLUT{1,1}(1:3,1:3)./255);
     fname=sprintf('retinotopy_%s_pos%02d.png',sparam.mode,nn);
@@ -784,19 +722,22 @@ task_id=1;
 % variable to store task position
 task_pos=cell(sparam.npositions,1);
 for nn=1:1:sparam.npositions
-  task_pos{nn}=randi(true_npatches{nn},[round(sparam.numRepeats*nframe_cycle/nframe_task),1]);
+  task_pos{nn}=randi(numel(unique(checkerboardID{nn}))-1,[round(sparam.numRepeats*nframe_cycle/nframe_task),1]);
 end
 
-%% set some flags
+% flag to index the first task frame
+firsttask_flg=0;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Initializing checkerboard color management parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % checkerboard color id
 color_id=1;
 
 % checkerboard compensating color id
 compensate_id=1;
-
-% flag to index the first task frame
-firsttask_flg=0;
 
 % variable to store the current rotation/disparity id
 stim_pos_id=1;
@@ -926,7 +867,7 @@ event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(1)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -945,7 +886,7 @@ end
 for cc=1:1:sparam.numRepeats
   % NOTE: as this event will be logged before the first flip in the trial,
   % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-  event=event.add_event(sprintf('Cycle: %d',cc),[],the_experiment_start-sparam.waitframes*dparam.ifi);
+  event=event.add_event(sprintf('Cycle: %d',cc),[]);
   fprintf(sprintf('Cycle: %03d...\n',cc));
 
   %% rest perioed
@@ -1071,7 +1012,7 @@ event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(2)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -1087,8 +1028,8 @@ end
 %%%% Experiment & scanner end here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
-event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
+experimentDuration=GetSecs()-the_experiment_start;
+event=event.add_event('End',[]);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);

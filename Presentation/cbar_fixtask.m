@@ -23,7 +23,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2018-12-20 09:27:47 ban"
+% Last Update: "2019-01-09 18:07:16 ban"
 %
 %
 %
@@ -587,34 +587,6 @@ end
 [checkerboardID,checkerboard]=bar_GenerateCheckerBar1D(fieldSize,width,sparam.rotangles,sparam.steps,...
                                                        sparam.pix_per_deg,sparam.ndivsL,sparam.ndivsS,sparam.phase);
 
-%% update number of patches and number of wedges, taking into an account of checkerboard phase shift
-
-% here, all parameters are generated for each checkerboard
-% This looks circuitous, duplicating procedures, and it consumes more CPU and memory.
-% 'if' statements may be better.
-% However, to decrease the number of 'if' statement after starting stimulus
-% presentation as possible as I can, I will do adopt this circuitous procedures.
-true_npatches=cell(numel(sparam.rotangles),sparam.steps);
-true_nwedges=cell(numel(sparam.rotangles),sparam.steps);
-patchids=cell(numel(sparam.rotangles),sparam.steps);
-
-% in the bar presentation, the number of patches/wedges are different over time
-% because a part of the bar can be occluded by the circular aperture mask.
-% therefore, we have to re-compute the patches and the corresponding IDs here.
-for aa=1:1:numel(sparam.rotangles)
-  for nn=1:1:sparam.steps
-    tmp_checks=unique(checkerboardID{aa,nn})';
-    true_npatches{aa,nn}=numel(tmp_checks)-1; % -1 is to omit background id
-    true_nwedges{aa,nn}=0;
-    for pp=1:1:sparam.ndivsS
-      true_nwedges{aa,nn}=true_nwedges{aa,nn}+ ~(isempty(find(tmp_checks((pp-1)*sparam.ndivsL<tmp_checks & tmp_checks<pp*sparam.ndivsL))));
-    end
-    patchids{aa,nn}=tmp_checks;
-    patchids{aa,nn}=patchids{aa,nn}(2:end); % omit background id;
-  end
-end
-clear tmp_checks;
-
 %% Make Checkerboard textures
 checkertexture=cell(numel(sparam.rotangles),sparam.steps);
 for aa=1:1:numel(sparam.rotangles)
@@ -671,7 +643,7 @@ if strfind(upper(subjID),'DEBUG')
   for aa=1:1:numel(sparam.rotangles)
     for nn=1:1:sparam.steps
       figure; hold on;
-      imfig=imagesc(flipdim(checkerboard{aa,nn},1),[0,true_npatches{aa,nn}]);
+      imfig=imagesc(flipdim(checkerboard{aa,nn},1),[0,numel(unique(checkerboardID{nn}))-1]);
       axis off; axis square;
       colormap(CLUT{1,1}(1:3,1:3)./255);
       fname=sprintf('bar_angle_%.2f_pos_%02d.png',sparam.rotangles(aa),nn);
@@ -860,7 +832,7 @@ fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(1)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -887,8 +859,7 @@ for cc=1:1:sparam.numRepeats
   for aa=1:1:numel(sparam.rotangles)
     % NOTE: as this event will be logged before the first flip in the trial,
     % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-    event=event.add_event(sprintf('Cycle: %d, Direction: %.2f deg',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa)),...
-                          [],the_experiment_start-sparam.waitframes*dparam.ifi);
+    event=event.add_event(sprintf('Cycle: %d, Direction: %.2f deg',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa)),[]);
     fprintf('Cycle: %03d, Direction: %.2f deg...\n',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa));
 
     %% stimulus presentation loop
@@ -979,7 +950,7 @@ event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(2)-1 % -1 is to omit the first frame period above, %-1 is for the first stimulus frame
+for ff=1:1:nframe_fixation(2)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
@@ -1000,8 +971,8 @@ end
 %%%% Experiment & scanner end here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-experimentDuration=GetSecs()-the_experiment_start+sparam.waitframes*dparam.ifi;
-event=event.add_event('End',[],the_experiment_start-sparam.waitframes*dparam.ifi);
+experimentDuration=GetSecs()-the_experiment_start;
+event=event.add_event('End',[]);
 disp(' ');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
