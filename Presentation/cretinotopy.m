@@ -14,7 +14,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2019-01-09 17:53:49 ban"
+% Last Update: "2019-01-25 16:16:03 ban"
 %
 %
 %
@@ -85,10 +85,8 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_01_2013
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -137,10 +135,8 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___April_11_2011
+% % This is the stimulus parameter file for the phase-encoded retinotopy stimulus
+% % Programmed by Hiroshi Ban Apr 01 2011
 % % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"
@@ -630,7 +626,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Talbe (CLUT)
+%%%% Initializing Color Lookup-Table (CLUT)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [note]
@@ -1105,7 +1101,7 @@ catch lasterror
   Priority(0);
   GammaResetPTB(1.0);
   tmp=lasterror; %#ok
-  if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
+  %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
   fprintf(['\nErrror detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...

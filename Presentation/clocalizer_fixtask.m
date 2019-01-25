@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-01-09 18:04:24 ban"
+% Last Update: "2019-01-25 16:14:59 ban"
 %
 %
 %
@@ -89,10 +89,8 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___April_01_2011
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -141,10 +139,8 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___April_01_2011
+% % This is the stimulus parameter file for the clocalizer retinotopy stimulus
+% % Programmed by Hiroshi Ban Dec 19 2018
 % % ************************************************************
 %
 % %%% stimulus parameters
@@ -607,7 +603,7 @@ clear tmpmask mask;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Talbe (CLUT)
+%%%% Initializing Color Lookup-Table (CLUT)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [note]
@@ -1030,7 +1026,7 @@ catch lasterror
   Priority(0);
   GammaResetPTB(1.0);
   tmp=lasterror; %#ok
-  if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
+  %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
   fprintf(['\nErrror detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...

@@ -11,18 +11,12 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2018-12-20 09:14:52 ban"
+% Last Update: "2019-01-25 16:15:39 ban"
 %
 %
 % [input variables]
 % sujID         : ID of subject, string, such as 's01'
-%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
-%                 !!! if 'debug' (case insensitive) is included          !!!
-%                 !!! in subjID string, this program runs as DEBUG mode; !!!
-%                 !!! stimulus images are saved as *.png format at       !!!
-%                 !!! ~/CurvatureShading/Presentation/images             !!!
-%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
-%
+%                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.
 % exp_mode      : experiment mode acceptable in this script is only "bar"
 % acq           : acquisition number (design file number),
 %                 an integer, such as 1, 2, 3, ...
@@ -69,10 +63,8 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_gen_cretinotopy_windows
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % %%% the resolution of the screen height
@@ -89,10 +81,8 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_20_2018
+% % This is the stimulus parameter file for the pRF bar stimulus
+% % Programmed by Hiroshi Ban Nov 20 2018
 % % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"

@@ -27,7 +27,7 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2018-11-29 21:41:56 ban"
-% Last Update: "2019-01-09 17:59:27 ban"
+% Last Update: "2019-01-25 16:16:10 ban"
 %
 %
 %
@@ -94,10 +94,8 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_01_2013
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -146,10 +144,8 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_29_2018
+% % This is the stimulus parameter file for the multifocal retinotopy stimulus
+% % Programmed by Hiroshi Ban Nov 29 2018
 % % ************************************************************
 %
 % %%% stimulus parameters
@@ -394,7 +390,6 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
                     255, 128,   0;
                     128,   0, 255],...
          'trial_duration',2000,...
-         'rest_duration',0,...
          'rest_duration',0,...
          'numTrials',255,...
          'waitframes',6,... % Screen('FrameRate',0)*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
@@ -648,7 +643,7 @@ for cc=1:1:sparam.numTrials, checkertexture{cc}=Screen('MakeTexture',winPtr,chec
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Talbe (CLUT)
+%%%% Initializing Color Lookup-Table (CLUT)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [note]
@@ -1085,7 +1080,7 @@ catch lasterror
   Priority(0);
   GammaResetPTB(1.0);
   tmp=lasterror; %#ok
-  if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
+  %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
   fprintf(['\nErrror detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...

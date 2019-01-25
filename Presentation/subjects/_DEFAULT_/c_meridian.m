@@ -1,8 +1,6 @@
 % ************************************************************
-% This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___Dec_12_2018
+% This is the stimulus parameter file for the cmeridian retinotopy stimulus
+% Programmed by Hiroshi Ban Dec 12 2018
 % ************************************************************
 
 % "sparam" means "stimulus generation parameters"

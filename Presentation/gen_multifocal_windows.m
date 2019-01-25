@@ -11,19 +11,12 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 %            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2018-12-20 09:14:48 ban"
+% Last Update: "2019-01-25 16:15:27 ban"
 %
 %
 % [input variables]
 % sujID         : ID of subject, string, such as 's01'
 %                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.
-%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
-%                 !!! if 'debug' (case insensitive) is included          !!!
-%                 !!! in subjID string, this program runs as DEBUG mode; !!!
-%                 !!! stimulus images are saved as *.png format at       !!!
-%                 !!! ~/Retinotopy/Presentation/images                   !!!
-%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
-%
 % exp_mode      : experiment mode acceptable in this script is only "multifocal"
 %                 this variable is set just to make the input formats similar with the other functions.
 % acq           : acquisition number (design file number),
@@ -71,10 +64,8 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_01_2013
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -123,10 +114,8 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_29_2018
+% % This is the stimulus parameter file for the multifocal retinotopy stimulus
+% % Programmed by Hiroshi Ban Nov 29 2018
 % % ************************************************************
 %
 % %%% stimulus parameters

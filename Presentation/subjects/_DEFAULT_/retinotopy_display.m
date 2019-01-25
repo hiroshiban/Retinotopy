@@ -1,8 +1,6 @@
 % ************************************************************
-% This_is_the_display_file_for_retinotopyDepth_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___November_01_2013
+% This is the display configuration file for the retinotopy stimuli
+% Programmed by Hiroshi Ban Nov 01 2013
 % ************************************************************
 
 % display mode, one of "mono", "dual", "dualcross", "dualparallel", "cross", "parallel", "redgreen", "greenred",

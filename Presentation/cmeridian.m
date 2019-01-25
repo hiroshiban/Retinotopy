@@ -18,7 +18,7 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2018-12-11 19:10:32 ban"
-% Last Update: "2019-01-09 18:03:13 ban"
+% Last Update: "2019-01-25 16:14:51 ban"
 %
 %
 %
@@ -85,10 +85,8 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_01_2013
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -137,10 +135,8 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___Dec_12_2018
+% % This is the stimulus parameter file for the cmeridian retinotopy stimulus
+% % Programmed by Hiroshi Ban Dec 12 2018
 % % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"
@@ -584,7 +580,7 @@ sparam.startangles=[0-sparam.width/2,0-sparam.width/2+90];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Talbe (CLUT)
+%%%% Initializing Color Lookup-Table (CLUT)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [note]
@@ -1015,7 +1011,7 @@ catch lasterror
   Priority(0);
   GammaResetPTB(1.0);
   tmp=lasterror; %#ok
-  if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
+  %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
   fprintf(['\nErrror detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...

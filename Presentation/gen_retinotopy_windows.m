@@ -12,18 +12,12 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2018-12-20 09:33:19 ban"
+% Last Update: "2019-01-25 16:16:16 ban"
 %
 %
 % [input variables]
 % sujID         : ID of subject, string, such as 's01'
-%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
-%                 !!! if 'debug' (case insensitive) is included          !!!
-%                 !!! in subjID string, this program runs as DEBUG mode; !!!
-%                 !!! stimulus images are saved as *.png format at       !!!
-%                 !!! ~/CurvatureShading/Presentation/images             !!!
-%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
-%
+%                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.
 % exp_mode      : experiment mode that you want to run, one of
 %  - ccw   : checkerboard wedge rotated counter-clockwise
 %  - cw    : checkerboard wedge rotated clockwise
@@ -73,10 +67,8 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_gen_cretinotopy_windows
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % %%% the resolution of the screen height
@@ -93,10 +85,8 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_gen_cretinotopy_windows
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___Dec_03_2011
+% % This is the stimulus parameter file for the phase-encoded retinotopy stimulus
+% % Programmed by Hiroshi Ban Apr 01 2011
 % % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"

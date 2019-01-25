@@ -1,8 +1,6 @@
 % ************************************************************
-% This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___April_01_2011
+% This is the stimulus parameter file for the HRF characterization stimulus
+% Programmed by Hiroshi Ban Jan 24 2019
 % ************************************************************
 
 %%% stimulus parameters

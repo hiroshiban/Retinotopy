@@ -1,8 +1,6 @@
 % ************************************************************
-% This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___November_20_2018
+% This is the stimulus parameter file for the pRF bar stimulus
+% Programmed by Hiroshi Ban Nov 20 2018
 % ************************************************************
 
 % "sparam" means "stimulus generation parameters"

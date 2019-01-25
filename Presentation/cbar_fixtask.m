@@ -1,7 +1,7 @@
 function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
 % Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.
-% function cretinotopy(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% function cbar_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % This function generates and presents color/luminance-defined checkerboard bar stimulus
@@ -23,7 +23,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2019-01-09 18:07:16 ban"
+% Last Update: "2019-01-25 16:17:33 ban"
 %
 %
 %
@@ -90,10 +90,8 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % (an example of the displayfile)
 %
 % % ************************************************************
-% % This_is_the_display_file_for_retinotopy_Checker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_01_2013
+% % This is the display configuration file for the retinotopy stimuli
+% % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
 % % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
@@ -142,15 +140,15 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
-% % Please_change_the_parameters_below.
-% % retinotopyDepthfMRI.m
-% % Programmed_by_Hiroshi_Ban___November_20_2018
+% % This is the stimulus parameter file for the pRF bar stimulus
+% % Programmed by Hiroshi Ban Nov 20 2018
 % % ************************************************************
 %
 % % "sparam" means "stimulus generation parameters"
 %
 % %%% stimulus parameters
+% sparam.fieldSize   = 12; % stimulation field size in deg, [row,col]. circular region with sparam.fieldSize is stimulated.
+%
 % sparam.ndivsL      = 24;  % number of bar subdivisions along the bar's long axis
 % sparam.ndivsS      = 3;   % number of bar subdivisions along the bar's  short axis
 % sparam.width       = 1.5; % bar width in deg
@@ -172,7 +170,6 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % sparam.rotangles   = [0,45,90,135,180,225,270,315];
 %
 % sparam.steps       = 16; % steps in sweeping the visual field (from start to end)
-% sparam.fieldSize   = 12; % stimulation field size in deg, [row,col]. circular region with sparam.fieldSize is stimulated.
 %
 % sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
 %                        255,   0,   0; % the first row is background
@@ -357,13 +354,13 @@ sparam=struct(); % initialize
 sparam.mode=exp_mode;
 if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
 sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
+         'fieldSize',[12,12],...
          'ndivsL',24,...
          'ndivsS',3,...
          'width',1.5,...
          'phase',0,...
          'rotangles',[0,45,90,135,180,225,270,315],...
          'steps',16,...
-         'fieldSize',[12,12],...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
                       0, 255,   0;
@@ -421,7 +418,7 @@ fprintf('*************** Screen Settings ****************\n');
 fprintf('Screen Height          : %d\n',dparam.ScrHeight);
 fprintf('Screen Width           : %d\n',dparam.ScrWidth);
 fprintf('*********** Stimulation Periods etc. ***********\n');
-fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),,sparam.initial_fixation_time(2));
+fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
 fprintf('Cycle Duration(sec)    : %d\n',sparam.cycle_duration);
 fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
 fprintf('Repetitions(cycles)    : %d\n',sparam.numRepeats);
@@ -597,7 +594,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Talbe (CLUT)
+%%%% Initializing Color Lookup-Table (CLUT)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [note]
@@ -1048,7 +1045,7 @@ catch lasterror
   Priority(0);
   GammaResetPTB(1.0);
   tmp=lasterror; %#ok
-  if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
+  %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
   fprintf(['\nErrror detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...

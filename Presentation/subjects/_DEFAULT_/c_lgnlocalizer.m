@@ -1,8 +1,6 @@
 % ************************************************************
-% This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
-% Please_change_the_parameters_below.
-% retinotopyDepthfMRI.m
-% Programmed_by_Hiroshi_Ban___April_01_2011
+% This is the stimulus parameter file for the clgnlocalizer retinotopy stimulus
+% Programmed by Hiroshi Ban Dec 19 2018
 % ************************************************************
 
 %%% stimulus parameters
