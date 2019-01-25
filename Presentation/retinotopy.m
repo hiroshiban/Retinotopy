@@ -4,7 +4,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 % function OK=retinotopy(subj,exp_mode,acq_num)
 %
 % This function is a simple wrapper to control phase-encoded/pRF retinotopy stimuli.
-% The fMRI responses for the stimuli can be utilized to delineate borders of retinotopic visual areas.
+% The fMRI responses evoked by the stimuli can be utilized to delineate borders of retinotopic visual areas etc.
 % The details of the wrapped functions are as below.
 %     1. cretinotopy           : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for phase-encoded analysis
 %     2. cretinotopy_fixtask   : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for phase-encoded analysis
@@ -85,7 +85,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-01-25 16:56:35 ban"
+% Last Update: "2019-01-25 17:18:13 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
