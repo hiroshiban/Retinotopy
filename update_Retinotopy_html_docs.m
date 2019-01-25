@@ -9,7 +9,7 @@ function update_Retinotopy_html_docs(style)
 % [input]
 % style : (optional) if 0, a default CSS/TPL templates will be applied in
 %         generating HTML-based help documents, while Hiroshi's customized
-%         templates will be applied if this value is non-zero. 0 by default.
+%         templates will be applied if this value is non-zero. 1 by default.
 %
 % [output]
 % new html-baesd documents will be generated in
@@ -17,7 +17,9 @@ function update_Retinotopy_html_docs(style)
 %
 %
 % Created    : "2013-11-26 10:31:46 ban (ban.hiroshi@gmail.com)"
-% Last Update: "2016-08-29 13:40:30 ban"
+% Last Update: "2019-01-25 17:22:12 ban"
+
+if nargin<1 || isempty(style), style=1; end
 
 % add path to m2html
 m2htmlpath=fullfile(fileparts(mfilename('fullpath')),'m2html');
