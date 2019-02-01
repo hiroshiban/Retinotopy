@@ -14,7 +14,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2019-01-25 16:16:03 ban"
+% Last Update: "2019-02-01 13:11:51 ban"
 %
 %
 %
@@ -765,7 +765,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images

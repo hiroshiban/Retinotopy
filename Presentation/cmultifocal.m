@@ -27,7 +27,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2019-01-25 16:15:11 ban"
+% Last Update: "2019-02-01 13:12:13 ban"
 %
 %
 %
@@ -810,7 +810,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images

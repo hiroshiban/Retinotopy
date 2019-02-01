@@ -17,7 +17,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-01-25 16:17:49 ban"
+% Last Update: "2019-02-01 13:10:58 ban"
 %
 %
 %
@@ -750,7 +750,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images

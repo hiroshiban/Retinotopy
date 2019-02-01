@@ -18,7 +18,7 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2018-12-11 19:10:32 ban"
-% Last Update: "2019-01-25 16:14:51 ban"
+% Last Update: "2019-02-01 13:10:43 ban"
 %
 %
 %
@@ -574,7 +574,7 @@ end
 % Each patch ID will be associated with a CLUT color of the same ID
 
 % generate a dual wedge checkerboard pattern
-sparam.startangles=[0-sparam.width/2,0-sparam.width/2+90];
+sparam.startangles=[0-sparam.width/2,0-sparam.width/2+90]; % 2 = horizontal and vertical meridians
 [checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangles,sparam.pix_per_deg,...
                                                          sparam.nwedges,sparam.nrings,sparam.phase,1);
 
@@ -716,7 +716,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images

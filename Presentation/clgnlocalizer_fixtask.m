@@ -1,6 +1,6 @@
 function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus for localizing LGN.
+% Color/luminance-defined checkerboard stimulus with fixation-point luminance change-detection tasks for localizing LGN.
 % function clgnlocalizer_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -9,7 +9,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 % [note]
 % Behavioral task of LGNlocalizer is to detect changes of luminance of the central
-% fixation period, whereas tasks in cretinotopy and cretinotopy_mono etc is to detect
+% fixation point, whereas tasks in cretinotopy and cretinotopy_mono etc is to detect
 % changes of luminance of one of the patches in the checkerboard stimuli.
 % The central fixation task will be suitable for naive participants as it can minimize
 % eye movement of untrained observers.
@@ -21,7 +21,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-01-25 16:15:05 ban"
+% Last Update: "2019-02-01 16:56:54 ban"
 %
 %
 %
@@ -235,7 +235,7 @@ if nargin<8 || isempty(force_proceed_flag), force_proceed_flag=0; end
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
 
 % check the experiment mode (stimulus type)
-if ~strcmpi(sparam.mode,'LGN'), error('exp_mode acceptable in this script is only "LGN". check the input variable.'); end
+if ~strcmpi(exp_mode,'LGN'), error('exp_mode acceptable in this script is only "LGN". check the input variable.'); end
 
 % check the subject directory
 if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
@@ -645,8 +645,8 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+2*(nframe_block+nframe_rest)*sparam.numRepeats;
-num_tasks=round(totalframes/nframe_task);
+totalframes=max([sum(nframe_fixation),1])+2*(nframe_block+nframe_rest)*sparam.numRepeats;
+num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
   if task_flg(nn-1)==2
@@ -700,22 +700,19 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images, first larger fixations are generated, then they are antialiased
 % This is required to present a beautiful circle
 fix=CreateFixationImgCircular(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*sparam.fixsize,0,0);
 dark_fix=CreateFixationImgCircular(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*sparam.fixsize,0,0);
-task_fix=CreateFixationImgCircular(4*sparam.fixsize,[128,0,0],sparam.bgcolor,4*sparam.fixsize,0,0);
-
 fix=imresize(fix,0.25);
 dark_fix=imresize(dark_fix,0.25);
 
 fcircle=cell(2,1); % 1 is for default fixation, 2 is for darker fixation (luminance detection task)
 fcircle{1}=Screen('MakeTexture',winPtr,fix);
-fcircle{2}=Screen('MakeTexture',winPtr,task_fix);
-fcircle{3}=Screen('MakeTexture',winPtr,dark_fix);
+fcircle{2}=Screen('MakeTexture',winPtr,dark_fix);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -773,7 +770,7 @@ ttime=GetSecs(); while (GetSecs()-ttime < 0.5), end  % run up the clock.
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fcircle{3},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,fcircle{2},[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip', winPtr,[],[],[],1);
@@ -901,7 +898,7 @@ for nn=1:1:nScr
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration)-0.5*dparam.ifi,[],[],1); % the first flip;
-cur_frames=cur_frames+1;
+%cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
@@ -1023,4 +1020,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function LGNlocalizer
+% end % function clgnlocalizer_fixtask

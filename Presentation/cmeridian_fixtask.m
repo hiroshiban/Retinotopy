@@ -18,7 +18,7 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2018-12-12 12:13:50 ban"
-% Last Update: "2019-01-25 16:14:43 ban"
+% Last Update: "2019-02-01 16:58:16 ban"
 %
 %
 %
@@ -652,7 +652,7 @@ end % if strfind(upper(subjID),'DEBUG')
 %% set task variables
 % flag to decide whether presenting fixation task
 totalframes=max(sum(nframe_fixation),1)+2*(nframe_block+nframe_rest)*sparam.numRepeats;
-num_tasks=round(totalframes/nframe_task);
+num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
   if task_flg(nn-1)==2
@@ -706,7 +706,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images, first larger fixations are generated, then they are antialiased
@@ -904,7 +904,7 @@ for nn=1:1:nScr
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration)-0.5*dparam.ifi,[],[],1); % the first flip;
-cur_frames=cur_frames+1;
+%cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 

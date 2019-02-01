@@ -1,6 +1,6 @@
 function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus for localizing specific retinotopic (eccentricity) regions.
+% Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks for localizing specific retinotopic (eccentricity) regions.
 % function clocalizer_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -9,9 +9,9 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % You can also use this script for checking BOLD signal and fMR-image quality.
 %
 % [note]
-% Behavioral task of chrf_fixtask is to detect changes of luminance of the central
-% fixation period, whereas tasks in cretinotopy and cretinotopy_mono etc is to detect
-% changes of luminance of one of the patches in the checkerboard stimuli.
+% Behavioral task of clocalizer_fixtask is to detect changes of luminance of
+% the central fixation point, whereas tasks in cretinotopy and clocalizer is
+% to detect changes of luminance of one of the patches in the checkerboard stimuli.
 % The central fixation task will be suitable for naive participants as it can minimize
 % eye movement of untrained observers.
 %
@@ -22,7 +22,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-01-25 16:14:59 ban"
+% Last Update: "2019-02-01 16:56:48 ban"
 %
 %
 %
@@ -578,28 +578,26 @@ end
 % .....
 % sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
-[checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
+[tmp_checkerboardID,tmp_checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
                                         sparam.nwedges,sparam.nrings,sparam.phase);
-checkerboardID=checkerboardID{1};
-checkerboard=checkerboard{1};
 
-% make the checkerboard texture
-checkertexture=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Generating two compensating masks
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% generating two compensating masks
 tmpmask=CreateWedgeMask(rmin,rmax,rtgt(1),rtgt(2),sparam.width,sparam.startangle,sparam.pix_per_deg);
 tmpmask{1}(tmpmask{1}>0)=255; tmpmask{2}(tmpmask{2}>0)=255;
 
-mask=ones([size(tmpmask{1}),4]); for ii=1:1:3, mask(:,:,ii)=sparam.bgcolor(ii)*mask(:,:,ii); end
-mask(:,:,4)=tmpmask{1};
-targetMask=Screen('MakeTexture',winPtr,mask);
-mask(:,:,4)=tmpmask{2};
-compensatingMask=Screen('MakeTexture',winPtr,mask);
-clear tmpmask mask;
+checkerboardID=cell(2,1);
+checkerboard=cell(2,1);
+checkertexture=cell(2,1);
+for pp=1:1:2
+  checkerboardID{pp}=tmp_checkerboardID{1};
+  checkerboardID{pp}(tmpmask{pp}<255)=0; % set the background ID to the outer region
+
+  checkerboard{pp}=tmp_checkerboard{1};
+  checkerboard{pp}(tmpmask{pp}<255)=0; % set the background ID to the outer region
+
+  checkertexture{pp}=Screen('MakeTexture',winPtr,checkerboard{pp});
+end
+clear tmp_checkerboardID tmp_checkerboard tmpmask;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -666,8 +664,8 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+2*(nframe_block+nframe_rest)*sparam.numRepeats;
-num_tasks=round(totalframes/nframe_task);
+totalframes=max([sum(nframe_fixation),1])+2*(nframe_block+nframe_rest)*sparam.numRepeats;
+num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
   if task_flg(nn-1)==2
@@ -721,7 +719,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images, first larger fixations are generated, then they are antialiased
@@ -744,11 +742,11 @@ if dparam.fullscr
   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
-  stimSize = [size(checkerboard,2)*ratio_wid, size(checkerboard,1)*ratio_hei];
+  stimSize = [size(checkerboard{1},2)*ratio_wid, size(checkerboard{1},1)*ratio_hei];
   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
-  stimSize = [size(checkerboard,2), size(checkerboard,1)];
+  stimSize = [size(checkerboard{1},2), size(checkerboard{1},1)];
   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
@@ -866,12 +864,7 @@ for cc=1:1:sparam.numRepeats
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
         if ff<=nframe_block
-          DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
-          if pp==1 % the target
-            Screen('DrawTexture',winPtr,targetMask,[],CenterRect(stimRect,winRect));
-          else % if pp==2 % the compensating pattern
-            Screen('DrawTexture',winPtr,compensatingMask,[],CenterRect(stimRect,winRect));
-          end
+          DrawTextureWithCLUT(winPtr,checkertexture{pp},CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
         end
         Screen('DrawTexture',winPtr,fcircle{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
@@ -896,7 +889,7 @@ for cc=1:1:sparam.numRepeats
         if ~mod(ff,nframe_flicker) % color reversal
           compensate_id=mod(compensate_id,2)+1;
         end
-  
+
         if ~mod(ff,2*nframe_flicker) % color change
           color_id=color_id+1;
           if color_id>sparam.ncolors, color_id=1; end
@@ -923,7 +916,7 @@ for nn=1:1:nScr
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration)-0.5*dparam.ifi,[],[],1); % the first flip;
-cur_frames=cur_frames+1;
+%cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 

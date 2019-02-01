@@ -1,7 +1,7 @@
 function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus for measuring and estimating a HRF function.
-% function chrf_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% Color/luminance-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.
+% function chrf_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % Color/Luminance-defined checkerboard stimulus for measuring/estimating
@@ -10,10 +10,9 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 % [note]
 % Behavioral task of chrf_fixtask is to detect changes of luminance of the central
-% fixation period, whereas tasks in cretinotopy and cretinotopy_mono etc is to detect
-% changes of luminance of one of the patches in the checkerboard stimuli.
-% The central fixation task will be suitable for naive participants as it can minimize
-% eye movement of untrained observers.
+% fixation point, while the task in chrf is to detect changes of luminance of one
+% of the patches in the checkerboard stimuli. The central fixation task will be
+% suitable for naive participants as it can minimize eye movement of untrained observers.
 %
 % - Acquired fMRI data evoked by this stimulus will be utilized
 %   to delineate retinotopic visual area borders (conventional retinotopy)
@@ -22,7 +21,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-01-25 16:14:13 ban"
+% Last Update: "2019-02-01 16:58:05 ban"
 %
 %
 %
@@ -80,7 +79,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % [example]
-% >> chrf_fixtask_mono('HB','hrf',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> chrf_fixtask('HB','hrf',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -394,7 +393,7 @@ fprintf('Display Mode           : %s\n',dparam.ExpMode);
 fprintf('use Full Screen Mode   : %d\n',dparam.fullscr);
 fprintf('Start Method           : %d\n',dparam.start_method);
 if dparam.start_method==4
-  fprintf('Custom Trigger         : %d\n',dparam.custom_trigger));
+  fprintf('Custom Trigger         : %d\n',dparam.custom_trigger);
 end
 fprintf('*************** Screen Settings ****************\n');
 fprintf('Screen Height          : %d\n',dparam.ScrHeight);
@@ -561,7 +560,7 @@ end
 % sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
 [checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
-                                        sparam.nwedges,sparam.nrings,sparam.phase);
+                                                         sparam.nwedges,sparam.nrings,sparam.phase);
 checkerboardID=checkerboardID{1};
 checkerboard=checkerboard{1};
 
@@ -634,7 +633,7 @@ end % if strfind(upper(subjID),'DEBUG')
 %% set task variables
 % flag to decide whether presenting fixation task
 totalframes=max(sum(nframe_fixation),1)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
-num_tasks=round(totalframes/nframe_task);
+num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
   if task_flg(nn-1)==2
@@ -688,7 +687,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images, first larger fixations are generated, then they are antialiased
@@ -900,7 +899,7 @@ for nn=1:1:nScr
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip;
-cur_frames=cur_frames+1;
+%cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
@@ -1022,4 +1021,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function chrf_fixtask_mono
+% end % function chrf_fixtask

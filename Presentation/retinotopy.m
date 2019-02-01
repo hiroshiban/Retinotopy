@@ -16,12 +16,16 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %     8. cmultifocal_fixtask   : color/luminance-defined multifocal retinotopy checkerboard stimuli with a fixation luminance change detection task, for GLM or pRF analysis
 %     9. cmeridian             : color/luminance-defined dual wedge checkerboard stimuli presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task
 %    10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboard stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
-%    11. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for HRF shape estimation
-%    12. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for localizing LGN
-%    13. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identify retinotopic subregions
-%    14. gen_retinotopy_windows: a function for generating phase-encoded stimulus windows of ccw/cw/exp/cont, for pRF analysis
-%    15. gen_bar_windows       : a function for generating a standard pRF bar stimulus windows, for pRF analysis
-%    16. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
+%    11. chrf                  : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for HRF shape estimation
+%    12. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for HRF shape estimation
+%    13. clgnlocalizer         : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for localizing LGN
+%    14. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for localizing LGN
+%    15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identify retinotopic subregions
+%    16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identify retinotopic subregions
+%    17. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
+%    18. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
+%    19. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
+%    20. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
 % For details, see each function's help.
 %
 % [example]
@@ -32,7 +36,8 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 % [input]
 % subj    : subject's name, e.g. 'HB'
 % exp_mode: experiment mode that you want to run, one of
-%           (task -- luminance change detection on the checkerboard)
+%
+%           *** task -- luminance change detection on the checkerboard
 %           - ccw     : color/luminance-defined checkerboard wedge rotated counter-clockwisely
 %           - cw      : color/luminance-defined checkerboard wedge rotated clockwisely
 %           - exp     : color/luminance-defined checkerboard anuulus expanding from fovea
@@ -44,7 +49,14 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           - cwcont  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - multifocal : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
 %           - meridian : color/luminance-defined dual wedge checkerboard presented along the horizontal or vertical visual meridian
-%           (task -- luminance change detection on the central fixation)
+%           - lgn     : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
+%                       to localize LGN
+%           - hrf     : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
+%                       to measure HRF responses and to test scanner sequence
+%           - localizer : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                       to identify specific eccentricity corresponding regions
+%
+%           *** task -- luminance change detection on the central fixation
 %           - ccwf    : color/luminance-defined checkerboard wedge rotated counter-clockwisely
 %           - cwf     : color/luminance-defined checkerboard wedge rotated clockwisely
 %           - expf    : color/luminance-defined checkerboard anuulus expanding from fovea
@@ -56,16 +68,14 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           - cwcontf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - multifocalf : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
 %           - meridianf : color/luminance-defined dual wedge checkerboard presented along the horizontal or vertical visual meridian
-%           (task -- luminance change detection on the central fixation)
-%           - hrf          : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
-%                            to measure HRF responses and to test scanner sequence
-%           (task -- luminance change detection on the central fixation)
-%           - localizer    : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
-%                            to identify specific eccentricity corresponding regions
-%           (task -- luminance change detection on the central fixation)
-%           - LGN          : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
-%                            to localizer LGN
-%           (these are stimulus windows to generate pRF (population receptive field) model)
+%           - lgnf    : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
+%                       to localize LGN
+%           - hrff    : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
+%                       to measure HRF responses and to test scanner sequence
+%           - localizerf: color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                       to identify specific eccentricity corresponding regions
+%
+%           *** these are stimulus windows to generate pRF (population receptive field) model
 %           - ccwwindows     : stimulation windows of wedge rotated counter-clockwisely
 %           - cwwindows      : stimulation windows of wedge rotated clockwisely
 %           - expwindows     : stimulation windows of annulus expanding from fovea
@@ -76,7 +86,8 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           - cwexpwindows   : stimulation windows of a wedge+annulus checkerboard pattern
 %           - cwcontwindows  : stimulation windows of a wedge+annulus checkerboard pattern
 %           - multifocalwindows : stimulation windows of a standard multifocal retinotopy stimulus
-%           string, or cell string structure, e.g. 'ccw', or {'ccw','exp'}
+%
+%           string or a cell string structure, e.g. 'ccw', or {'ccw','exp'}
 %           length(exp_mode) should equal numel(acq_num)
 % acq_num : acquisition number, 1,2,3,...
 %
@@ -85,7 +96,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-01-25 17:18:13 ban"
+% Last Update: "2019-02-01 16:00:59 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,41 +108,49 @@ if size(exp_mode,1)==1 && ~iscell(exp_mode), exp_mode={exp_mode}; end
 if ~isempty(find(acq_num<1,1)), error('acq_num should be 1,2,3,... check input variable'); end
 if length(exp_mode)~=numel(acq_num), error('the numbers of exp_mode and acq_num mismatch. check input variable'); end
 
-for ii=1:1:length(exp_mode)
-  if ( ~strcmpi(exp_mode{ii},'ccw') && ~strcmpi(exp_mode{ii},'cw') && ...
-       ~strcmpi(exp_mode{ii},'exp') && ~strcmpi(exp_mode{ii},'cont') && ...
-       ~strcmpi(exp_mode{ii},'bar') && ~strcmpi(exp_mode{ii},'ccwexp') && ...
-       ~strcmpi(exp_mode{ii},'cwexp') && ~strcmpi(exp_mode{ii},'ccwcont') && ...
-       ~strcmpi(exp_mode{ii},'cwcont') && ...
-       ~strcmpi(exp_mode{ii},'ccwf') && ~strcmpi(exp_mode{ii},'cwf') && ...
-       ~strcmpi(exp_mode{ii},'expf') && ~strcmpi(exp_mode{ii},'contf') && ...
-       ~strcmpi(exp_mode{ii},'barf') && ~strcmpi(exp_mode{ii},'ccwexpf') && ...
-       ~strcmpi(exp_mode{ii},'cwexpf') && ~strcmpi(exp_mode{ii},'ccwcontf') && ...
-       ~strcmpi(exp_mode{ii},'cwcontf') && ...
-       ~strcmpi(exp_mode{ii},'multifocal') && ~strcmpi(exp_mode{ii},'multifocalf') && ...
-       ~strcmpi(exp_mode{ii},'meridian') && ~strcmpi(exp_mode{ii},'meridianf') && ...
-       ~strcmpi(exp_mode{ii},'HRF') && ~strcmpi(exp_mode{ii},'localizer') && ...
-       ~strcmpi(exp_mode{ii},'LGN') && ...
-       ~strcmpi(exp_mode{ii},'ccwwindows') && ~strcmpi(exp_mode{ii},'cwwindows') && ...
-       ~strcmpi(exp_mode{ii},'expwindows') && ~strcmpi(exp_mode{ii},'contwindows') && ...
-       ~strcmpi(exp_mode{ii},'barwindows') && ~strcmpi(exp_mode{ii},'ccwexpwindows') && ...
-       ~strcmpi(exp_mode{ii},'ccwcontwindows') && ~strcmpi(exp_mode{ii},'cwexpwindows') && ...
-       ~strcmpi(exp_mode{ii},'cwcontwindows') && ~strcmpi(exp_mode{ii},'multifocalwindows') )
+stimtypes={'ccw','cw','exp','cont','bar','ccwexp','cwexp','ccwcont','cwcont',...
+           'ccwf','cwf','expf','contf','barf','ccwexpf','cwexpf','ccwcontf','cwcontf',...
+           'multifocal','multifocalf','meridian','meridianf','hrf','hrff',...
+           'localizer','localizerf','lgn','lgnf'};
 
-    message=sprintf('\ncan not run exp_mode: %s',exp_mode{ii}); disp(message);
-    message='exp_mode should be one of ''ccw'', ''cw'', ''exp'', ''cont'', ''bar'', ''ccwexp'', ''ccwcont'', ''cwexp'','; disp(message);
-    message='                          ''cwcont'', ''multifocal'', ''meridian'', ''ccwf'', ''cwf'', ''expf'', ''contf'','; disp(message);
-    message='                          ''barf'', ''ccwexpf'', ''ccwcontf'', ''cwexpf'', ''cwcont'', ''multifocalf'','; disp(message);
-    message='                          ''meridianf'', ''hrf'', ''localizer'', ''LGN'', ''ccwwindows'', ''cwwindows'','; disp(message);
-    message='                          ''expwindows'', ''contwindows'', ''barwindows'', ''ccwexpwindows'', ''cwexpwindows'','; disp(message);
-    message='                          ''ccwcontwindows'', ''cwcontwindows'', ''multifocalwindows'''; disp(message);
-    message='check the input variables'; disp(message);
+windtypes={'ccwwindows','cwwindows','expwindows','contwindows','barwindows',...
+           'ccwexpwindows','cwexpwindows','ccwcontwindows','cwcontwindows','multifocalwindows'};
+
+for ii=1:1:length(exp_mode)
+  if isempty(intersect(lower(exp_mode{ii}),stimtypes)) && isempty(intersect(lower(exp_mode{ii}),windtypes))
+    % generating warning message like,
+    %
+    % exp_mode should be one of 'ccw', 'cw', 'exp', 'cont', 'bar', 'ccwexp', 'cwexp', 'ccwcont', 
+    %                           'cwcont', 'ccwf', 'cwf', 'expf', 'contf', 'barf', 'ccwexpf', 'cwexpf', 
+    %                           'ccwcontf', 'cwcontf', 'multifocal', 'multifocalf', 'meridian', 'meridianf', 'hrf', 'hrff', 
+    %                           'localizer', 'localizerf', 'lgn', 'lgnf', 
+    %                           'ccwwindows', 'cwwindows', 'expwindows', 'contwindows', 
+    %                           'barwindows', 'ccwexpwindows', 'cwexpwindows', 'ccwcontwindows', 
+    %                           'cwcontwindows', 'multifocalwindows'
+    % check the input variables
+
+    msg_str='exp_mode should be one of '; % 26 characters
+    slen=length(msg_str);
+    for pp=1:1:length(stimtypes)
+      msg_str=[msg_str,'''',stimtypes{pp},''', '];
+      if ~mod(pp,8), msg_str=[msg_str,'\n',repmat(' ',[1,slen])]; end
+    end
+    msg_str=[msg_str,'\n'];
+
+    msg_str=[msg_str,repmat(' ',[1,slen])];
+    for pp=1:1:length(windtypes)
+      msg_str=[msg_str,'''',windtypes{pp},''', '];
+      if ~mod(pp,4), msg_str=[msg_str,'\n',repmat(' ',[1,slen])]; end
+    end
+    msg_str=msg_str(1:end-2); % omit ', ' at the end of the string
+    msg_str=[msg_str,'\ncheck the input variable\n'];
+
+    fprintf(msg_str)
 
     if nargout, OK=false; end
-    return;
+    return
   end
 end
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% set script names
@@ -165,6 +184,12 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='cmultifocal';            stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
   elseif strcmpi(exp_mode{ii},'meridian')
     run_fname{ii}='cmeridian';              stim_mode{ii}='meridian';   stim_fname{ii}='c_meridian';
+  elseif strcmpi(exp_mode{ii},'lgn')
+    run_fname{ii}='clgnlocalizer';          stim_mode{ii}='lgn';        stim_fname{ii}='c_lgnlocalizer';
+  elseif strcmpi(exp_mode{ii},'hrf')
+    run_fname{ii}='chrf';                   stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
+  elseif strcmpi(exp_mode{ii},'localizer')
+    run_fname{ii}='clocalizer';             stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
   elseif strcmpi(exp_mode{ii},'ccwf')
     run_fname{ii}='cretinotopy_fixtask';    stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwf')
@@ -187,12 +212,12 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='cmultifocal_fixtask';    stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
   elseif strcmpi(exp_mode{ii},'meridianf')
     run_fname{ii}='cmeridian_fixtask';      stim_mode{ii}='meridian';   stim_fname{ii}='c_meridian';
-  elseif strcmpi(exp_mode{ii},'hrf')
+  elseif strcmpi(exp_mode{ii},'lgnf')
+    run_fname{ii}='clgnlocalizer_fixtask';  stim_mode{ii}='lgn';        stim_fname{ii}='c_lgnlocalizer';
+  elseif strcmpi(exp_mode{ii},'hrff')
     run_fname{ii}='chrf_fixtask';           stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
-  elseif strcmpi(exp_mode{ii},'localizer')
+  elseif strcmpi(exp_mode{ii},'localizerf')
     run_fname{ii}='clocalizer_fixtask';     stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
-  elseif strcmpi(exp_mode{ii},'LGN')
-    run_fname{ii}='clgnlocalizer_fixtask';  stim_mode{ii}='LGN';        stim_fname{ii}='c_lgnlocalizer';
   elseif strcmpi(exp_mode{ii},'ccwwindows')
     run_fname{ii}='gen_retinotopy_windows'; stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwwindows')
@@ -218,11 +243,7 @@ end
 
 %% set additional parameters to reconstruct stimlus windows
 for ii=1:1:length(exp_mode)
-  if ( strcmpi(exp_mode{ii},'ccwwindows') || strcmpi(exp_mode{ii},'cwwindows') || ...
-       strcmpi(exp_mode{ii},'expwindows') || strcmpi(exp_mode{ii},'contwindows') || ...
-       strcmpi(exp_mode{ii},'barwindows') || strcmpi(exp_mode{ii},'ccwexpwindows') || ...
-       strcmpi(exp_mode{ii},'cwexpwindows') || strcmpi(exp_mode{ii},'ccwcontwindows') || ...
-       strcmpi(exp_mode{ii},'cwcontwindows') || strcmpi(exp_mode{ii},'multifocalwindows') )
+  if ~isempty(intersect(lower(exp_mode{ii}),windtypes))
     overwrite_pix_per_deg=10;
     TR=2;
   end
@@ -279,21 +300,13 @@ gammatable=repmat(linspace(0.0,1.0,256),3,1)'; %#ok % a simple linear gamma
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for ii=1:1:length(exp_mode)
-
-  % generate stimulus windows
-  if ( strcmpi(exp_mode{ii},'ccwwindows') || strcmpi(exp_mode{ii},'cwwindows') || ...
-       strcmpi(exp_mode{ii},'expwindows') || strcmpi(exp_mode{ii},'contwindows') || ...
-       strcmpi(exp_mode{ii},'barwindows') || strcmpi(exp_mode{ii},'ccwexpwindows') || ...
-       strcmpi(exp_mode{ii},'cwexpwindows') || strcmpi(exp_mode{ii},'ccwcontwindows') || ...
-       strcmpi(exp_mode{ii},'cwcontwindows') || strcmpi(exp_mode{ii},'multifocalwindows') )
+  if ~isempty(intersect(lower(exp_mode{ii}),windtypes)) % generate stimulus windows
     main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'',%d,%d);',...
-                          run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii},overwrite_pix_per_deg,TR);
-  % stimulus presentation
-  else
+        run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii},overwrite_pix_per_deg,TR);
+  else % stimulus presentation
     main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'',gammatable);',...
-                          run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii});
+        run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii});
   end
-
   eval(main_exp_name);
 end
 

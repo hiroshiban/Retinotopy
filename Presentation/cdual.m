@@ -14,7 +14,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-01-25 16:18:18 ban"
+% Last Update: "2019-02-01 13:13:29 ban"
 %
 %
 %
@@ -892,7 +892,7 @@ background = Screen('MakeTexture',winPtr,bgimg{1});
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Creating the central fixation, cross images (left/right)
+%%%% Creating the central fixation, cross images
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create fixation cross images

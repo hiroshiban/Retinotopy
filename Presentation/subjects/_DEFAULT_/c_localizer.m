@@ -14,6 +14,8 @@ sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
 sparam.minRad      = 0;      % minimum
 sparam.tgtRad      = [2.7,3.8];  % target eccentricity
 
+sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
+
 sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
                        255,   0,   0; % the first row is background
                          0, 255,   0; % the second to end are patch colors
