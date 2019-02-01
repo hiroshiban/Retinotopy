@@ -4,20 +4,36 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 % function cbar(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% This function generates and presents color/luminance-defined checkerboard bar stimulus
-% to measure cortical retinotopy with the standard pRF (population receptive field) analysis
-% procedure and to delineate retinotopic borders.
-% reference: Population receptive field estimates in human visual cortex.
-%            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
+% - This function generates and presents color/luminance-defined checkerboard bar stimulus
+%   sweeping periodically over the whole visual field, to measure cortical retinotopy and
+%   to delineate retinotopic borders using the standard pRF (population receptive field)
+%   analysis technique.
+%
+%   reference: Population receptive field estimates in human visual cortex.
+%              Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage, 39(2), 647-660.
 %
 % - Acquired fMRI data evoked by this stimulus will be utilized
 %   to delineate retinotopic visual area borders (conventional retinotopy)
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
-% - Stimulus presentation timing are controled by vertical synch signals
+%
+% - Luminance detection task: one of the checks of the checkerboard pattern
+%   randomly turns to darker. An observer has to press the button if s/he
+%   detects this luminance change. Response keys are defined in displayfile.
+%
+% [note]
+% Behavioral task of (function_name)_fixtask is to detect changes of luminance
+% of the central fixation point, while the task in (function_name) is to detect
+% changes of luminance of one of the patches in the checkerboard stimuli.
+% Here, the central fixation task is more easy to sustain the stable fixation
+% on the center of the screen and may be suitable for naive/non-expert
+% participants with minimizing unwilling eye movements. However, some studies
+% have reported that attention to the target stimulus (checker-patch luminance
+% change detection task) is required to get reliable retinotopic representations
+% in higher-order visual areas.
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-02-01 13:10:58 ban"
+% Last Update: "2019-02-01 19:01:20 ban"
 %
 %
 %
@@ -218,12 +234,6 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %    with MATLAB scripts & functions.
 %    see ../Generation & ../Common directries.
 % 2. Stimulus parameters are defined in the display & stimulus file.
-%
-%
-% [about stimuli and task]
-% One of checkerboard patches sometimes (randomly) becomes darker.
-% If you find this contrast difference, press any key.
-% Response kes are difined in display file.
 %
 %
 % [reference]

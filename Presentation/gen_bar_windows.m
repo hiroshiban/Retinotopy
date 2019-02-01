@@ -4,14 +4,16 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 % function stim_windows=gen_bar_windows(subjID,exp_mode,acq,:displayfile,:stimulusfile,:overwrite_pix_per_deg,:TR)
 % (: is optional)
 %
-% This function generates stimulus windows corresponding to the color/luminance-defined
-% checkerboard bar stimuli. The generated stimulus windows will be utilized to generate
-% pRF (population receptive field) models.
-% reference: Population receptive field estimates in human visual cortex.
-%            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
+% - This function generates stimulus windows corresponding to the color/luminance-defined
+%   checkerboard bar stimuli, sweeping periodically over the whole visual field. The
+%   generated stimulus windows can be used to generate pRF (population receptive field) models.
+%
+%   reference: Population receptive field estimates in human visual cortex.
+%              Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2), 647-660.
+%
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2019-01-25 16:15:39 ban"
+% Last Update: "2019-02-01 19:00:26 ban"
 %
 %
 % [input variables]

@@ -4,23 +4,40 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % function cretinotopy_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% This function generates and presents color/luminance-defined checkerboard stimulus
-% to measure cortical retinotopy and to delineate retinotopic borders.
+% - This function generates and presents color/luminance-defined checkerboard stimulus
+%   (rotating wedge and expanding/contracting annulus) to measure cortical retinotopy
+%   and to delineate retinotopic borders using the standard phase-encoded or pRF
+%   (population receptive field) analysis techniques.
+%
+%   references: 1. Borders of multiple visual areas in humans revealed by functional magnetic resonance imaging.
+%                  Sereno MI, Dale AM, Reppas JB, Kwong KK, Belliveau JW, Brady TJ, Rosen BR, Tootell RB. (1995).
+%                  Science 268(5212), 889-893.
+%               2. fMRI of human visual cortex.
+%                  Engel SA, Rumelhart DE, Wandell BA, Lee AT, Glover GH, Chichilnisky EJ, Shadlen MN. (1994).
+%                  Nature, 369(6481), 525.
+%               3. Visual field maps in human cortex.
+%                  Wandell BA, Dumoulin SO, Brewer AA. (2007). Neuron, 56(2), 366-383.
+%
+% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
+%
+% - Luminance detection task: the central fixation point (default: white)
+%   randomly turns to gray. An observer has to press the button if s/he
+%   detects this luminance change. Response keys are defined in displayfile.
 %
 % [note]
-% Behavioral task of cretinotopy_fixtask is to detect changes of luminance of the central
-% fixation period, whereas tasks in cretinotopy is to detect changes of luminance of one
-% of the patches in the checkerboard stimuli. The central fixation task will be suitable
-% for naive participants as it can minimize eye movement of untrained observers.
-%
-% - Acquired fMRI data evoked by this stimulus will be utilized
-%   to delineate retinotopic visual area borders (conventional retinotopy)
-% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
-% - Stimulus presentation timing are controled by vertical synch signals
+% Behavioral task of (function_name)_fixtask is to detect changes of luminance
+% of the central fixation point, while the task in (function_name) is to detect
+% changes of luminance of one of the patches in the checkerboard stimuli.
+% Here, the central fixation task is more easy to sustain the stable fixation
+% on the center of the screen and may be suitable for naive/non-expert
+% participants with minimizing unwilling eye movements. However, some studies
+% have reported that attention to the target stimulus (checker-patch luminance
+% change detection task) is required to get reliable retinotopic representations
+% in higher-order visual areas.
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-02-01 16:57:28 ban"
+% Last Update: "2019-02-01 18:35:41 ban"
 %
 %
 %
@@ -209,12 +226,6 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %    with MATLAB scripts & functions.
 %    see ../Generation & ../Common directries.
 % 2. Stimulus parameters are defined in the display & stimulus file.
-%
-%
-% [about stimuli and task]
-% The central fixation point sometimes changes its color from white to gray.
-% If you find this contrast difference, press any key.
-% Response kes are difined in display file.
 %
 %
 % [reference]

@@ -4,24 +4,31 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % function chrf_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% Color/Luminance-defined checkerboard stimulus for measuring/estimating
-% a cannonical hemodynamic response function shape subject-by-subject.
-% You can also use this script for checking BOLD signal and fMR-image quality.
+% - This function generates and presents color/luminance-defined checkerboard
+%   stimulus (a big circular checkerboard pattern) for for measuring/estimating
+%   a cannonical hemodynamic response function shape subject-by-subject.
+%   You can also use this script for checking BOLD signal and fMR-image quality.
+%
+% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
+%
+% - Luminance detection task: the central fixation point (default: white)
+%   randomly turns to gray. An observer has to press the button if s/he
+%   detects this luminance change. Response keys are defined in displayfile.
 %
 % [note]
-% Behavioral task of chrf_fixtask is to detect changes of luminance of the central
-% fixation point, while the task in chrf is to detect changes of luminance of one
-% of the patches in the checkerboard stimuli. The central fixation task will be
-% suitable for naive participants as it can minimize eye movement of untrained observers.
-%
-% - Acquired fMRI data evoked by this stimulus will be utilized
-%   to delineate retinotopic visual area borders (conventional retinotopy)
-% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
-% - Stimulus presentation timing are controled by vertical synch signals
+% Behavioral task of (function_name)_fixtask is to detect changes of luminance
+% of the central fixation point, while the task in (function_name) is to detect
+% changes of luminance of one of the patches in the checkerboard stimuli.
+% Here, the central fixation task is more easy to sustain the stable fixation
+% on the center of the screen and may be suitable for naive/non-expert
+% participants with minimizing unwilling eye movements. However, some studies
+% have reported that attention to the target stimulus (checker-patch luminance
+% change detection task) is required to get reliable retinotopic representations
+% in higher-order visual areas.
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-01 16:58:05 ban"
+% Last Update: "2019-02-01 18:46:12 ban"
 %
 %
 %
@@ -203,12 +210,6 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %    with MATLAB scripts & functions.
 %    see ../Generation & ../Common directries.
 % 2. Stimulus parameters are defined in the display & stimulus file.
-%
-%
-% [about stimuli and task]
-% The central fixation point sometimes changes its color from white to gray.
-% If you find this contrast difference, press any key.
-% Response kes are difined in display file.
 %
 %
 % [reference]

@@ -4,21 +4,37 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 % function cmeridian_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% This function generates and presents color/luminance-defined dual checkerboard stimulus
-% to measure cortical retinotopy and to delineate retinotopic borders.
-% Unlike the standard phase-encoded visual stimulation, this fucntion present the checkerboards
-% alond the horizontal or vertical visual meridians alternatively. The corresponding fMRI signals
-% evoked by the stimuli can be reliably used to identify the delineating borders of retinotopic
-% visual areas.
+% - This function generates and presents color/luminance-defined dual checkerboard stimulus
+%   to measure cortical retinotopy and to delineate retinotopic visual area borders.
+%   Unlike the standard phase-encoded visual stimulation, this fucntion presents the checkerboards
+%   alond the horizontal or vertical visual meridians alternatively.
 %
-% - Acquired fMRI data evoked by this stimulus will be utilized
-%   to delineate retinotopic visual area borders (conventional retinotopy)
+%   references : 1. Visuotopic cortical connectivity underlying attention revealed with white-matter tractography.
+%                   Greenberg AS, Verstynen T, Chiu YC, Yantis S, Schneider W, Behrmann M. (2012).
+%                   J Neurosci. 32(8), 2773-82.
+%                2. Parallel, multi-stage processing of colors, faces and shapes in macaque inferior temporal cortex.
+%                   Lafer-Sousa, R, Conway, BR. (2013). Nature Neuroscience, 16, 1870-1878.
+%
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
-% - Stimulus presentation timing are controled by vertical synch signals
+%
+% - Luminance detection task: the central fixation point (default: white)
+%   randomly turns to gray. An observer has to press the button if s/he
+%   detects this luminance change. Response keys are defined in displayfile.
+%
+% [note]
+% Behavioral task of (function_name)_fixtask is to detect changes of luminance
+% of the central fixation point, while the task in (function_name) is to detect
+% changes of luminance of one of the patches in the checkerboard stimuli.
+% Here, the central fixation task is more easy to sustain the stable fixation
+% on the center of the screen and may be suitable for naive/non-expert
+% participants with minimizing unwilling eye movements. However, some studies
+% have reported that attention to the target stimulus (checker-patch luminance
+% change detection task) is required to get reliable retinotopic representations
+% in higher-order visual areas.
 %
 %
 % Created    : "2018-12-12 12:13:50 ban"
-% Last Update: "2019-02-01 16:58:16 ban"
+% Last Update: "2019-02-01 18:41:55 ban"
 %
 %
 %
@@ -209,12 +225,6 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %    with MATLAB scripts & functions.
 %    see ../Generation & ../Common directries.
 % 2. Stimulus parameters are defined in the display & stimulus file.
-%
-%
-% [about stimuli and task]
-% The central fixation point sometimes changes its color from white to gray.
-% If you find this contrast difference, press any key.
-% Response kes are difined in display file.
 %
 %
 % [reference]

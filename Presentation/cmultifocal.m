@@ -4,18 +4,31 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 % function cmultifocal(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% This function generates and presents color/luminance-defined multi-focalcheckerboard stimulus
-% to measure cortical retinotopy with the standard multi-focal retinotopy analysis
-% procedure and to delineate retinotopic borders.
-% reference: Multifocal fMRI mapping of visual cortical areas.
-%            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
+% - This function generates and presents color/luminance-defined multi-focal checkerboard
+%   stimulus for indentifying retinotopic visual areas and their visual field representations
+%   based on the standard multi-focal retinotopy analysis.
 %
-% - Acquired fMRI data evoked by this stimulus will be utilized
-%   to delineate retinotopic visual area borders (conventional retinotopy)
+%   reference: Multifocal fMRI mapping of visual cortical areas.
+%              Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
+%
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
-% - Stimulus presentation timing are controled by vertical synch signals
 %
-% *IMPORTANT NOTE*
+% - Luminance detection task: one of the checks of the checkerboard pattern
+%   randomly turns to darker. An observer has to press the button if s/he
+%   detects this luminance change. Response keys are defined in displayfile.
+%
+% [note]
+% Behavioral task of (function_name)_fixtask is to detect changes of luminance
+% of the central fixation point, while the task in (function_name) is to detect
+% changes of luminance of one of the patches in the checkerboard stimuli.
+% Here, the central fixation task is more easy to sustain the stable fixation
+% on the center of the screen and may be suitable for naive/non-expert
+% participants with minimizing unwilling eye movements. However, some studies
+% have reported that attention to the target stimulus (checker-patch luminance
+% change detection task) is required to get reliable retinotopic representations
+% in higher-order visual areas.
+%
+% [*** IMPORTANT NOTE ***]
 % The multi-focal checkerboard patterns are randomly generated based on mseq() function.
 % To analyze the fMRI/MEG time series for specific patterns, please load result files,
 % ./subjects/(subjID)/results/(date)/(subjID)_cmultifocal_results_run_(run_num).mat.
@@ -27,7 +40,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2019-02-01 13:12:13 ban"
+% Last Update: "2019-02-01 18:36:13 ban"
 %
 %
 %
@@ -250,12 +263,6 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %    with MATLAB scripts & functions.
 %    see ../Generation & ../Common directries.
 % 2. Stimulus parameters are defined in the display & stimulus file.
-%
-%
-% [about stimuli and task]
-% One of checkerboard patches sometimes (randomly) becomes darker.
-% If you find this contrast difference, press any key.
-% Response kes are difined in display file.
 %
 %
 % [reference]

@@ -4,23 +4,32 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 % function clgnlocalizer(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% Color/Luminance-defined checkerboard stimulus for delineating LGN subject-by-subject.
-% You can also use this script for checking BOLD signal and fMR-image quality.
+% - This function generates and presents color/luminance-defined checkerboard
+%   stimulus for identifying LGN subject-by-subject (hemifield checker wedges
+%   are presented in the left/right visual hemifields alternatively).
+%   You can also use this script to measure a cannonical hemodynamic response
+%   function shape subject-by-subject or to evaluate BOLD signal and fMR-image quality.
+%
+% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
+%
+% - Luminance detection task: one of the checks of the checkerboard pattern
+%   randomly turns to darker. An observer has to press the button if s/he
+%   detects this luminance change. Response keys are defined in displayfile.
 %
 % [note]
-% Behavioral task of clgnlocalizer_fixtask is to detect changes of luminance of the central
-% fixation point, while the task in clgnlocalizer is to detect changes of luminance of one
-% of the patches in the checkerboard stimuli. The central fixation task will be
-% suitable for naive participants as it can minimize eye movement of untrained observers.
-%
-% - Acquired fMRI data evoked by this stimulus will be utilized
-%   to delineate retinotopic visual area borders (conventional retinotopy)
-% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
-% - Stimulus presentation timing are controled by vertical synch signals
+% Behavioral task of (function_name)_fixtask is to detect changes of luminance
+% of the central fixation point, while the task in (function_name) is to detect
+% changes of luminance of one of the patches in the checkerboard stimuli.
+% Here, the central fixation task is more easy to sustain the stable fixation
+% on the center of the screen and may be suitable for naive/non-expert
+% participants with minimizing unwilling eye movements. However, some studies
+% have reported that attention to the target stimulus (checker-patch luminance
+% change detection task) is required to get reliable retinotopic representations
+% in higher-order visual areas.
 %
 %
 % Created    : "2019-01-31 18:08:27 ban"
-% Last Update: "2019-02-01 16:36:44 ban"
+% Last Update: "2019-02-01 18:45:45 ban"
 %
 %
 %
@@ -208,12 +217,6 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %    with MATLAB scripts & functions.
 %    see ../Generation & ../Common directries.
 % 2. Stimulus parameters are defined in the display & stimulus file.
-%
-%
-% [about stimuli and task]
-% One of checkerboard patches sometimes (randomly) becomes darker.
-% If you find this contrast difference, press any key.
-% Response kes are difined in display file.
 %
 %
 % [reference]

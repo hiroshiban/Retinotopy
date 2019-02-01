@@ -4,14 +4,16 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 % function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,:displayfile,:stimulusfile,:overwrite_pix_per_deg,:TR)
 % (: is optional)
 %
-% This function generates stimulus windows corresponding to the color/luminance-defined
-% multifocal retinotopy checkerboard stimuli. The generated stimulus windows will be utilized
-% to generate GLM or pRF (population receptive field) models.
-% reference: Multifocal fMRI mapping of visual cortical areas.
-%            Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
+% - This function generates stimulus windows corresponding to the color/luminance-defined
+%   multifocal retinotopy checkerboard stimuli. The generated stimulus windows can be used
+%   to generate GLM or pRF (population receptive field) models.
+%
+%   reference: Multifocal fMRI mapping of visual cortical areas.
+%              Vanni, S., Henriksson, L., James, A.C. (2005). Neuroimage, 27(1), 95-105.
+%
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2019-01-25 16:15:27 ban"
+% Last Update: "2019-02-01 18:58:03 ban"
 %
 %
 % [input variables]

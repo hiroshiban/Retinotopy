@@ -4,15 +4,25 @@ function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusf
 % function stim_windows=gen_dual_windows(subjID,exp_mode,acq,:displayfile,:stimulusfile,:overwrite_pix_per_deg,:TR)
 % (: is optional)
 %
-% This function generates stimulus windows corresponding to the color/luminance-defined
-% checkerboard cdual(polar wedge + eccentricity annulus) stimuli.
-% The generated stimulus windows will be utilized to generate pRF (population receptive field) models.
-% reference: Population receptive field estimates in human visual cortex.
-%            Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage 39(2):647-660.
+% - This function generates stimulus windows corresponding to the color/luminance-defined
+%   checkerboard stimuli, cdual and cdual_fixtask, in which a wedge (polar angle) and an
+%   annulus (eccentricity) are simultaneously presented. The generated stimulus windows
+%   can be used to generate pRF (population receptive field) models.
+%
+%   references: 1. Population receptive field estimates in human visual cortex.
+%                  Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage, 39(2), 647-660.
+%               2. Borders of multiple visual areas in humans revealed by functional magnetic resonance imaging.
+%                  Sereno MI, Dale AM, Reppas JB, Kwong KK, Belliveau JW, Brady TJ, Rosen BR, Tootell RB. (1995).
+%                  Science 268(5212), 889-893.
+%               3. fMRI of human visual cortex.
+%                  Engel SA, Rumelhart DE, Wandell BA, Lee AT, Glover GH, Chichilnisky EJ, Shadlen MN. (1994).
+%                  Nature, 369(6481), 525.
+%               4. Visual field maps in human cortex.
+%                  Wandell BA, Dumoulin SO, Brewer AA. (2007). Neuron, 56(2), 366-383.
 %
 %
 % Created    : "2019-01-25 12:30:39 ban"
-% Last Update: "2019-01-25 16:22:24 ban"
+% Last Update: "2019-02-01 18:59:01 ban"
 %
 %
 %
