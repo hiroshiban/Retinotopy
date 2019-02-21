@@ -1,7 +1,7 @@
-function fix=CreateFixationImgConcentrate(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag)
+function fix=CreateFixationImgConcentrateMono(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag)
 
-% Creates circular fixation images for left and right-eyes in a binocular display setting.
-% function fiximg=CreateFixationImgConcentrate(:fixsize,:fixcolor,:bgcolor,:circlesize,:gap,:show_flag,:save_flag)
+% Creates a circular fixation image for a monocular display setting.
+% function fiximg=CreateFixationImgConcentrateMono(:fixsize,:fixcolor,:bgcolor,:circlesize,:gap,:show_flag,:save_flag)
 % (: is optional)
 %
 % Create fixation-cross image that is reported to be able to get more stable and sustained
@@ -21,13 +21,13 @@ function fix=CreateFixationImgConcentrate(fixsize,fixcolor,bgcolor,circlesize,ga
 % save_flag  : if 1, the generated images are saved. [1|0]. 0 by default.
 %
 % [output]
-% fix        : fixation image, a cell structure, fix{left,right}
+% fix        : fixation image.
 %
 % [reference]
 % 
 %
 % Created    : "2019-02-12 14:32:02 ban"
-% Last Update: "2019-02-19 20:14:32 ban"
+% Last Update: "2019-02-19 20:01:55 ban"
 
 % check the input variables
 if nargin < 1, fixsize=32; end
@@ -51,41 +51,28 @@ r=sqrt(x.*x+y.*y);
 
 % create the circular background
 alphac=r; alphac(r>fixsize)=0; alphac(r<=fixsize)=255;
-fix=cell(2,1);
-for ii=1:1:2
-  fix{ii}=repmat(reshape([bgcolor,1],[1,1,1,4]),[2*fixsize,2*fixsize]);
-  fix{ii}(:,:,4)=alphac; % alpha channel
-end
+fix=repmat(reshape([bgcolor,1],[1,1,1,4]),[2*fixsize,2*fixsize]);
+fix(:,:,4)=alphac; % alpha channel
 
 % create the central fixation point
-for ii=1:1:2
-  for pp=1:1:3
-    tmp=fix{ii}(:,:,pp);
-    if ii==1 % left-eye
-      tmp(r<circlesize(2) & ((x<=0 & y>=0) | (x>=0 & y<=0)))=fixcolor(pp);
-    elseif ii==2 % right-eye
-      tmp(r<circlesize(2) & ((x>=0 & y>=0) | (x<=0 & y<=0)))=fixcolor(pp);
-    end
-    tmp( (-circlesize(1)-gap<=x & x<=circlesize(1)+gap) | (-circlesize(1)-gap<=y & y<=circlesize(1)+gap) ) = bgcolor(pp);
-    tmp(r<circlesize(1))=fixcolor(pp);
-    fix{ii}(:,:,pp)=tmp;
-    clear tmp;
-  end
+for ii=1:1:3
+  tmp=fix(:,:,ii);
+  tmp(r<circlesize(2))=fixcolor(ii);
+  tmp( (-circlesize(1)-gap<=x & x<=circlesize(1)+gap) | (-circlesize(1)-gap<=y & y<=circlesize(1)+gap) ) = bgcolor(ii);
+  tmp(r<circlesize(1))=fixcolor(ii);
+  fix(:,:,ii)=tmp;
+  clear tmp;
 end
 
-for ii=1:1:2, fix{ii}=uint8(fix{ii}); end
+fix=uint8(fix);
 
 if show_flag
   figure;
-  subplot(1,2,1)
-  imid1=imshow(fix{1}(:,:,1:3));
-  set(imid1,'AlphaData',double(fix{1}(:,:,4)./255));
+
+  imid1=imshow(fix(:,:,1:3));
+  set(imid1,'AlphaData',double(fix(:,:,4)./255));
   hold on;
-  
-  subplot(1,2,2)
-  imid1=imshow(fix{2}(:,:,1:3));
-  set(imid1,'AlphaData',double(fix{2}(:,:,4)./255));
-  hold on;
+
 end
 
 if save_flag
