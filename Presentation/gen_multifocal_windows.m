@@ -13,7 +13,7 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2019-02-22 15:26:58 ban"
+% Last Update: "2019-02-22 17:25:06 ban"
 %
 %
 % [input variables]
@@ -245,10 +245,10 @@ if acq<1, error('Acquistion number must be integer and greater than zero'); end
 % check the experiment mode (stimulus type)
 if ~strcmpi(exp_mode,'multifocal'), error('exp_mode acceptable in this script is only "multifocal". check the input variable.'); end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

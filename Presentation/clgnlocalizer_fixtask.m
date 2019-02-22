@@ -29,7 +29,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-22 15:19:39 ban"
+% Last Update: "2019-02-22 17:27:18 ban"
 %
 %
 %
@@ -242,10 +242,10 @@ if acq<1, error('Acquistion number must be integer and greater than zero'); end
 % check the experiment mode (stimulus type)
 if ~strcmpi(exp_mode,'LGN'), error('exp_mode acceptable in this script is only "LGN". check the input variable.'); end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

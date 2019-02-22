@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-02-22 15:23:32 ban"
+% Last Update: "2019-02-22 17:25:57 ban"
 %
 %
 %
@@ -274,10 +274,10 @@ if ~strcmpi(exp_mode,'ccwexp') && ~strcmpi(exp_mode,'cwexp') && ~strcmpi(exp_mod
   error('exp_mode should be one of "ccwexp", "cwexp", "ccwcont", and "cwcont". check the input variable.');
 end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

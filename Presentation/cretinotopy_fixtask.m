@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-02-22 15:13:46 ban"
+% Last Update: "2019-02-22 17:28:23 ban"
 %
 %
 %
@@ -255,10 +255,10 @@ if ~strcmpi(exp_mode,'ccw') && ~strcmpi(exp_mode,'cw') && ~strcmpi(exp_mode,'exp
   error('exp_mode should be one of "ccw", "cw", "exp", and "cont". check the input variable.');
 end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

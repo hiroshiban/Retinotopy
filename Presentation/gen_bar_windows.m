@@ -13,7 +13,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2019-02-22 15:12:51 ban"
+% Last Update: "2019-02-22 17:28:36 ban"
 %
 %
 % [input variables]
@@ -159,10 +159,10 @@ if acq<1, error('Acquistion number must be integer and greater than zero'); end
 % check the experiment mode (stimulus type)
 if ~strcmpi(exp_mode,'bar'), error('exp_mode acceptable in this script is only "bar". check the input variable.'); end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

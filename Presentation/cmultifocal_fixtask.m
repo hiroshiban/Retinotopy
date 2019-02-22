@@ -40,7 +40,7 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2018-11-29 21:41:56 ban"
-% Last Update: "2019-02-22 15:14:43 ban"
+% Last Update: "2019-02-22 17:28:14 ban"
 %
 %
 %
@@ -276,10 +276,10 @@ if acq<1, error('Acquistion number must be integer and greater than zero'); end
 % check the experiment mode (stimulus type)
 if ~strcmpi(exp_mode,'multifocal'), error('exp_mode acceptable in this script is only "multifocal". check the input variable.'); end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

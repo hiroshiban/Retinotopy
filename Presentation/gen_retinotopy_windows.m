@@ -21,7 +21,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2019-02-22 15:25:43 ban"
+% Last Update: "2019-02-22 17:25:35 ban"
 %
 %
 % [input variables]
@@ -158,10 +158,10 @@ if ~strcmpi(exp_mode,'ccw') && ~strcmpi(exp_mode,'cw') && ~strcmpi(exp_mode,'exp
   error('exp_mode should be one of "ccw", "cw", "exp", and "cont". check the input variable.');
 end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)

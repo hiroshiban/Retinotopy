@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-02-22 15:24:41 ban"
+% Last Update: "2019-02-22 17:26:22 ban"
 %
 %
 %
@@ -261,10 +261,10 @@ if acq<1, error('Acquistion number must be integer and greater than zero'); end
 % check the experiment mode (stimulus type)
 if ~strcmpi(exp_mode,'bar'), error('exp_mode acceptable in this script is only "bar". check the input variable.'); end
 
-% check the subject directory
-if ~exist(fullfile(pwd,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
-
 rootDir=fileparts(mfilename('fullpath'));
+
+% check the subject directory
+if ~exist(fullfile(rootDir,'subjects',subjID),'dir'), error('can not find subj directory. check the input variable.'); end
 
 % check the display/stimulus files
 if ~isempty(displayfile)
