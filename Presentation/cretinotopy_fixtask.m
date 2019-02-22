@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-02-21 15:21:24 ban"
+% Last Update: "2019-02-22 12:03:08 ban"
 %
 %
 %
@@ -892,7 +892,7 @@ Screen('DrawingFinished',winPtr);
 
 % add time stamp (this also works to load add_event method in memory in advance of the actual displays)
 fprintf('\nWaiting for the start...\n');
-event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),GetSecs());
+event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),NaN);
 
 % waiting for stimulus presentation
 resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
@@ -905,7 +905,7 @@ fprintf('\nExperiment running...\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
-[event,the_experiment_start]=event.set_reference_time(GetSecs());
+[event,the_experiment_start]=event.set_reference_time(vbl);
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
@@ -933,13 +933,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for cc=1:1:sparam.numRepeats
-  % NOTE: as this event will be logged before the first flip in the trial,
-  % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-  event=event.add_event(sprintf('Cycle: %d',cc),[]);
-  fprintf(sprintf('Cycle: %03d...\n',cc));
 
   %% rest perioed
-
   if strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont')
 
     for ff=1:1:nframe_rest
@@ -953,6 +948,12 @@ for cc=1:1:sparam.numRepeats
       % flip the window
       Screen('DrawingFinished',winPtr);
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+
+      if ff==1
+        event=event.add_event(sprintf('Cycle: %d',cc),[]);
+        fprintf(sprintf('Cycle: %03d...\n',cc));
+      end
+
       cur_frames=cur_frames+1;
 
       % update task
@@ -981,6 +982,12 @@ for cc=1:1:sparam.numRepeats
     else
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
     end
+
+    if ff==1 && (~strcmpi(sparam.mode,'cw') && ~strcmpi(sparam.mode,'cont'))
+      event=event.add_event(sprintf('Cycle: %d',cc),[]);
+      fprintf(sprintf('Cycle: %03d...\n',cc));
+    end
+
     cur_frames=cur_frames+1;
 
     % update task
@@ -1014,7 +1021,6 @@ for cc=1:1:sparam.numRepeats
   end % for ff=1:1:cycle_frames
 
   %% rest perioed
-
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')
     for ff=1:1:nframe_rest
       for nn=1:1:nScr

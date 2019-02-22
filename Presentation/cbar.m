@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-02-21 15:49:15 ban"
+% Last Update: "2019-02-22 12:01:25 ban"
 %
 %
 %
@@ -877,7 +877,7 @@ Screen('DrawingFinished',winPtr);
 
 % add time stamp (this also works to load add_event method in memory in advance of the actual displays)
 fprintf('\nWaiting for the start...\n');
-event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),GetSecs());
+event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),NaN);
 
 % waiting for stimulus presentation
 resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
@@ -890,7 +890,7 @@ fprintf('\nExperiment running...\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
-[event,the_experiment_start]=event.set_reference_time(GetSecs());
+[event,the_experiment_start]=event.set_reference_time(vbl);
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
 
@@ -915,10 +915,6 @@ for cc=1:1:sparam.numRepeats
 
   % loop for angle directions
   for aa=1:1:numel(sparam.rotangles)
-    % NOTE: as this event will be logged before the first flip in the trial,
-    % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-    event=event.add_event(sprintf('Cycle: %d, Direction: %.2f deg',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa)),[]);
-    fprintf('Cycle: %03d, Direction: %.2f deg...\n',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa));
 
     %% stimulus presentation loop
     for ff=1:1:nframe_cycle+nframe_rest
@@ -954,6 +950,12 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawingFinished',winPtr);
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
              (aa-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+
+      if ff==1
+        event=event.add_event(sprintf('Cycle: %d, Direction: %.2f deg',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa)),[]);
+        fprintf('Cycle: %03d, Direction: %.2f deg...\n',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa));
+      end
+
       if ff<=nframe_cycle && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
 
       % clean up

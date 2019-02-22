@@ -40,7 +40,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2019-02-21 17:01:37 ban"
+% Last Update: "2019-02-22 13:32:58 ban"
 %
 %
 %
@@ -934,7 +934,7 @@ Screen('DrawingFinished',winPtr);
 
 % add time stamp (this also works to load add_event method in memory in advance of the actual displays)
 fprintf('\nWaiting for the start...\n');
-event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),GetSecs());
+event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),NaN);
 
 % waiting for stimulus presentation
 resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
@@ -947,7 +947,7 @@ fprintf('\nExperiment running...\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
-[event,the_experiment_start]=event.set_reference_time(GetSecs());
+[event,the_experiment_start]=event.set_reference_time(vbl);
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
 
@@ -969,12 +969,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for cc=1:1:sparam.numTrials
-  % NOTE: as this event will be logged before the first flip in the trial,
-  % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-  event=event.add_event(sprintf('Trial: %d',cc),[]);
-  if cc==1, fprintf('Trial: '); end
-  if mod(cc,20)~=0 && cc~=sparam.numTrials, fprintf(sprintf('%03d, ',cc)); end
-  if mod(cc,20)==0 || cc==sparam.numTrials, fprintf('%03d\n       ',cc); end
 
   %% stimulus presentation loop
   for ff=1:1:nframe_trial+nframe_rest
@@ -1009,6 +1003,14 @@ for cc=1:1:sparam.numTrials
     % flip the window
     Screen('DrawingFinished',winPtr);
     Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.trial_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+
+    if ff==1
+      event=event.add_event(sprintf('Trial: %d',cc),[]);
+      if cc==1, fprintf('Trial: '); end
+      if mod(cc,20)~=0 && cc~=sparam.numTrials, fprintf(sprintf('%03d, ',cc)); end
+      if mod(cc,20)==0 || cc==sparam.numTrials, fprintf('%03d\n       ',cc); end
+    end
+
     if ff<=nframe_trial && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
 
     % clean up

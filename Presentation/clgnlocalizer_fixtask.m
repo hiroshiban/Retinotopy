@@ -29,7 +29,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-21 15:23:46 ban"
+% Last Update: "2019-02-22 11:54:11 ban"
 %
 %
 %
@@ -826,7 +826,7 @@ Screen('DrawingFinished',winPtr);
 
 % add time stamp (this also works to load add_event method in memory in advance of the actual displays)
 fprintf('\nWaiting for the start...\n');
-event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),GetSecs());
+event=event.add_event('Experiment Start',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]),NaN);
 
 % waiting for stimulus presentation
 resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
@@ -839,7 +839,7 @@ fprintf('\nExperiment running...\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
-[event,the_experiment_start]=event.set_reference_time(GetSecs());
+[event,the_experiment_start]=event.set_reference_time(vbl);
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
@@ -867,10 +867,6 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for cc=1:1:sparam.numRepeats
-  % NOTE: as this event will be logged before the first flip in the trial,
-  % it will be faster by sparam.waitframes in the record of the event. Please be careful.
-  event=event.add_event(sprintf('Cycle: %d',cc),[]);
-  fprintf(sprintf('Cycle: %03d...\n',cc));
 
   %% stimulus presentation loop
   for pp=1:1:2 % 2 = left and right visual hemifields
@@ -891,6 +887,12 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawingFinished',winPtr);
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*2*(sparam.block_duration+sparam.rest_duration)+...
                            (pp-1)*(sparam.block_duration+sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+
+      if pp==1 && ff==1
+        event=event.add_event(sprintf('Cycle: %d',cc),[]);
+        fprintf(sprintf('Cycle: %03d...\n',cc));
+      end
+
       cur_frames=cur_frames+1;
 
       % update task

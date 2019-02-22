@@ -40,7 +40,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           *** task -- luminance change detection on the checkerboard
 %           - ccw     : color/luminance-defined checkerboard wedge rotated counter-clockwisely
 %           - cw      : color/luminance-defined checkerboard wedge rotated clockwisely
-%           - exp     : color/luminance-defined checkerboard anuulus expanding from fovea
+%           - exp     : color/luminance-defined checkerboard annulus expanding from fovea
 %           - cont    : color/luminance-defined checkerboard annulus contracting from periphery
 %           - bar     : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
 %           - ccwexp  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
@@ -59,7 +59,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           *** task -- luminance change detection on the central fixation
 %           - ccwf    : color/luminance-defined checkerboard wedge rotated counter-clockwisely
 %           - cwf     : color/luminance-defined checkerboard wedge rotated clockwisely
-%           - expf    : color/luminance-defined checkerboard anuulus expanding from fovea
+%           - expf    : color/luminance-defined checkerboard annulus expanding from fovea
 %           - contf   : color/luminance-defined checkerboard annulus contracting from periphery
 %           - barf    : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
 %           - ccwexpf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
@@ -96,7 +96,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-02-01 19:07:20 ban"
+% Last Update: "2019-02-21 23:52:04 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
