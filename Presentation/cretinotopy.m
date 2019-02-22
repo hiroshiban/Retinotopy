@@ -37,7 +37,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2019-02-22 12:02:49 ban"
+% Last Update: "2019-02-22 15:28:04 ban"
 %
 %
 %
@@ -411,7 +411,7 @@ sparam.RunScript = mfilename();
 fprintf('checking validity of stimulus generation/presentation parameters...');
 if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check the input variables.'); end
 if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check the input variables.'); end
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1089,10 +1089,10 @@ end
 
 experimentDuration=GetSecs()-the_experiment_start;
 event=event.add_event('End',[]);
-disp(' ');
+fprintf('\n');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);
-disp(' ');
+fprintf('\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1112,7 +1112,7 @@ if ~overwrite_flg
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 % calculate & display task performance
 fprintf('calculating task accuracy...\n');
@@ -1120,7 +1120,7 @@ correct_event=cell(2,1); for ii=1:1:2, correct_event{ii}=sprintf('key%d',ii); en
 [task.numTasks,task.numHits,task.numErrors,task.numResponses,task.RT]=event.calc_accuracy(correct_event);
 event=event.get_event(); % convert an event logger object to a cell data structure
 eval(sprintf('save -append %s event task;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 % tell the experimenter that the measurements are completed
 try

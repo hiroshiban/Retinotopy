@@ -13,7 +13,7 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2019-02-01 18:58:03 ban"
+% Last Update: "2019-02-22 15:26:58 ban"
 %
 %
 % [input variables]
@@ -451,8 +451,7 @@ nTR_whole=round((sum(sparam.initial_fixation_time)+sparam.trial_duration*sparam.
 rmin=sparam.minRad+sparam.fixsize/sparam.pix_per_deg; % omit the central fixation point
 rmax=sparam.maxRad;
 
-disp('done.');
-disp(' ');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -490,8 +489,7 @@ clear mask_idx mfcheckerboard;
 stim_windows=false([round(size(checkerboard{1})),nTR_whole]);
 TRcounter=1; % TR counter
 
-disp('done.');
-disp(' ');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -508,7 +506,7 @@ end
 %%%% Initial/Final Fixation Period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('storing stimulus patterns...');
+fprintf('storing stimulus patterns...\n');
 fprintf('Frames(TR):\n');
 
 % generate images in the fixation periods
@@ -573,8 +571,7 @@ for ff=TRcounter:1:counterend
   end
 end
 
-disp('done.');
-disp(' ');
+fprintf('done.\n');
 close all;
 
 
@@ -586,7 +583,7 @@ close all;
 fprintf('saving data...');
 savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_multifocal_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

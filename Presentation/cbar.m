@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-02-22 12:01:25 ban"
+% Last Update: "2019-02-22 15:24:41 ban"
 %
 %
 %
@@ -1035,10 +1035,10 @@ end
 
 experimentDuration=GetSecs()-the_experiment_start;
 event=event.add_event('End',[]);
-disp(' ');
+fprintf('\n');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
-disp(' ');
+fprintf('\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1058,7 +1058,7 @@ if ~overwrite_flg
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 % calculate & display task performance
 fprintf('calculating task accuracy...\n');
@@ -1066,7 +1066,7 @@ correct_event=cell(2,1); for ii=1:1:2, correct_event{ii}=sprintf('key%d',ii); en
 [task.numTasks,task.numHits,task.numErrors,task.numResponses,task.RT]=event.calc_accuracy(correct_event);
 event=event.get_event(); % convert an event logger object to a cell data structure
 eval(sprintf('save -append %s event task;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 % tell the experimenter that the measurements are completed
 try

@@ -22,7 +22,7 @@ function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusf
 %
 %
 % Created    : "2019-01-25 12:30:39 ban"
-% Last Update: "2019-02-01 18:59:01 ban"
+% Last Update: "2019-02-22 15:11:58 ban"
 %
 %
 %
@@ -282,7 +282,7 @@ if mod(360,sparam.pol_rotangle), error('mod(360,sparam.pol_rotangle) should be 0
 if mod(360,sparam.ecc_rotangle), error('mod(360,sparam.ecc_rotangle) should be 0. check the input variables.'); end
 if mod(sparam.pol_width,sparam.pol_rotangle), error('mod(sparam.pol_width,sparam.pol_rotangle) should be 0. check the input variables.'); end
 if mod(sparam.ecc_width,sparam.ecc_rotangle), error('mod(sparam.ecc_width,sparam.ecc_rotangle) should be 0. check the input variables.'); end
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -353,8 +353,7 @@ rmax=sparam.maxRad;
 sparam.pol_npositions=360/sparam.pol_rotangle;
 sparam.ecc_npositions=sparam.pol_npositions*(sparam.ecc_cycle_duration-sparam.ecc_rest_duration)/(sparam.pol_cycle_duration-sparam.pol_rest_duration);
 
-disp('done.');
-disp(' ');
+fprintf('done.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -465,8 +464,7 @@ end
 stim_windows=false([round(size(checkerboard{1})),nTR_whole]);
 TRcounter=1; % TR counter
 
-disp('done.');
-disp(' ');
+fprintf('done.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -483,7 +481,7 @@ end
 %%%% Initial Fixation Period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('storing stimulus patterns...');
+fprintf('storing stimulus patterns...\n');
 fprintf('Frames(TR):\n');
 
 % generate images in the fixation periods
@@ -535,8 +533,7 @@ for ff=TRcounter:1:counterend
   end
 end
 
-disp('done.');
-disp(' ');
+fprintf('done.\n\n');
 close all;
 
 
@@ -548,7 +545,7 @@ close all;
 fprintf('saving data...');
 savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_dual_',sparam.mode,'_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

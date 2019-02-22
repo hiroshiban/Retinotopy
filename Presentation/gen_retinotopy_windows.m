@@ -21,7 +21,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2019-02-01 19:00:02 ban"
+% Last Update: "2019-02-22 15:25:43 ban"
 %
 %
 % [input variables]
@@ -246,10 +246,10 @@ dparam.RunScript = mfilename();
 sparam.RunScript = mfilename();
 
 %% check varidity of parameters
-disp('checking validity of stimulus generation/presentation parameters...');
+fprintf('checking validity of stimulus generation/presentation parameters...');
 if mod(360,sparam.rotangle), error('mod(360,sparam.rotangle) should be 0. check input variables.'); end
 if mod(sparam.width,sparam.rotangle), error('mod(sparam.width,sparam.rotangle) should be 0. check input variables.'); end
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -318,8 +318,7 @@ rmax=sparam.maxRad;
 % variable to store the current rotation/disparity id
 stim_pos_id=1;
 
-disp('done.');
-disp(' ');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -379,8 +378,7 @@ end
 stim_windows=false([round(size(checkerboard{1})),nTR_whole]);
 TRcounter=1; % TR counter
 
-disp('done.');
-disp(' ');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -397,7 +395,7 @@ end
 %%%% Initial/Final Fixation Period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('storing stimulus patterns...');
+fprintf('storing stimulus patterns...\n');
 fprintf('Frames(TR):\n');
 
 % generate images in the fixation periods
@@ -497,8 +495,7 @@ for ff=TRcounter:1:counterend
   end
 end
 
-disp('done.');
-disp(' ');
+fprintf('done.\n');
 close all;
 
 
@@ -510,7 +507,7 @@ close all;
 fprintf('saving data...');
 savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',sparam.mode,'_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

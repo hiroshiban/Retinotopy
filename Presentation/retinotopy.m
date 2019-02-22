@@ -96,7 +96,7 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-02-21 23:52:04 ban"
+% Last Update: "2019-02-22 15:07:47 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -262,7 +262,7 @@ end
 subj_dir=fullfile(pwd,'subjects',subj);
 if ~exist(subj_dir,'dir')
 
-  disp('The subject directory was not found.');
+  fprintf('The subject directory was not found.\n');
   user_response=0;
   while ~user_response
     user_entry = input('Do you want to proceed using DEFAULT parameters? (y/n) : ', 's');
@@ -271,11 +271,11 @@ if ~exist(subj_dir,'dir')
       user_response=1; %#ok
       break;
     elseif (user_entry == 'n')
-      disp('quiting the script...');
+      fprintf('quiting the script...\n');
       if nargout, OK=false; end
       return;
     else
-      disp('Please answer y or n!'); continue;
+      fprintf('Please answer y or n!\n'); continue;
     end
   end
 

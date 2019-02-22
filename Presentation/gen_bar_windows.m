@@ -13,7 +13,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2019-02-01 19:00:26 ban"
+% Last Update: "2019-02-22 15:12:51 ban"
 %
 %
 % [input variables]
@@ -311,8 +311,7 @@ nTR_whole=round((sum(sparam.initial_fixation_time)+sparam.cycle_duration*numel(s
 % variable to store the current rotation/disparity id
 stim_pos_id=1;
 
-disp('done.');
-disp(' ');
+fprintf('done.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -338,8 +337,7 @@ clear dummy1 dummy2;
 stim_windows=false([round(size(checkerboard{1,1})),nTR_whole]);
 TRcounter=1; % TR counter
 
-disp('done.');
-disp(' ');
+fprintf('done.\n\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -356,7 +354,7 @@ end
 %%%% Initial/Final Fixation Period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('storing stimulus patterns...');
+fprintf('storing stimulus patterns...\n');
 fprintf('Frames(TR):\n');
 
 % generate images in the fixation periods
@@ -434,8 +432,7 @@ for ff=TRcounter:1:counterend
   end
 end
 
-disp('done.');
-disp(' ');
+fprintf('done.\n\n');
 close all;
 
 
@@ -447,7 +444,7 @@ close all;
 fprintf('saving data...');
 savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_bar_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

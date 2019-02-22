@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-02-22 11:58:59 ban"
+% Last Update: "2019-02-22 15:23:32 ban"
 %
 %
 %
@@ -445,7 +445,7 @@ if mod(360,sparam.pol_rotangle), error('mod(360,sparam.pol_rotangle) should be 0
 if mod(360,sparam.ecc_rotangle), error('mod(360,sparam.ecc_rotangle) should be 0. check the input variables.'); end
 if mod(sparam.pol_width,sparam.pol_rotangle), error('mod(sparam.pol_width,sparam.pol_rotangle) should be 0. check the input variables.'); end
 if mod(sparam.ecc_width,sparam.ecc_rotangle), error('mod(sparam.ecc_width,sparam.ecc_rotangle) should be 0. check the input variables.'); end
-disp('done.');
+fprintf('done.\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1171,10 +1171,10 @@ end
 
 experimentDuration=GetSecs()-the_experiment_start;
 event=event.add_event('End',[]);
-disp(' ');
+fprintf('\n');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
         sum(sparam.initial_fixation_time)+sparam.pol_numRepeats*sparam.pol_cycle_duration);
-disp(' ');
+fprintf('\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1194,7 +1194,7 @@ if ~overwrite_flg
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 % calculate & display task performance
 fprintf('calculating task accuracy...\n');
@@ -1202,7 +1202,7 @@ correct_event=cell(2,1); for ii=1:1:2, correct_event{ii}=sprintf('key%d',ii); en
 [task.numTasks,task.numHits,task.numErrors,task.numResponses,task.RT]=event.calc_accuracy(correct_event);
 event=event.get_event(); % convert an event logger object to a cell data structure
 eval(sprintf('save -append %s event task;',savefname));
-disp('done.');
+fprintf('done.\n');
 
 % tell the experimenter that the measurements are completed
 try
