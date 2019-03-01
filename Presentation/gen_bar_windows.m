@@ -13,7 +13,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2019-02-22 17:28:36 ban"
+% Last Update: "2019-02-27 11:01:35 ban"
 %
 %
 % [input variables]
@@ -256,19 +256,19 @@ sparam.RunScript = mfilename();
 fprintf('The Presentation Parameters are as below.\n\n');
 fprintf('************************************************\n');
 fprintf('*************** Script, Subject ****************\n');
-fprintf('Running Script Name    : %s'');',mfilename());
-fprintf('Subject ID             : %s'');',subjID);
-fprintf('Acquisition Number     : %d'');',acq);
+fprintf('Running Script Name    : %s\n',mfilename());
+fprintf('Subject ID             : %s\n',subjID);
+fprintf('Acquisition Number     : %d\n',acq);
 fprintf('*************** Screen Settings ****************\n');
-fprintf('Screen Height          : %d'');',dparam.ScrHeight);
-fprintf('Screen Width           : %d'');',dparam.ScrWidth);
+fprintf('Screen Height          : %d\n',dparam.ScrHeight);
+fprintf('Screen Width           : %d\n',dparam.ScrWidth);
 fprintf('*********** Stimulation periods etc. ***********\n');
-fprintf('Fixation Time(sec)     : %d & %d'');',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
-fprintf('Cycle Duration(sec)    : %d'');',sparam.cycle_duration);
-fprintf('Rest  Duration(sec)    : %d'');',sparam.rest_duration);
-fprintf('Repetitions(cycles)    : %d'');',sparam.numRepeats);
+fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
+fprintf('Cycle Duration(sec)    : %d\n',sparam.cycle_duration);
+fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
+fprintf('Repetitions(cycles)    : %d\n',sparam.numRepeats);
 fprintf('******** The number of experiment, imgs ********\n');
-fprintf('Experiment Mode        : %s'');',sparam.mode);
+fprintf('Experiment Mode        : %s\n',sparam.mode);
 fprintf('************************************************\n\n');
 fprintf('Please carefully check before proceeding.\n\n');
 

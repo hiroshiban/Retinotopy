@@ -29,10 +29,10 @@ dparam.Key2=71; % key 2 'g'
 dparam.fullscr=false;
 
 %%% the resolution of the screen height
-dparam.ScrHeight=768;
+dparam.ScrHeight=1024;
 
 %% the resolution of the screen width
-dparam.ScrWidth=1024;
+dparam.ScrWidth=1280;
 
 % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
 % if non zero, the value is used as the screen frame rate.

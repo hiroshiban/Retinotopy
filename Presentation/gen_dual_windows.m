@@ -22,7 +22,7 @@ function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusf
 %
 %
 % Created    : "2019-01-25 12:30:39 ban"
-% Last Update: "2019-02-22 17:25:22 ban"
+% Last Update: "2019-02-28 17:30:29 ban"
 %
 %
 %
@@ -65,7 +65,7 @@ function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusf
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/pRF/(date)
-%    as ./subjects/(subjID)/pRF/(date)/(subjID)_stimulus_window_dual_(exp_mode)_run_XX.mat
+%    as ./subjects/(subjID)/pRF/(date)/(subjID)_stimulus_window_(exp_mode)_run_XX.mat
 %
 %
 % [example]
@@ -211,11 +211,11 @@ addpath(fullfile(rootDir,'..','Generation'));
 today=datestr(now,'yymmdd');
 
 % result directry & file
-resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
+resultDir=fullfile(rootDir,'subjects',num2str(subjID),'pRF',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_dual_',exp_mode,'_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',exp_mode,'_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -543,7 +543,7 @@ close all;
 
 % saving the results
 fprintf('saving data...');
-savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_dual_',sparam.mode,'_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_stimulus_window_',sparam.mode,'_run_',num2str(acq,'%02d'),'.mat']);
 eval(sprintf('save %s subjID sparam dparam stim_windows;',savefname));
 fprintf('done.\n');
 

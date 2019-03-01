@@ -1,7 +1,8 @@
-function OK=retinotopy(subj,exp_mode,acq_num)
+function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 
 % a simple wrapper to control all the retinotopy stimulus scripts included in this "Retinotopy" package.
-% function OK=retinotopy(subj,exp_mode,acq_num)
+% function OK=retinotopy(subj,exp_mode,acq_num,:overwrite_pix_per_deg,:TR)
+% (: is optional)
 %
 % This function is a simple wrapper to control phase-encoded/pRF retinotopy stimuli.
 % The fMRI responses evoked by the stimuli can be utilized to delineate borders of retinotopic visual areas etc.
@@ -91,12 +92,22 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %           length(exp_mode) should equal numel(acq_num)
 % acq_num : acquisition number, 1,2,3,...
 %
+% === NOTE: the two input variables below are only effective when exp_mode is set to *windows (one of stimulus window generation functions) ===
+% overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg
+%                 if not specified, sparam.pix_per_deg is used to reconstruct
+%                 stim_windows.
+%                 This is useful to reconstruct stim_windows with less memory space
+%                 1/pix_per_deg = spatial resolution of the generated visual field,
+%                 e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
+%                 empty (use sparam.pix_per_deg) by default
+% TR            : (optional) TR used in fMRI scans, in sec, 2 by default
+%
 % [output]
 % OK      : (optional) flag, whether this script finished without any error [true/false]
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-02-22 15:07:47 ban"
+% Last Update: "2019-03-01 15:15:31 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,6 +115,9 @@ function OK=retinotopy(subj,exp_mode,acq_num)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if nargin<3, help(mfilename()); return; end
+if nargin<4 || isempty(overwrite_pix_per_deg), overwrite_pix_per_deg=[]; end
+if nargin<5 || isempty(TR), TR=2; end
+
 if size(exp_mode,1)==1 && ~iscell(exp_mode), exp_mode={exp_mode}; end
 if ~isempty(find(acq_num<1,1)), error('acq_num should be 1,2,3,... check input variable'); end
 if length(exp_mode)~=numel(acq_num), error('the numbers of exp_mode and acq_num mismatch. check input variable'); end
@@ -229,23 +243,15 @@ for ii=1:1:length(exp_mode)
   elseif strcmpi(exp_mode{ii},'barwindows')
     run_fname{ii}='gen_bar_windows';        stim_mode{ii}='bar';        stim_fname{ii}='c_bar';
   elseif strcmpi(exp_mode{ii},'ccwexpwindows')
-    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='ccwexp';     stim_fname{ii}='c_bar';
+    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='ccwexp';     stim_fname{ii}='c_dual';
   elseif strcmpi(exp_mode{ii},'cwexpwindows')
-    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='cwexp';      stim_fname{ii}='c_bar';
+    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='cwexp';      stim_fname{ii}='c_dual';
   elseif strcmpi(exp_mode{ii},'ccwcontwindows')
-    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='ccwcont';    stim_fname{ii}='c_bar';
+    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='ccwcont';    stim_fname{ii}='c_dual';
   elseif strcmpi(exp_mode{ii},'cwcontwindows')
-    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='cwcont';     stim_fname{ii}='c_bar';
+    run_fname{ii}='gen_dual_windows';       stim_mode{ii}='cwcont';     stim_fname{ii}='c_dual';
   elseif strcmpi(exp_mode{ii},'multifocalwindows')
     run_fname{ii}='gen_multifocal_windows'; stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
-  end
-end
-
-%% set additional parameters to reconstruct stimlus windows
-for ii=1:1:length(exp_mode)
-  if ~isempty(intersect(lower(exp_mode{ii}),windtypes))
-    overwrite_pix_per_deg=10;
-    TR=2;
   end
 end
 
@@ -259,7 +265,7 @@ end
 % all condition files from DEFAULT and then this function tries to run the
 % stimulus presentation script using the DEFAULT parameters
 
-subj_dir=fullfile(pwd,'subjects',subj);
+subj_dir=fullfile(fileparts(mfilename('fullpath')),'subjects',subj);
 if ~exist(subj_dir,'dir')
 
   fprintf('The subject directory was not found.\n');
@@ -280,7 +286,7 @@ if ~exist(subj_dir,'dir')
   end
 
   %mkdir(subj_dir);
-  copyfile(fullfile(pwd,'subjects','_DEFAULT_'),subj_dir);
+  copyfile(fullfile(fileparts(mfilename('fullpath')),'subjects','_DEFAULT_'),subj_dir);
 end
 
 

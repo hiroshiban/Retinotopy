@@ -31,7 +31,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-22 17:27:27 ban"
+% Last Update: "2019-02-28 18:41:50 ban"
 %
 %
 %
@@ -235,7 +235,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 %%%% Check the input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%clear global; clear mex;
+clear global; clear mex;
 if nargin<3, help(mfilename()); return; end
 if nargin<4 || isempty(displayfile), displayfile=[]; end
 if nargin<5 || isempty(stimulusfile), stimulusfile=[]; end
@@ -932,6 +932,8 @@ for cc=1:1:sparam.numRepeats
         end
       end
 
+      [resps,event]=resps.check_responses(event);
+
       %% display the current frame
       for nn=1:1:nScr
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
@@ -960,8 +962,9 @@ for cc=1:1:sparam.numRepeats
       % clean up
       if ff<=nframe_block, Screen('Close',checkertexture); end
 
-      %% exit from the loop if the final frame is displayed
+      [resps,event]=resps.check_responses(event);
 
+      %% exit from the loop if the final frame is displayed
       if pp==2 && ff==nframe_block+nframe_rest && cc==sparam.numRepeats, continue; end
 
       %% update IDs
@@ -1088,7 +1091,7 @@ Priority(0);
 GammaResetPTB(1.0);
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
-%clear all; clear mex; clear global;
+clear all; clear mex; clear global;
 diary off;
 
 
@@ -1113,8 +1116,7 @@ catch lasterror
   keyboard;
   rmpath(genpath(fullfile(rootDir,'..','Common')));
   rmpath(fullfile(rootDir,'..','Generation'));
-  %psychrethrow(psychlasterror);
-  %clear global; clear mex; clear all; close all;
+  clear all; clear mex; clear global;
   return
 end % try..catch
 

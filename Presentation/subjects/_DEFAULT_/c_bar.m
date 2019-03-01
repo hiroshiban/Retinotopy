@@ -1,6 +1,8 @@
 % ************************************************************
-% This is the stimulus parameter file for the pRF bar stimulus
-% Programmed by Hiroshi Ban Nov 20 2018
+% This_is_the_stimulus_parameter_file_for_retinotopyChecker_experiment.
+% Please_change_the_parameters_below.
+% retinotopyDepthfMRI.m
+% Programmed_by_Hiroshi_Ban___November_20_2018
 % ************************************************************
 
 % "sparam" means "stimulus generation parameters"
@@ -61,17 +63,14 @@ sparam.waitframes = 60*(sparam.cycle_duration./1000) / sparam.steps / ( (size(sp
 sparam.initial_fixation_time=[4000,4000];
 
 %%% fixation size & color
-sparam.fixtype=1; % 1: circular, 2: rectangular, 3: concentric fixation point
 sparam.fixsize=4; % radius in pixels
 sparam.fixcolor=[255,255,255];
 
 %%% background color
 sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
 
-%%% background-patch colors (RGB)
-sparam.bgtype=1; % 1: a simple background with sparam.bgcolor (then, the parameters belows are not used), 2: a background with grid guides
-sparam.patch_size=[30,30]; % background patch size, [height,width] in pixels
-sparam.patch_num=[20,40];  % the number of background patches along vertical and horizontal axis
+%%% RGB for background patches
+% 1x3 matrices
 sparam.patch_color1=[255,255,255];
 sparam.patch_color2=[0,0,0];
 

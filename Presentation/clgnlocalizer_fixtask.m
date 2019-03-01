@@ -29,7 +29,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-22 17:27:18 ban"
+% Last Update: "2019-02-28 18:41:57 ban"
 %
 %
 %
@@ -228,7 +228,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %%%% Check input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%clear global; clear mex;
+clear global; clear mex;
 if nargin<3, help(mfilename()); return; end
 if nargin<4 || isempty(displayfile), displayfile=[]; end
 if nargin<5 || isempty(stimulusfile), stimulusfile=[]; end
@@ -883,6 +883,8 @@ for cc=1:1:sparam.numRepeats
         Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
 
+      [resps,event]=resps.check_responses(event);
+
       % flip the window
       Screen('DrawingFinished',winPtr);
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*2*(sparam.block_duration+sparam.rest_duration)+...
@@ -898,8 +900,9 @@ for cc=1:1:sparam.numRepeats
       % update task
       if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
 
-      %% exit from the loop if the final frame is displayed
+      [resps,event]=resps.check_responses(event);
 
+      %% exit from the loop if the final frame is displayed
       if pp==2 && ff==nframe_block+nframe_rest && cc==sparam.numRepeats, continue; end
 
       %% update IDs
@@ -1028,7 +1031,7 @@ Priority(0);
 GammaResetPTB(1.0);
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
-%clear all; clear mex; clear global;
+clear all; clear mex; clear global;
 diary off;
 
 
@@ -1053,8 +1056,7 @@ catch lasterror
   keyboard;
   rmpath(genpath(fullfile(rootDir,'..','Common')));
   rmpath(fullfile(rootDir,'..','Generation'));
-  %psychrethrow(psychlasterror);
-  %clear global; clear mex; clear all; close all;
+  clear all; clear mex; clear global;
   return
 end % try..catch
 

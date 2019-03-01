@@ -31,7 +31,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2019-02-22 17:25:45 ban"
+% Last Update: "2019-02-28 18:42:37 ban"
 %
 %
 %
@@ -243,7 +243,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %%%% Check the input variables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%clear global; clear mex;
+clear global; clear mex;
 if nargin<3, help(mfilename()); return; end
 if nargin<4 || isempty(displayfile), displayfile=[]; end
 if nargin<5 || isempty(stimulusfile), stimulusfile=[]; end
@@ -905,6 +905,8 @@ for cc=1:1:sparam.numRepeats
         Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
 
+      [resps,event]=resps.check_responses(event);
+
       % flip the window
       Screen('DrawingFinished',winPtr);
       Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
@@ -920,8 +922,9 @@ for cc=1:1:sparam.numRepeats
       % update task
       if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
 
-      %% exit from the loop if the final frame is displayed
+      [resps,event]=resps.check_responses(event);
 
+      %% exit from the loop if the final frame is displayed
       if ff==nframe_cycle+nframe_rest && aa==numel(sparam.rotangles), continue; end
 
       %% update IDs
@@ -942,6 +945,10 @@ for cc=1:1:sparam.numRepeats
           stim_pos_id=stim_pos_id+1;
           if stim_pos_id>sparam.steps, stim_pos_id=1; end
         end
+      else % required to compensate insubdivisible frames
+        compensate_id=1;
+        color_id=1;
+        stim_pos_id=1;
       end
 
       % get responses
@@ -1055,7 +1062,7 @@ Priority(0);
 GammaResetPTB(1.0);
 rmpath(genpath(fullfile(rootDir,'..','Common')));
 rmpath(fullfile(rootDir,'..','Generation'));
-%clear all; clear mex; clear global;
+clear all; clear mex; clear global;
 diary off;
 
 
@@ -1080,8 +1087,7 @@ catch lasterror
   keyboard;
   rmpath(genpath(fullfile(rootDir,'..','Common')));
   rmpath(fullfile(rootDir,'..','Generation'));
-  %psychrethrow(psychlasterror);
-  %clear global; clear mex; clear all; close all;
+  clear all; clear mex; clear global;
   return
 end % try..catch
 
