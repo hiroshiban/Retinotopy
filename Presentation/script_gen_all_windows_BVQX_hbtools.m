@@ -1,13 +1,16 @@
-function script_gen_all_windows(subj,pix_per_deg,TR)
+function script_gen_all_windows_BVQX_hbtools(subj,pix_per_deg,TR)
 
 % a simple script to generate all the retinotopy stimulus windows for pRF analyses, which are compatible with the BVQX_hbtools's pRF analysis routines.
-% function script_gen_all_windows(subj,:pix_per_deg,:TR)
+% function script_gen_all_windows_BVQX_hbtools(subj,:pix_per_deg,:TR)
 % (: is optional)
 %
 % This is a simple script to generate all the retinotopy stimulus windows for pRF analyses.
 % The generated files can be directly applied to the BVQX_hbtools's pRF analysis pipeline.
 % For details of the stimulus window generation, please see help documents of gen_*_windows
 % functions.
+%
+% [example]
+% >> script_gen_all_windows_BVQX_hbtools('2d',[10,20],[1,2]);
 %
 % [input]
 % subj  : subject's name, e.g. 'HB'
@@ -23,10 +26,11 @@ function script_gen_all_windows(subj,pix_per_deg,TR)
 %
 % [output]
 % no output variable.
+% all the stimulus windows are stored in ~/Retinotopy/Presentation/subjects/(subj_name)/results/(date)/pRF.
 %
 %
 % Created    : "2019-02-28 17:46:17 ban"
-% Last Update: "2019-03-01 15:15:31 ban"
+% Last Update: "2019-03-03 11:15:01 ban"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% check the input variables

@@ -2,7 +2,7 @@
 README for "Retinotopy" stimulus package
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2019-02-21 23:50:57 ban"
+Last Update: "2019-03-03 14:14:54 ban"
 ***********************************
 
 [about Retinotopy package]
@@ -50,8 +50,8 @@ subj    : subject's name, e.g. 'HB'
 exp_mode: experiment mode that you want to run, one of
 
           *** task -- luminance change detection on the checkerboard
-          - ccw     : color/luminance-defined checkerboard wedge rotated counter-clockwisely
-          - cw      : color/luminance-defined checkerboard wedge rotated clockwisely
+          - ccw     : color/luminance-defined checkerboard wedge rotating counter-clockwisely
+          - cw      : color/luminance-defined checkerboard wedge rotating clockwisely
           - exp     : color/luminance-defined checkerboard annulus expanding from fovea
           - cont    : color/luminance-defined checkerboard annulus contracting from periphery
           - bar     : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
@@ -69,8 +69,8 @@ exp_mode: experiment mode that you want to run, one of
                       to identify specific eccentricity corresponding regions
 
           *** task -- luminance change detection on the central fixation
-          - ccwf    : color/luminance-defined checkerboard wedge rotated counter-clockwisely
-          - cwf     : color/luminance-defined checkerboard wedge rotated clockwisely
+          - ccwf    : color/luminance-defined checkerboard wedge rotating counter-clockwisely
+          - cwf     : color/luminance-defined checkerboard wedge rotating clockwisely
           - expf    : color/luminance-defined checkerboard annulus expanding from fovea
           - contf   : color/luminance-defined checkerboard annulus contracting from periphery
           - barf    : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
@@ -88,8 +88,8 @@ exp_mode: experiment mode that you want to run, one of
                       to identify specific eccentricity corresponding regions
 
           *** these are stimulus windows to generate pRF (population receptive field) model
-          - ccwwindows     : stimulation windows of wedge rotated counter-clockwisely
-          - cwwindows      : stimulation windows of wedge rotated clockwisely
+          - ccwwindows     : stimulation windows of wedge rotating counter-clockwisely
+          - cwwindows      : stimulation windows of wedge rotating clockwisely
           - expwindows     : stimulation windows of annulus expanding from fovea
           - contwindows    : stimulation windows of annulus contracting from periphery
           - barwindows     : stimulation windows of a standard pRF bar
