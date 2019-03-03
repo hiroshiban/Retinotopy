@@ -26,11 +26,11 @@ function script_gen_all_windows_BVQX_hbtools(subj,pix_per_deg,TR)
 %
 % [output]
 % no output variable.
-% all the stimulus windows are stored in ~/Retinotopy/Presentation/subjects/(subj_name)/results/(date)/pRF.
+% all the stimulus windows are stored in ~/Retinotopy/Presentation/subjects/(subj_name)/pRF/(date).
 %
 %
 % Created    : "2019-02-28 17:46:17 ban"
-% Last Update: "2019-03-03 11:15:01 ban"
+% Last Update: "2019-03-03 14:53:40 ban"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% check the input variables
