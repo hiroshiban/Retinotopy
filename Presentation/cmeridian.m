@@ -7,7 +7,8 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 % - This function generates and presents color/luminance-defined dual checkerboard stimulus
 %   to measure cortical retinotopy and to delineate retinotopic visual area borders.
 %   Unlike the standard phase-encoded visual stimulation, this fucntion presents the checkerboards
-%   alond the horizontal or vertical visual meridians alternatively.
+%   alond the horizontal or vertical visual meridians alternatively. Please use GLM for retinotopy
+%   analysis, not the conventional phase-encoded analysis technique.
 %
 %   references : 1. Visuotopic cortical connectivity underlying attention revealed with white-matter tractography.
 %                   Greenberg AS, Verstynen T, Chiu YC, Yantis S, Schneider W, Behrmann M. (2012).
@@ -34,7 +35,7 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2018-12-11 19:10:32 ban"
-% Last Update: "2019-02-28 18:41:37 ban"
+% Last Update: "2019-03-05 16:48:42 ban"
 %
 %
 %

@@ -1,7 +1,7 @@
 function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks for localizing specific retinotopic (iso-eccentricity) regions.
-% function clocalizer_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.
+% function clocalizer_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % - This function generates and presents color/luminance-defined checkerboard
@@ -31,7 +31,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-28 18:41:44 ban"
+% Last Update: "2019-03-05 17:24:48 ban"
 %
 %
 %

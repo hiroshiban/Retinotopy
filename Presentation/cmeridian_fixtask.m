@@ -1,13 +1,14 @@
 function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.
+% Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.
 % function cmeridian_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % - This function generates and presents color/luminance-defined dual checkerboard stimulus
 %   to measure cortical retinotopy and to delineate retinotopic visual area borders.
 %   Unlike the standard phase-encoded visual stimulation, this fucntion presents the checkerboards
-%   alond the horizontal or vertical visual meridians alternatively.
+%   alond the horizontal or vertical visual meridians alternatively. Please use GLM for retinotopy
+%   analysis, not the conventional phase-encoded analysis technique.
 %
 %   references : 1. Visuotopic cortical connectivity underlying attention revealed with white-matter tractography.
 %                   Greenberg AS, Verstynen T, Chiu YC, Yantis S, Schneider W, Behrmann M. (2012).
@@ -34,7 +35,7 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2018-12-12 12:13:50 ban"
-% Last Update: "2019-02-28 18:41:31 ban"
+% Last Update: "2019-03-05 16:51:11 ban"
 %
 %
 %
@@ -165,8 +166,6 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 % sparam.maxRad      = 8;     % maximum radius of  annulus (degrees)
 % sparam.minRad      = 0;     % minumum
-%
-% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 %
 % sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
 %                        255,   0,   0; % the first row is background
@@ -360,7 +359,6 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'phase',0,...
          'maxRad',8,...
          'minRad',0,...
-         'dimratio',0.4,...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
                       0, 255,   0;

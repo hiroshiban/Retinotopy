@@ -51,6 +51,8 @@ sparam.cycle_duration=40000; % msec
 sparam.rest_duration =8000; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
 sparam.numRepeats=1;
 
+sparam.flip_duration=500; % msec, used only for object-image-based retinotopy stimuli
+
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
 % the final 2 is for 2 times repetitions of flicker

@@ -1,6 +1,6 @@
 function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.
+% Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.
 % function cdual_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -39,7 +39,7 @@ function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-02-28 18:42:26 ban"
+% Last Update: "2019-03-05 18:12:28 ban"
 %
 %
 %
@@ -183,8 +183,6 @@ function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 % sparam.maxRad      = 6.0;  % maximum radius of  annulus (degrees)
 % sparam.minRad      = 0;    % minumum
-%
-% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 %
 % sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
 %                        255,   0,   0; % the first row is background
@@ -390,7 +388,6 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'ecc_startangle',-48/2-90,...
          'maxRad',8,...
          'minRad',0,...
-         'dimratio',0.4,...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
                       0, 255,   0;

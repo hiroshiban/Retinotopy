@@ -1,6 +1,6 @@
 function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks for localizing LGN.
+% Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks, for localizing LGN.
 % function clgnlocalizer(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -29,7 +29,7 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2019-01-31 18:08:27 ban"
-% Last Update: "2019-02-28 18:42:05 ban"
+% Last Update: "2019-03-05 17:31:22 ban"
 %
 %
 %
@@ -184,6 +184,7 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 % sparam.block_duration=16000; % msec
 % sparam.rest_duration =0; % msec, rest after each block
 % sparam.numRepeats=6;
+%
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
 % % the final 2 is for 2 times repetitions of flicker

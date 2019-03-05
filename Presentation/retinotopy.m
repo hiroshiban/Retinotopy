@@ -6,6 +6,7 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %
 % This function is a simple wrapper to control phase-encoded/pRF retinotopy stimuli.
 % The fMRI responses evoked by the stimuli can be utilized to delineate borders of retinotopic visual areas etc.
+%
 % The wrapped functions are as below.
 %     1. cretinotopy           : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for phase-encoded analysis
 %     2. cretinotopy_fixtask   : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for phase-encoded analysis
@@ -15,18 +16,26 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %     6. cdual_fixtask         : color/luminance-defined checkerboard stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
 %     7. cmultifocal           : color/luminance-defined multifocal retinotopy checkerboard stimuli with a checker-pattern luminance change detection task, for GLM or pRF analysis
 %     8. cmultifocal_fixtask   : color/luminance-defined multifocal retinotopy checkerboard stimuli with a fixation luminance change detection task, for GLM or pRF analysis
-%     9. cmeridian             : color/luminance-defined dual wedge checkerboard stimuli presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task
-%    10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboard stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+%     9. cmeridian             : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task
+%    10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
 %    11. chrf                  : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for HRF shape estimation
 %    12. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for HRF shape estimation
 %    13. clgnlocalizer         : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for localizing LGN
 %    14. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for localizing LGN
-%    15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identify retinotopic subregions
-%    16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identify retinotopic subregions
-%    17. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
-%    18. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
-%    19. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
-%    20. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
+%    15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+%    16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+%    17. iretinotopy_fixtask   : object-image-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis
+%    18. ibar_fixtask          : object-image-defined bar stimuli with a fixation luminance change detection task, for pRF analysis
+%    19. idual_fixtask         : object-image-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
+%    20. imultifocal_fixtask   : object-image-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis
+%    21. imeridian_fixtask     : object-image-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+%    22. ihrf_fixtask          : object-image-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation
+%    23. ilgnlocalizer_fixtask : object-image-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN
+%    24. ilocalizer_fixtask    : object-image-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+%    25. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
+%    26. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
+%    27. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
+%    28. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
 % For more details, please see each function's help.
 %
 % [example]
@@ -41,40 +50,52 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %           *** task -- luminance change detection on the checkerboard
 %           - ccw     : color/luminance-defined checkerboard wedge rotating counter-clockwisely
 %           - cw      : color/luminance-defined checkerboard wedge rotating clockwisely
-%           - exp     : color/luminance-defined checkerboard annulus expanding from fovea
-%           - cont    : color/luminance-defined checkerboard annulus contracting from periphery
+%           - exp     : color/luminance-defined checkerboard annulus expanding from fovea to periphery
+%           - cont    : color/luminance-defined checkerboard annulus contracting from periphery to fovea
 %           - bar     : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
 %           - ccwexp  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - ccwcont : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - cwexp   : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - cwcont  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
-%           - multifocal : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
-%           - meridian : color/luminance-defined dual wedge checkerboard presented along the horizontal or vertical visual meridian
-%           - lgn     : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
-%                       to localize LGN
-%           - hrf     : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
-%                       to measure HRF responses and to test scanner sequence
-%           - localizer : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
-%                       to identify specific eccentricity corresponding regions
+%           - multifocal : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus
+%           - meridian : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian
+%           - lgn     : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+%           - hrf     : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+%           - localizer : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                       to identify specific iso-eccentricity regions
 %
 %           *** task -- luminance change detection on the central fixation
 %           - ccwf    : color/luminance-defined checkerboard wedge rotating counter-clockwisely
 %           - cwf     : color/luminance-defined checkerboard wedge rotating clockwisely
-%           - expf    : color/luminance-defined checkerboard annulus expanding from fovea
-%           - contf   : color/luminance-defined checkerboard annulus contracting from periphery
+%           - expf    : color/luminance-defined checkerboard annulus expanding from fovea to periphery
+%           - contf   : color/luminance-defined checkerboard annulus contracting from periphery to fovea
 %           - barf    : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
 %           - ccwexpf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - ccwcontf: color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - cwexpf  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
 %           - cwcontf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
-%           - multifocalf : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
-%           - meridianf : color/luminance-defined dual wedge checkerboard presented along the horizontal or vertical visual meridian
-%           - lgnf    : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
-%                       to localize LGN
-%           - hrff    : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
-%                       to measure HRF responses and to test scanner sequence
-%           - localizerf: color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
-%                       to identify specific eccentricity corresponding regions
+%           - multifocalf : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus
+%           - meridianf : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian
+%           - lgnf    : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+%           - hrff    : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+%           - localizerf : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                       to identify specific iso-eccentricity regions
+%
+%           - ccwi    : Object-image-defined wedge rotating counter-clockwisely
+%           - cwi     : Object-image-defined wedge rotating clockwisely
+%           - expi    : Object-image-defined annulus expanding from fovea to periphery
+%           - conti   : Object-image-defined annulus contracting from periphery to fovea
+%           - bari    : Object-image-defined bar, a standard pRF (population receptive field) stimulus
+%           - ccwexpi : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - ccwconti: Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - cwexpi  : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - cwconti : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - multifocali : Object-image-defined multifocal retinotopy stimulus
+%           - meridiani : Object-image-defined dual wedges presented along the horizontal or vertical visual meridian
+%           - lgni    : Object-image-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+%           - hrfi    : Object-image-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+%           - localizeri: Object-image-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                       to identify specific iso-eccentricity regions
 %
 %           *** these are stimulus windows to generate pRF (population receptive field) model
 %           - ccwwindows     : stimulation windows of wedge rotating counter-clockwisely
@@ -94,20 +115,20 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %
 % === NOTE: the two input variables below are only effective when exp_mode is set to *windows (one of stimulus window generation functions) ===
 % overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg
-%                 if not specified, sparam.pix_per_deg is used to reconstruct
-%                 stim_windows.
-%                 This is useful to reconstruct stim_windows with less memory space
-%                 1/pix_per_deg = spatial resolution of the generated visual field,
-%                 e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
-%                 empty (use sparam.pix_per_deg) by default
-% TR            : (optional) TR used in fMRI scans, in sec, 2 by default
+%           if not specified, sparam.pix_per_deg is used to reconstruct
+%           stim_windows.
+%           This is useful to reconstruct stim_windows with less memory space
+%           1/pix_per_deg = spatial resolution of the generated visual field,
+%           e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
+%           empty (use sparam.pix_per_deg) by default
+% TR      : (optional) TR used in fMRI scans, in sec, 2 by default
 %
 % [output]
 % OK      : (optional) flag, whether this script finished without any error [true/false]
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-03-03 14:15:12 ban"
+% Last Update: "2019-03-05 19:08:32 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,8 +145,9 @@ if length(exp_mode)~=numel(acq_num), error('the numbers of exp_mode and acq_num 
 
 stimtypes={'ccw','cw','exp','cont','bar','ccwexp','cwexp','ccwcont','cwcont',...
            'ccwf','cwf','expf','contf','barf','ccwexpf','cwexpf','ccwcontf','cwcontf',...
-           'multifocal','multifocalf','meridian','meridianf','hrf','hrff',...
-           'localizer','localizerf','lgn','lgnf'};
+           'ccwi','cwi','expi','conti','bari','ccwexpi','cwexpi','ccwconti','cwconti',...
+           'multifocal','multifocalf',',multifocali','meridian','meridianf','meridiani',...
+           'hrf','hrff','hrfi','localizer','localizerf','localizeri','lgn','lgnf','lgni'};
 
 windtypes={'ccwwindows','cwwindows','expwindows','contwindows','barwindows',...
            'ccwexpwindows','cwexpwindows','ccwcontwindows','cwcontwindows','multifocalwindows'};
@@ -136,11 +158,11 @@ for ii=1:1:length(exp_mode)
     %
     % exp_mode should be one of 'ccw', 'cw', 'exp', 'cont', 'bar', 'ccwexp', 'cwexp', 'ccwcont', 
     %                           'cwcont', 'ccwf', 'cwf', 'expf', 'contf', 'barf', 'ccwexpf', 'cwexpf', 
-    %                           'ccwcontf', 'cwcontf', 'multifocal', 'multifocalf', 'meridian', 'meridianf', 'hrf', 'hrff', 
-    %                           'localizer', 'localizerf', 'lgn', 'lgnf', 
-    %                           'ccwwindows', 'cwwindows', 'expwindows', 'contwindows', 
-    %                           'barwindows', 'ccwexpwindows', 'cwexpwindows', 'ccwcontwindows', 
-    %                           'cwcontwindows', 'multifocalwindows'
+    %                           'ccwcontf', 'cwcontf', 'ccwi', 'cwi', 'expi', 'conti', 'bari', 'ccwexpi',
+    %                           'cwexpi', 'ccwconti', 'cwconti', 'multifocal', 'multifocalf', 'multifocali', 'meridian', 'meridianf',
+    %                           'meridiani', 'hrf', 'hrff', 'hrfi', 'localizer', 'localizerf', 'localizeri', 'lgn',
+    %                           'lgnf', 'lgni', 'ccwwindows', 'cwwindows', 'expwindows', 'contwindows', 'barwindows', 'ccwexpwindows',
+    %                           'cwexpwindows', 'ccwcontwindows', 'cwcontwindows', 'multifocalwindows'
     % check the input variables
 
     msg_str='exp_mode should be one of '; % 26 characters
@@ -232,6 +254,34 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='chrf_fixtask';           stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
   elseif strcmpi(exp_mode{ii},'localizerf')
     run_fname{ii}='clocalizer_fixtask';     stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
+  elseif strcmpi(exp_mode{ii},'ccwi')
+    run_fname{ii}='iretinotopy_fixtask';    stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
+  elseif strcmpi(exp_mode{ii},'cwi')
+    run_fname{ii}='iretinotopy_fixtask';    stim_mode{ii}='cw';         stim_fname{ii}='c_pol';
+  elseif strcmpi(exp_mode{ii},'expi')
+    run_fname{ii}='iretinotopy_fixtask';    stim_mode{ii}='exp';        stim_fname{ii}='c_ecc';
+  elseif strcmpi(exp_mode{ii},'conti')
+    run_fname{ii}='iretinotopy_fixtask';    stim_mode{ii}='cont';       stim_fname{ii}='c_ecc';
+  elseif strcmpi(exp_mode{ii},'bari')
+    run_fname{ii}='ibar_fixtask';           stim_mode{ii}='bar';        stim_fname{ii}='c_bar';
+  elseif strcmpi(exp_mode{ii},'ccwexpi')
+    run_fname{ii}='idual_fixtask';          stim_mode{ii}='ccwexp';     stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'cwexpi')
+    run_fname{ii}='idual_fixtask';          stim_mode{ii}='cwexp';      stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'ccwconti')
+    run_fname{ii}='idual_fixtask';          stim_mode{ii}='ccwcont';    stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'cwconti')
+    run_fname{ii}='idual_fixtask';          stim_mode{ii}='cwcont';     stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'multifocali')
+    run_fname{ii}='imultifocal_fixtask';    stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
+  elseif strcmpi(exp_mode{ii},'meridiani')
+    run_fname{ii}='imeridian_fixtask';      stim_mode{ii}='meridian';   stim_fname{ii}='c_meridian';
+  elseif strcmpi(exp_mode{ii},'lgni')
+    run_fname{ii}='ilgnlocalizer_fixtask';  stim_mode{ii}='lgn';        stim_fname{ii}='c_lgnlocalizer';
+  elseif strcmpi(exp_mode{ii},'hrfi')
+    run_fname{ii}='ihrf_fixtask';           stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
+  elseif strcmpi(exp_mode{ii},'localizeri')
+    run_fname{ii}='ilocalizer_fixtask';     stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
   elseif strcmpi(exp_mode{ii},'ccwwindows')
     run_fname{ii}='gen_retinotopy_windows'; stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwwindows')
@@ -291,7 +341,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% set the gamma table. please change the line below to use your measurements
+%% set a display gamma table. please change the line below to use your own measurements
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % loading gamma_table
@@ -313,6 +363,7 @@ for ii=1:1:length(exp_mode)
     main_exp_name=sprintf('%s(''%s'',''%s'',%d,''%s'',''%s'',gammatable);',...
         run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii});
   end
+  main_exp_name=strrep(main_exp_name,',,',',[],'); % to avoid error when some variable is empty, we need to add this line.
   eval(main_exp_name);
 end
 

@@ -1,7 +1,7 @@
 function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
 % Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.
-% function cretinotopy_fixtask_mono(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% function cretinotopy_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
 % - This function generates and presents color/luminance-defined checkerboard stimulus
@@ -99,7 +99,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % [example]
-% >> cretinotopy_fixtask_mono('HB','ccw',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> cretinotopy_fixtask('HB','ccw',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.

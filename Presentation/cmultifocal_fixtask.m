@@ -1,6 +1,6 @@
 function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.
+% Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.
 % function cmultifocal_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
@@ -40,7 +40,7 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2018-11-29 21:41:56 ban"
-% Last Update: "2019-02-28 18:41:15 ban"
+% Last Update: "2019-03-05 16:19:20 ban"
 %
 %
 %
@@ -172,8 +172,6 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 % sparam.maxRad      = 6.0;  % maximum radius of  annulus (degrees)
 % sparam.minRad      = 0;    % minumum
-%
-% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 %
 % sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
 %                        255,   0,   0; % the first row is background
@@ -387,7 +385,6 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'startangle',0,...
          'maxRad',8,...
          'minRad',0,...
-         'dimratio',0.4,...
          'colors',[ 128, 128, 128;
                     255,   0,   0;
                       0, 255,   0;
