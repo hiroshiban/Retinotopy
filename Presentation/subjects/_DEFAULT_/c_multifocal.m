@@ -72,7 +72,10 @@ sparam.rest_duration=0;
 
 sparam.numTrials=size(sparam.design,2);
 
-sparam.flip_duration=500; % msec, used only for object-image-based retinotopy stimuli
+%%% parameters used only for object-image-based retinotopy stimuli
+sparam.flip_duration=500; % msec
+sparam.nimg=120; % number of images to be presented at a frame
+sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
@@ -87,6 +90,7 @@ sparam.waitframes = 60*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (
 sparam.initial_fixation_time=[4000,4000];
 
 %%% fixation size & color
+sparam.fixtype=1; % 1: circular, 2: rectangular, 3: concentric fixation point
 sparam.fixsize=4; % radius in pixels
 sparam.fixcolor=[255,255,255];
 

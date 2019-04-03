@@ -37,7 +37,7 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-04 16:38:34 ban"
-% Last Update: "2019-03-05 16:42:14 ban"
+% Last Update: "2019-04-03 21:00:03 ban"
 %
 %
 %
@@ -177,6 +177,11 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 % sparam.flip_duration=500; % msec
 % sparam.rest_duration =0; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
 % sparam.numRepeats=6;
+%
+% %%% parameters used only for object-image-based retinotopy stimuli
+% sparam.flip_duration=500; % msec
+% sparam.nimg=120; % number of images to be presented at a frame
+% sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
@@ -347,9 +352,11 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'maxRad',8,...
          'minRad',0,...
          'cycle_duration',60000,...
-         'flip_duration',500,...
          'rest_duration',0,...
          'numRepeats',6,...
+         'flip_duration',500,...
+         'nimg',120,...
+         'imRatio',[0.2,0.5],...
          'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
          'initial_fixation_time',[4000,4000],...
          'fixtype',1,...
@@ -518,7 +525,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes)+1;
+nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
 nframe_flicker=round(sparam.flip_duration*dparam.fps/sparam.waitframes);
@@ -572,8 +579,6 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
   %% !!! NOTICE !!!
   % update some parameters here for 'exp' or 'cont' mode
   nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.npositions/sparam.waitframes);
-  nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
-  nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
   % get annuli's min/max lims
   ecclims=zeros(sparam.npositions,3);
@@ -627,6 +632,38 @@ noisetexture=Screen('MakeTexture',winPtr,bnimg);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Initializing object images
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% loading the object image database
+load(fullfile(fileparts(mfilename('fullpath')),'..','object_images','object_image_database.mat')); % img is loaded on the memory
+
+% shuffling the presentation order
+img=img(:,:,:,shuffle(1:size(img,4)));
+imgsz=[size(img,1),size(img,2)];
+posLims=CenterRect([0,0,size(checkerboard{1},2),size(checkerboard{1},1)],winRect); % image location limit, [x_min, y_min, x_max, y_max], the image positions are randomly selected whithin this range
+
+% initializing the firt object image textures
+
+% image IDs
+imgids=1:1:sparam.nimg;
+imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
+imgids(imgids==0)=size(img,4);
+
+% rectangles
+cpos=[(posLims(3)-posLims(1)).*rand(sparam.nimg,1)+posLims(1),(posLims(4)-posLims(2)).*rand(sparam.nimg,1)+posLims(2)]; % center positions, [x,y]
+cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
+imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
+
+% angles
+imgrot=360.*rand(sparam.nimg,1);
+
+% generate the object image textures at the first frame
+objecttextures=zeros(numel(imgids),1);
+for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Debug codes
 %%%% saving the stimulus images as *.png format files and enter the debug (keyboard) mode
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -669,7 +706,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+(nframe_stim+nframe_rest)*sparam.numRepeats;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -700,7 +737,7 @@ stim_pos_id=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if sparam.bgtype==1 % a simple background with sparam.bgcolor
-  bgimg{1}=repmat(reshape(sparam.colors(1,:),[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
+  bgimg{1}=repmat(reshape(sparam.bgcolor,[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
 
 elseif sparam.bgtype==2 % a background with grid guides
 
@@ -724,7 +761,14 @@ else
   error('sparam.bgtype should be 1 or 2. check the input variable.');
 end
 
-background=Screen('MakeTexture',winPtr,bgimg{1});
+% set mask and transparency in the middle region of the background where the target stimuli are to be presented.
+% this mask is required to prevent the object images from being presented in the external regions.
+bgimg=bgimg{1};
+bgimg(:,:,4)=255*ones(size(bgimg,1),size(bgimg,2));
+maskRect=CenterRect([0,0,size(checkerboard{1},2),size(checkerboard{1},1)],[0,0,size(bgimg,2),size(bgimg,1)]);
+bgimg(maskRect(2)+1:maskRect(4),maskRect(1)+1:maskRect(3),4)=0; % alpha channel, transparency
+
+background=Screen('MakeTexture',winPtr,bgimg);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -784,11 +828,34 @@ fixRect = [0, 0, fixSize]; % used to display the central fixation point
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Generating additional mask which covers the outside region of the background.
+%%%% The mask is required to hide parts of the objects presented outside the background
+%%%% when the script is not running with full-screen mode.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+wrect=Screen('Rect',winPtr);
+if wrect(3)-wrect(1)>bgRect(3)-bgRect(1) | wrect(4)-wrect(2)>bgRect(4)-bgRect(2) % if background is smaller than the whole screen
+  hide_flg=1;
+  amskimg=repmat(reshape(sparam.colors(1,:),[1,1,3]),[wrect(4)-wrect(2),wrect(3)-wrect(1)]);
+  amskimg(:,:,4)=255*ones(size(amskimg,1),size(amskimg,2));
+  amskRect=CenterRect(bgRect,wrect);
+  amskimg(amskRect(2)+1:amskRect(4),amskRect(1)+1:amskRect(3),4)=0; % alpha channel, transparency
+
+  abackground=Screen('MakeTexture',winPtr,amskimg);
+else
+  hide_flg=0;
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Initialize functions and variables for trial loop
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % initialize variables that we will use during the experiment (faster)
 cur_frames=0;
+
+% object image counter
+obj_counter=0;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -851,8 +918,9 @@ cur_frames=cur_frames+1;
 for ff=1:1:nframe_fixation(1)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-    Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+    Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
+
   end
   Screen('DrawingFinished',winPtr);
   Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
@@ -878,8 +946,8 @@ for cc=1:1:sparam.numRepeats
       for nn=1:1:nScr
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         % background & the central fixation
-        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
         Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
       end
 
       % flip the window
@@ -902,15 +970,17 @@ for cc=1:1:sparam.numRepeats
   end
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_cycle
+  for ff=1:1:nframe_stim
 
     %% display the current frame
     for nn=1:1:nScr
       Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-      Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
       Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
+      Screen('DrawTextures',winPtr,objecttextures,[],imgpos,imgrot); % object images
       Screen('DrawTexture',winPtr,checkertexture{stim_pos_id},[],CenterRect(stimRect,winRect)); % checkerboard mask
       Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
+      Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
+      if hide_flg, Screen('DrawTexture',winPtr,abackground,[],winRect); end % additional background to hide the external region
     end
 
     [resps,event]=resps.check_responses(event);
@@ -936,24 +1006,50 @@ for cc=1:1:sparam.numRepeats
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_cycle && cc==sparam.numRepeats, continue; end
+    if ff==nframe_stim && cc==sparam.numRepeats, continue; end
 
     %% update IDs
 
-    % flickering the target image
-    if ~mod(ff,nframe_flicker) % noise pattern reversal
-      % update the brownian noise texture.
-      Screen('Close',noisetexture);
-      %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
-      %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
-      bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
-      noisetexture=Screen('MakeTexture',winPtr,bnimg);
-    end
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % noise pattern reversal
+        %% update the brownian noise texture.
+        Screen('Close',noisetexture);
+        %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
+        %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
+        bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
+        noisetexture=Screen('MakeTexture',winPtr,bnimg);
+      end
 
-    % stimulus position id for the next presentation
-    if ~mod(ff,nframe_rotation)
-      stim_pos_id=stim_pos_id+1;
-      if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+      if ~mod(ff,ceil(nframe_flicker/2)) % object image reversal
+        %% update object images
+        for pp=1:1:numel(imgids), Screen('Close',objecttextures(pp)); end
+
+        obj_counter=obj_counter+1;
+
+        % image IDs
+        imgids=sparam.nimg*(obj_counter-1)+1:1:sparam.nimg*obj_counter;
+        imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
+        imgids(imgids==0)=size(img,4);
+
+        % rectangles
+        cpos=[(posLims(3)-posLims(1)).*rand(sparam.nimg,1)+posLims(1),(posLims(4)-posLims(2)).*rand(sparam.nimg,1)+posLims(2)]; % center positions, [x,y]
+        cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
+        imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
+
+        % angles
+        imgrot=360.*rand(sparam.nimg,1);
+
+        % generate object image textures
+        for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
+      end
+
+      % stimulus position id for the next presentation
+      if ~mod(ff,nframe_rotation)
+        stim_pos_id=stim_pos_id+1;
+        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+      end
+    else
+      stim_pos_id=1;
     end
 
     % get responses
@@ -967,8 +1063,8 @@ for cc=1:1:sparam.numRepeats
       for nn=1:1:nScr
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         % background & the central fixation
-        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
         Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
       end
 
       % flip the window
@@ -992,8 +1088,8 @@ end % for cc=1:1:sparam.numRepeats
 
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-  Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
@@ -1005,8 +1101,8 @@ fprintf('\nfixation\n');
 for ff=1:1:nframe_fixation(2)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-    Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+    Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
   Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);

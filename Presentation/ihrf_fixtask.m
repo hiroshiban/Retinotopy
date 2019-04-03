@@ -1,17 +1,14 @@
-function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
+function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Object-image-defined bar stimulus with fixation luminance change-detection tasks.
-% function ibar_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.
+% function ihrf_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% - This function generates and presents the conventional pRF bar stimulus on which
-%   object images are randomly located with brownian noise images on its background.
-%   The bar sweeps periodically over the whole visual field.
-%   The stimulus can be used to measure cortical retinotopy and to delineate retinotopic
-%   borders using the standard pRF (population receptive field) analysis techniques.
-%
-%   reference: Population receptive field estimates in human visual cortex.
-%              Dumoulin, S.O. and Wandell, B.A. (2008). Neuroimage, 39(2), 647-660.
+% - This function generates and presents a checkerboard stimulus, on which
+%   object images are randomly located with brownian noise images on its
+%   background. The stimulus can be used to measure/estimate a cannonical
+%   hemodynamic response function shape subject-by-subject.
+%   You can also use this script for checking BOLD signal and fMR-image quality.
 %
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
 %
@@ -31,7 +28,7 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % in higher-order visual areas.
 %
 %
-% Created    : "2019-03-05 15:54:52 ban"
+% Created    : "2019-04-03 18:16:24 ban"
 % Last Update: "2019-04-03 21:08:35 ban"
 %
 %
@@ -46,7 +43,7 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %                 !!! ~/Retinotopy/Presentation/images                   !!!
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %
-% exp_mode      : experiment mode acceptable in this script is only "bar"
+% exp_mode      : experiment mode acceptable in this script is only "hrf"
 % acq           : acquisition number (design file number),
 %                 an integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
@@ -86,11 +83,11 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_ibar_fixtask_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_ihrf_fixtask_results_run_(run_num).mat
 %
 %
 % [example]
-% >> ibar_fixtask('HB','bar',1,'bar_display.m','bar_stimulus.m')
+% >> ihrf_fixtask('HB','hrf',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -149,38 +146,20 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This is the stimulus parameter file for the pRF bar stimulus
-% % Programmed by Hiroshi Ban Nov 20 2018
+% % This is the stimulus parameter file for the HRF characterization stimulus
+% % Programmed by Hiroshi Ban Jan 24 2019
 % % ************************************************************
 %
-% % "sparam" means "stimulus generation parameters"
-%
 % %%% stimulus parameters
-% sparam.fieldSize   = 12; % stimulation field size in deg, [row,col]. circular region with sparam.fieldSize is stimulated.
-% sparam.width       = 1.5; % bar width in deg
+% sparam.width       = 24;    % wedge width in deg along polar angle
 %
-% % rotation angles in deg, 0 = right horizontal meridian, counter-clockwise.
-% % when sparam.rotangles(1)=0, the bar emerges at the right hemifield and sweeps
-% % the visual field leftwards.
-% %
-% % following this parameter, stimulus presentation seuence is defined.
-% % for instance, is sparam.rotangles   = [0,45,90,135,180,225,270,315];,
-% % the bar sweeps visual field like
-% % 1. sparam.rotangles(1)=0   : right to left horizontally, then rest for sparam.rest_duration
-% % 2. sparam.rotangles(2)=45  : upper right to lower left at 45 deg direction, then rest for sparam.rest_duration
-% % 3. sparam.rotangles(3)=90  : upper to lower vertically, then rest for sparam.rest_duration
-% % 4. sparam.rotangles(4)=135 : upper left to lower right at 45 deg direction, then rest for sparam.rest_duration
-% % ...
-% % ... to sparam.rotangles(end)
-% sparam.rotangles   = [0,45,90,135,180,225,270,315];
-%
-% sparam.steps       = 16; % steps in sweeping the visual field (from start to end)
+% sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
+% sparam.minRad      = 0;    % minumum
 %
 % %%% duration in msec for each cycle & repetitions
-% sparam.cycle_duration=40000; % msec
-% sparam.flip_duration=500; % msec
-% sparam.rest_duration =8000; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
-% sparam.numRepeats=1;
+% sparam.cycle_duration=32000; % msec
+% sparam.rest_duration =16000; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
+% sparam.numRepeats=6;
 %
 % %%% parameters used only for object-image-based retinotopy stimuli
 % sparam.flip_duration=500; % msec
@@ -189,8 +168,10 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
+% % the final 2 is for 2 times repetitions of flicker
 % % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
-% sparam.waitframes = 6; % #frames for each object-images, 30 = 0.5 sec if the display vsynch = 60 Hz.
+% sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+% %sparam.waitframes = 1;
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
@@ -198,11 +179,11 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 % %%% fixation size & color
 % sparam.fixtype=1; % 1: circular, 2: rectangular, 3: concentric fixation point
-% sparam.fixsize=4; % radius in pixels
+% sparam.fixsize=12; % radius in pixels
 % sparam.fixcolor=[255,255,255];
 %
 % %%% background color
-% sparam.bgcolor=[128,128,128];
+% sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
 %
 % %%% background-patch colors (RGB)
 % sparam.bgtype=1; % 1: a simple background with sparam.bgcolor (then, the parameters belows are not used), 2: a background with grid guides
@@ -240,11 +221,11 @@ if nargin<6 || isempty(gamma_table), gamma_table=[]; end
 if nargin<7 || isempty(overwrite_flg), overwrite_flg=1; end
 if nargin<8 || isempty(force_proceed_flag), force_proceed_flag=0; end
 
-% check the aqcuisition number
+% check the aqcuisition number. up to 10 design files can be used
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
 
 % check the experiment mode (stimulus type)
-if ~strcmpi(exp_mode,'bar'), error('exp_mode acceptable in this script is only "bar". check the input variable.'); end
+if ~strcmpi(exp_mode,'hrf'), error('exp_mode acceptable in this script is only "hrf". check the input variable.'); end
 
 rootDir=fileparts(mfilename('fullpath'));
 
@@ -264,7 +245,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Add path to the subfunctions
+%%%% Add paths to the subfunctions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % add paths to the subfunctions
@@ -273,7 +254,7 @@ addpath(fullfile(rootDir,'..','Generation'));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% For log file
+%%%% For a log file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % get date
@@ -284,7 +265,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_ibar_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_ihrf_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -348,20 +329,19 @@ sparam=struct(); % initialize
 sparam.mode=exp_mode;
 if ~isempty(stimulusfile), run(fullfile(rootDir,'subjects',subjID,stimulusfile)); end % load specific sparam parameters configured for each of the participants
 sparam=ValidateStructureFields(sparam,... % validate fields and set the default values to missing field(s)
-         'fieldSize',[12,12],...
-         'width',1.5,...
-         'rotangles',[0,45,90,135,180,225,270,315],...
-         'steps',16,...
-         'cycle_duration',40000,...
-         'rest_duration',8000,...
-         'numRepeats',1,...
+         'width',360,...
+         'maxRad',8,...
+         'minRad',0,...
+         'cycle_duration',32000,...
+         'rest_duration',16000,...
+         'numRepeats',6,...
          'flip_duration',500,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
-         'waitframes',6,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
+         'waitframes',4,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
          'initial_fixation_time',[4000,4000],...
          'fixtype',1,...
-         'fixsize',4,...
+         'fixsize',12,...
          'fixcolor',[255,255,255],...
          'bgcolor',[128,128,128],... % sparam.colors(1,:);
          'bgtype',1,...
@@ -376,13 +356,13 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
 sparam.initial_fixation_time=sparam.initial_fixation_time./1000; %#ok
 
 % change unit from msec to sec.
-sparam.cycle_duration = sparam.cycle_duration./1000;
-sparam.flip_duration  = sparam.flip_duration./1000;
-sparam.rest_duration  = sparam.rest_duration./1000;
+sparam.cycle_duration=sparam.cycle_duration./1000;
+sparam.flip_duration=sparam.flip_duration./1000;
+sparam.rest_duration=sparam.rest_duration./1000;
 
 % set the other parameters
-dparam.RunScript = mfilename();
-sparam.RunScript = mfilename();
+dparam.RunScript=mfilename();
+sparam.RunScript=mfilename();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -411,7 +391,7 @@ fprintf('Cycle Duration(sec)    : %d\n',sparam.cycle_duration);
 fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
 fprintf('Repetitions(cycles)    : %d\n',sparam.numRepeats);
 fprintf('Frame Flip(per VerSync): %d\n',sparam.waitframes);
-fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration*numel(sparam.rotangles));
+fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);
 fprintf('**************** Stimulus Type *****************\n');
 fprintf('Experiment Mode        : %s\n',sparam.mode);
 fprintf('************ Response key settings *************\n');
@@ -454,7 +434,7 @@ HideCursor();
 if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dparam.ifi=1/dparam.fps;
+    dpara.ifi=1/dparam.fps;
   end
 end
 
@@ -495,6 +475,14 @@ Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Initializing MATLAB OpenGL shader API
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% just call DrawTextureWithCLUT with window pointer alone
+DrawTextureWithCLUT(winPtr);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Displaying 'Initializing...'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -516,13 +504,15 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 
 % deg to radian
 % do not convert!
-% sparam.width, sparam.phase, sparam.startangle, sparam.rotangle are used in deg formats
+% sparam.width, sparam.phase, and sparam.startangle are used in deg formats
+
+% number of checkerboard color
+sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.steps/sparam.waitframes);
 nframe_flicker=round(sparam.flip_duration*dparam.fps/sparam.waitframes);
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
@@ -534,17 +524,17 @@ if dparam.fullscr
   ratio_wid=( winRect(3)-winRect(1) )/dparam.ScrWidth;
   %ratio_hei=( winRect(4)-winRect(2) )/dparam.ScrHeight;
 
-  % adjusting stimulus sizes
-  fieldSize=sparam.fieldSize*ratio_wid; % !!! degree, not pixel or cm !!!
-  width=sparam.width*ratio_wid;
+  % min/max radius of annulus
+  rmin=sparam.minRad*ratio_wid; % !!! degree, not pixel or cm !!!
+  rmax=sparam.maxRad*ratio_wid;
 else
-  fieldSize=sparam.fieldSize;
-  width=sparam.width;
+  rmin=sparam.minRad;
+  rmax=sparam.maxRad;
 end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Generating checkerboard bar patterns
+%%%% Generating checkerboard patterns
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % [note]
@@ -556,25 +546,15 @@ end
 % .....
 % sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
-
-% generate the checker bar stimuli, checkerboard{rotangles,steps}
-[dummy1,dummy2,checkerboard]=bar_GenerateCheckerBar1D(fieldSize,width,sparam.rotangles,sparam.steps,sparam.pix_per_deg,1,1,0);
+[dummy1,dummy2,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,0,sparam.pix_per_deg,1,1,0,0);
+checkerboard=checkerboard{1};
 
 %% organize the checkerboard into masks
-for aa=1:1:numel(sparam.rotangles)
-  for nn=1:1:sparam.steps
-    checkerboard{aa,nn}=repmat(255.*double(~checkerboard{aa,nn}),[1,1,4]);
-    checkerboard{aa,nn}(:,:,1:3)=repmat(reshape(sparam.bgcolor,[1,1,3]),[size(checkerboard{aa,nn},1),size(checkerboard{aa,nn},2)]);
-  end
-end
+checkerboard=repmat(255.*double(~checkerboard),[1,1,4]);
+checkerboard(:,:,1:3)=repmat(reshape(sparam.bgcolor,[1,1,3]),[size(checkerboard,1),size(checkerboard,2)]);
 
-%% Make Checkerboard-mask textures
-checkertexture=cell(numel(sparam.rotangles),sparam.steps);
-for aa=1:1:numel(sparam.rotangles)
-  for nn=1:1:sparam.steps
-    checkertexture{aa,nn}=Screen('MakeTexture',winPtr,checkerboard{aa,nn});
-  end
-end
+% make the checkerboard texture
+checkertexture=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -582,14 +562,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %pdims=[4,4];
-%szh=size(checkerboard{1,1},1);
+%szh=size(checkerboard{1},1);
 %if mod(szh,pdims(1)), szh=szh+pdims(1)-mod(szh,pdims(1)); end
-%szw=size(checkerboard{1,1},2);
+%szw=size(checkerboard{1},2);
 %if mod(szw,pdims(2)), szw=szw+pdims(2)-mod(szw,pdims(1)); end
 %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
-%bnimg=bnimg(1:size(checkerboard{1,1},1),1:size(checkerboard{1,1},2),:);
+%bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
 
-bnimg=CreateColoredNoise(round([size(checkerboard{1,1},1),size(checkerboard{1,1},2)]./4),[1,1],3,2,1,0,0); % ./4 is for reducing computation time, 3 is required for RGB color noise
+bnimg=CreateColoredNoise(round([size(checkerboard,1),size(checkerboard,2)]./4),[1,1],3,2,1,0,0); % ./4 is for reducing computation time, 3 is required for RGB color noise
 noisetexture=Screen('MakeTexture',winPtr,bnimg);
 
 
@@ -603,7 +583,7 @@ load(fullfile(fileparts(mfilename('fullpath')),'..','object_images','object_imag
 % shuffling the presentation order
 img=img(:,:,:,shuffle(1:size(img,4)));
 imgsz=[size(img,1),size(img,2)];
-posLims=CenterRect([0,0,size(checkerboard{1,1},2),size(checkerboard{1,1},1)],winRect); % image location limit, [x_min, y_min, x_max, y_max], the image positions are randomly selected whithin this range
+posLims=CenterRect([0,0,size(checkerboard,2),size(checkerboard,1)],winRect); % image location limit, [x_min, y_min, x_max, y_max], the image positions are randomly selected whithin this range
 
 % initializing the firt object image textures
 
@@ -631,30 +611,24 @@ for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % %%%%%% DEBUG codes start here
-% note: debug stimuli have no jitters of binocular disparity
 if strfind(upper(subjID),'DEBUG')
 
   % just to get stimulus figures
   Screen('CloseAll');
-  save_dir=fullfile(resultDir,'images_ibar_fixtask');
+  save_dir=fullfile(resultDir,'images_ihrf_fixtask');
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
   figure; hold off;
-  for aa=1:1:numel(sparam.rotangles)
-    for nn=1:1:sparam.steps
-      imagesc(checkerboard{aa,nn}+1,[1,numel(unique(checkerboard{aa,nn}))]);
-      axis off; axis equal;
+  imagesc(checkerboard+1,[1,numel(unique(checkerboard))]);
+  axis off; axis equal;
 
-      for cc=1:1:sparam.ncolors
-        for pp=1:1:2 % compensating checkers
-          colormap(CLUT{cc,pp}(1:3,1:3)./255);
-          drawnow;
-          pause(0.05);
-          fname=sprintf('bar_angle_%.2f_pos_%02d_lut_%02d_%02d.png',sparam.rotangles(aa),nn,cc,pp);
-          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
-        end
-      end
-
+  for cc=1:1:sparam.ncolors
+    for pp=1:1:2 % compensating checkers
+      colormap(CLUT{cc,pp}(1:3,1:3)./255);
+      drawnow;
+      pause(0.05);
+      fname=sprintf('checkerboard_%s_lut_%02d_%02d.png',sparam.mode,cc,pp);
+      imwrite(checkerboard+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
     end
   end
   close all;
@@ -671,7 +645,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+numel(sparam.rotangles)*(nframe_stim+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+(nframe_stim+nframe_rest)*sparam.numRepeats;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -687,14 +661,6 @@ for nn=2:1:num_tasks
 end
 task_flg=repmat(task_flg,nframe_task,1);
 task_flg=task_flg(:);
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing checkerboard color management parameters
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% variable to store the current rotation/disparity id
-stim_pos_id=1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -714,11 +680,11 @@ elseif sparam.bgtype==2 % a background with grid guides
   p_width=round((dparam.ScrWidth-edgeX)/sparam.patch_num(2)); % width in pix of patch_width + interval-X
 
   if dparam.fullscr
-    aperture_size=[2*( p_height*ceil( size(checkerboard{1,1},1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
-                   2*( p_width*ceil( size(checkerboard{1,1},2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
+    aperture_size=[2*( p_height*ceil( size(checkerboard,1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
+                   2*( p_width*ceil( size(checkerboard,2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
   else
-    aperture_size=[2*( p_height*ceil(size(checkerboard{1,1},1)/2/p_height) ),...
-                   2*( p_width*ceil(size(checkerboard{1,1},2)/2/p_width) )];
+    aperture_size=[2*( p_height*ceil(size(checkerboard,1)/2/p_height) ),...
+                   2*( p_width*ceil(size(checkerboard,2)/2/p_width) )];
   end
 
   bgimg=CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,sparam.patch_size,sparam.bgcolor,sparam.patch_color1,sparam.patch_color2,sparam.fixcolor,sparam.patch_num,0,0,0);
@@ -730,7 +696,7 @@ end
 % this mask is required to prevent the object images from being presented in the external regions.
 bgimg=bgimg{1};
 bgimg(:,:,4)=255*ones(size(bgimg,1),size(bgimg,2));
-maskRect=CenterRect([0,0,size(checkerboard{1,1},2),size(checkerboard{1,1},1)],[0,0,size(bgimg,2),size(bgimg,1)]);
+maskRect=CenterRect([0,0,size(checkerboard,2),size(checkerboard,1)],[0,0,size(bgimg,2),size(bgimg,1)]);
 bgimg(maskRect(2)+1:maskRect(4),maskRect(1)+1:maskRect(3),4)=0; % alpha channel, transparency
 
 background=Screen('MakeTexture',winPtr,bgimg);
@@ -771,11 +737,11 @@ if dparam.fullscr
   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
-  stimSize = [size(checkerboard{1,1},2)*ratio_wid, size(checkerboard{1,1},1)*ratio_hei];
+  stimSize = [size(checkerboard,2)*ratio_wid, size(checkerboard,1)*ratio_hei];
   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
-  stimSize = [size(checkerboard{1,1},2), size(checkerboard{1,1},1)];
+  stimSize = [size(checkerboard,2), size(checkerboard,1)];
   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
@@ -881,7 +847,7 @@ fprintf('\nfixation\n\n');
 cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)
+for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
@@ -904,98 +870,85 @@ end
 
 for cc=1:1:sparam.numRepeats
 
-  % loop for angle directions
-  for aa=1:1:numel(sparam.rotangles)
+  %% stimulus presentation loop
+  for ff=1:1:nframe_stim+nframe_rest
 
-    %% stimulus presentation loop
-    for ff=1:1:nframe_stim+nframe_rest
-
-      %% display the current frame
-      for nn=1:1:nScr
-        Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-        if ff<=nframe_stim
-          Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
-          Screen('DrawTextures',winPtr,objecttextures,[],imgpos,imgrot); % object images
-          Screen('DrawTexture',winPtr,checkertexture{aa,stim_pos_id},[],CenterRect(stimRect,winRect)); % checkerboard mask
-          if hide_flg, Screen('DrawTexture',winPtr,abackground,[],winRect); end % additional background to hide the external region
-        end
-        Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
-        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
-      end
-
-      [resps,event]=resps.check_responses(event);
-
-      % flip the window
-      Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*numel(sparam.rotangles)*sparam.cycle_duration+...
-             (aa-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-
-      if ff==1
-        event=event.add_event(sprintf('Cycle: %d, Direction: %.2f deg',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa)),[]);
-        fprintf('Cycle: %03d, Direction: %.2f deg...\n',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa));
-      end
-
-      cur_frames=cur_frames+1;
-
-      % update task
-      if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
-
-      [resps,event]=resps.check_responses(event);
-
-      %% exit from the loop if the final frame is displayed
-      if ff==nframe_stim+nframe_rest && aa==numel(sparam.rotangles), continue; end
-
-      %% update IDs
-
+    %% display the current frame
+    for nn=1:1:nScr
+      Screen('SelectStereoDrawBuffer',winPtr,nn-1);
       if ff<=nframe_stim
+        Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
+        Screen('DrawTextures',winPtr,objecttextures,[],imgpos,imgrot); % object images
+        Screen('DrawTexture',winPtr,checkertexture,[],CenterRect(stimRect,winRect)); % checkerboard mask
+        if hide_flg, Screen('DrawTexture',winPtr,abackground,[],winRect); end % additional background to hide the external region
+      end
+      Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
+      Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
+    end
 
-        % flickering the target image
-        if ~mod(ff,nframe_flicker) % noise pattern reversal
-          % update the brownian noise texture.
-          Screen('Close',noisetexture);
-          %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
-          %bnimg=bnimg(1:size(checkerboard{1,1},1),1:size(checkerboard{1,1},2),:);
-          bnimg=CreateColoredNoise(round([size(checkerboard{aa,nn},1),size(checkerboard{aa,nn},2)]./4),[1,1],3,2,1,0,0);
-          noisetexture=Screen('MakeTexture',winPtr,bnimg);
-        end
+    [resps,event]=resps.check_responses(event);
 
-        if ~mod(ff,ceil(nframe_flicker/2)) % object image reversal
-          %% update object images
-          for pp=1:1:numel(imgids), Screen('Close',objecttextures(pp)); end
+    % flip the window
+    Screen('DrawingFinished',winPtr);
+    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
 
-          obj_counter=obj_counter+1;
+    if ff==1
+      event=event.add_event(sprintf('Cycle: %d',cc),[]);
+      fprintf(sprintf('Cycle: %03d...\n',cc));
+    end
 
-          % image IDs
-          imgids=sparam.nimg*(obj_counter-1)+1:1:sparam.nimg*obj_counter;
-          imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
-          imgids(imgids==0)=size(img,4);
+    cur_frames=cur_frames+1;
 
-          % rectangles
-          cpos=[(posLims(3)-posLims(1)).*rand(sparam.nimg,1)+posLims(1),(posLims(4)-posLims(2)).*rand(sparam.nimg,1)+posLims(2)]; % center positions, [x,y]
-          cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
-          imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
+    % update task
+    if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
 
-          % angles
-          imgrot=360.*rand(sparam.nimg,1);
+    [resps,event]=resps.check_responses(event);
 
-          % generate object image textures
-          for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
-        end
+    %% exit from the loop if the final frame is displayed
+    if ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
 
-        % stimulus position id for the next presentation
-        if ~mod(ff,nframe_movement)
-          stim_pos_id=stim_pos_id+1;
-          if stim_pos_id>sparam.steps, stim_pos_id=1; end
-        end
-      else % required to compensate insubdivisible frames
-        stim_pos_id=1;
+    %% update IDs
+
+    % flickering checkerboard
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % color reversal
+        % update the brownian noise texture.
+        Screen('Close',noisetexture);
+        %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
+        %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
+        bnimg=CreateColoredNoise(round([size(checkerboard,1),size(checkerboard,2)]./4),[1,1],3,2,1,0,0);
+        noisetexture=Screen('MakeTexture',winPtr,bnimg);
       end
 
-      % get responses
-      [resps,event]=resps.check_responses(event);
+      if ~mod(ff,ceil(nframe_flicker/2)) % object image reversal
+        %% update object images
+        for pp=1:1:numel(imgids), Screen('Close',objecttextures(pp)); end
 
-    end % for ff=1:1:nframe_stim+nframe_rest
-  end % for aa=1:1:numel(sparam.rotangles)
+        obj_counter=obj_counter+1;
+
+        % image IDs
+        imgids=sparam.nimg*(obj_counter-1)+1:1:sparam.nimg*obj_counter;
+        imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
+        imgids(imgids==0)=size(img,4);
+
+        % rectangles
+        cpos=[(posLims(3)-posLims(1)).*rand(sparam.nimg,1)+posLims(1),(posLims(4)-posLims(2)).*rand(sparam.nimg,1)+posLims(2)]; % center positions, [x,y]
+        cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
+        imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
+
+        % angles
+        imgrot=360.*rand(sparam.nimg,1);
+
+        % generate object image textures
+        for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
+      end
+    end
+
+    % get responses
+    [resps,event]=resps.check_responses(event);
+
+  end % for ff=1:1:nframe_stim+nframe_rest
+
 end % for cc=1:1:sparam.numRepeats
 
 
@@ -1009,7 +962,7 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip;
 %cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
@@ -1022,7 +975,7 @@ for ff=1:1:nframe_fixation(2)
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
@@ -1032,7 +985,7 @@ for ff=1:1:nframe_fixation(2)
 end
 
 % the final clock up
-while GetSecs()-the_experiment_start<sum(sparam.initial_fixation_time)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration
+while GetSecs()-the_experiment_start<sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration
   [resps,event]=resps.check_responses(event);
 end
 
@@ -1045,7 +998,7 @@ experimentDuration=GetSecs()-the_experiment_start;
 event=event.add_event('End',[]);
 fprintf('\n');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        sum(sparam.initial_fixation_time)+sparam.numRepeats*numel(sparam.rotangles)*sparam.cycle_duration);
+        sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);
 fprintf('\n');
 
 
@@ -1057,12 +1010,12 @@ fprintf('\n');
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_ibar_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_ihrf_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_ibar_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_ihrf_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
@@ -1082,6 +1035,14 @@ try
 catch
   % do nothing
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Cleaning up MATLAB OpenGL shader API
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% just call DrawTextureWithCLUT without any input argument
+DrawTextureWithCLUT();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1128,4 +1089,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function ibar_fixtask
+% end % function ihrf_fixtask
