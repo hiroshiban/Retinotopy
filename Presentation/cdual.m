@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-02-28 18:42:32 ban"
+% Last Update: "2019-04-03 21:15:34 ban"
 %
 %
 %
@@ -601,9 +601,9 @@ nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframe
 sparam.pol_npositions=360/sparam.pol_rotangle;
 sparam.ecc_npositions=sparam.pol_npositions*(sparam.ecc_cycle_duration-sparam.ecc_rest_duration)/(sparam.pol_cycle_duration-sparam.pol_rest_duration);
 
-nframe_rotation=round((sparam.pol_cycle_duration-sparam.pol_rest_duration)*dparam.fps/(360/sparam.pol_rotangle)/sparam.waitframes);
-nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
-nframe_task=round(nframe_rotation/2);
+nframe_stim=round((sparam.pol_cycle_duration-sparam.pol_rest_duration)*dparam.fps/(360/sparam.pol_rotangle)/sparam.waitframes);
+nframe_flicker=round(nframe_stim/sparam.ncolors/4);
+nframe_task=round(nframe_stim/2);
 
 %% initialize chackerboard parameters
 
@@ -861,12 +861,12 @@ end % if strfind(upper(subjID),'DEBUG')
 % about task_flg:
 % 1, task is added in the first half period
 % 2, task is added in the second half period
-task_flg=randi(2,[ceil(length(checkerboard)*nframe_rotation/nframe_task),1]);
+task_flg=randi(2,[ceil(length(checkerboard)*nframe_stim/nframe_task),1]);
 
 % flag whether presenting disparity task
-do_task=zeros(ceil(length(checkerboard)*nframe_rotation/nframe_task),1);
+do_task=zeros(ceil(length(checkerboard)*nframe_stim/nframe_task),1);
 do_task(1)=0; % no task for the first presentation
-for ii=2:1:ceil(length(checkerboard)*nframe_rotation/nframe_task)
+for ii=2:1:ceil(length(checkerboard)*nframe_stim/nframe_task)
   if do_task(ii-1)==1
     do_task(ii)=0;
   else
@@ -880,8 +880,8 @@ task_id=1;
 % variable to store task position
 task_pos=cell(length(checkerboard),1);
 for cc=1:1:length(checkerboard)
-  task_pos{cc}=zeros(1,ceil(length(checkerboard)*nframe_rotation/nframe_task));
-  for pp=1:1:ceil(length(checkerboard)*nframe_rotation/nframe_task)
+  task_pos{cc}=zeros(1,ceil(length(checkerboard)*nframe_stim/nframe_task));
+  for pp=1:1:ceil(length(checkerboard)*nframe_stim/nframe_task)
     tmp_id=shuffle(patchids{cc});
     task_pos{cc}(pp)=tmp_id(1);
   end
@@ -1065,12 +1065,12 @@ end
 for cc=1:1:length(checkerboard)
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_rotation
+  for ff=1:1:nframe_stim
 
     % generate a checkerboard texture with/without a luminance detection task
     if do_task(task_id) && ...
-      ( ( task_flg(task_id)==1 && mod(ff,nframe_rotation)<=nframe_rotation/2 ) || ...
-        ( task_flg(task_id)==2 && mod(ff,nframe_rotation)>nframe_rotation/2 ) )
+      ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
+        ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) )
       tidx=find(checkerboardID{cc}==task_pos{cc}(task_id));
       checkerboard{cc}(tidx)=checkerboard{cc}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
       checkertexture=Screen('MakeTexture',winPtr,checkerboard{cc});
@@ -1094,7 +1094,7 @@ for cc=1:1:length(checkerboard)
 
     % flip the window
     Screen('DrawingFinished',winPtr);
-    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+( ((cc-1)*nframe_rotation+(ff-1))*sparam.waitframes-0.5 )*dparam.ifi,[],[],1);
+    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+( ((cc-1)*nframe_stim+(ff-1))*sparam.waitframes-0.5 )*dparam.ifi,[],[],1);
 
     if ff==1
       event=event.add_event(sprintf('Trial: %d',cc),[]);
@@ -1111,18 +1111,23 @@ for cc=1:1:length(checkerboard)
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_rotation && cc==length(checkerboard), continue; end
+    if ff==nframe_stim && cc==length(checkerboard), continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ~mod(ff,nframe_flicker) % color reversal
-      compensate_id=mod(compensate_id,2)+1;
-    end
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % color reversal
+        compensate_id=mod(compensate_id,2)+1;
+      end
 
-    if ~mod(ff,2*nframe_flicker) % color change
-      color_id=color_id+1;
-      if color_id>sparam.ncolors, color_id=1; end
+      if ~mod(ff,2*nframe_flicker) % color change
+        color_id=color_id+1;
+        if color_id>sparam.ncolors, color_id=1; end
+      end
+    else
+      compensate_id=1;
+      color_id=1;
     end
 
     %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
@@ -1132,7 +1137,7 @@ for cc=1:1:length(checkerboard)
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:nframe_rotation
+  end % for ff=1:1:nframe_stim
 end % for cc=1:1:length(checkerboard)
 
 

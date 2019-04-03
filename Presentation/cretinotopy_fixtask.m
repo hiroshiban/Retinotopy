@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-02-28 18:42:50 ban"
+% Last Update: "2019-04-03 21:11:54 ban"
 %
 %
 %
@@ -557,7 +557,7 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes)+1;
+nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
 nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
@@ -726,7 +726,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+(nframe_stim+nframe_rest)*sparam.numRepeats;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -965,7 +965,7 @@ for cc=1:1:sparam.numRepeats
   end
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_cycle
+  for ff=1:1:nframe_stim
 
     %% display the current frame
     for nn=1:1:nScr
@@ -998,24 +998,30 @@ for cc=1:1:sparam.numRepeats
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_cycle && cc==sparam.numRepeats, continue; end
+    if ff==nframe_stim && cc==sparam.numRepeats, continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ~mod(ff,nframe_flicker) % color reversal
-      compensate_id=mod(compensate_id,2)+1;
-    end
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % color reversal
+        compensate_id=mod(compensate_id,2)+1;
+      end
 
-    if ~mod(ff,2*nframe_flicker) % color change
-      color_id=color_id+1;
-      if color_id>sparam.ncolors, color_id=1; end
-    end
+      if ~mod(ff,2*nframe_flicker) % color change
+        color_id=color_id+1;
+        if color_id>sparam.ncolors, color_id=1; end
+      end
 
-    % stimulus position id for the next presentation
-    if ~mod(ff,nframe_rotation)
-      stim_pos_id=stim_pos_id+1;
-      if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+      % stimulus position id for the next presentation
+      if ~mod(ff,nframe_rotation)
+        stim_pos_id=stim_pos_id+1;
+        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+      end
+    else
+      compensate_id=1;
+      color_id=1;
+      stim_pos_id=1;
     end
 
     % get responses

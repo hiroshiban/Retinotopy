@@ -37,7 +37,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2019-02-28 18:41:08 ban"
+% Last Update: "2019-04-03 21:11:52 ban"
 %
 %
 %
@@ -560,8 +560,8 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
-nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes)+1;
+nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
+nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
 nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
 nframe_task=round(nframe_rotation/2);
@@ -733,12 +733,12 @@ end % if strfind(upper(subjID),'DEBUG')
 % about task_flg:
 % 1, task is added in the first half period
 % 2, task is added in the second half period
-task_flg=randi(2,[ceil(sparam.numRepeats*nframe_cycle/nframe_task),1]);
+task_flg=randi(2,[ceil(sparam.numRepeats*nframe_stim/nframe_task),1]);
 
 % flag whether presenting disparity task
-do_task=zeros(ceil(sparam.numRepeats*nframe_cycle/nframe_task),1);
+do_task=zeros(ceil(sparam.numRepeats*nframe_stim/nframe_task),1);
 do_task(1)=0; % no task for the first presentation
-for ii=2:1:ceil(sparam.numRepeats*nframe_cycle/nframe_task)
+for ii=2:1:ceil(sparam.numRepeats*nframe_stim/nframe_task)
   if do_task(ii-1)==1
     do_task(ii)=0;
   else
@@ -752,7 +752,7 @@ task_id=1;
 % variable to store task position
 task_pos=cell(sparam.npositions,1);
 for nn=1:1:sparam.npositions
-  task_pos{nn}=randi(numel(unique(checkerboardID{nn}))-1,[ceil(sparam.numRepeats*nframe_cycle/nframe_task),1]);
+  task_pos{nn}=randi(numel(unique(checkerboardID{nn}))-1,[ceil(sparam.numRepeats*nframe_stim/nframe_task),1]);
 end
 
 % flag to index the first task frame
@@ -959,7 +959,7 @@ for cc=1:1:sparam.numRepeats
   end
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_cycle
+  for ff=1:1:nframe_stim
 
     % generate a checkerboard texture with/without a luminance detection task
     if do_task(task_id) && ...
@@ -1007,33 +1007,40 @@ for cc=1:1:sparam.numRepeats
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_cycle && cc==sparam.numRepeats, continue; end
+    if ff==nframe_stim && cc==sparam.numRepeats, continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ~mod(ff,nframe_flicker) % color reversal
-      compensate_id=mod(compensate_id,2)+1;
-    end
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % color reversal
+        compensate_id=mod(compensate_id,2)+1;
+      end
 
-    if ~mod(ff,2*nframe_flicker) % color change
-      color_id=color_id+1;
-      if color_id>sparam.ncolors, color_id=1; end
-    end
+      if ~mod(ff,2*nframe_flicker) % color change
+        color_id=color_id+1;
+        if color_id>sparam.ncolors, color_id=1; end
+      end
 
-    % stimulus position id for the next presentation
-    if ~mod(ff,nframe_rotation)
-      stim_pos_id=stim_pos_id+1;
-      if stim_pos_id>sparam.npositions, stim_pos_id=1; end
-    end
+      % stimulus position id for the next presentation
+      if ~mod(ff,nframe_rotation)
+        stim_pos_id=stim_pos_id+1;
+        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+      end
 
-    %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
-    if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
-    firsttask_flg=firsttask_flg+1;
+      %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
+      if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
+      firsttask_flg=firsttask_flg+1;
+    else % required to compensate insubdivisible frames
+      compensate_id=1;
+      color_id=1;
+      stim_pos_id=1;
+      firsttask_flg=0;
+    end
 
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:nframe_cycle
+  end % for ff=1:1:nframe_stim
 
   %% rest perioed
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')

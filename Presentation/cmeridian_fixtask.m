@@ -35,7 +35,7 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2018-12-12 12:13:50 ban"
-% Last Update: "2019-03-05 16:51:11 ban"
+% Last Update: "2019-04-03 21:10:51 ban"
 %
 %
 %
@@ -546,7 +546,7 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_block=round(sparam.block_duration*dparam.fps/sparam.waitframes);
+nframe_stim=round(sparam.block_duration*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 
 % !!!NOTICE!!!
@@ -676,7 +676,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+2*(nframe_block+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+2*(nframe_stim+nframe_rest)*sparam.numRepeats;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -883,14 +883,14 @@ for cc=1:1:sparam.numRepeats
 
   %% stimulus presentation loop
   for pp=1:1:2 % 2 = horizontal and vertical visual meridians
-    for ff=1:1:nframe_block+nframe_rest
+    for ff=1:1:nframe_stim+nframe_rest
 
       %% display the current frame
       for nn=1:1:nScr
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
         % present the checkerboard along the horizontal (when pp is 1) or vertical (when pp is 2) visual meridian
-        if ff<=nframe_block
+        if ff<=nframe_stim
           DrawTextureWithCLUT(winPtr,checkertexture{pp},CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
         end
         Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
@@ -916,12 +916,12 @@ for cc=1:1:sparam.numRepeats
       [resps,event]=resps.check_responses(event);
 
       %% exit from the loop if the final frame is displayed
-      if pp==2 && ff==nframe_block+nframe_rest && cc==sparam.numRepeats, continue; end
+      if pp==2 && ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
 
       %% update IDs
 
       % flickering checkerboard
-      if ff<=nframe_block
+      if ff<=nframe_stim
         if ~mod(ff,nframe_flicker) % color reversal
           compensate_id=mod(compensate_id,2)+1;
         end
@@ -930,12 +930,15 @@ for cc=1:1:sparam.numRepeats
           color_id=color_id+1;
           if color_id>sparam.ncolors, color_id=1; end
         end
+      else
+        compensate_id=1;
+        color_id=1;
       end
 
       % get responses
       [resps,event]=resps.check_responses(event);
 
-    end % for ff=1:1:nframe_block+nframe_rest
+    end % for ff=1:1:nframe_stim+nframe_rest
   end % for pp=1:1:2 % 2 = horizontal and vertical visual meridians
 
 end % for cc=1:1:sparam.numRepeats

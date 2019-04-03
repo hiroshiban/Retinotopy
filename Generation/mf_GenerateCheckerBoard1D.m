@@ -27,17 +27,17 @@ function [checkerboard,bincheckerboard,mfcheckerboard,mask]=mf_GenerateCheckerBo
 % phase       : (optional) checker's phase, 0 by default.
 %
 % [output]
-% checkerboard   :   output grayscale checkerboard, cell structure, {numel(startangle)}.
-%                    each pixel shows each checker patch's ID or background(0)
-% binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,
-%                  cell structure, {numel(startangle)}.
-% mfcheckerboard : (optional) checkerboard whose checker IDs are subdivided by ndivsP and ndivsE.
-%                  the pattern can be used for visual field subdivisions for multi-focal retinotpy stimuli.
-% mask           : (optional) checkerboard regional mask, cell structure, logical
+% checkerboard    : output grayscale checkerboard, cell structure, {numel(startangle)}.
+%                   each pixel shows each checker patch's ID or background(0)
+% bincheckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,
+%                   cell structure, {numel(startangle)}.
+% mfcheckerboard  : (optional) checkerboard whose checker IDs are subdivided by ndivsP and ndivsE.
+%                   the pattern can be used for visual field subdivisions for multi-focal retinotpy stimuli.
+% mask            : (optional) checkerboard regional mask, cell structure, logical
 %
 %
 % Created    : "2011-04-12 11:12:37 ban"
-% Last Update: "2018-12-11 18:16:38 ban"
+% Last Update: "2019-03-05 16:22:58 ban"
 
 %% check the input variables
 if nargin<1 || isempty(rmin), rmin=0; end

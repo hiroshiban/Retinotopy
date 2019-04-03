@@ -1,8 +1,7 @@
 function [filenames,originalnames]=ReplaceFilenameSequentially(target_dir,sequence_fmt,extension,prefix_inc_tgt,prefix_exc_tgt)
 
 % Replaces target files following a specified sequential file name format.
-% function [filenames,originalnames]=ReplaceFilenameSequentially(target_dir,:sequence_fmt,:extension,...
-%                                                                :prefix_inc_tgt,:prefix_exc_tgt)
+% function [filenames,originalnames]=ReplaceFilenameSequentially(target_dir,:sequence_fmt,:extension,:prefix_inc_tgt,:prefix_exc_tgt)
 % (: is optional)
 %
 % [example]
@@ -28,13 +27,30 @@ function [filenames,originalnames]=ReplaceFilenameSequentially(target_dir,sequen
 % filenames      : cell structure of file names after replacing
 % originalnames  : cell structure of the original file names
 %
+% [note on how to set the 'prefix_*' variable]
+% prefix_* can be set flexibly as below.
+% 1. a string: setting an including prefix (string) alone
+%    e.g. prefix_*='_TDTS6.0';
+%         --> processes files whose names contain '_TDTS6.0'
+% 2. a {1 x N} cell string: setting including prefix (string) arrays
+%    e.g. prefix_*={'_TDTS6.0','_TSS5.0mm'};
+%         --> processes files whose names contain '_TDTS6.0s' or '_TSS5.0mm'.
+% 3. a {2 x N} cell string: setting including/excluding prefix (string) arrays
+%    e.g. prefix_*={{'_TDTS6.0s','_TSS5.0mm'};{'THP'}};
+%         --> processes files whose names contain '_TDTS6.0s'
+%             or '_TSS5.0mm' but do not contain 'THP'.
+%         prefix_*={'';{'_TDTS6.0s'}};
+%         --> processes files whose names do not contain '_TDTS6.0s'.
+%         prefix_*={'_TSS5.0mm';''};
+%         --> processes files whose names contain '_TSS5.0mm'.
+%
 % [dependency]
 % 1. wildcardsearch.m
 % enable reg-exp search of files
 %
 %
 % Created    : "2013-11-14 14:14:05 ban"
-% Last Update: "2013-11-22 23:55:50 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-03-08 10:35:11 ban"
 
 % check the input variables
 if nargin<1 || isempty(target_dir), help(mfilename()); return; end
@@ -49,14 +65,20 @@ if ~strcmp(extension,'*')
   %if ~strcmp(extension(2),'.'), extension=['*.',extension(2:end)]; end
 end
 
-% get vtc files from the directories in the VTC_dir
+% get target files and directories
 tmpfiles=GetFiles(fullfile(pwd,target_dir),extension,prefix_inc_tgt);
 
 % exclude files whose name include prefix_exc_tgt
 file_counter=0; tgtfiles='';
 for ii=1:1:length(tmpfiles)
   [dummy,fname]=fileparts(tmpfiles{ii});
-  if ~isempty(prefix_exc_tgt) & strfind(fname,prefix_exc_tgt), continue; end %#ok
+  if ~isempty(prefix_exclude)
+    if strfind(fname,prefix_exclude), continue; end %#ok % the target is file
+    if isempty(fname) % the target is directory
+      [dummy,dirname]=fileparts(dirpath); %#ok
+      if strfind(dirname,prefix_exclude), continue; end %#ok
+    end
+  end
   file_counter=file_counter+1;
   tgtfiles{file_counter}=tmpfiles{ii};
 end
@@ -69,8 +91,7 @@ if isempty(tgtfiles)
 end
 
 % display message
-message=sprintf('Target : %s',fullfile(pwd,target_dir));
-disp(message);
+fprintf('Target : %s\n',fullfile(pwd,target_dir));
 
 % processing
 originalnames=cell(length(tgtfiles),1);
@@ -80,8 +101,7 @@ for ii=1:1:length(tgtfiles)
   [path,originalnames{ii},ext]=fileparts(tgtfiles{ii});
   filenames{ii}=sprintf(sequence_fmt,ii);
 
-  message=sprintf('processing : %s%s --> %s%s',originalnames{ii},ext,filenames{ii},ext);
-  disp(message);
+  fprintf('processing : %s%s --> %s%s\n',originalnames{ii},ext,filenames{ii},ext);
 
   % matlab movefile function is quite slow in some situations
   % since it copies the file first

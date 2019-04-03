@@ -31,7 +31,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-03-05 17:24:44 ban"
+% Last Update: "2019-04-03 21:10:34 ban"
 %
 %
 %
@@ -547,7 +547,7 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_block=round(sparam.block_duration*dparam.fps/sparam.waitframes);
+nframe_stim=round(sparam.block_duration*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 
 % !!!NOTICE!!!
@@ -711,12 +711,12 @@ end % if strfind(upper(subjID),'DEBUG')
 % about task_flg:
 % 1, task is added in the first half period
 % 2, task is added in the second half period
-task_flg=randi(2,[ceil(sparam.numRepeats*2*(nframe_block+nframe_rest)/nframe_task),1]);
+task_flg=randi(2,[ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task),1]);
 
 % flag whether presenting disparity task
-do_task=zeros(ceil(sparam.numRepeats*2*(nframe_block+nframe_rest)/nframe_task),1);
+do_task=zeros(ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task),1);
 do_task(1)=0; % no task for the first presentation
-for ii=2:1:ceil(sparam.numRepeats*2*(nframe_block+nframe_rest)/nframe_task)
+for ii=2:1:ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task)
   if do_task(ii-1)==1
     do_task(ii)=0;
   else
@@ -731,7 +731,7 @@ task_id=1;
 task_pos=cell(2,1); % 2 = target and its comensating patterns
 for pp=1:1:2
   task_pos{pp}=[];
-  for nn=1:1:ceil(sparam.numRepeats*2*(nframe_block+nframe_rest)/nframe_task)
+  for nn=1:1:ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task)
     tmp_id=shuffle(patchids{pp});
     task_pos{pp}=[task_pos{pp},tmp_id(1)];
   end
@@ -916,10 +916,10 @@ for cc=1:1:sparam.numRepeats
 
   %% stimulus presentation loop
   for pp=1:1:2 % 2 = the target and its compensating patterns
-    for ff=1:1:nframe_block+nframe_rest
+    for ff=1:1:nframe_stim+nframe_rest
 
       % generate a checkerboard texture with/without a luminance detection task
-      if ff<=nframe_block
+      if ff<=nframe_stim
         if do_task(task_id) && ...
           ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
             ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
@@ -938,14 +938,14 @@ for cc=1:1:sparam.numRepeats
       for nn=1:1:nScr
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
-        if ff<=nframe_block
+        if ff<=nframe_stim
           DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
 
       % put the checkerboard ID back to the default
-      if ff<=nframe_block && ~isempty(tidx), checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; end
+      if ff<=nframe_stim && ~isempty(tidx), checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; end
 
       % flip the window
       Screen('DrawingFinished',winPtr);
@@ -957,20 +957,20 @@ for cc=1:1:sparam.numRepeats
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
 
-      if ff<=nframe_block && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+      if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
 
       % clean up
-      if ff<=nframe_block, Screen('Close',checkertexture); end
+      if ff<=nframe_stim, Screen('Close',checkertexture); end
 
       [resps,event]=resps.check_responses(event);
 
       %% exit from the loop if the final frame is displayed
-      if pp==2 && ff==nframe_block+nframe_rest && cc==sparam.numRepeats, continue; end
+      if pp==2 && ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
 
       %% update IDs
 
       % flickering checkerboard
-      if ff<=nframe_block
+      if ff<=nframe_stim
         if ~mod(ff,nframe_flicker) % color reversal
           compensate_id=mod(compensate_id,2)+1;
         end
@@ -983,12 +983,16 @@ for cc=1:1:sparam.numRepeats
         %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
         if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
         firsttask_flg=firsttask_flg+1;
+      else
+        compensate_id=1;
+        color_id=1;
+        firsttask_flg=0;
       end
 
       % get responses
       [resps,event]=resps.check_responses(event);
 
-    end % for ff=1:1:nframe_block+nframe_rest
+    end % for ff=1:1:nframe_stim+nframe_rest
   end % for pp=1:1:2 % 2 = the target and its compensating patterns
 
 end % for cc=1:1:sparam.numRepeats

@@ -1,9 +1,8 @@
-function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,...
-                                   prefix_to_be_replaced,prefix_replace,prefix_exclude)
+function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,prefix_to_be_replaced,prefix_replace,prefix_exclude)
 
 % Replaces a target word in the file name to the specified one.
-% function filenames=ReplaceFilename(target_dir,extension,prefix_tgt,...
-%                                    prefix_to_be_replaced,prefix_replace,prefix_exclude)
+% function filenames=ReplaceFilename(target_dir,extension,:prefix_tgt,:prefix_to_be_replaced,:prefix_replace,:prefix_exclude)
+% (: is optional)
 %
 % [example]
 % >> ReplaceFilename('/HB/zk09_091','*.vtc','','ZK','zk')
@@ -13,7 +12,7 @@ function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,..
 % like, hb_test_partial.vtc ---> HB_test_partial.vtc
 % Directory name is also acceptable
 %
-% !!!NOTICE!!!
+% !!! NOTICE !!!
 % If prefix_replace is not specified, only original file names
 % will be returned.
 %
@@ -25,9 +24,9 @@ function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,..
 %              called is the origin.
 % extension  : extension of files you want to get
 %              e.g. '*.vtc'
-% prefix_tgt : (optional) file prefix to specify target, e.g. 'HB'
-% prefix_to_be_replaced: (optional) string to be replaced, e.g. 'ZK'
-% prefix_replace: (optional) string to replace prefix_to_be_replaced, e.g. 'zk'
+% prefix_tgt : (optional) file prefix to specify target, e.g. 'HB', empty by default
+% prefix_to_be_replaced: (optional) string to be replaced, e.g. 'ZK', empty by default (NO replacement)
+% prefix_replace: (optional) string to replace prefix_to_be_replaced, e.g. 'zk', empty by default (NO replacement)
 % prefix_exclude: (optional) string to specify files to be excluded from the processing
 %                 e.g. 'test'. empty by default.
 %
@@ -37,13 +36,30 @@ function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,..
 % dirnames   : cell structure of directory names after replacing
 %              prefix_to_be_replaced by prefix_replace
 %
+% [note on how to set the 'prefix_*' variable]
+% prefix_* can be set flexibly as below.
+% 1. a string: setting an including prefix (string) alone
+%    e.g. prefix_*='_TDTS6.0';
+%         --> processes files whose names contain '_TDTS6.0'
+% 2. a {1 x N} cell string: setting including prefix (string) arrays
+%    e.g. prefix_*={'_TDTS6.0','_TSS5.0mm'};
+%         --> processes files whose names contain '_TDTS6.0s' or '_TSS5.0mm'.
+% 3. a {2 x N} cell string: setting including/excluding prefix (string) arrays
+%    e.g. prefix_*={{'_TDTS6.0s','_TSS5.0mm'};{'THP'}};
+%         --> processes files whose names contain '_TDTS6.0s'
+%             or '_TSS5.0mm' but do not contain 'THP'.
+%         prefix_*={'';{'_TDTS6.0s'}};
+%         --> processes files whose names do not contain '_TDTS6.0s'.
+%         prefix_*={'_TSS5.0mm';''};
+%         --> processes files whose names contain '_TSS5.0mm'.
+%
 % [dependency]
 % 1. wildcardsearch.m
 % enable reg-exp search of files
 %
 %
 % Created    : "2010-08-19 16:02:21 banh"
-% Last Update: "2013-11-22 23:55:54 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-03-08 10:35:07 ban"
 
 % check the input variables
 if nargin<2, help(mfilename()); return; end
@@ -62,14 +78,20 @@ if ~strcmp(extension,'*')
   %if ~strcmp(extension(2),'.'), extension=['*.',extension(2:end)]; end
 end
 
-% get vtc files from the directories in the VTC_dir
+% get target files and directories
 tmpfiles=GetFiles(fullfile(pwd,target_dir),extension,prefix_tgt);
 
-% exclude files whose name include prefix_exclude
+% exclude files whose names include prefix_exclude
 file_counter=0; tgtfiles='';
 for ii=1:1:length(tmpfiles)
-  [dummy,fname]=fileparts(tmpfiles{ii});
-  if ~isempty(prefix_exclude) & strfind(fname,prefix_exclude), continue; end %#ok
+  [dirpath,fname]=fileparts(tmpfiles{ii});
+  if ~isempty(prefix_exclude)
+    if strfind(fname,prefix_exclude), continue; end %#ok % the target is file
+    if isempty(fname) % the target is directory
+      [dummy,dirname]=fileparts(dirpath); %#ok
+      if strfind(dirname,prefix_exclude), continue; end %#ok
+    end
+  end
   file_counter=file_counter+1;
   tgtfiles{file_counter}=tmpfiles{ii};
 end
@@ -77,8 +99,7 @@ tmpfiles=tgtfiles;
 clear file_counter tgtfiles;
 
 % display message
-message=sprintf('Target : %s',fullfile(pwd,target_dir));
-disp(message);
+fprintf('Target : %s\n',fullfile(pwd,target_dir));
 
 % initialize variables
 filenames=''; dirnames='';
@@ -101,14 +122,14 @@ end
 
 % sort dir & file structure by length of directory tree
 if ~isnan(tgtdirlength)
-  [dummy,idx]=sort(tgtdirlength,'descend');
+  [dummy,idx]=sort(tgtdirlength,'descend'); %#ok
   tmp=cell(length(tgtdirs),1);
   for ii=1:1:length(tgtdirs), tmp{ii}=tgtdirs{idx(ii)}; end
   tgtdirs=tmp; clear tmp;
 end
 
 if ~isnan(tgtfilelength)
-  [dummy,idx]=sort(tgtfilelength,'descend');
+  [dummy,idx]=sort(tgtfilelength,'descend'); %#ok
   tmp=cell(length(tgtfiles),1);
   for ii=1:1:length(tgtfiles), tmp{ii}=tgtfiles{idx(ii)}; end
   tgtfiles=tmp; clear tmp;
@@ -118,7 +139,7 @@ end
 if strcmp(prefix_replace,'')
   filenames=tgtfiles;
   dirnames=tgtdirs;
-  return;
+  return
 end
 
 % replace file names
@@ -132,8 +153,7 @@ if ~isnan(tgtfilelength)
     % rename file
     if ~strcmp(tgtfiles{ii},filenames{ii})
 
-      message=sprintf('processing : %s%s --> %s%s',fname,ext,strrep(fname,prefix_to_be_replaced,prefix_replace),ext);
-      disp(message);
+      fprintf('processing : %s%s --> %s%s\n',fname,ext,strrep(fname,prefix_to_be_replaced,prefix_replace),ext);
 
       % matlab movefile function is quite slow in some situations
       % since it copies the file first
@@ -141,7 +161,7 @@ if ~isnan(tgtfilelength)
       %movefile([tgtfiles{ii},'_tmp'],filenames{ii},'f');
 
       % so use the external dos-command
-      [dummy,fname,ext]=fileparts(filenames{ii});
+      [dummy,fname,ext]=fileparts(filenames{ii}); %#ok
       eval(sprintf('dos(''rename "%s" "%s"'');',tgtfiles{ii},[fname,ext]));
     end
 
@@ -160,8 +180,7 @@ if ~isnan(tgtdirlength)
     % rename directory
     if ~strcmp(tgtdirs{ii},dirnames{ii})
 
-      message=sprintf('processing : %s --> %s',dname,strrep(dname,prefix_to_be_replaced,prefix_replace));
-      disp(message);
+      fprintf('processing : %s --> %s\n',dname,strrep(dname,prefix_to_be_replaced,prefix_replace));
 
       % matlab movefile fucntion is quite slow in some situations
       % since it copies the file first

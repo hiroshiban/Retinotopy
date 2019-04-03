@@ -2,14 +2,14 @@
 README for "Retinotopy" stimulus package
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2019-03-03 14:14:54 ban"
+Last Update: "2019-03-05 19:07:50 ban"
 ***********************************
 
 [about Retinotopy package]
-This "Retinotopy" experiment package is a modified version of RetinotopyWithDepth
+This "Retinotopy" stimulus package is a modified version of RetinotopyWithDepth
 that I once wrote and had used at University of Birmingham, UK, for my ex-fMRI projects.
-The current presentation procedures are more sophisticated, robust to errors, and
-more suitable with settings of fMRI experiments at CiNet, Osaka, Japan.
+The current presentation procedures are more accurate in timing, more sophisticated,
+robust to errors.
 
 [about the scripts]
 Please go to ~/Retinotopy/Presentation/ and you will find a function, named retinotopy.m
@@ -26,19 +26,27 @@ The wrapped functions are as below.
     6. cdual_fixtask         : color/luminance-defined checkerboard stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
     7. cmultifocal           : color/luminance-defined multifocal retinotopy checkerboard stimuli with a checker-pattern luminance change detection task, for GLM or pRF analysis
     8. cmultifocal_fixtask   : color/luminance-defined multifocal retinotopy checkerboard stimuli with a fixation luminance change detection task, for GLM or pRF analysis
-    9. cmeridian             : color/luminance-defined dual wedge checkerboard stimuli presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task
-   10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboard stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+    9. cmeridian             : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task
+   10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
    11. chrf                  : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for HRF shape estimation
    12. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for HRF shape estimation
    13. clgnlocalizer         : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for localizing LGN
    14. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for localizing LGN
-   15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identify retinotopic subregions
-   16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identify retinotopic subregions
-   17. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
-   18. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
-   19. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
-   20. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
-For details, see each function's help.
+   15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+   16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+   17. iretinotopy_fixtask   : object-image-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis
+   18. ibar_fixtask          : object-image-defined bar stimuli with a fixation luminance change detection task, for pRF analysis
+   19. idual_fixtask         : object-image-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
+   20. imultifocal_fixtask   : object-image-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis
+   21. imeridian_fixtask     : object-image-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+   22. ihrf_fixtask          : object-image-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation
+   23. ilgnlocalizer_fixtask : object-image-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN
+   24. ilocalizer_fixtask    : object-image-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+   25. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
+   26. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
+   27. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
+   28. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
+For more details, please see each function's help.
 
 [example]
 >> retinotopy('HB','ccw',1);
@@ -52,40 +60,52 @@ exp_mode: experiment mode that you want to run, one of
           *** task -- luminance change detection on the checkerboard
           - ccw     : color/luminance-defined checkerboard wedge rotating counter-clockwisely
           - cw      : color/luminance-defined checkerboard wedge rotating clockwisely
-          - exp     : color/luminance-defined checkerboard annulus expanding from fovea
-          - cont    : color/luminance-defined checkerboard annulus contracting from periphery
+          - exp     : color/luminance-defined checkerboard annulus expanding from fovea to periphery
+          - cont    : color/luminance-defined checkerboard annulus contracting from periphery to fovea
           - bar     : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
           - ccwexp  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
           - ccwcont : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
           - cwexp   : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
           - cwcont  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
-          - multifocal : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
-          - meridian : color/luminance-defined dual wedge checkerboard presented along the horizontal or vertical visual meridian
-          - lgn     : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
-                      to localize LGN
-          - hrf     : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
-                      to measure HRF responses and to test scanner sequence
-          - localizer : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
-                      to identify specific eccentricity corresponding regions
+          - multifocal : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus
+          - meridian : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian
+          - lgn     : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+          - hrf     : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+          - localizer : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                      to identify specific iso-eccentricity regions
 
           *** task -- luminance change detection on the central fixation
           - ccwf    : color/luminance-defined checkerboard wedge rotating counter-clockwisely
           - cwf     : color/luminance-defined checkerboard wedge rotating clockwisely
-          - expf    : color/luminance-defined checkerboard annulus expanding from fovea
-          - contf   : color/luminance-defined checkerboard annulus contracting from periphery
+          - expf    : color/luminance-defined checkerboard annulus expanding from fovea to periphery
+          - contf   : color/luminance-defined checkerboard annulus contracting from periphery to fovea
           - barf    : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
           - ccwexpf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
           - ccwcontf: color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
           - cwexpf  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
           - cwcontf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
-          - multifocalf : color/luminance-defined checkerboard for a standard multifocal retinotopy stimulus
-          - meridianf : color/luminance-defined dual wedge checkerboard presented along the horizontal or vertical visual meridian
-          - lgnf    : color/luminance-defined checkerboard hemifield wedge pattern 16s rest + 6x(16s left + 16s right) + 16s rest = 240s
-                      to localize LGN
-          - hrff    : color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s
-                      to measure HRF responses and to test scanner sequence
-          - localizerf: color/luminance-defined checkerboard pattern 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
-                      to identify specific eccentricity corresponding regions
+          - multifocalf : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus
+          - meridianf : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian
+          - lgnf    : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+          - hrff    : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+          - localizerf : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                      to identify specific iso-eccentricity regions
+
+          - ccwi    : Object-image-defined wedge rotating counter-clockwisely
+          - cwi     : Object-image-defined wedge rotating clockwisely
+          - expi    : Object-image-defined annulus expanding from fovea to periphery
+          - conti   : Object-image-defined annulus contracting from periphery to fovea
+          - bari    : Object-image-defined bar, a standard pRF (population receptive field) stimulus
+          - ccwexpi : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+          - ccwconti: Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+          - cwexpi  : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+          - cwconti : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+          - multifocali : Object-image-defined multifocal retinotopy stimulus
+          - meridiani : Object-image-defined dual wedges presented along the horizontal or vertical visual meridian
+          - lgni    : Object-image-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+          - hrfi    : Object-image-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+          - localizeri: Object-image-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                      to identify specific iso-eccentricity regions
 
           *** these are stimulus windows to generate pRF (population receptive field) model
           - ccwwindows     : stimulation windows of wedge rotating counter-clockwisely
@@ -102,6 +122,19 @@ exp_mode: experiment mode that you want to run, one of
           string or a cell string structure, e.g. 'ccw', or {'ccw','exp'}
           length(exp_mode) should equal numel(acq_num)
 acq_num : acquisition number, 1,2,3,...
+
+=== NOTE: the two input variables below are only effective when exp_mode is set to *windows (one of stimulus window generation functions) ===
+overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg
+          if not specified, sparam.pix_per_deg is used to reconstruct
+          stim_windows.
+          This is useful to reconstruct stim_windows with less memory space
+          1/pix_per_deg = spatial resolution of the generated visual field,
+          e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
+          empty (use sparam.pix_per_deg) by default
+TR      : (optional) TR used in fMRI scans, in sec, 2 by default
+
+[output]
+OK      : (optional) flag, whether this script finished without any error [true/false]
 
 
 For more details, please see the comment lines of retinotopy.m

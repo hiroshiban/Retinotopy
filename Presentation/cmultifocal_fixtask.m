@@ -40,7 +40,7 @@ function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2018-11-29 21:41:56 ban"
-% Last Update: "2019-03-05 16:19:20 ban"
+% Last Update: "2019-04-03 21:15:37 ban"
 %
 %
 %
@@ -596,9 +596,9 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_trial=round((sparam.trial_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
+nframe_stim=round((sparam.trial_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-nframe_flicker=round(nframe_trial/sparam.ncolors/4);
+nframe_flicker=round(nframe_stim/sparam.ncolors/4);
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
 %% initialize chackerboard parameters
@@ -730,7 +730,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+(nframe_trial+nframe_rest)*sparam.numTrials;
+totalframes=max(sum(nframe_fixation),1)+(nframe_stim+nframe_rest)*sparam.numTrials;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -936,13 +936,13 @@ end
 for cc=1:1:sparam.numTrials
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_trial+nframe_rest
+  for ff=1:1:nframe_stim+nframe_rest
 
     %% display the current frame
     for nn=1:1:nScr
       Screen('SelectStereoDrawBuffer',winPtr,nn-1);
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
-      if ff<=nframe_trial
+      if ff<=nframe_stim
         DrawTextureWithCLUT(winPtr,checkertexture{cc},CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
       end
       Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
@@ -969,12 +969,12 @@ for cc=1:1:sparam.numTrials
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_trial+nframe_rest && cc==sparam.numTrials, continue; end
+    if ff==nframe_stim+nframe_rest && cc==sparam.numTrials, continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ff<=nframe_trial
+    if ff<=nframe_stim
       if ~mod(ff,nframe_flicker) % color reversal
         compensate_id=mod(compensate_id,2)+1;
       end
@@ -983,12 +983,15 @@ for cc=1:1:sparam.numTrials
         color_id=color_id+1;
         if color_id>sparam.ncolors, color_id=1; end
       end
+    else
+      compensate_id=1;
+      color_id=1;
     end
 
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:nframe_trial+nframe_rest
+  end % for ff=1:1:nframe_stim+nframe_rest
 
 end % for cc=1:1:sparam.numTrials
 

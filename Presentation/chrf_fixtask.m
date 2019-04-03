@@ -28,7 +28,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-02-28 18:42:12 ban"
+% Last Update: "2019-04-03 21:11:39 ban"
 %
 %
 %
@@ -532,7 +532,7 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_cycle=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
+nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 %nframe_flicker=round(sparam.waitframes/2/2); % the first 2 = 2 cycles of color flickering, the second 2 is for compensation colors (e.g. RG and GR)
 nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.ncolors/4); %60,0,30 are from CCW/CW parameters.
@@ -650,7 +650,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+(nframe_cycle+nframe_rest)*sparam.numRepeats;
+totalframes=max(sum(nframe_fixation),1)+(nframe_stim+nframe_rest)*sparam.numRepeats;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -856,13 +856,13 @@ end
 for cc=1:1:sparam.numRepeats
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_cycle+nframe_rest
+  for ff=1:1:nframe_stim+nframe_rest
 
     %% display the current frame
     for nn=1:1:nScr
       Screen('SelectStereoDrawBuffer',winPtr,nn-1);
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
-      if ff<=nframe_cycle
+      if ff<=nframe_stim
         DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
       end
       Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
@@ -887,12 +887,12 @@ for cc=1:1:sparam.numRepeats
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_cycle+nframe_rest && cc==sparam.numRepeats, continue; end
+    if ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ff<=nframe_cycle
+    if ff<=nframe_stim
       if ~mod(ff,nframe_flicker) % color reversal
         compensate_id=mod(compensate_id,2)+1;
       end
@@ -901,12 +901,15 @@ for cc=1:1:sparam.numRepeats
         color_id=color_id+1;
         if color_id>sparam.ncolors, color_id=1; end
       end
+    else
+      compensate_id=1;
+      color_id=1;
     end
 
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:nframe_cycle+nframe_rest
+  end % for ff=1:1:nframe_stim+nframe_rest
 
 end % for cc=1:1:sparam.numRepeats
 

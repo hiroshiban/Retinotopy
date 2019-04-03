@@ -39,7 +39,7 @@ function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-03-05 18:12:28 ban"
+% Last Update: "2019-04-03 21:15:35 ban"
 %
 %
 %
@@ -598,8 +598,8 @@ nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframe
 sparam.pol_npositions=360/sparam.pol_rotangle;
 sparam.ecc_npositions=sparam.pol_npositions*(sparam.ecc_cycle_duration-sparam.ecc_rest_duration)/(sparam.pol_cycle_duration-sparam.pol_rest_duration);
 
-nframe_rotation=round((sparam.pol_cycle_duration-sparam.pol_rest_duration)*dparam.fps/(360/sparam.pol_rotangle)/sparam.waitframes);
-nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
+nframe_stim=round((sparam.pol_cycle_duration-sparam.pol_rest_duration)*dparam.fps/(360/sparam.pol_rotangle)/sparam.waitframes);
+nframe_flicker=round(nframe_stim/sparam.ncolors/4);
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
 %% initialize chackerboard parameters
@@ -840,7 +840,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 %% set task variables
 % flag to decide whether presenting fixation task
-totalframes=max(sum(nframe_fixation),1)+length(checkerboard)*nframe_rotation;
+totalframes=max(sum(nframe_fixation),1)+length(checkerboard)*nframe_stim;
 num_tasks=ceil(totalframes/nframe_task);
 task_flg=ones(1,num_tasks);
 for nn=2:1:num_tasks
@@ -1046,7 +1046,7 @@ end
 for cc=1:1:length(checkerboard)
 
   %% stimulus presentation loop
-  for ff=1:1:nframe_rotation
+  for ff=1:1:nframe_stim
 
     %% display the current frame
     for nn=1:1:nScr
@@ -1060,7 +1060,7 @@ for cc=1:1:length(checkerboard)
 
     % flip the window
     Screen('DrawingFinished',winPtr);
-    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+( ((cc-1)*nframe_rotation+(ff-1))*sparam.waitframes-0.5 )*dparam.ifi,[],[],1);
+    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+( ((cc-1)*nframe_stim+(ff-1))*sparam.waitframes-0.5 )*dparam.ifi,[],[],1);
 
     if ff==1
       event=event.add_event(sprintf('Trial: %d',cc),[]);
@@ -1077,24 +1077,29 @@ for cc=1:1:length(checkerboard)
     [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
-    if ff==nframe_rotation && cc==length(checkerboard), continue; end
+    if ff==nframe_stim && cc==length(checkerboard), continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ~mod(ff,nframe_flicker) % color reversal
-      compensate_id=mod(compensate_id,2)+1;
-    end
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % color reversal
+        compensate_id=mod(compensate_id,2)+1;
+      end
 
-    if ~mod(ff,2*nframe_flicker) % color change
-      color_id=color_id+1;
-      if color_id>sparam.ncolors, color_id=1; end
+      if ~mod(ff,2*nframe_flicker) % color change
+        color_id=color_id+1;
+        if color_id>sparam.ncolors, color_id=1; end
+      end
+    else
+      compensate_id=1;
+      color_id=1;
     end
 
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:nframe_rotation
+  end % for ff=1:1:nframe_stim
 end % for cc=1:1:length(checkerboard)
 
 
