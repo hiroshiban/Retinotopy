@@ -37,7 +37,7 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-04 16:38:34 ban"
-% Last Update: "2019-04-03 21:00:03 ban"
+% Last Update: "2019-04-04 11:54:53 ban"
 %
 %
 %
@@ -527,7 +527,7 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
+nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
 nframe_flicker=round(sparam.flip_duration*dparam.fps/sparam.waitframes);
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
@@ -578,7 +578,7 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
 
   %% !!! NOTICE !!!
   % update some parameters here for 'exp' or 'cont' mode
-  nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.npositions/sparam.waitframes);
+  nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.npositions/sparam.waitframes);
 
   % get annuli's min/max lims
   ecclims=zeros(sparam.npositions,3);
@@ -671,29 +671,81 @@ for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:
 % %%%%%% DEBUG codes start here
 if strfind(upper(subjID),'DEBUG')
 
-  % just to get stimulus figures
   Screen('CloseAll');
+
   save_dir=fullfile(resultDir,'images_iretinotopy_fixtask');
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
-  figure; hold off;
-  for nn=1:1:sparam.npositions
-    imagesc(checkerboard{nn}+1,[1,numel(unique(checkerboard{nn}))]);
-    axis off; axis equal;
+  % open a new window for drawing stimuli
+  stimRect=[0,0,size(checkerboard{1},2),size(checkerboard{1},1)];
+  [winPtr,winRect]=Screen('OpenWindow',dparam.scrID,sparam.bgcolor,CenterRect(stimRect,Screen('Rect',dparam.scrID)));
 
-    for cc=1:1:sparam.ncolors
-      for pp=1:1:2 % compensating checkers
-        %colormap(CLUT{cc,pp}(1:3,1:3)./255);
-        drawnow;
-        pause(0.05);
-        fname=sprintf('retinotopy_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp);
-        %imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
-      end
-    end
+  % set OpenGL
+  priorityLevel=MaxPriority(winPtr,'WaitBlanking');
+  Priority(priorityLevel);
+  AssertOpenGL();
+  Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  % regenerate checkerboard textures
+  for nn=1:1:sparam.npositions, checkertexture{nn}=Screen('MakeTexture',winPtr,checkerboard{nn}); end
+
+  % check the number of flickers
+  if mod((sparam.cycle_duration-sparam.rest_duration)/(360/sparam.rotangle)/sparam.flip_duration,1)~=0
+    warning('(sparam.cycle_duration-sparam.rest_duration)/(360/sparam.rotangle)/sparam.flip_duration is not an integer. check the sparam parameters.');
   end
-  close all;
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+
+  % processing
+  obj_counter=0;
+  for rr=1:1:sparam.numRepeats
+    for nn=1:1:sparam.npositions
+      for cc=1:1:round((sparam.cycle_duration-sparam.rest_duration)/(360/sparam.rotangle)/sparam.flip_duration)
+
+        % brownian noise image
+        bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
+        noisetexture=Screen('MakeTexture',winPtr,bnimg);
+
+        for pp=1:1:2 % by default, 2 image sets in one background noise flicker
+          % generate object image textures
+
+          % image IDs
+          obj_counter=obj_counter+1;
+          imgids=sparam.nimg*(obj_counter-1)+1:1:sparam.nimg*obj_counter;
+          imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
+          imgids(imgids==0)=size(img,4);
+
+          % rectangles
+          cpos=[(stimRect(3)-stimRect(1)).*rand(sparam.nimg,1)+stimRect(1),(stimRect(4)-stimRect(2)).*rand(sparam.nimg,1)+stimRect(2)]; % center positions, [x,y]
+          cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
+          imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
+
+          % angles
+          imgrot=360.*rand(sparam.nimg,1);
+
+          for mm=1:1:numel(imgids), objecttextures(mm)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(mm))); end
+
+          % drawing
+          Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
+          Screen('DrawTextures',winPtr,objecttextures,[],imgpos,imgrot); % object images
+          Screen('DrawTexture',winPtr,checkertexture{nn},[],CenterRect(stimRect,winRect)); % checkerboard mask
+
+          % flip the window
+          Screen('DrawingFinished',winPtr);
+          Screen('Flip',winPtr,[],[],[],1);
+
+          % get the current frame and save it
+          imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_cycle_%02d_pos_%02d_type_%02d_%02d.png',sparam.mode,rr,nn,cc,pp)),'png');
+
+          % close the textures and OffScreenWindow
+          for mm=1:1:numel(imgids), Screen('Close',objecttextures(mm)); end
+        end % for pp=1:1:2
+        Screen('Close',noisetexture);
+
+      end % for cc=1:1:round((sparam.cycle_duration-sparam.rest_duration)/(360/sparam.rotangle)/sparam.flip_duration)
+    end % for nn=1:1:sparam.npositions
+  end % for rr=1:1:sparam.numRepeats
+
+  Screen('CloseAll');
+  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')
@@ -1027,7 +1079,7 @@ for cc=1:1:sparam.numRepeats
         obj_counter=obj_counter+1;
 
         % image IDs
-        imgids=sparam.nimg*(obj_counter-1)+1:1:sparam.nimg*obj_counter;
+        imgids=sparam.nimg*obj_counter+1:1:sparam.nimg*(obj_counter+1); % the first image set is already presented
         imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
         imgids(imgids==0)=size(img,4);
 
@@ -1044,7 +1096,7 @@ for cc=1:1:sparam.numRepeats
       end
 
       % stimulus position id for the next presentation
-      if ~mod(ff,nframe_rotation)
+      if ~mod(ff,nframe_movement)
         stim_pos_id=stim_pos_id+1;
         if stim_pos_id>sparam.npositions, stim_pos_id=1; end
       end
@@ -1055,7 +1107,7 @@ for cc=1:1:sparam.numRepeats
     % get responses
     [resps,event]=resps.check_responses(event);
 
-  end % for ff=1:1:cycle_frames
+  end % for ff=1:1:nframe_stim
 
   %% rest perioed
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')

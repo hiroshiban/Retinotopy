@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-04-03 21:11:54 ban"
+% Last Update: "2019-04-04 10:26:52 ban"
 %
 %
 %
@@ -559,8 +559,8 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
-nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
+nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
+nframe_flicker=round(nframe_movement/sparam.ncolors/4);
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
 %% initialize chackerboard parameters
@@ -610,8 +610,8 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
 
   %% !!! NOTICE !!!
   % update some parameters here for 'exp' or 'cont' mode
-  nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.npositions/sparam.waitframes);
-  nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
+  nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.npositions/sparam.waitframes);
+  nframe_flicker=round(nframe_movement/sparam.ncolors/4);
   nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
   % get annuli's min/max lims
@@ -1014,7 +1014,7 @@ for cc=1:1:sparam.numRepeats
       end
 
       % stimulus position id for the next presentation
-      if ~mod(ff,nframe_rotation)
+      if ~mod(ff,nframe_movement)
         stim_pos_id=stim_pos_id+1;
         if stim_pos_id>sparam.npositions, stim_pos_id=1; end
       end
