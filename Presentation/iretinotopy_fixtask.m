@@ -37,7 +37,7 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-04 16:38:34 ban"
-% Last Update: "2019-04-04 14:39:37 ban"
+% Last Update: "2019-04-04 17:43:47 ban"
 %
 %
 %
@@ -745,7 +745,7 @@ if strfind(upper(subjID),'DEBUG')
   end % for rr=1:1:sparam.numRepeats
 
   Screen('CloseAll');
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

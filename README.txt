@@ -3,7 +3,7 @@ README on the "Retinotopy" stimulus package
 
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2019-04-04 14:59:53 ban"
+Last Update: "2019-04-04 17:01:25 ban"
 **********************************************************************
 
 ======================================================================
@@ -158,7 +158,7 @@ For more details, please see the comment lines of retinotopy.m
 
 
 ======================================================================
-about the object image databases used in the Retinotopy package
+About the object image databases used in the Retinotopy package
 ======================================================================
 
 The object images stored in the object_image_database.mat and used in i* retinotopy stimuli are obtained and modified from the databases publicly available from
@@ -180,3 +180,11 @@ I sincerely express my gratitude to the developers and distributors, scientists 
 
 - A Familiar Size Stroop Effect: Real-world size is an automatic property of object representation.
   Konkle, T., & Oliva, A. (2012). Journal of Experimental Psychology: Human Perception & Performance, 38, 561-9.
+
+
+======================================================================
+TODOs
+======================================================================
+
+1. Update the procedure for getting response more precisely.
+2. Generate dretinotopy (3D depth version of the retinotopy stimuli) in which checkerboards consist of Random-Dot-Stereograms

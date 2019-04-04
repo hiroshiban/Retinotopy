@@ -31,7 +31,7 @@ function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2018-11-22 13:23:43 ban"
-% Last Update: "2019-04-04 14:38:47 ban"
+% Last Update: "2019-04-04 17:44:52 ban"
 %
 %
 %
@@ -660,15 +660,14 @@ if strfind(upper(subjID),'DEBUG')
           colormap(CLUT{cc,pp}(1:3,1:3)./255);
           drawnow;
           pause(0.05);
-          fname=sprintf('bar_angle_%.2f_pos_%02d_lut_%02d_%02d.png',sparam.rotangles(aa),nn,cc,pp);
-          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
+          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('bar_angle_%.2f_pos_%02d_lut_%02d_%02d.png',sparam.rotangles(aa),nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
         end
       end
 
     end
   end
   close all;
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

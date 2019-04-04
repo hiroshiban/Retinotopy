@@ -39,7 +39,7 @@ function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2019-03-05 17:07:56 ban"
-% Last Update: "2019-04-04 14:31:21 ban"
+% Last Update: "2019-04-04 17:42:53 ban"
 %
 %
 %
@@ -648,15 +648,15 @@ if strfind(upper(subjID),'DEBUG')
   for nn=1:1:numel(sparam.startangles), checkertexture{nn}=Screen('MakeTexture',winPtr,checkerboard{nn}); end
 
   % check the number of flickers
-  if mod((sparam.cycle_duration-sparam.rest_duration)/sparam.flip_duration,1)~=0
-    warning('sparam.cycle_duration-sparam.rest_duration can not be divided by sparam.flip_duration. check the sparam parameters.');
+  if mod((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration,1)~=0
+    warning('sparam.block_duration-sparam.rest_duration can not be divided by sparam.flip_duration. check the sparam parameters.');
   end
 
   % processing
   obj_counter=0;
   for rr=1:1:sparam.numRepeats
     for nn=1:1:numel(sparam.startangles)
-      for cc=1:1:round((sparam.cycle_duration-sparam.rest_duration)/sparam.flip_duration)
+      for cc=1:1:round((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration)
 
         % brownian noise image
         bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
@@ -698,12 +698,12 @@ if strfind(upper(subjID),'DEBUG')
         end % for pp=1:1:2
         Screen('Close',noisetexture);
 
-      end % for cc=1:1:round((sparam.cycle_duration-sparam.rest_duration)/sparam.flip_duration);
+      end % for cc=1:1:round((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration);
     end % for nn=1:1:numel(sparam.startangles)
   end % for rr=1:1:sparam.numRepeats
 
   Screen('CloseAll');
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

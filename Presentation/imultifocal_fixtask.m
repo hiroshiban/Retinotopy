@@ -41,7 +41,7 @@ function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-05 16:15:44 ban"
-% Last Update: "2019-04-04 14:39:37 ban"
+% Last Update: "2019-04-04 18:16:12 ban"
 %
 %
 %
@@ -741,7 +741,7 @@ if strfind(upper(subjID),'DEBUG')
         Screen('Flip',winPtr,[],[],[],1);
 
         % get the current frame and save it
-        imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_trial_%02d_type_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png');
+        imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_pos_%02d_type_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png');
 
         % close the textures and OffScreenWindow
         for mm=1:1:numel(imgids), Screen('Close',objecttextures(mm)); end
@@ -752,7 +752,7 @@ if strfind(upper(subjID),'DEBUG')
   end % for nn=1:1:length(checkerboard)
 
   Screen('CloseAll');
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

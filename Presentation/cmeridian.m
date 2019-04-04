@@ -35,7 +35,7 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2018-12-11 19:10:32 ban"
-% Last Update: "2019-04-04 14:35:12 ban"
+% Last Update: "2019-04-04 17:44:18 ban"
 %
 %
 %
@@ -644,7 +644,7 @@ if strfind(upper(subjID),'DEBUG')
 
   % just to get stimulus figures
   Screen('CloseAll');
-  save_dir=fullfile(resultDir,'images');
+  save_dir=fullfile(resultDir,'images_cmeridian');
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
   figure; hold off;
@@ -657,14 +657,13 @@ if strfind(upper(subjID),'DEBUG')
         colormap(CLUT{cc,pp}(1:3,1:3)./255);
         drawnow;
         pause(0.05);
-        fname=sprintf('checkerboard_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp);
-        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
+        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('checkerboard_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
       end
     end
 
   end
   close all;
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

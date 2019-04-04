@@ -28,7 +28,7 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2019-03-05 17:27:27 ban"
-% Last Update: "2019-04-04 14:33:38 ban"
+% Last Update: "2019-04-04 18:13:38 ban"
 %
 %
 %
@@ -676,7 +676,7 @@ if strfind(upper(subjID),'DEBUG')
           Screen('Flip',winPtr,[],[],[],1);
 
           % get the current frame and save it
-          imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_cycle_%02d_type_%02d_%02d_%02d.png',sparam.mode,rr,nn,cc,pp)),'png');
+          imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_cycle_%02d_pos_%02d_type_%02d_%02d.png',sparam.mode,rr,nn,cc,pp)),'png');
 
           % close the textures and OffScreenWindow
           for mm=1:1:numel(imgids), Screen('Close',objecttextures(mm)); end
@@ -687,7 +687,7 @@ if strfind(upper(subjID),'DEBUG')
   end % for rr=1:1:sparam.numRepeats
 
   Screen('CloseAll');
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

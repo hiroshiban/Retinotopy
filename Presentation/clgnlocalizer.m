@@ -29,7 +29,7 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2019-01-31 18:08:27 ban"
-% Last Update: "2019-04-04 14:27:20 ban"
+% Last Update: "2019-04-04 17:47:52 ban"
 %
 %
 %
@@ -642,20 +642,21 @@ if strfind(upper(subjID),'DEBUG')
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
   figure; hold off;
-  imagesc(checkerboard+1,[1,numel(unique(checkerboard))]);
-  axis off; axis equal;
+  for nn=1:1:2
+    imagesc(checkerboard{nn}+1,[1,numel(unique(checkerboard{nn}))]);
+    axis off; axis equal;
 
-  for cc=1:1:sparam.ncolors
-    for pp=1:1:2 % compensating checkers
-      colormap(CLUT{cc,pp}(1:3,1:3)./255);
-      drawnow;
-      pause(0.05);
-      fname=sprintf('checkerboard_%s_lut_%02d_%02d.png',sparam.mode,cc,pp);
-      imwrite(checkerboard+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
+    for cc=1:1:sparam.ncolors
+      for pp=1:1:2 % compensating checkers
+        colormap(CLUT{cc,pp}(1:3,1:3)./255);
+        drawnow;
+        pause(0.05);
+        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('checkerboard_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
+      end
     end
   end
   close all;
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-04-04 14:38:46 ban"
+% Last Update: "2019-04-04 17:44:49 ban"
 %
 %
 %
@@ -838,14 +838,13 @@ if strfind(upper(subjID),'DEBUG')
         colormap(CLUT{cc,pp}(1:3,1:3)./255);
         drawnow;
         pause(0.05);
-        fname=sprintf('retinotopy_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp);
-        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
+        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('retinotopy_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
       end
     end
 
   end
   close all;
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

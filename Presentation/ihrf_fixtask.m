@@ -29,7 +29,7 @@ function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2019-04-03 18:16:24 ban"
-% Last Update: "2019-04-04 14:39:35 ban"
+% Last Update: "2019-04-04 17:43:29 ban"
 %
 %
 %
@@ -685,7 +685,7 @@ if strfind(upper(subjID),'DEBUG')
   end % for rr=1:1:sparam.numRepeats
 
   Screen('CloseAll');
-  save(fullfile(save_dir,sprintf('checkerboard_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')

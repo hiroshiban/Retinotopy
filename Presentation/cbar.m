@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-04-04 14:38:47 ban"
+% Last Update: "2019-04-04 15:57:53 ban"
 %
 %
 %
@@ -681,8 +681,7 @@ if strfind(upper(subjID),'DEBUG')
           colormap(CLUT{cc,pp}(1:3,1:3)./255);
           drawnow;
           pause(0.05);
-          fname=sprintf('bar_angle_%.2f_pos_%02d_lut_%02d_%02d.png',sparam.rotangles(aa),nn,cc,pp);
-          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,[fname,'.png']),'png'); % +1 is required as the image index is assumed to be started from 1.
+          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('bar_angle_%.2f_pos_%02d_lut_%02d_%02d.png',sparam.rotangles(aa),nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
         end
       end
 
