@@ -1,15 +1,23 @@
-***********************************
-README for "Retinotopy" stimulus package
+**********************************************************************
+README on the "Retinotopy" stimulus package
+
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2019-04-03 21:33:16 ban"
-***********************************
+Last Update: "2019-04-04 14:59:53 ban"
+**********************************************************************
 
-[about Retinotopy package]
-This "Retinotopy" stimulus package is a modified version of RetinotopyWithDepth
-that I once wrote and had used at University of Birmingham, UK, for my ex-fMRI projects.
-The current presentation procedures are more accurate in timing, more sophisticated,
-robust to errors.
+======================================================================
+About Retinotopy stimulus package
+======================================================================
+
+This "Retinotopy" stimulus package is a modified version of RetinotopyWithDepth that I once wrote and had used at University of Birmingham, UK, for my ex-fMRI projects.
+The current presentation procedures are more accurate in timing, more sophisticated, and more robust against errors.
+
+[system requirements]
+- Windows or MacOS
+- (preferred) OpenGL-compatible graphic board
+- MATLAB 64 bit
+- MATLAB Psychtoolbox (and Image Processing Toolbox)
 
 [about the scripts]
 Please go to ~/Retinotopy/Presentation/ and you will find a function, named retinotopy.m
@@ -48,10 +56,19 @@ The wrapped functions are as below.
    28. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
 For more details, please see each function's help.
 
-[example]
+
+======================================================================
+Examples
+======================================================================
+
 >> retinotopy('HB','ccw',1);
 >> retinotopy('HB',{'ccw','exp','ccw','exp'},[1,1,2,2]);
 >> retinotopy('HB',{'ccwwindows','cwwindows','expwindows','contwindows'},[1,1,1,1]);
+
+
+======================================================================
+Details of retinotopy.m
+======================================================================
 
 [input]
 subj    : subject's name, e.g. 'HB'
@@ -140,7 +157,9 @@ OK      : (optional) flag, whether this script finished without any error [true/
 For more details, please see the comment lines of retinotopy.m
 
 
-[about the object image databases used in the Retinotopy package]
+======================================================================
+about the object image databases used in the Retinotopy package
+======================================================================
 
 The object images stored in the object_image_database.mat and used in i* retinotopy stimuli are obtained and modified from the databases publicly available from
 http://konklab.fas.harvard.edu/#
