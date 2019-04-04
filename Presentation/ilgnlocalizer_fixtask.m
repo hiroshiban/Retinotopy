@@ -28,7 +28,7 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2019-03-05 17:27:27 ban"
-% Last Update: "2019-04-04 11:53:25 ban"
+% Last Update: "2019-04-04 14:33:38 ban"
 %
 %
 %
@@ -158,10 +158,10 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 % %%% duration in msec for each cycle & repetitions
 % % Here, the stimulus presentation protocol is defined as below.
-% % initial_fixation_time(1) ---> block_duration (the wedge in the left visual hemifield) ---> rest_duration (blank) --->
-% %   block_duration (the wedge in the right) ---> rest_duration (blank) ---> block_duration (the wedge in the left) --->
-% %     rest_duration (blank) ---> block_duration (the wedge in the right) ---> ... (repeated numRepeats in total) ---> initial_fixation_time(2)
-% % Therefore, one_stimulation_cycle = (block_duration + rest_duration) x 2
+% % initial_fixation_time(1) ---> block_duration-rest_duration (the wedge in the left visual hemifield) ---> rest_duration (blank) --->
+% %   block_duration-rest_duration (the wedge in the right) ---> rest_duration (blank) ---> block_duration-rest_duration (the wedge in the left) --->
+% %     rest_duration (blank) ---> block_duration-rest_duration (the wedge in the right) ---> ... (repeated numRepeats in total) ---> initial_fixation_time(2)
+% % Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)
 %
 % sparam.block_duration=16000; % msec
 % sparam.flip_duration=500; % msec
@@ -175,8 +175,9 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
-% % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
-% sparam.waitframes = 6; % #frames for each object-images, 30 = 0.5 sec if the display vsynch = 60 Hz.
+% % the final 2 is for 2 times repetitions of the flicker
+% % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
+% sparam.waitframes = 4; %Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
@@ -344,7 +345,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'flip_duration',500,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
-         'waitframes',6,... % Screen('FrameRate',0)*(2*(sparam.block_duration+sparam.rest_duration)/1000) / (2*sparam.block_duration/1000) / ( (size(sparam.colors,1)-1)*2 )
+         'waitframes',6,... % Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 )
          'initial_fixation_time',[4000,4000],...
          'fixtype',1,...
          'fixsize',12,...
@@ -393,12 +394,12 @@ fprintf('Screen Height          : %d\n',dparam.ScrHeight);
 fprintf('Screen Width           : %d\n',dparam.ScrWidth);
 fprintf('*********** Stimulation Periods etc. ***********\n');
 fprintf('Fixation Time(sec)     : [%d,%d]\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
-fprintf('Cycle Duration(sec)    : %d\n',2*(sparam.block_duration+sparam.rest_duration));
-fprintf('Block Duration(sec)    : %d x 2 (L/R)\n',sparam.block_duration);
+fprintf('Cycle Duration(sec)    : %d\n',2*sparam.block_duration);
+fprintf('Block Duration(sec)    : %d x 2 (L/R)\n',sparam.block_duration-sparam.rest_duration);
 fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
 fprintf('Repetitions(cycles)    : %d\n',sparam.numRepeats);
 fprintf('Frame Flip(per VerSync): %d\n',sparam.waitframes);
-fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration));
+fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration);
 fprintf('**************** Stimulus Type *****************\n');
 fprintf('Experiment Mode        : %s\n',sparam.mode);
 fprintf('************ Response key settings *************\n');
@@ -510,7 +511,7 @@ sparam.ncolors=(size(sparam.colors,1)-1)/2;
 
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_stim=round(sparam.block_duration*dparam.fps/sparam.waitframes);
+nframe_stim=round((sparam.block_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_flicker=round(sparam.flip_duration*dparam.fps/sparam.waitframes);
 nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
@@ -632,15 +633,15 @@ if strfind(upper(subjID),'DEBUG')
   checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard,2)); % a checkerboard in the right visual hemifield (left LGN localizer)
 
   % check the number of flickers
-  if mod(sparam.block_duration/sparam.flip_duration,1)~=0
-    warning('sparam.block_duration can not be divided by sparam.flip_duration. check the sparam parameters.');
+  if mod((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration,1)~=0
+    warning('sparam.block_duration-sparam.rest_duration can not be divided by sparam.flip_duration. check the sparam parameters.');
   end
 
   % processing
   obj_counter=0;
   for rr=1:1:sparam.numRepeats
     for nn=1:1:2 % compensating patterns
-      for cc=1:1:round(sparam.block_duration/sparam.flip_duration)
+      for cc=1:1:round((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration)
 
         % brownian noise image
         bnimg=CreateColoredNoise(round([size(checkerboard,1),size(checkerboard,2)]./4),[1,1],3,2,1,0,0);
@@ -681,7 +682,7 @@ if strfind(upper(subjID),'DEBUG')
           for mm=1:1:numel(imgids), Screen('Close',objecttextures(mm)); end
         end % for pp=1:1:2
         Screen('Close',noisetexture);
-      end % for cc=1:1:round(sparam.block_duration/sparam.flip_duration)
+      end % for cc=1:1:round((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration)
     end % for nn=1:1:2 % compensating patterns
   end % for rr=1:1:sparam.numRepeats
 
@@ -946,8 +947,7 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*2*(sparam.block_duration+sparam.rest_duration)+...
-                           (pp-1)*(sparam.block_duration+sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*2*sparam.block_duration+(pp-1)*sparam.block_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
 
       if pp==1 && ff==1
         event=event.add_event(sprintf('Cycle: %d',cc),[]);
@@ -1020,7 +1020,7 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration)-0.5*dparam.ifi,[],[],1); % the first flip;
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi,[],[],1); % the first flip;
 %cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
@@ -1033,7 +1033,7 @@ for ff=1:1:nframe_fixation(2)
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration)+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
@@ -1043,7 +1043,7 @@ for ff=1:1:nframe_fixation(2)
 end
 
 % the final clock up
-while GetSecs()-the_experiment_start<sum(sparam.initial_fixation_time)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration)
+while GetSecs()-the_experiment_start<sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration
   [resps,event]=resps.check_responses(event);
 end
 
@@ -1056,7 +1056,7 @@ experimentDuration=GetSecs()-the_experiment_start;
 event=event.add_event('End',[]);
 fprintf('\n');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        sum(sparam.initial_fixation_time)+sparam.numRepeats*2*(sparam.block_duration+sparam.rest_duration));
+        sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration);
 fprintf('\n');
 
 

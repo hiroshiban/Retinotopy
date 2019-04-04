@@ -32,7 +32,7 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
 
 %%% duration in msec for each cycle & repetitions
 sparam.cycle_duration=60000; % msec
-sparam.rest_duration =0; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
+sparam.rest_duration =0; % msec, rest after each cycle, stimulation = cycle_duration-rest_duration
 sparam.numRepeats=6;
 
 %%% parameters used only for object-image-based retinotopy stimuli
@@ -43,7 +43,7 @@ sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
 % the final 2 is for 2 times repetitions of flicker
-% Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
+% Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
 %sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
 sparam.waitframes = 60*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
 %sparam.waitframes = 1;

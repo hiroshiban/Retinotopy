@@ -29,13 +29,13 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
 
 %%% duration in msec for each cycle & repetitions
 % Here, the stimulus presentation protocol is defined as below.
-% initial_fixation_time(1) ---> block_duration (the wedge in the left visual hemifield) ---> rest_duration (blank) --->
-%   block_duration (the wedge in the right) ---> rest_duration (blank) ---> block_duration (the wedge in the left) --->
-%     rest_duration (blank) ---> block_duration (the wedge in the right) ---> ... (repeated numRepeats in total) ---> initial_fixation_time(2)
-% Therefore, one_stimulation_cycle = (block_duration + rest_duration) x 2
+% initial_fixation_time(1) ---> block_duration-rest_duration (the wedge in the left visual hemifield) ---> rest_duration (blank) --->
+%   block_duration-rest_duration (the wedge in the right) ---> rest_duration (blank) ---> block_duration-rest_duration (the wedge in the left) --->
+%     rest_duration (blank) ---> block_duration-rest_duration (the wedge in the right) ---> ... (repeated numRepeats in total) ---> initial_fixation_time(2)
+% Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)
 
 sparam.block_duration=16000; % msec
-sparam.rest_duration =0; % msec, rest after each block
+sparam.rest_duration =0; % msec, stimulation = block_duration-rest_duration
 sparam.numRepeats=6;
 
 %%% parameters used only for object-image-based retinotopy stimuli
@@ -45,9 +45,9 @@ sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the
 
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.
-% the final 2 is for 2 times repetitions of flicker
-% Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
-sparam.waitframes = 4; %Screen('FrameRate',0)*(2*(sparam.block_duration+sparam.rest_duration)/1000) / (2*sparam.block_duration/1000) / ( (size(sparam.colors,1)-1)*2 );
+% the final 2 is for 2 times repetitions of the flicker
+% Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
+sparam.waitframes = 4; %Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
 
 %%% fixation period in msec before/after presenting the target stimuli, integer
 % must set a value more than 1 TR for initializing the frame counting.

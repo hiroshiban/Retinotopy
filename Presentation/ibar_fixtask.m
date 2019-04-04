@@ -32,7 +32,7 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2019-03-05 15:54:52 ban"
-% Last Update: "2019-04-04 12:06:39 ban"
+% Last Update: "2019-04-04 14:39:36 ban"
 %
 %
 %
@@ -189,7 +189,7 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
-% % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
+% % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
 % sparam.waitframes = 6; % #frames for each object-images, 30 = 0.5 sec if the display vsynch = 60 Hz.
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer

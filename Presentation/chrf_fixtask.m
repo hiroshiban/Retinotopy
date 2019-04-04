@@ -28,7 +28,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-04-03 21:11:39 ban"
+% Last Update: "2019-04-04 14:38:48 ban"
 %
 %
 %
@@ -179,7 +179,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
 % % the final 2 is for 2 times repetitions of flicker
-% % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
+% % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
 % sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
 % %sparam.waitframes = 1;
 %

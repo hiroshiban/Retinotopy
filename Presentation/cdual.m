@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-04-03 21:15:34 ban"
+% Last Update: "2019-04-04 14:38:46 ban"
 %
 %
 %
@@ -214,7 +214,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
 % % the final 2 is for 2 times repetitions of flicker
-% % Set 1 if you want to flip the display at each vertical sync, but not recommended due to much CPU power
+% % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
 % sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );
 % % sparam.waitframes = 1;
 %
