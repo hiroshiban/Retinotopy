@@ -39,7 +39,7 @@ function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-04-23 15:13:56 ban"
+% Last Update: "2019-04-23 15:57:29 ban"
 %
 %
 %
@@ -1153,6 +1153,14 @@ fprintf('\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Cleaning up MATLAB OpenGL shader API
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% just call DrawTextureWithCLUT without any input argument
+DrawTextureWithCLUT();
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Cleaning up the PTB screen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1188,14 +1196,6 @@ correct_event=cell(2,1); for ii=1:1:2, correct_event{ii}=sprintf('key%d',ii); en
 event=event.get_event(); % convert an event logger object to a cell data structure
 eval(sprintf('save -append %s event task;',savefname));
 fprintf('done.\n');
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Cleaning up MATLAB OpenGL shader API
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% just call DrawTextureWithCLUT without any input argument
-DrawTextureWithCLUT();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
