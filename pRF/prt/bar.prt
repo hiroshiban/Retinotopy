@@ -1,0 +1,70 @@
+
+FileVersion:        2
+
+ResolutionOfTime:   Volumes
+
+Experiment:         pRF bar
+
+BackgroundColor:    0 0 0
+TextColor:          255 255 255
+TimeCourseColor:    192 192 192
+TimeCourseThick:    2
+ReferenceFuncColor: 0 0 80
+ReferenceFuncThick: 2
+
+NrOfConditions:     9
+
+Fix
+10
+      1            2
+     19           22
+     39           42
+     59           62
+     79           82
+     99          102
+    119          122
+    139          142
+    159          162
+    179          184
+Color:              195 195 195
+
+stim1
+2
+      3           18
+    163          178
+Color:              255 0 191
+
+stim2
+1
+     23           38
+Color:              127 0 255
+
+stim3
+1
+     43           58
+Color:              0 63 255
+
+stim4
+1
+     63           78
+Color:              0 255 255
+
+stim5
+1
+     83           98
+Color:              0 255 63
+
+stim6
+1
+    103          118
+Color:              127 255 0
+
+stim7
+1
+    123          138
+Color:              255 191 0
+
+stim8
+1
+    143          158
+Color:              255 0 0
