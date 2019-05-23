@@ -37,7 +37,7 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-04 16:38:34 ban"
-% Last Update: "2019-04-23 15:15:23 ban"
+% Last Update: "2019-05-23 13:31:10 ban"
 %
 %
 %
@@ -1061,49 +1061,44 @@ for cc=1:1:sparam.numRepeats
 
     %% update IDs
 
-    if ff<=nframe_stim
-      if ~mod(ff,nframe_flicker) % noise pattern reversal
-        %% update the brownian noise texture.
-        Screen('Close',noisetexture);
-        %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
-        %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
-        bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
-        noisetexture=Screen('MakeTexture',winPtr,bnimg);
-      end
-
-      if ~mod(ff,ceil(nframe_flicker/2)) % object image reversal
-        %% update object images
-        for pp=1:1:numel(imgids), Screen('Close',objecttextures(pp)); end
-
-        obj_counter=obj_counter+1;
-
-        % image IDs
-        imgids=sparam.nimg*obj_counter+1:1:sparam.nimg*(obj_counter+1); % the first image set is already presented
-        imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
-        imgids(imgids==0)=size(img,4);
-
-        % rectangles
-        cpos=[(posLims(3)-posLims(1)).*rand(sparam.nimg,1)+posLims(1),(posLims(4)-posLims(2)).*rand(sparam.nimg,1)+posLims(2)]; % center positions, [x,y]
-        cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
-        imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
-
-        % angles
-        imgrot=360.*rand(sparam.nimg,1);
-
-        % generate object image textures
-        for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
-      end
-
-      % stimulus position id for the next presentation
-      if ~mod(ff,nframe_movement)
-        stim_pos_id=stim_pos_id+1;
-        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
-      end
-    else
-      stim_pos_id=1;
+    if ~mod(ff,nframe_flicker) % noise pattern reversal
+      %% update the brownian noise texture.
+      Screen('Close',noisetexture);
+      %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
+      %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
+      bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
+      noisetexture=Screen('MakeTexture',winPtr,bnimg);
     end
 
-    % get responses
+    if ~mod(ff,ceil(nframe_flicker/2)) % object image reversal
+      %% update object images
+      for pp=1:1:numel(imgids), Screen('Close',objecttextures(pp)); end
+
+      obj_counter=obj_counter+1;
+
+      % image IDs
+      imgids=sparam.nimg*obj_counter+1:1:sparam.nimg*(obj_counter+1); % the first image set is already presented
+      imgids(imgids>size(img,4))=mod(imgids(imgids>size(img,4)),size(img,4));
+      imgids(imgids==0)=size(img,4);
+
+      % rectangles
+      cpos=[(posLims(3)-posLims(1)).*rand(sparam.nimg,1)+posLims(1),(posLims(4)-posLims(2)).*rand(sparam.nimg,1)+posLims(2)]; % center positions, [x,y]
+      cszs=(sparam.imRatio(2)-sparam.imRatio(1)).*rand(sparam.nimg,1)+sparam.imRatio(1); % image maginification factor
+      imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,round(cpos(:,1)+cszs*imgsz(2)/2),round(cpos(:,2)+cszs*imgsz(1)/2)]';
+
+      % angles
+      imgrot=360.*rand(sparam.nimg,1);
+
+      % generate object image textures
+      for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
+    end
+
+    % stimulus position id for the next presentation
+    if ~mod(ff,nframe_movement)
+      stim_pos_id=stim_pos_id+1;
+      if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+    end
+
     [resps,event]=resps.check_responses(event);
 
   end % for ff=1:1:nframe_stim

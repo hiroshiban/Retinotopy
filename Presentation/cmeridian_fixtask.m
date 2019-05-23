@@ -35,7 +35,7 @@ function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2018-12-12 12:13:50 ban"
-% Last Update: "2019-04-23 15:56:18 ban"
+% Last Update: "2019-05-20 17:27:32 ban"
 %
 %
 %
@@ -1088,4 +1088,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function cmeridian
+% end % function cmeridian_fixtask

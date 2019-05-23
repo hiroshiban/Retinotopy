@@ -1,10 +1,10 @@
-function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
+function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.
-% function clocalizer(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.
+% function dlocalizer(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% - This function generates and presents color/luminance-defined checkerboard
+% - This function generates and presents Random-Dot-Stereogram(RDS)-defined checkerboard
 %   stimulus for measuring/estimating cortical representations of a specific
 %   subregion of the visual field. Specifically, the target checkerboard which
 %   covers specific visual subfield and its compensating patterns are alternatively
@@ -14,24 +14,25 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 %
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
 %
-% - Luminance detection task: one of the checks of the checkerboard pattern
-%   randomly turns to darker. An observer has to press the button if s/he
-%   detects this luminance change. Response keys are defined in displayfile.
+% - Depth-change detection task: one of the checks of the checkerboard pattern
+%   randomly appears to be more depthy compared to the other checkers.
+%   An observer has to press the button if s/he detects this luminance change.
+%   Response keys are defined in displayfile.
 %
 % [note]
 % Behavioral task of (function_name)_fixtask is to detect changes of luminance
-% of the central fixation point, while the task in (function_name) is to detect
-% changes of luminance of one of the patches in the checkerboard stimuli.
+% of the central fixation point, while the task in (function_name_alone) is to
+% detect changes of depth of one of the patches in the checkerboard stimuli.
 % Here, the central fixation task is more easy to sustain the stable fixation
 % on the center of the screen and may be suitable for naive/non-expert
 % participants with minimizing unwilling eye movements. However, some studies
-% have reported that attention to the target stimulus (checker-patch luminance
+% have reported that attention to the target stimulus (lead by checker-patch depth
 % change detection task) is required to get reliable retinotopic representations
 % in higher-order visual areas.
 %
 %
-% Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-05-22 19:45:18 ban"
+% Created    : "2019-05-23 10:50:26 ban"
+% Last Update: "2019-05-23 15:53:18 ban"
 %
 %
 %
@@ -85,11 +86,11 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_clocalizer_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_dlocalizer_results_run_(run_num).mat
 %
 %
 % [example]
-% >> clocalizer('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> dlocalizer('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -163,19 +164,13 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % sparam.minRad      = 0;      % minimum
 % sparam.tgtRad      = [3.5,5,5];  % target eccentricity, [min,max]
 %
-% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
-%
-% sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
-%                        255,   0,   0; % the first row is background
-%                          0, 255,   0; % the second to end are patch colors
-%                        255, 255,   0;
-%                          0,   0, 255;
-%                        255,   0, 255;
-%                          0, 255, 255;
-%                        255, 255, 255;
-%                          0,   0,   0;
-%                        255, 128,   0;
-%                        128,   0, 255;];
+% %%% RDS parameters
+% sparam.RDSdepth = [ -12, 12, 5]; % binocular disparity in arcmins, [min, max, #steps(from min to max)]
+% sparam.RDSDense=0.5; % dot density in the RDS images to be generated (percentage)
+% sparam.RDSradius=0.05; % dot radius in deg
+% sparam.RDScolors=[255,0,128]; % dot colors in the RDS, [color1, color2, background (grayscale)]
+% sparam.RDSbackground=0; % 1 = with background, 0 = no background
+% sparam.RDStaskmagnitude=2; % ratio (x2, x3, etc against the sparam.RDSdepth([1,2])) of the depth maginitude in the change-detection task
 %
 % %%% duration in msec for each cycle & repetitions
 % % Here, the stimulus presentation protocol is defined as below.
@@ -205,7 +200,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % sparam.fixcolor=[255,255,255];
 %
 % %%% background color
-% sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
+% sparam.bgcolor=[128,128,128];
 %
 % %%% background-patch colors (RGB)
 % sparam.bgtype=1; % 1: a simple background with sparam.bgcolor (then, the parameters belows are not used), 2: a background with grid guides
@@ -218,6 +213,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
+% %sparam.ipd=6.5;
 %
 %
 % [HOWTO create stimulus files]
@@ -287,7 +283,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_clocalizer_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_dlocalizer_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -359,18 +355,12 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'maxRad',8,...
          'minRad',0,...
          'tgtRad',[3.5,5.5],...
-         'dimratio',0.4,...
-         'colors',[ 128, 128, 128;
-                    255,   0,   0;
-                      0, 255,   0;
-                    255, 255,   0;
-                      0,   0, 255;
-                    255,   0, 255;
-                      0, 255, 255;
-                    255, 255, 255;
-                      0,   0,   0;
-                    255, 128,   0;
-                    128,   0, 255],...
+         'RDSdepth',[-12,12,5],...
+         'RDSDense',0.5,...
+         'RDSradius',0.05,...
+         'RDScolors',[255,0,128],...
+         'RDSbackground',0,...
+         'RDStaskmagnitude',2,...
          'block_duration',16000,...
          'rest_duration',16000,...
          'numRepeats',6,...
@@ -511,14 +501,6 @@ Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing MATLAB OpenGL shader API
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% just call DrawTextureWithCLUT with window pointer alone
-DrawTextureWithCLUT(winPtr);
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Displaying 'Initializing...'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -542,9 +524,6 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 % do not convert!
 % sparam.width, sparam.phase, and sparam.startangle are used in deg formats
 
-% number of checkerboard color
-sparam.ncolors=(size(sparam.colors,1)-1)/2;
-
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
 nframe_stim=round((sparam.block_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
@@ -553,10 +532,10 @@ nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 % !!!NOTICE!!!
 % Two lines below are from cretinotopy.m
 % nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
-% nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
+% nframe_flicker=round(nframe_rotation/sparam.RDSdepth(3)/4);
 % nframe_flicker should be adjusted to match with these parameters.
-nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.ncolors/4); %60,0,30 are from CCW/CW parameters.
-nframe_task=round(nframe_flicker*sparam.ncolors*4/2);
+nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.RDSdepth(3)/4); %60,0,30 are from CCW/CW parameters.
+nframe_task=round(nframe_flicker*sparam.RDSdepth(3)*4/2);
 
 %% initialize chackerboard parameters
 
@@ -627,42 +606,14 @@ for pp=1:1:2 % 2 = target and its comensating patterns
 end
 clear tmp_checks;
 
+%% generate a circular mask
+if ~sparam.RDSbackground
+  for nn=1:1:2, checkerboard{nn}(~logical(checkerboard{nn}))=NaN; end
+end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Table (CLUT)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% [note]
-% all checker color/luminance flickering is realized by just flipping CLUT generated here
-% to save memory and CPU power
-
-CLUT=cell(sparam.ncolors,2); % 2 is for compensating patterns
-
-% generate base CLUT
-for cc=1:1:sparam.ncolors
-  for pp=1:1:2 % compensating checkers
-
-    % initialize, DrawTextureWithCLUT requires [256x4] color lookup table even when we do not use whole 256 colors
-    % though DrawTextureWithCLUT does not support alpha transparency up to now...
-    CLUT{cc,pp}=zeros(256,4);
-    CLUT{cc,pp}(:,4)=1; % default alpha is 1 (no transparent)
-
-    CLUT{cc,pp}(1,:)=[sparam.colors(1,:),0]; % background LUT, default alpha is 0 (invisible);
-
-    if ~mod(pp,2)
-      CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc,:);
-      CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc+1,:);
-      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
-      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
-    else
-      CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc+1,:);
-      CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc,:);
-      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
-      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
-    end
-
-  end % for pp=1:1:2 % compensating checkers
-end % for cc=1:1:sparam.ncolors
+% generating the first RDS
+[XY,colors]=GetDotPositionsRDS(checkerboard{1},[0,sparam.RDSdepth(1),sparam.RDSdepth(2)],sparam.RDSDense,...
+                               sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -673,28 +624,52 @@ end % for cc=1:1:sparam.ncolors
 % %%%%%% DEBUG codes start here
 if strfind(upper(subjID),'DEBUG')
 
-  % just to get stimulus figures
   Screen('CloseAll');
-  save_dir=fullfile(resultDir,'images_clocalizer');
+
+  save_dir=fullfile(resultDir,'images_dlocalizer');
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
-  figure; hold off;
-  for nn=1:1:length(checkerboard)
-    imagesc(checkerboard{nn}+1,[1,numel(unique(checkerboard{nn}))]);
-    axis off; axis equal;
+  % open a new window for drawing stimuli
+  stimRect=[0,0,size(checkerboard{1},2),size(checkerboard{1},1)];
+  [winPtr,winRect]=Screen('OpenWindow',dparam.scrID,sparam.bgcolor,CenterRect(stimRect,Screen('Rect',dparam.scrID)));
 
-    for cc=1:1:sparam.ncolors
-      for pp=1:1:2 % compensating checkers
-        colormap(CLUT{cc,pp}(1:3,1:3)./255);
-        drawnow;
-        pause(0.05);
-        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('checkerboard_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
+  % set OpenGL
+  priorityLevel=MaxPriority(winPtr,'WaitBlanking');
+  Priority(priorityLevel);
+  AssertOpenGL();
+  Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  % processing
+  for nn=1:1:2
+    for mm=1:1:sparam.RDSdepth(3) % depth steps
+
+      % generate/get dot positions/colors
+      if sparam.RDSdepth(3)~=1
+        depth1=sparam.RDSdepth(1)+(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+        depth2=sparam.RDSdepth(2)-(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+      else
+        depth1=sparam.RDSdepth(1);
+        depth2=sparam.RDSdepth(2);
+      end
+      [XY,colors]=GetDotPositionsRDS(checkerboard{nn},[0,depth1,depth2],sparam.RDSDense,...
+                                     sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+
+      for pp=1:1:2 % left and right images
+        Screen('FillRect',winPtr,sparam.bgcolor,stimRect); % wipe the background just in case
+        Screen('DrawDots',winPtr,XY{pp},2*sparam.RDSradius*sparam.pix_per_deg,colors{pp},[0,0],3); % RDS
+
+        % flip the window
+        Screen('DrawingFinished',winPtr);
+        Screen('Flip',winPtr,[],[],[],1);
+
+        % get the current frame and save it
+        imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('checkerboard_%s_pos_%02d_depth_%02d_%02d.png',sparam.mode,nn,mm,pp)),'png');
       end
     end
-
   end
-  close all;
-  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+
+  Screen('CloseAll');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')
@@ -702,7 +677,7 @@ end % if strfind(upper(subjID),'DEBUG')
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Generating contrast detection task parameters
+%%%% Generating depth detection task parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% set task variables
@@ -744,11 +719,8 @@ firsttask_flg=0;
 %%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% checkerboard color id
-color_id=1;
-
-% checkerboard compensating color id
-compensate_id=1;
+% checkerboard depth id
+depth_id=1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -756,7 +728,7 @@ compensate_id=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if sparam.bgtype==1 % a simple background with sparam.bgcolor
-  bgimg{1}=repmat(reshape(sparam.colors(1,:),[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
+  bgimg{1}=repmat(reshape(sparam.bgcolor,[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
 
 elseif sparam.bgtype==2 % a background with grid guides
 
@@ -838,6 +810,15 @@ bgRect  = [0, 0, bgSize]; % used to display background images;
 stimRect= [0, 0, stimSize];
 fixRect = [0, 0, fixSize]; % used to display the central fixation point
 
+% compute Random-Dot-Stereogram image center
+if strcmpi(dparam.ExpMode,'cross') || strcmpi(dparam.ExpMode,'parallel') || ...
+   strcmpi(dparam.ExpMode,'topbottom') || strcmpi(dparam.ExpMode,'bottomtop')
+  half_flg=1;
+else
+  half_flg=0;
+end
+dotCenter=[diff(winRect([1,3])),diff(winRect([2,4]))]./2-[diff(stimRect([1,3])),diff(stimRect([2,4]))]./2;
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Displaying 'Ready to Start'
@@ -866,7 +847,7 @@ Screen('Flip', winPtr,[],[],[],1);
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % fix{1} is valis as no task in the first period
 end
 Screen('DrawingFinished',winPtr);
 
@@ -917,20 +898,42 @@ for cc=1:1:sparam.numRepeats
   for pp=1:1:2 % 2 = the target and its compensating patterns
     for ff=1:1:nframe_stim+nframe_rest
 
-      % generate a checkerboard texture with/without a luminance detection task
-      if ff<=nframe_stim
+      % preparaing the next stimulus
+      if ff<=nframe_stim && ~mod(ff,nframe_flicker)
+
+        % generate a checkerboard texture with/without a depth detection task
         if do_task(task_id) && ...
-          ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
-            ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
+          ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
+            ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) )
           tidx=find(checkerboardID{pp}==task_pos{pp}(task_id));
-          checkerboard{pp}(tidx)=checkerboard{pp}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
-          checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
-          checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; % put the checkerboard ID back to the default
+          cval=checkerboard{stim_pos_id}(tidx(ceil(numel(tidx)/2))); % ceil(numel(tidx)/2) is required as sometimes tidx(1) is located at the edge of the checkerboard which gives NaN.
+          checkerboard{pp}(tidx)=3; % as IDs of the original checkerboard are 0|1|2, 3 is assigned to the task patch.
         else
           tidx=[];
-          checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
         end
-      end
+
+        if sparam.RDSdepth(3)~=1
+          depth1=sparam.RDSdepth(1)+(depth_id-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+          depth2=sparam.RDSdepth(2)-(depth_id-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+        else
+          depth1=sparam.RDSdepth(1);
+          depth2=sparam.RDSdepth(2);
+        end
+
+        if ~isempty(tidx)
+          if cval==1
+            [XY,colors]=GetDotPositionsRDS(checkerboard{pp},[0,depth1,depth2,sparam.RDStaskmagnitude*(-1)*abs(sparam.RDSdepth(1))],sparam.RDSDense,...
+                                           sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+          else % if cval==2
+            [XY,colors]=GetDotPositionsRDS(checkerboard{pp},[0,depth1,depth2,sparam.RDStaskmagnitude*(-1)*abs(sparam.RDSdepth(2))],sparam.RDSDense,...
+                                           sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+          end
+          checkerboard{pp}(tidx)=cval; % put the checkerboard ID back to the default
+        else
+          [XY,colors]=GetDotPositionsRDS(checkerboard{pp},[0,depth1,depth2],sparam.RDSDense,...
+                                         sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+        end
+      end % if ff<=nframe_stim && ~mod(ff,nframe_flicker)
 
       [resps,event]=resps.check_responses(event);
 
@@ -939,7 +942,11 @@ for cc=1:1:sparam.numRepeats
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
         if ff<=nframe_stim
-          DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
+          if half_flg
+            Screen('DrawDots',winPtr,XY{nn}./2,sparam.RDSradius*sparam.pix_per_deg,colors{nn},dotCenter,3); % RDS
+          else
+            Screen('DrawDots',winPtr,XY{nn},2*sparam.RDSradius*sparam.pix_per_deg,colors{nn},dotCenter,3); % RDS
+          end
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
@@ -953,10 +960,7 @@ for cc=1:1:sparam.numRepeats
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
 
-      if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
-
-      % clean up
-      if ff<=nframe_stim, Screen('Close',checkertexture); end
+      if do_task(task_id) && firsttask_flg==1, event=event.add_event('Depth Task',[]); end
 
       [resps,event]=resps.check_responses(event);
 
@@ -967,25 +971,19 @@ for cc=1:1:sparam.numRepeats
 
       % flickering checkerboard
       if ff<=nframe_stim
-        if ~mod(ff,nframe_flicker) % color reversal
-          compensate_id=mod(compensate_id,2)+1;
+        if ~mod(ff,nframe_flicker) % depth change
+          depth_id=depth_id+1;
+          if depth_id>sparam.RDSdepth(3), depth_id=1; end
         end
-
-        if ~mod(ff,2*nframe_flicker) % color change
-          color_id=color_id+1;
-          if color_id>sparam.ncolors, color_id=1; end
-        end
-
+        
         %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
         if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
         firsttask_flg=firsttask_flg+1;
       else
-        compensate_id=1;
-        color_id=1;
+        depth_id=1;
         firsttask_flg=0;
       end
 
-      % get responses
       [resps,event]=resps.check_responses(event);
 
     end % for ff=1:1:nframe_stim+nframe_rest
@@ -1039,14 +1037,6 @@ fprintf('\n');
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Cleaning up MATLAB OpenGL shader API
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% just call DrawTextureWithCLUT without any input argument
-DrawTextureWithCLUT();
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Cleaning up the PTB screen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1064,12 +1054,12 @@ GammaResetPTB(1.0);
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_clocalizer_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_dlocalizer_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_clocalizer_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_dlocalizer_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
@@ -1135,4 +1125,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function clocalizer
+% end % function dlocalizer

@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-04-23 15:57:55 ban"
+% Last Update: "2019-05-22 19:46:45 ban"
 %
 %
 %
@@ -925,7 +925,8 @@ for cc=1:1:sparam.numRepeats
             ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) )
           tidx=find(checkerboardID{aa,stim_pos_id}==task_pos{aa,stim_pos_id}(task_id));
           checkerboard{aa,stim_pos_id}(tidx)=checkerboard{aa,stim_pos_id}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
-          checkertexture=Screen('MakeTexture',winPtr,checkerboard{aa,stim_pos_id});
+          checkertexture=Screen('MakeTexture',winPtr,checkerboard{aa,stim_pos_id});% put the checkerboard ID back to the default
+          checkerboard{aa,stim_pos_id}(tidx)=checkerboard{aa,stim_pos_id}(tidx)-2;
         else
           tidx=[];
           checkertexture=Screen('MakeTexture',winPtr,checkerboard{aa,stim_pos_id});
@@ -943,9 +944,6 @@ for cc=1:1:sparam.numRepeats
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
-
-      % put the checkerboard ID back to the default
-      if ff<=nframe_stim && ~isempty(tidx), checkerboard{aa,stim_pos_id}(tidx)=checkerboard{aa,stim_pos_id}(tidx)-2; end
 
       % flip the window
       Screen('DrawingFinished',winPtr);

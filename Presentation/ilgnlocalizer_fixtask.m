@@ -28,7 +28,7 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2019-03-05 17:27:27 ban"
-% Last Update: "2019-04-23 15:05:11 ban"
+% Last Update: "2019-05-21 17:47:28 ban"
 %
 %
 %
@@ -547,14 +547,14 @@ end
 % sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
 [dummy1,dummy2,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,1,1,0);
-checkerboard=checkerboard{1};
 
-checkerboard=repmat(255.*double(~checkerboard),[1,1,4]);
-checkerboard(:,:,1:3)=repmat(reshape(sparam.bgcolor,[1,1,3]),[size(checkerboard,1),size(checkerboard,2)]);
+checkerboard{1}=repmat(255.*double(~checkerboard{1}),[1,1,4]);
+checkerboard{1}(:,:,1:3)=repmat(reshape(sparam.bgcolor,[1,1,3]),[size(checkerboard{1},1),size(checkerboard{1},2)]);
+checkerboard{2}=flipdim(checkerboard{1},2);
 
 % make checkerboard textures
-checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
-checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard,2)); % a checkerboard in the right visual hemifield (left LGN localizer)
+checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard{1}); % a checkerboard in the left visual hemifield (right LGN localizer)
+checkertexture{2}=Screen('MakeTexture',winPtr,checkerboard{2}); % a checkerboard in the right visual hemifield (left LGN localizer)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -569,7 +569,7 @@ checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard,2)); % a chec
 %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
 %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
 
-bnimg=CreateColoredNoise(round([size(checkerboard,1),size(checkerboard,2)]./4),[1,1],3,2,1,0,0); % ./4 is for reducing computation time, 3 is required for RGB color noise
+bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0); % ./4 is for reducing computation time, 3 is required for RGB color noise
 noisetexture=Screen('MakeTexture',winPtr,bnimg);
 
 
@@ -583,7 +583,7 @@ load(fullfile(fileparts(mfilename('fullpath')),'..','object_images','object_imag
 % shuffling the presentation order
 img=img(:,:,:,shuffle(1:size(img,4)));
 imgsz=[size(img,1),size(img,2)];
-posLims=CenterRect([0,0,size(checkerboard,2),size(checkerboard,1)],winRect); % image location limit, [x_min, y_min, x_max, y_max], the image positions are randomly selected whithin this range
+posLims=CenterRect([0,0,size(checkerboard{1},2),size(checkerboard{1},1)],winRect); % image location limit, [x_min, y_min, x_max, y_max], the image positions are randomly selected whithin this range
 
 % initializing the firt object image textures
 
@@ -619,7 +619,7 @@ if strfind(upper(subjID),'DEBUG')
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
   % open a new window for drawing stimuli
-  stimRect=[0,0,size(checkerboard,2),size(checkerboard,1)];
+  stimRect=[0,0,size(checkerboard{1},2),size(checkerboard{1},1)];
   [winPtr,winRect]=Screen('OpenWindow',dparam.scrID,sparam.bgcolor,CenterRect(stimRect,Screen('Rect',dparam.scrID)));
 
   % set OpenGL
@@ -629,8 +629,8 @@ if strfind(upper(subjID),'DEBUG')
   Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   % regenerate checkerboard texture
-  checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
-  checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard,2)); % a checkerboard in the right visual hemifield (left LGN localizer)
+  checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard{1}); % a checkerboard in the left visual hemifield (right LGN localizer)
+  checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard{1},2)); % a checkerboard in the right visual hemifield (left LGN localizer)
 
   % check the number of flickers
   if mod((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration,1)~=0
@@ -644,7 +644,7 @@ if strfind(upper(subjID),'DEBUG')
       for cc=1:1:round((sparam.block_duration-sparam.rest_duration)/sparam.flip_duration)
 
         % brownian noise image
-        bnimg=CreateColoredNoise(round([size(checkerboard,1),size(checkerboard,2)]./4),[1,1],3,2,1,0,0);
+        bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
         noisetexture=Screen('MakeTexture',winPtr,bnimg);
 
         for pp=1:1:2 % by default, 2 image sets in one background noise flicker
@@ -735,11 +735,11 @@ elseif sparam.bgtype==2 % a background with grid guides
   p_width=round((dparam.ScrWidth-edgeX)/sparam.patch_num(2)); % width in pix of patch_width + interval-X
 
   if dparam.fullscr
-    aperture_size=[2*( p_height*ceil( size(checkerboard,1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
-                   2*( p_width*ceil( size(checkerboard,2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
+    aperture_size=[2*( p_height*ceil( size(checkerboard{1},1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
+                   2*( p_width*ceil( size(checkerboard{1},2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
   else
-    aperture_size=[2*( p_height*ceil(size(checkerboard,1)/2/p_height) ),...
-                   2*( p_width*ceil(size(checkerboard,2)/2/p_width) )];
+    aperture_size=[2*( p_height*ceil(size(checkerboard{1},1)/2/p_height) ),...
+                   2*( p_width*ceil(size(checkerboard{1},2)/2/p_width) )];
   end
 
   bgimg=CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,sparam.patch_size,sparam.bgcolor,sparam.patch_color1,sparam.patch_color2,sparam.fixcolor,sparam.patch_num,0,0,0);
@@ -751,7 +751,7 @@ end
 % this mask is required to prevent the object images from being presented in the external regions.
 bgimg=bgimg{1};
 bgimg(:,:,4)=255*ones(size(bgimg,1),size(bgimg,2));
-maskRect=CenterRect([0,0,size(checkerboard,2),size(checkerboard,1)],[0,0,size(bgimg,2),size(bgimg,1)]);
+maskRect=CenterRect([0,0,size(checkerboard{1},2),size(checkerboard{1},1)],[0,0,size(bgimg,2),size(bgimg,1)]);
 bgimg(maskRect(2)+1:maskRect(4),maskRect(1)+1:maskRect(3),4)=0; % alpha channel, transparency
 
 background=Screen('MakeTexture',winPtr,bgimg);
@@ -792,11 +792,11 @@ if dparam.fullscr
   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
-  stimSize = [size(checkerboard,2)*ratio_wid, size(checkerboard,1)*ratio_hei];
+  stimSize = [size(checkerboard{1},2)*ratio_wid, size(checkerboard{1},1)*ratio_hei];
   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
-  stimSize = [size(checkerboard,2), size(checkerboard,1)];
+  stimSize = [size(checkerboard{1},2), size(checkerboard{1},1)];
   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
@@ -973,7 +973,7 @@ for cc=1:1:sparam.numRepeats
           Screen('Close',noisetexture);
           %bnimg=CreateColoredNoise([szh,szw],pdims,3,2,1,0,0);
           %bnimg=bnimg(1:size(checkerboard{1},1),1:size(checkerboard{1},2),:);
-          bnimg=CreateColoredNoise(round([size(checkerboard,1),size(checkerboard,2)]./4),[1,1],3,2,1,0,0);
+          bnimg=CreateColoredNoise(round([size(checkerboard{1},1),size(checkerboard{1},2)]./4),[1,1],3,2,1,0,0);
           noisetexture=Screen('MakeTexture',winPtr,bnimg);
         end
 

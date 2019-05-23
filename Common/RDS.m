@@ -31,7 +31,7 @@ function [imgL,imgR]=RDS(heightfield,dotDens,imgNum,colors,ipd,...
 % [imgL,imgR]=RDS(field,30,1,[128,0],6.4,50,57,1,0);
 %
 % Created: "2010-04-03 14:05:21 ban"
-% Last Update: "2013-11-23 00:05:40 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-05-17 16:22:12 ban"
 
 % --- input variable check
 if nargin<1, help RDS; return; end
@@ -107,10 +107,9 @@ for n=1:1:imgNum
     elseif k==0
       TT = randXY;
     end
-    %tmp(posL==k) = TT(posL==k);
-    
-    tmp(posL==k) = TT(posL==k).*hiddensurf(posL==k);
-    hiddensurf(posL==k) = NaN;
+    tidx=find(posL==k);
+    tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+    hiddensurf(tidx)=NaN;
     %imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code
   end
   imgL{n}=tmp;
@@ -129,10 +128,9 @@ for n=1:1:imgNum
     elseif k==0
       TT = randXY;
     end
-    %tmp(posR==k) = TT(posR==k);
-    
-    tmp(posR==k) = TT(posR==k).*hiddensurf(posR==k);
-    hiddensurf(posR==k) = NaN;
+    tidx=find(posR==k);
+    tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+    hiddensurf(tidx)=NaN;
     %imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code
   end
   imgR{n}=tmp;

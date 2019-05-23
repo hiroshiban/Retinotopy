@@ -28,7 +28,7 @@ function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2019-01-31 17:41:51 ban"
-% Last Update: "2019-04-23 15:57:20 ban"
+% Last Update: "2019-05-22 19:46:05 ban"
 %
 %
 %
@@ -865,6 +865,7 @@ for cc=1:1:sparam.numRepeats
         tidx=find(checkerboardID==task_pos(task_id));
         checkerboard(tidx)=checkerboard(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
         checkertexture=Screen('MakeTexture',winPtr,checkerboard);
+        checkerboard(tidx)=checkerboard(tidx)-2; % put the checkerboard ID back to the default
       else
         tidx=[];
         checkertexture=Screen('MakeTexture',winPtr,checkerboard);
@@ -882,9 +883,6 @@ for cc=1:1:sparam.numRepeats
       end
       Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
     end
-
-    % put the checkerboard ID back to the default
-    if ff<=nframe_stim && ~isempty(tidx), checkerboard(tidx)=checkerboard(tidx)-2; end
 
     % flip the window
     Screen('DrawingFinished',winPtr);

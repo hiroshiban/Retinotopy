@@ -23,7 +23,7 @@ function [imgL,imgR]=RDSfast(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per
 % [output]
 % imgL        : generated image(s) for left eye, cells [row,col]
 % imgR        : generated image(s) for right eye, cells [row,col]
-% 
+%
 % [example]
 % field=CreateExpField([480,480],3,1);
 % [imgL,imgR]=RDSfast(field,30,1,[255,0,128],6.4,50,57,1,0);
@@ -34,7 +34,7 @@ function [imgL,imgR]=RDSfast(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per
 % If the bias affects your experiment, please use RDS instead.
 %
 % Created: "2010-04-03 14:05:21 ban"
-% Last Update: "2013-11-23 00:01:23 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-05-17 16:15:23 ban"
 
 % --- input variable check
 if nargin<1, help RDS; return; end
@@ -43,7 +43,7 @@ if nargin<3 || isempty(imgNum), imgNum=1; end
 if nargin<4 || isempty(colors), colors=[255,0,128]; end
 if nargin<5 || isempty(ipd), ipd=6.4; end
 if nargin<6 || isempty(vdist), vdist=65; end
-if nargin<7 || isempty(pix_per_cm), 
+if nargin<7 || isempty(pix_per_cm),
   % cm per pix
   % 1 inch = 2.54 cm, my PC's display is 1920x1200, 15.4 inch.
   % So, 15.4(inch)*2.54(cm) / sqrt(1920^2+1200^2) (pix) = XXX cm/pixel
@@ -89,7 +89,7 @@ for n=1:1:imgNum
   randXY(randXY~=round(oversampling_ratio*100/dotDens))=0;
   randXY(logical(randXY))=1;
   randXY(randXY==0)=colors(3); % background;
-  
+
   % set 2 colors
   [row,col]=find(randXY==1);
   for ii=1:1:size(row,1)
@@ -99,44 +99,47 @@ for n=1:1:imgNum
       randXY(row(ii),col(ii))=colors(2); % dot2;
     end
   end
-        
+
   % create left/right images
   tmpL=colors(3)*ones(size(randXY));
   tmpR=colors(3)*ones(size(randXY));
   for ii=1:1:size(row,1)
 
-    % if you want to put the paired dots only, use the codes below
-    %if ( (1 < col+posL(row,col)) && (col+posL(row,col) < size(randXY,2)) ) && ...
-    %      ( (1 < col+posR(row,col)) && (col+posR(row,col) < size(randXY,2)) )
-    %  tmpL(row,col+posL(row,col))=colors(1);
-    %  tmpR(row,col+posR(row,col))=colors(1);
-    %end
-    
-    % if you do not want to fill the 'hole' of the image use the codes below 
-    %if ( (1 < col+posL(row,col)) && (col+posL(row,col) < size(randXY,2)) )
-    %  tmpL(row,col+posL(row,col))=colors(1);
-    %end
-    %if ( (1 < col+posR(row,col)) && (col+posR(row,col) < size(randXY,2)) )
-    %  tmpR(row,col+posR(row,col))=colors(1);
-    %end
-    
-    % if you want to fill the 'hole' of the image, use the codes below instead of those above
-    if col(ii)+posL(row(ii),col(ii)) < 1
-      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=randXY(row(ii),col(ii));
-    elseif size(randXY,2) < col(ii)+posL(row(ii),col(ii))
-      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=randXY(row(ii),col(ii));
-    else  
-      tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=randXY(row(ii),col(ii));
+    if ~isnan(posL(row(ii),col(ii))) && ~isnan(posR(row(ii),col(ii)))
+
+      % if you want to put the paired dots only, use the codes below
+      %if ( (1 < col+posL(row,col)) && (col+posL(row,col) < size(randXY,2)) ) && ...
+      %      ( (1 < col+posR(row,col)) && (col+posR(row,col) < size(randXY,2)) )
+      %  tmpL(row,col+posL(row,col))=colors(1);
+      %  tmpR(row,col+posR(row,col))=colors(1);
+      %end
+
+      % if you do not want to fill the 'hole' of the image use the codes below
+      %if ( (1 < col+posL(row,col)) && (col+posL(row,col) < size(randXY,2)) )
+      %  tmpL(row,col+posL(row,col))=colors(1);
+      %end
+      %if ( (1 < col+posR(row,col)) && (col+posR(row,col) < size(randXY,2)) )
+      %  tmpR(row,col+posR(row,col))=colors(1);
+      %end
+
+      % if you want to fill the 'hole' of the image, use the codes below instead of those above
+      if col(ii)+posL(row(ii),col(ii)) < 1
+        tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=randXY(row(ii),col(ii));
+      elseif size(randXY,2) < col(ii)+posL(row(ii),col(ii))
+        tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=randXY(row(ii),col(ii));
+      else
+        tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=randXY(row(ii),col(ii));
+      end
+
+      if col(ii)+posR(row(ii),col(ii)) < 1
+        tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=randXY(row(ii),col(ii));
+      elseif size(randXY,2) < col(ii)+posR(row(ii),col(ii))
+        tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=randXY(row(ii),col(ii));
+      else
+        tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=randXY(row(ii),col(ii));
+      end
+
     end
-      
-    if col(ii)+posR(row(ii),col(ii)) < 1
-      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=randXY(row(ii),col(ii));
-    elseif size(randXY,2) < col(ii)+posR(row(ii),col(ii))
-      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=randXY(row(ii),col(ii));
-    else  
-      tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=randXY(row(ii),col(ii));
-    end
-    
   end
 
   % adjust oversampled image to the original size
@@ -147,7 +150,7 @@ for n=1:1:imgNum
     imgL{n}=uint8(tmpL);
     imgR{n}=uint8(tmpR);
   end
-  
+
 end % for n=1:1:imgNum
 
 % --- plot the results

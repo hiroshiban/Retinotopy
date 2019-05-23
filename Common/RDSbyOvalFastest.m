@@ -21,13 +21,13 @@ function [imgL,imgR]=RDSbyOvalFastest(posL,posR,wdot,bdot,dotalpha,dotDens,bgcol
 % [output]
 % imgL        : generated image(s) for left eye, [row,col]
 % imgR        : generated image(s) for right eye, [row,col]
-% 
+%
 % Created:     "2010-04-03 14:05:21 ban"
-% Last Update: "2013-11-23 00:03:45 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-05-17 16:16:20 ban"
 
 % check input variables
 if nargin<6, help RDSbyOvalFastest; return; end
-if nargin<7 || isempty(dotDens), dotDens=2; end 
+if nargin<7 || isempty(dotDens), dotDens=2; end
 if nargin<8 || isempty(bgcolor), bgcolor=128; end
 
 % check sizes of input data
@@ -66,24 +66,24 @@ idx=find(~isnan(idXY));
 [row,col]=ind2sub(size(idXY),idx);
 
 for ii=1:1:size(row,1)
-  
-  % here the 'hole' in the image is filled by shifting the dot position cyclically
-  if col(ii)+posL(row(ii),col(ii)) < 1
-    tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
-  elseif size(idXY,2) < col(ii)+posL(row(ii),col(ii))
-    tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
-  else
-    tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+  if ~isnan(posL(row(ii),col(ii))) && ~isnan(posR(row(ii),col(ii)))
+    % here the 'hole' in the image is filled by shifting the dot position cyclically
+    if col(ii)+posL(row(ii),col(ii)) < 1
+      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+    elseif size(idXY,2) < col(ii)+posL(row(ii),col(ii))
+      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+    else
+      tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+    end
+
+    if col(ii)+posR(row(ii),col(ii)) < 1
+      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+    elseif size(idXY,2) < col(ii)+posR(row(ii),col(ii))
+      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+    else
+      tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+    end
   end
-  
-  if col(ii)+posR(row(ii),col(ii)) < 1
-    tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
-  elseif size(idXY,2) < col(ii)+posR(row(ii),col(ii))
-    tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
-  else
-    tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
-  end
-  
 end
 imgLids=tmpL;
 imgRids=tmpR;
@@ -98,11 +98,11 @@ for rr=1:1:size(rowL,1)
   else
     dot=bdot;
   end
-  
+
   % set ovals to the left image
   idxr=max(1,rowL(rr)-round(size(dot,1)/2)+1):min(rowL(rr)+round(size(dot,1)/2),size(imgL,1));
   idxc=max(1,colL(rr)-round(size(dot,2)/2)+1):min(colL(rr)+round(size(dot,2)/2),size(imgL,2));
-  
+
   if 1 <= rowL(rr)-round(size(dot,1)/2)
     didxr=1:min(size(dot,1),size(idxr,2));
   else
@@ -112,7 +112,7 @@ for rr=1:1:size(rowL,1)
       didxr=round(size(dot,1)/2)-rowL(rr)+1:size(idxr,1);
     end
   end
-  
+
   if 1<=colL(rr)-round(size(dot,2)/2)
     didxc=1:min(size(dot,2),size(idxc,2));
   else
@@ -122,7 +122,7 @@ for rr=1:1:size(rowL,1)
       didxc=round(size(dot,2)/2)-colL(rr)+1:size(idxr,2);
     end
   end
-  
+
   % put ovals considering alpha value
   imgL(idxr,idxc)=(1-dotalpha(didxr,didxc)).*imgL(idxr,idxc)+dotalpha(didxr,didxc).*dot(didxr,didxc);
 end
@@ -135,11 +135,11 @@ for rr=1:1:size(rowR,1)
   else
     dot=bdot;
   end
-  
+
   % prevent edge removal problem
   idxr=max(1,rowR(rr)-round(size(dot,1)/2)+1):min(rowR(rr)+round(size(dot,1)/2),size(imgR,1));
   idxc=max(1,colR(rr)-round(size(dot,2)/2)+1):min(colR(rr)+round(size(dot,2)/2),size(imgR,2));
-  
+
   if 1 <= rowR(rr)-round(size(dot,1)/2)
     didxr=1:min(size(dot,1),size(idxr,2));
   else
@@ -149,7 +149,7 @@ for rr=1:1:size(rowR,1)
       didxr=round(size(dot,1)/2)-rowR(rr)+1:size(idxr,1);
     end
   end
-  
+
   if 1<=colR(rr)-round(size(dot,2)/2)
     didxc=1:min(size(dot,2),size(idxc,2));
   else

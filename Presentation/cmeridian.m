@@ -35,7 +35,7 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2018-12-11 19:10:32 ban"
-% Last Update: "2019-04-23 15:56:26 ban"
+% Last Update: "2019-05-22 19:44:32 ban"
 %
 %
 %
@@ -890,6 +890,7 @@ for cc=1:1:sparam.numRepeats
           tidx=find(checkerboardID{pp}==task_pos{pp}(task_id));
           checkerboard{pp}(tidx)=checkerboard{pp}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
           checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
+          checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; % put the checkerboard ID back to the default
         else
           tidx=[];
           checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
@@ -907,9 +908,6 @@ for cc=1:1:sparam.numRepeats
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
-
-      % put the checkerboard ID back to the default
-      if ff<=nframe_stim && ~isempty(tidx), checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; end
 
       % flip the window
       Screen('DrawingFinished',winPtr);

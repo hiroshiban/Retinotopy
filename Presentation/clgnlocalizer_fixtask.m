@@ -29,7 +29,7 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-04-23 15:56:52 ban"
+% Last Update: "2019-05-21 17:44:16 ban"
 %
 %
 %
@@ -83,11 +83,11 @@ function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_lgn_localizer_fixtask_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_clgn_localizer_fixtask_results_run_(run_num).mat
 %
 %
 % [example]
-% >> clgnlocalizer_fixtask('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> clgnlocalizer_fixtask('HB','lgn',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -281,7 +281,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_clgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -583,12 +583,14 @@ end
 % Each patch ID will be associated with a CLUT color of the same ID
 [checkerboardID,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
                                         sparam.nwedges,sparam.nrings,sparam.phase);
-checkerboardID=checkerboardID{1};
-checkerboard=checkerboard{1};
+%checkerboardID{1}=checkerboardID{1};
+%checkerboard{1}=checkerboard{1};
+checkerboardID{2}=flipdim(checkerboardID{1},2);
+checkerboard{2}=flipdim(checkerboard{1},2);
 
 % make checkerboard textures
-checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard); % a checkerboard in the left visual hemifield (right LGN localizer)
-checkertexture{2}=Screen('MakeTexture',winPtr,flipdim(checkerboard,2)); % a checkerboard in the right visual hemifield (left LGN localizer)
+checkertexture{1}=Screen('MakeTexture',winPtr,checkerboard{1}); % a checkerboard in the left visual hemifield (right LGN localizer)
+checkertexture{2}=Screen('MakeTexture',winPtr,checkerboard{2}); % a checkerboard in the right visual hemifield (left LGN localizer)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -711,11 +713,11 @@ elseif sparam.bgtype==2 % a background with grid guides
   p_width=round((dparam.ScrWidth-edgeX)/sparam.patch_num(2)); % width in pix of patch_width + interval-X
 
   if dparam.fullscr
-    aperture_size=[2*( p_height*ceil( size(checkerboard,1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
-                   2*( p_width*ceil( size(checkerboard,2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
+    aperture_size=[2*( p_height*ceil( size(checkerboard{1},1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
+                   2*( p_width*ceil( size(checkerboard{1},2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
   else
-    aperture_size=[2*( p_height*ceil(size(checkerboard,1)/2/p_height) ),...
-                   2*( p_width*ceil(size(checkerboard,2)/2/p_width) )];
+    aperture_size=[2*( p_height*ceil(size(checkerboard{1},1)/2/p_height) ),...
+                   2*( p_width*ceil(size(checkerboard{1},2)/2/p_width) )];
   end
 
   bgimg=CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,sparam.patch_size,sparam.bgcolor,sparam.patch_color1,sparam.patch_color2,sparam.fixcolor,sparam.patch_num,0,0,0);
@@ -761,11 +763,11 @@ if dparam.fullscr
   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
-  stimSize = [size(checkerboard,2)*ratio_wid, size(checkerboard,1)*ratio_hei];
+  stimSize = [size(checkerboard{1},2)*ratio_wid, size(checkerboard{1},1)*ratio_hei];
   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
-  stimSize = [size(checkerboard,2), size(checkerboard,1)];
+  stimSize = [size(checkerboard{1},2), size(checkerboard{1},1)];
   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
@@ -1008,12 +1010,12 @@ GammaResetPTB(1.0);
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_clgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_lgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_clgn_localizer_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));

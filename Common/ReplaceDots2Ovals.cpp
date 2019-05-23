@@ -34,7 +34,7 @@
 //
 //
 // Created:     "2010-11-07 13:28:28 ban"
-// Last Update: "2010-11-09 16:27:12 ban"
+// Last Update: "2019-05-17 17:56:48 ban"
 
 // header files
 #include <mex.h>
@@ -57,7 +57,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
   UINT i,j,k; // iterators
   
   // get the size of input image
-  const int *dims=mxGetDimensions(prhs[0]);
+  //const int *dims=mxGetDimensions(prhs[0]);
+  const mwSize *dims=mxGetDimensions(prhs[0]);
   const UINT img_rows=dims[0], img_cols=dims[1];
 
   const int num_of_dims=mxGetNumberOfDimensions(prhs[0]);

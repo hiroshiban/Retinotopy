@@ -33,7 +33,7 @@ function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor
 % Please be careful.
 %
 % Created:     "2010-04-03 14:05:21 ban"
-% Last Update: "2017-12-29 13:03:05 ban"
+% Last Update: "2019-05-17 16:13:35 ban"
 
 % --- generate RDS images
 imgL=double(bgcolor*ones(size(posL)));
@@ -67,8 +67,9 @@ if avoid_bias_flg
     elseif k==0
       TT=idXY;
     end
-    tmp(posL==k)=TT(posL==k).*hiddensurf(posL==k);
-    hiddensurf(posL==k)=NaN;
+    tidx=find(posL==k);
+    tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+    hiddensurf(tidx)=NaN;
     %imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code
   end
   if use_mex_flg
@@ -91,8 +92,9 @@ if avoid_bias_flg
     elseif k==0
       TT=idXY;
     end
-    tmp(posR==k)=TT(posR==k).*hiddensurf(posR==k);
-    hiddensurf(posR==k)=NaN;
+    tidx=find(posR==k);
+    tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+    hiddensurf(tidx)=NaN;
     %imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code
   end
 
@@ -107,26 +109,28 @@ else % avoid_bias_flg
   % without considering biases of dot density in the image
   tmpL=NaN*ones(size(randXY));
   tmpR=NaN*ones(size(randXY));
-  
+
   idx=find(~isnan(idXY));
   [row,col]=ind2sub(size(idXY),idx);
-  
+
   for ii=1:1:size(row,1)
-    % here the 'hole' in the image is filled by shifting the dot position cyclically
-    if col(ii)+posL(row(ii),col(ii)) < 1
-      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
-    elseif size(idXY,2) < col(ii)+posL(row(ii),col(ii))
-      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
-    else
-      tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
-    end
-  
-    if col(ii)+posR(row(ii),col(ii)) < 1
-      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
-    elseif size(idXY,2) < col(ii)+posR(row(ii),col(ii))
-      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
-    else
-      tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+    if ~isnan(posL(row(ii),col(ii))) && ~isnan(posR(row(ii),col(ii)))
+      % here the 'hole' in the image is filled by shifting the dot position cyclically
+      if col(ii)+posL(row(ii),col(ii)) < 1
+        tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+      elseif size(idXY,2) < col(ii)+posL(row(ii),col(ii))
+        tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+      else
+        tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+      end
+
+      if col(ii)+posR(row(ii),col(ii)) < 1
+        tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+      elseif size(idXY,2) < col(ii)+posR(row(ii),col(ii))
+        tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+      else
+        tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+      end
     end
   end
   %imgLids=tmpL;
@@ -139,7 +143,7 @@ else % avoid_bias_flg
     imgLids=tmpL;
     imgRids=tmpR;
   end
-  
+
 end % if avoid_bias_flg
 
 if use_mex_flg

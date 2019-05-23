@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-04-23 15:57:38 ban"
+% Last Update: "2019-05-22 19:46:26 ban"
 %
 %
 %
@@ -1073,6 +1073,7 @@ for cc=1:1:length(checkerboard)
       tidx=find(checkerboardID{cc}==task_pos{cc}(task_id));
       checkerboard{cc}(tidx)=checkerboard{cc}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
       checkertexture=Screen('MakeTexture',winPtr,checkerboard{cc});
+      checkerboard{cc}(tidx)=checkerboard{cc}(tidx)-2; % put the checkerboard ID back to the default
     else
       tidx=[];
       checkertexture=Screen('MakeTexture',winPtr,checkerboard{cc});
@@ -1087,9 +1088,6 @@ for cc=1:1:length(checkerboard)
       DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
       Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
     end
-
-    % put the checkerboard ID back to the default
-    if ~isempty(tidx), checkerboard{cc}(tidx)=checkerboard{cc}(tidx)-2; end
 
     % flip the window
     Screen('DrawingFinished',winPtr);

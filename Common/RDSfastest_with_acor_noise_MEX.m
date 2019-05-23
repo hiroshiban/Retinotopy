@@ -29,7 +29,7 @@ function [imgL,imgR]=RDSfastest_with_acor_noise_MEX(posL,posR,wdot,bdot,dotalpha
 % Please be careful.
 %
 % Created:     "2010-10-27 13:28:28 ban"
-% Last Update: "2013-11-23 00:00:33 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-05-17 16:15:09 ban"
 
 % create initial random dot image
 randXY=randi(round(100/dotDens),size(posL));
@@ -53,42 +53,42 @@ idx=find(logical(idXY));
 [row,col]=ind2sub(size(idXY),idx);
 
 for ii=1:1:size(row,1)
+  if ~isnan(posL(row(ii),col(ii))) && ~isnan(posR(row(ii),col(ii)))
+    % here the 'hole' in the image is filled by shifting the dot position cyclically
+    if col(ii)+posL(row(ii),col(ii)) < 1
+      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+      if posL(row(ii),col(ii))~=0
+        tmpNL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+      end
+    elseif size(idXY,2) < col(ii)+posL(row(ii),col(ii))
+      tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+      if posL(row(ii),col(ii))~=0
+        tmpNL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+      end
+    else
+      tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+      if posL(row(ii),col(ii))~=0
+        tmpNL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+      end
+    end
 
-  % here the 'hole' in the image is filled by shifting the dot position cyclically
-  if col(ii)+posL(row(ii),col(ii)) < 1
-    tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
-    if posL(row(ii),col(ii))~=0
-      tmpNL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
-    end
-  elseif size(idXY,2) < col(ii)+posL(row(ii),col(ii))
-    tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
-    if posL(row(ii),col(ii))~=0
-      tmpNL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
-    end
-  else
-    tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
-    if posL(row(ii),col(ii))~=0
-      tmpNL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+    if col(ii)+posR(row(ii),col(ii)) < 1
+      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+      if posR(row(ii),col(ii))~=0
+        tmpNR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+      end
+    elseif size(idXY,2) < col(ii)+posR(row(ii),col(ii))
+      tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+      if posR(row(ii),col(ii))~=0
+        tmpNR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+      end
+    else
+      tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+      if posR(row(ii),col(ii))~=0
+        tmpNR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+      end
     end
   end
-
-  if col(ii)+posR(row(ii),col(ii)) < 1
-    tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
-    if posR(row(ii),col(ii))~=0
-      tmpNR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
-    end
-  elseif size(idXY,2) < col(ii)+posR(row(ii),col(ii))
-    tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
-    if posR(row(ii),col(ii))~=0
-      tmpNR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
-    end
-  else
-    tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
-    if posR(row(ii),col(ii))~=0
-      tmpNR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
-    end
-  end
-
 end
 imgLids=repmat(uint32(0),size(randXY));
 imgRids=repmat(uint32(0),size(randXY));

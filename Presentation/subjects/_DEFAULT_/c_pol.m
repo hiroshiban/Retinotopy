@@ -18,6 +18,7 @@ sparam.minRad      = 0;   % minumum
 
 sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
 
+% checkerboard colors, this variable is only for c* stimulus presentation scripts (e.g. cretinotopy)
 sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
                        255,   0,   0; % the first row is background
                          0, 255,   0; % the second to end are patch colors
@@ -30,12 +31,20 @@ sparam.colors      = [ 128, 128, 128; % number of colors for compensating flicke
                        255, 128,   0;
                        128,   0, 255;];
 
+%%% RDS parameters, these are only for d* stimulus presentation scripts (e.g dretinotopy_fixtask)
+sparam.RDSdepth = [ -12, 12, 5]; % binocular disparity in arcmins, [min, max, #steps(from min to max)]
+sparam.RDSDense=0.5; % dot density in the RDS images to be generated (percentage)
+sparam.RDSradius=0.05; % dot radius in deg
+sparam.RDScolors=[255,0,128]; % dot colors in the RDS, [color1, color2, background (grayscale)]
+sparam.RDSbackground=0; % 1 = with background, 0 = no background
+sparam.RDStaskmagnitude=2; % ratio (x2, x3, etc against the sparam.RDSdepth([1,2])) of the depth maginitude in the change-detection task
+
 %%% duration in msec for each cycle & repetitions
 sparam.cycle_duration=60000; % msec
 sparam.rest_duration =0; % msec, rest after each cycle, stimulation = cycle_duration-rest_duration
 sparam.numRepeats=6;
 
-%%% parameters used only for object-image-based retinotopy stimuli
+%%% object-image presentation parameters, only for i* object-image-based retinotopy stimuli (e.g. iretinotopy_fixtask)
 sparam.flip_duration=500; % msec
 sparam.nimg=120; % number of images to be presented at a frame
 sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
@@ -69,3 +78,4 @@ sparam.patch_color2=[0,0,0];
 run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 %sparam.pix_per_cm=57.1429;
 %sparam.vdist=65;
+%sparam.ipd=6.5;

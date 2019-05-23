@@ -37,7 +37,7 @@ function [imgL,imgR]=RDSbyOval(heightfield,dotRadius,dotDens,imgNum,...
 % [imgL,imgR]=RDSbyOvalFinest(field,0.05,3,1,[255,0,128],6.4,50,57,1,0);
 %
 % Created: "2010-04-03 14:05:21 ban"
-% Last Update: "2013-11-23 00:05:24 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2019-05-17 16:21:18 ban"
 
 % --- input variable check
 if nargin<1, help RDSbyOval; return; end
@@ -127,8 +127,9 @@ for n=1:1:imgNum
     elseif k==0
       TT = idXY;
     end
-    tmp(posL==k) = TT(posL==k).*hiddensurf(posL==k);
-    hiddensurf(posL==k) = NaN;
+    tidx=find(posL==k);
+    tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+    hiddensurf(tidx)=NaN;
     %imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code
   end
   imgLids=tmp;
@@ -147,8 +148,9 @@ for n=1:1:imgNum
     elseif k==0
       TT = idXY;
     end
-    tmp(posR==k) = TT(posR==k).*hiddensurf(posR==k);
-    hiddensurf(posR==k) = NaN;
+    tidx=find(posR==k);
+    tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+    hiddensurf(tidx)=NaN;
     %imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code
   end
   imgRids=tmp;

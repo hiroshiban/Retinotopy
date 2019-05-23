@@ -27,7 +27,7 @@
 //
 //
 // Created    : "2010-11-09 13:48:37 ban"
-// Last Update: "2010-11-09 15:43:24 ban"
+// Last Update: "2019-05-17 17:55:47 ban"
 
 // header files
 #include <mex.h>
@@ -44,7 +44,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
   // set input variables
   double *prhs_ptr=(double *)mxGetData(prhs[0]);
   
-  const int *dims=mxGetDimensions(prhs[0]);
+  //const int *dims=mxGetDimensions(prhs[0]);
+  const mwSize *dims=mxGetDimensions(prhs[0]);
   const UINT dist_rows=dims[0], dist_cols=dims[1];
   
   const double ipd=(double)mxGetScalar(prhs[1]);

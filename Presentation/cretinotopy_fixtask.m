@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-04-23 15:55:35 ban"
+% Last Update: "2019-05-23 13:28:57 ban"
 %
 %
 %
@@ -1001,28 +1001,21 @@ for cc=1:1:sparam.numRepeats
     %% update IDs
 
     % flickering checkerboard
-    if ff<=nframe_stim
-      if ~mod(ff,nframe_flicker) % color reversal
-        compensate_id=mod(compensate_id,2)+1;
-      end
-
-      if ~mod(ff,2*nframe_flicker) % color change
-        color_id=color_id+1;
-        if color_id>sparam.ncolors, color_id=1; end
-      end
-
-      % stimulus position id for the next presentation
-      if ~mod(ff,nframe_movement)
-        stim_pos_id=stim_pos_id+1;
-        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
-      end
-    else
-      compensate_id=1;
-      color_id=1;
-      stim_pos_id=1;
+    if ~mod(ff,nframe_flicker) % color reversal
+      compensate_id=mod(compensate_id,2)+1;
     end
 
-    % get responses
+    if ~mod(ff,2*nframe_flicker) % color change
+      color_id=color_id+1;
+      if color_id>sparam.ncolors, color_id=1; end
+    end
+
+    % stimulus position id for the next presentation
+    if ~mod(ff,nframe_movement)
+      stim_pos_id=stim_pos_id+1;
+      if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+    end
+
     [resps,event]=resps.check_responses(event);
 
   end % for ff=1:1:cycle_frames

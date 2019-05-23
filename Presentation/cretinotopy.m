@@ -37,7 +37,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2019-04-23 15:55:49 ban"
+% Last Update: "2019-05-23 13:30:41 ban"
 %
 %
 %
@@ -967,6 +967,7 @@ for cc=1:1:sparam.numRepeats
       tidx=find(checkerboardID{stim_pos_id}==task_pos{stim_pos_id}(task_id));
       checkerboard{stim_pos_id}(tidx)=checkerboard{stim_pos_id}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
       checkertexture=Screen('MakeTexture',winPtr,checkerboard{stim_pos_id});
+      checkerboard{stim_pos_id}(tidx)=checkerboard{stim_pos_id}(tidx)-2; % put the checkerboard ID back to the default
     else
       tidx=[];
       checkertexture=Screen('MakeTexture',winPtr,checkerboard{stim_pos_id});
@@ -981,9 +982,6 @@ for cc=1:1:sparam.numRepeats
       DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
       Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
     end
-
-    % put the checkerboard ID back to the default
-    if ~isempty(tidx), checkerboard{stim_pos_id}(tidx)=checkerboard{stim_pos_id}(tidx)-2; end
 
     % flip the window
     Screen('DrawingFinished',winPtr);
@@ -1012,31 +1010,24 @@ for cc=1:1:sparam.numRepeats
     %% update IDs
 
     % flickering checkerboard
-    if ff<=nframe_stim
-      if ~mod(ff,nframe_flicker) % color reversal
-        compensate_id=mod(compensate_id,2)+1;
-      end
-
-      if ~mod(ff,2*nframe_flicker) % color change
-        color_id=color_id+1;
-        if color_id>sparam.ncolors, color_id=1; end
-      end
-
-      % stimulus position id for the next presentation
-      if ~mod(ff,nframe_movement)
-        stim_pos_id=stim_pos_id+1;
-        if stim_pos_id>sparam.npositions, stim_pos_id=1; end
-      end
-
-      %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
-      if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
-      firsttask_flg=firsttask_flg+1;
-    else % required to compensate insubdivisible frames
-      compensate_id=1;
-      color_id=1;
-      stim_pos_id=1;
-      firsttask_flg=0;
+    if ~mod(ff,nframe_flicker) % color reversal
+      compensate_id=mod(compensate_id,2)+1;
     end
+
+    if ~mod(ff,2*nframe_flicker) % color change
+      color_id=color_id+1;
+      if color_id>sparam.ncolors, color_id=1; end
+    end
+
+    % stimulus position id for the next presentation
+    if ~mod(ff,nframe_movement)
+      stim_pos_id=stim_pos_id+1;
+      if stim_pos_id>sparam.npositions, stim_pos_id=1; end
+    end
+
+    %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
+    if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
+    firsttask_flg=firsttask_flg+1;
 
     [resps,event]=resps.check_responses(event);
 

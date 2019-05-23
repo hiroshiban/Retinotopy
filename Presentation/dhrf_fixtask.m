@@ -1,37 +1,34 @@
-function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
+function dhrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)
 
-% Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.
-% function clocalizer(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+% Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.
+% function dhrf_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
 % (: is optional)
 %
-% - This function generates and presents color/luminance-defined checkerboard
-%   stimulus for measuring/estimating cortical representations of a specific
-%   subregion of the visual field. Specifically, the target checkerboard which
-%   covers specific visual subfield and its compensating patterns are alternatively
-%   presented. You can also use this script to measure a cannonical hemodynamic
-%   response function shape subject-by-subject or to evaluate BOLD signal and
-%   fMR-image quality.
+% - This function generates and presents Random-Dot-Stereogram(RDS)-defined checkerboard
+%   stimulus (a big circular checkerboard pattern) for for measuring/estimating
+%   a cannonical hemodynamic response function shape subject-by-subject.
+%   You can also use this script for checking BOLD signal and fMR-image quality.
 %
 % - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
 %
-% - Luminance detection task: one of the checks of the checkerboard pattern
-%   randomly turns to darker. An observer has to press the button if s/he
+% - Luminance detection task: the central fixation point (default: white)
+%   randomly turns to gray. An observer has to press the button if s/he
 %   detects this luminance change. Response keys are defined in displayfile.
 %
 % [note]
 % Behavioral task of (function_name)_fixtask is to detect changes of luminance
-% of the central fixation point, while the task in (function_name) is to detect
-% changes of luminance of one of the patches in the checkerboard stimuli.
+% of the central fixation point, while the task in (function_name_alone) is to
+% detect changes of depth of one of the patches in the checkerboard stimuli.
 % Here, the central fixation task is more easy to sustain the stable fixation
 % on the center of the screen and may be suitable for naive/non-expert
 % participants with minimizing unwilling eye movements. However, some studies
-% have reported that attention to the target stimulus (checker-patch luminance
+% have reported that attention to the target stimulus (lead by checker-patch depth
 % change detection task) is required to get reliable retinotopic representations
 % in higher-order visual areas.
 %
 %
-% Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-05-22 19:45:18 ban"
+% Created    : "2019-05-21 10:00:53 ban"
+% Last Update: "2019-05-23 15:54:36 ban"
 %
 %
 %
@@ -45,7 +42,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 %                 !!! ~/Retinotopy/Presentation/images                   !!!
 %                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
 %
-% exp_mode      : experiment mode acceptable in this script is only "localizer"
+% exp_mode      : experiment mode acceptable in this script is only "hrf"
 % acq           : acquisition number (design file number),
 %                 an integer, such as 1, 2, 3, ...
 % displayfile   : (optional) display condition file,
@@ -85,11 +82,11 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_clocalizer_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_dhrf_fixtask_results_run_(run_num).mat
 %
 %
 % [example]
-% >> clocalizer('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> dhrf_fixtask('HB','hrf',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -148,8 +145,8 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % (an example of the stimulusfile)
 %
 % % ************************************************************
-% % This is the stimulus parameter file for the clocalizer retinotopy stimulus
-% % Programmed by Hiroshi Ban Dec 19 2018
+% % This is the stimulus parameter file for the HRF characterization stimulus
+% % Programmed by Hiroshi Ban Jan 24 2019
 % % ************************************************************
 %
 % %%% stimulus parameters
@@ -160,40 +157,26 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % sparam.startangle  = 0;     % presentation start angle in deg, from right-horizontal meridian, ccw
 %
 % sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
-% sparam.minRad      = 0;      % minimum
-% sparam.tgtRad      = [3.5,5,5];  % target eccentricity, [min,max]
+% sparam.minRad      = 0;    % minumum
 %
-% sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task
-%
-% sparam.colors      = [ 128, 128, 128; % number of colors for compensating flickering checkerboard
-%                        255,   0,   0; % the first row is background
-%                          0, 255,   0; % the second to end are patch colors
-%                        255, 255,   0;
-%                          0,   0, 255;
-%                        255,   0, 255;
-%                          0, 255, 255;
-%                        255, 255, 255;
-%                          0,   0,   0;
-%                        255, 128,   0;
-%                        128,   0, 255;];
+% %%% RDS parameters
+% sparam.RDSdepth = [ -12, 12, 5]; % binocular disparity in arcmins, [min, max, #steps(from min to max)]
+% sparam.RDSDense=0.5; % dot density in the RDS images to be generated (percentage)
+% sparam.RDSradius=0.05; % dot radius in deg
+% sparam.RDScolors=[255,0,128]; % dot colors in the RDS, [color1, color2, background (grayscale)]
+% sparam.RDSbackground=0; % 1 = with background, 0 = no background
 %
 % %%% duration in msec for each cycle & repetitions
-% % Here, the stimulus presentation protocol is defined as below.
-% % initial_fixation_time(1) ---> block_duration-rest_duration (the target pattern) ---> rest_duration (blank) --->
-% %   block_duration-rest_duration (the compensating pattern of the target) ---> rest_duration (blank) ---> block_duration-rest_duration (the target pattern) --->
-% %     rest_duration (blank) ---> block_duration-rest_duration (the compensating pattern) ---> ... (repeated numRepeats in total) ---> initial_fixation_time(2)
-% % Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)
-%
-% sparam.block_duration=16000; % msec, a presentation duration of the target or its compensating pattern
-% sparam.rest_duration =16000; % msec, rest after each block
+% sparam.cycle_duration=32000; % msec
+% sparam.rest_duration =16000; % msec, rest after each cycle, stimulation = cycle_duration-eccrest
 % sparam.numRepeats=6;
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
-% % the final 2 is for 2 times repetitions of the flicker
+% % the final 2 is for 2 times repetitions of flicker
 % % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
-% %sparam.waitframes = Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
-% sparam.waitframes = 60*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+% sparam.waitframes = 4;%Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+% %sparam.waitframes = 1;
 %
 % %%% fixation period in msec before/after presenting the target stimuli, integer
 % % must set a value more than 1 TR for initializing the frame counting.
@@ -205,7 +188,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % sparam.fixcolor=[255,255,255];
 %
 % %%% background color
-% sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
+% sparam.bgcolor=[128,128,128];
 %
 % %%% background-patch colors (RGB)
 % sparam.bgtype=1; % 1: a simple background with sparam.bgcolor (then, the parameters belows are not used), 2: a background with grid guides
@@ -218,6 +201,7 @@ function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 % run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
+% %sparam.ipd=6.5;
 %
 %
 % [HOWTO create stimulus files]
@@ -247,7 +231,7 @@ if nargin<8 || isempty(force_proceed_flag), force_proceed_flag=0; end
 if acq<1, error('Acquistion number must be integer and greater than zero'); end
 
 % check the experiment mode (stimulus type)
-if ~strcmpi(exp_mode,'localizer'), error('exp_mode acceptable in this script is only "localizer". check the input variable.'); end
+if ~strcmpi(exp_mode,'hrf'), error('exp_mode acceptable in this script is only "hrf". check the input variable.'); end
 
 rootDir=fileparts(mfilename('fullpath'));
 
@@ -287,7 +271,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_clocalizer_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_dhrf_fixtask_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -358,23 +342,15 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'startangle',0,...
          'maxRad',8,...
          'minRad',0,...
-         'tgtRad',[3.5,5.5],...
-         'dimratio',0.4,...
-         'colors',[ 128, 128, 128;
-                    255,   0,   0;
-                      0, 255,   0;
-                    255, 255,   0;
-                      0,   0, 255;
-                    255,   0, 255;
-                      0, 255, 255;
-                    255, 255, 255;
-                      0,   0,   0;
-                    255, 128,   0;
-                    128,   0, 255],...
-         'block_duration',16000,...
+         'RDSdepth',[-12,12,5],...
+         'RDSDense',0.5,...
+         'RDSradius',0.05,...
+         'RDScolors',[255,0,128],...
+         'RDSbackground',0,...
+         'cycle_duration',32000,...
          'rest_duration',16000,...
          'numRepeats',6,...
-         'waitframes',4,... % Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 )
+         'waitframes',4,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
          'initial_fixation_time',[4000,4000],...
          'fixtype',1,...
          'fixsize',12,...
@@ -389,15 +365,15 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'vdist',65);
 
 % change unit from msec to sec.
-sparam.initial_fixation_time = sparam.initial_fixation_time./1000; %#ok
+sparam.initial_fixation_time=sparam.initial_fixation_time./1000; %#ok
 
 % change unit from msec to sec.
-sparam.block_duration = sparam.block_duration./1000;
-sparam.rest_duration  = sparam.rest_duration./1000;
+sparam.cycle_duration=sparam.cycle_duration./1000;
+sparam.rest_duration=sparam.rest_duration./1000;
 
 % set the other parameters
-dparam.RunScript = mfilename();
-sparam.RunScript = mfilename();
+dparam.RunScript=mfilename();
+sparam.RunScript=mfilename();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -422,12 +398,11 @@ fprintf('Screen Height          : %d\n',dparam.ScrHeight);
 fprintf('Screen Width           : %d\n',dparam.ScrWidth);
 fprintf('*********** Stimulation Periods etc. ***********\n');
 fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
-fprintf('Cycle Duration(sec)    : %d\n',2*sparam.block_duration);
-fprintf('Block Duration(sec)    : %d x 2 (target/compensating)\n',sparam.block_duration-sparam.rest_duration);
+fprintf('Cycle Duration(sec)    : %d\n',sparam.cycle_duration);
 fprintf('Rest  Duration(sec)    : %d\n',sparam.rest_duration);
 fprintf('Repetitions(cycles)    : %d\n',sparam.numRepeats);
 fprintf('Frame Flip(per VerSync): %d\n',sparam.waitframes);
-fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration);
+fprintf('Total Time (sec)       : %d\n',sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);
 fprintf('**************** Stimulus Type *****************\n');
 fprintf('Experiment Mode        : %s\n',sparam.mode);
 fprintf('************ Response key settings *************\n');
@@ -511,14 +486,6 @@ Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing MATLAB OpenGL shader API
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% just call DrawTextureWithCLUT with window pointer alone
-DrawTextureWithCLUT(winPtr);
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Displaying 'Initializing...'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -542,21 +509,13 @@ sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
 % do not convert!
 % sparam.width, sparam.phase, and sparam.startangle are used in deg formats
 
-% number of checkerboard color
-sparam.ncolors=(size(sparam.colors,1)-1)/2;
-
 % sec to number of frames
 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
-nframe_stim=round((sparam.block_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
+nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
-
-% !!!NOTICE!!!
-% Two lines below are from cretinotopy.m
-% nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
-% nframe_flicker=round(nframe_rotation/sparam.ncolors/4);
-% nframe_flicker should be adjusted to match with these parameters.
-nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.ncolors/4); %60,0,30 are from CCW/CW parameters.
-nframe_task=round(nframe_flicker*sparam.ncolors*4/2);
+%nframe_flicker=round(sparam.waitframes/2/2); % the first 2 = 2 cycles of color flickering, the second 2 is for compensation colors (e.g. RG and GR)
+nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.RDSdepth(3)/4); %60,0,30 are from CCW/CW parameters.
+nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
 
 %% initialize chackerboard parameters
 
@@ -569,11 +528,9 @@ if dparam.fullscr
   % min/max radius of annulus
   rmin=sparam.minRad*ratio_wid; % !!! degree, not pixel or cm !!!
   rmax=sparam.maxRad*ratio_wid;
-  rtgt=sparam.tgtRad.*ratio_wid;
 else
   rmin=sparam.minRad;
   rmax=sparam.maxRad;
-  rtgt=sparam.tgtRad;
 end
 
 
@@ -590,79 +547,22 @@ end
 % .....
 % sparam.npatches = checker ID
 % Each patch ID will be associated with a CLUT color of the same ID
-[tmp_checkerboardID,tmp_checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
-                                        sparam.nwedges,sparam.nrings,sparam.phase);
+[dummy,checkerboard]=pol_GenerateCheckerBoard1D(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,...
+                                                         sparam.nwedges,sparam.nrings,sparam.phase);
+clear dummy;
+checkerboard=checkerboard{1};
 
-% generating two compensating masks
-tmpmask=CreateWedgeMask(rmin,rmax,rtgt(1),rtgt(2),sparam.width,sparam.startangle,sparam.pix_per_deg);
-tmpmask{1}(tmpmask{1}>0)=255; tmpmask{2}(tmpmask{2}>0)=255;
-
-checkerboardID=cell(2,1);
-checkerboard=cell(2,1);
-checkertexture=cell(2,1);
-for pp=1:1:2
-  checkerboardID{pp}=tmp_checkerboardID{1};
-  checkerboardID{pp}(tmpmask{pp}<255)=0; % set the background ID to the outer region
-
-  checkerboard{pp}=tmp_checkerboard{1};
-  checkerboard{pp}(tmpmask{pp}<255)=0; % set the background ID to the outer region
+%% generate a circular mask
+if sparam.RDSbackground
+  [dummy1,dummy2,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,360,0,sparam.pix_per_deg,1,1,0);
+  checkerboard(~logical(mask{1}))=NaN;
+else
+  checkerboard(~logical(checkerboard))=NaN;
 end
-clear tmp_checkerboardID tmp_checkerboard tmpmask;
 
-%% update number of patches and number of wedges, taking into an account of checkerboard phase shift
-
-% here, all parameters are generated for each checkerboard
-% This looks circuitous, duplicating procedures, and it consumes more CPU and memory.
-% 'if' statements may be better.
-% However, to decrease the number of 'if' statement after starting stimulus
-% presentation as possible as I can, I will do adopt this circuitous procedures.
-patchids=cell(2,1); % 2 = target and its comensating patterns
-
-% in the bar presentation, the number of patches/wedges are different over time
-% because a part of the bar can be occluded by the circular aperture mask.
-% therefore, we have to re-compute the patches and the corresponding IDs here.
-for pp=1:1:2 % 2 = target and its comensating patterns
-  tmp_checks=unique(checkerboardID{pp})';
-  patchids{pp}=tmp_checks(2:end); % omit background id
-end
-clear tmp_checks;
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Initializing Color Lookup-Table (CLUT)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% [note]
-% all checker color/luminance flickering is realized by just flipping CLUT generated here
-% to save memory and CPU power
-
-CLUT=cell(sparam.ncolors,2); % 2 is for compensating patterns
-
-% generate base CLUT
-for cc=1:1:sparam.ncolors
-  for pp=1:1:2 % compensating checkers
-
-    % initialize, DrawTextureWithCLUT requires [256x4] color lookup table even when we do not use whole 256 colors
-    % though DrawTextureWithCLUT does not support alpha transparency up to now...
-    CLUT{cc,pp}=zeros(256,4);
-    CLUT{cc,pp}(:,4)=1; % default alpha is 1 (no transparent)
-
-    CLUT{cc,pp}(1,:)=[sparam.colors(1,:),0]; % background LUT, default alpha is 0 (invisible);
-
-    if ~mod(pp,2)
-      CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc,:);
-      CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc+1,:);
-      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
-      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
-    else
-      CLUT{cc,pp}(2,1:3)=sparam.colors(2*cc+1,:);
-      CLUT{cc,pp}(3,1:3)=sparam.colors(2*cc,:);
-      CLUT{cc,pp}(4,1:3)=sparam.dimratio.*sparam.colors(2*cc+1,:);
-      CLUT{cc,pp}(5,1:3)=sparam.dimratio.*sparam.colors(2*cc,:);
-    end
-
-  end % for pp=1:1:2 % compensating checkers
-end % for cc=1:1:sparam.ncolors
+% generating the first RDS
+[XY,colors]=GetDotPositionsRDS(checkerboard,[0,sparam.RDSdepth(1),sparam.RDSdepth(2)],sparam.RDSDense,...
+                               sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -673,28 +573,50 @@ end % for cc=1:1:sparam.ncolors
 % %%%%%% DEBUG codes start here
 if strfind(upper(subjID),'DEBUG')
 
-  % just to get stimulus figures
   Screen('CloseAll');
-  save_dir=fullfile(resultDir,'images_clocalizer');
+
+  save_dir=fullfile(resultDir,'images_dhrf_fixtask');
   if ~exist(save_dir,'dir'), mkdir(save_dir); end
 
-  figure; hold off;
-  for nn=1:1:length(checkerboard)
-    imagesc(checkerboard{nn}+1,[1,numel(unique(checkerboard{nn}))]);
-    axis off; axis equal;
+  % open a new window for drawing stimuli
+  stimRect=[0,0,size(checkerboard,2),size(checkerboard,1)];
+  [winPtr,winRect]=Screen('OpenWindow',dparam.scrID,sparam.bgcolor,CenterRect(stimRect,Screen('Rect',dparam.scrID)));
 
-    for cc=1:1:sparam.ncolors
-      for pp=1:1:2 % compensating checkers
-        colormap(CLUT{cc,pp}(1:3,1:3)./255);
-        drawnow;
-        pause(0.05);
-        imwrite(checkerboard{nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('checkerboard_%s_pos_%02d_lut_%02d_%02d.png',sparam.mode,nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
-      end
+  % set OpenGL
+  priorityLevel=MaxPriority(winPtr,'WaitBlanking');
+  Priority(priorityLevel);
+  AssertOpenGL();
+  Screen('BlendFunction', winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  % processing
+  for mm=1:1:sparam.RDSdepth(3) % depth steps
+
+    % generate/get dot positions/colors
+    if sparam.RDSdepth(3)~=1
+      depth1=sparam.RDSdepth(1)+(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+      depth2=sparam.RDSdepth(2)-(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+    else
+      depth1=sparam.RDSdepth(1);
+      depth2=sparam.RDSdepth(2);
     end
+    [XY,colors]=GetDotPositionsRDS(checkerboard,[0,depth1,depth2],sparam.RDSDense,...
+                                   sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
 
+    for pp=1:1:2 % left and right images
+      Screen('FillRect',winPtr,sparam.bgcolor,stimRect); % wipe the background just in case
+      Screen('DrawDots',winPtr,XY{pp},2*sparam.RDSradius*sparam.pix_per_deg,colors{pp},[0,0],3); % RDS
+
+      % flip the window
+      Screen('DrawingFinished',winPtr);
+      Screen('Flip',winPtr,[],[],[],1);
+
+      % get the current frame and save it
+      imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('checkerboard_%s_depth_%02d_01.png',sparam.mode,mm)),'png');
+    end
   end
-  close all;
-  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam','CLUT');
+
+  Screen('CloseAll');
+  save(fullfile(save_dir,sprintf('stimulus_%s.mat',sparam.mode)),'checkerboard','sparam','dparam');
   keyboard;
 
 end % if strfind(upper(subjID),'DEBUG')
@@ -702,53 +624,35 @@ end % if strfind(upper(subjID),'DEBUG')
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Generating contrast detection task parameters
+%%%% Generating fixation detection task parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% set task variables
-% flag to decide in which period (first half or second half) the disparity task is applied
-% about task_flg:
-% 1, task is added in the first half period
-% 2, task is added in the second half period
-task_flg=randi(2,[ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task),1]);
-
-% flag whether presenting disparity task
-do_task=zeros(ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task),1);
-do_task(1)=0; % no task for the first presentation
-for ii=2:1:ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task)
-  if do_task(ii-1)==1
-    do_task(ii)=0;
+% flag to decide whether presenting fixation task
+totalframes=max(sum(nframe_fixation),1)+(nframe_stim+nframe_rest)*sparam.numRepeats;
+num_tasks=ceil(totalframes/nframe_task);
+task_flg=ones(1,num_tasks);
+for nn=2:1:num_tasks
+  if task_flg(nn-1)==2
+    task_flg(nn)=1;
   else
-    do_task(ii)=round(rand(1,1));
+    if mod(randi(4,1),4)==0 % this is arbitral, but I put these lines just to reduce the number of tasks
+      task_flg(nn)=round(rand(1,1))+1;
+    else
+      task_flg(nn)=1;
+    end
   end
 end
-
-% variable to store the current task array order
-task_id=1;
-
-% variable to store task position
-task_pos=cell(2,1); % 2 = target and its comensating patterns
-for pp=1:1:2
-  task_pos{pp}=[];
-  for nn=1:1:ceil(sparam.numRepeats*2*(nframe_stim+nframe_rest)/nframe_task)
-    tmp_id=shuffle(patchids{pp});
-    task_pos{pp}=[task_pos{pp},tmp_id(1)];
-  end
-end
-
-% flag to index the first task frame
-firsttask_flg=0;
+task_flg=repmat(task_flg,nframe_task,1);
+task_flg=task_flg(:);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Initializing checkerboard color management parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% checkerboard color id
-color_id=1;
-
-% checkerboard compensating color id
-compensate_id=1;
+% checkerboard depth id
+depth_id=1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -756,7 +660,7 @@ compensate_id=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if sparam.bgtype==1 % a simple background with sparam.bgcolor
-  bgimg{1}=repmat(reshape(sparam.colors(1,:),[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
+  bgimg{1}=repmat(reshape(sparam.bgcolor,[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
 
 elseif sparam.bgtype==2 % a background with grid guides
 
@@ -768,11 +672,11 @@ elseif sparam.bgtype==2 % a background with grid guides
   p_width=round((dparam.ScrWidth-edgeX)/sparam.patch_num(2)); % width in pix of patch_width + interval-X
 
   if dparam.fullscr
-    aperture_size=[2*( p_height*ceil( size(checkerboard{1},1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
-                   2*( p_width*ceil( size(checkerboard{1},2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
+    aperture_size=[2*( p_height*ceil( size(checkerboard,1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),...
+                   2*( p_width*ceil( size(checkerboard,2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
   else
-    aperture_size=[2*( p_height*ceil(size(checkerboard{1},1)/2/p_height) ),...
-                   2*( p_width*ceil(size(checkerboard{1},2)/2/p_width) )];
+    aperture_size=[2*( p_height*ceil(size(checkerboard,1)/2/p_height) ),...
+                   2*( p_width*ceil(size(checkerboard,2)/2/p_width) )];
   end
 
   bgimg=CreateBackgroundImage([dparam.ScrHeight,dparam.ScrWidth],aperture_size,sparam.patch_size,sparam.bgcolor,sparam.patch_color1,sparam.patch_color2,sparam.fixcolor,sparam.patch_num,0,0,0);
@@ -818,11 +722,11 @@ if dparam.fullscr
   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
-  stimSize = [size(checkerboard{1},2)*ratio_wid, size(checkerboard{1},1)*ratio_hei];
+  stimSize = [size(checkerboard,2)*ratio_wid, size(checkerboard,1)*ratio_hei];
   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
 else
   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
-  stimSize = [size(checkerboard{1},2), size(checkerboard{1},1)];
+  stimSize = [size(checkerboard,2), size(checkerboard,1)];
   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
 end
 
@@ -837,6 +741,23 @@ end
 bgRect  = [0, 0, bgSize]; % used to display background images;
 stimRect= [0, 0, stimSize];
 fixRect = [0, 0, fixSize]; % used to display the central fixation point
+
+% compute Random-Dot-Stereogram image center
+if strcmpi(dparam.ExpMode,'cross') || strcmpi(dparam.ExpMode,'parallel') || ...
+   strcmpi(dparam.ExpMode,'topbottom') || strcmpi(dparam.ExpMode,'bottomtop')
+  half_flg=1;
+else
+  half_flg=0;
+end
+dotCenter=[diff(winRect([1,3])),diff(winRect([2,4]))]./2-[diff(stimRect([1,3])),diff(stimRect([2,4]))]./2;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Initialize functions and variables for trial loop
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% initialize variables that we will use during the experiment (faster)
+cur_frames=0;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -866,7 +787,7 @@ Screen('Flip', winPtr,[],[],[],1);
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % fix{1} is valis as no task in the first period
 end
 Screen('DrawingFinished',winPtr);
 
@@ -893,16 +814,22 @@ vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
 [event,the_experiment_start]=event.set_reference_time(vbl);
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
+cur_frames=cur_frames+1;
 
 % wait for the initial fixation
-for ff=1:1:nframe_fixation(1)
+for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-    Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+    Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
   Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  cur_frames=cur_frames+1;
+
+  % update task
+  if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
+
   [resps,event]=resps.check_responses(event);
 end
 
@@ -914,82 +841,72 @@ end
 for cc=1:1:sparam.numRepeats
 
   %% stimulus presentation loop
-  for pp=1:1:2 % 2 = the target and its compensating patterns
-    for ff=1:1:nframe_stim+nframe_rest
+  for ff=1:1:nframe_stim+nframe_rest
 
-      % generate a checkerboard texture with/without a luminance detection task
-      if ff<=nframe_stim
-        if do_task(task_id) && ...
-          ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
-            ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
-          tidx=find(checkerboardID{pp}==task_pos{pp}(task_id));
-          checkerboard{pp}(tidx)=checkerboard{pp}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
-          checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
-          checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; % put the checkerboard ID back to the default
-        else
-          tidx=[];
-          checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
-        end
-      end
-
-      [resps,event]=resps.check_responses(event);
-
-      %% display the current frame
-      for nn=1:1:nScr
-        Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-        Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
-        if ff<=nframe_stim
-          DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect));
-        end
-        Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
-      end
-
-      % flip the window
-      Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*2*sparam.block_duration+(pp-1)*sparam.block_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-
-      if pp==1 && ff==1
-        event=event.add_event(sprintf('Cycle: %d',cc),[]);
-        fprintf(sprintf('Cycle: %03d...\n',cc));
-      end
-
-      if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
-
-      % clean up
-      if ff<=nframe_stim, Screen('Close',checkertexture); end
-
-      [resps,event]=resps.check_responses(event);
-
-      %% exit from the loop if the final frame is displayed
-      if pp==2 && ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
-
-      %% update IDs
-
-      % flickering checkerboard
-      if ff<=nframe_stim
-        if ~mod(ff,nframe_flicker) % color reversal
-          compensate_id=mod(compensate_id,2)+1;
-        end
-
-        if ~mod(ff,2*nframe_flicker) % color change
-          color_id=color_id+1;
-          if color_id>sparam.ncolors, color_id=1; end
-        end
-
-        %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
-        if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
-        firsttask_flg=firsttask_flg+1;
+    % preparaing the next stimulus
+    if ff<=nframe_stim && ~mod(ff,nframe_flicker)
+      if sparam.RDSdepth(3)~=1
+        depth1=sparam.RDSdepth(1)+(depth_id-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+        depth2=sparam.RDSdepth(2)-(depth_id-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
       else
-        compensate_id=1;
-        color_id=1;
-        firsttask_flg=0;
+        depth1=sparam.RDSdepth(1);
+        depth2=sparam.RDSdepth(2);
       end
+      [XY,colors]=GetDotPositionsRDS(checkerboard,[0,depth1,depth2],sparam.RDSDense,...
+                                     sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+    end
 
-      % get responses
-      [resps,event]=resps.check_responses(event);
+    %% display the current frame
+    for nn=1:1:nScr
+      Screen('SelectStereoDrawBuffer',winPtr,nn-1);
+      Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
+      if ff<=nframe_stim
+        if half_flg
+          Screen('DrawDots',winPtr,XY{nn}./2,sparam.RDSradius*sparam.pix_per_deg,colors{nn},dotCenter,3); % RDS
+        else
+          Screen('DrawDots',winPtr,XY{nn},2*sparam.RDSradius*sparam.pix_per_deg,colors{nn},dotCenter,3); % RDS
+        end
+      end
+      Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
+    end
 
-    end % for ff=1:1:nframe_stim+nframe_rest
-  end % for pp=1:1:2 % 2 = the target and its compensating patterns
+    [resps,event]=resps.check_responses(event);
+
+    % flip the window
+    Screen('DrawingFinished',winPtr);
+    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+
+    if ff==1
+      event=event.add_event(sprintf('Cycle: %d',cc),[]);
+      fprintf(sprintf('Cycle: %03d...\n',cc));
+    end
+
+    cur_frames=cur_frames+1;
+
+    % update task
+    if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
+
+    [resps,event]=resps.check_responses(event);
+
+    %% exit from the loop if the final frame is displayed
+    if ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
+
+    %% update IDs
+
+    % flickering checkerboard
+    if ff<=nframe_stim
+      if ~mod(ff,nframe_flicker) % depth change
+        depth_id=depth_id+1;
+        if depth_id>sparam.RDSdepth(3), depth_id=1; end
+      end
+    else
+      depth_id=1;
+    end
+
+    % get responses
+    [resps,event]=resps.check_responses(event);
+
+  end % for ff=1:1:nframe_stim+nframe_rest
 
 end % for cc=1:1:sparam.numRepeats
 
@@ -1001,10 +918,11 @@ end % for cc=1:1:sparam.numRepeats
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+  Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi,[],[],1); % the first flip;
+Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip;
+%cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
@@ -1013,15 +931,20 @@ for ff=1:1:nframe_fixation(2)
   for nn=1:1:nScr
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
-    Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+    Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  cur_frames=cur_frames+1;
+
+  % update task
+  if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
+
   [resps,event]=resps.check_responses(event);
 end
 
 % the final clock up
-while GetSecs()-the_experiment_start<sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration
+while GetSecs()-the_experiment_start<sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration
   [resps,event]=resps.check_responses(event);
 end
 
@@ -1034,16 +957,8 @@ experimentDuration=GetSecs()-the_experiment_start;
 event=event.add_event('End',[]);
 fprintf('\n');
 fprintf('Experiment Completed: %.2f/%.2f secs\n',experimentDuration,...
-        sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration);
+        sum(sparam.initial_fixation_time)+sparam.numRepeats*sparam.cycle_duration);
 fprintf('\n');
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Cleaning up MATLAB OpenGL shader API
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% just call DrawTextureWithCLUT without any input argument
-DrawTextureWithCLUT();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1064,12 +979,12 @@ GammaResetPTB(1.0);
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_clocalizer_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_dhrf_fixtask_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_clocalizer_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_dhrf_fixtask_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));
@@ -1135,4 +1050,4 @@ end % try..catch
 %%%%% That's it - we're done
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 return;
-% end % function clocalizer
+% end % function dhrf_fixtask

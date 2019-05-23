@@ -29,7 +29,7 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2019-01-31 18:08:27 ban"
-% Last Update: "2019-04-23 15:56:59 ban"
+% Last Update: "2019-05-22 19:45:44 ban"
 %
 %
 %
@@ -83,11 +83,11 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 % [output files]
 % 1. result file
 %    stored ./subjects/(subjID)/results/(date)
-%    as ./subjects/(subjID)/results/(date)/(subjID)_lgn_localizer_results_run_(run_num).mat
+%    as ./subjects/(subjID)/results/(date)/(subjID)_clgn_localizer_results_run_(run_num).mat
 %
 %
 % [example]
-% >> clgnlocalizer('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+% >> clgnlocalizer('HB','lgn',1,'ret_display.m','ret_checker_stimulus_exp1.m')
 %
 % [About displayfile]
 % The contents of the displayfile are as below.
@@ -283,7 +283,7 @@ resultDir=fullfile(rootDir,'subjects',num2str(subjID),'results',today);
 if ~exist(resultDir,'dir'), mkdir(resultDir); end
 
 % record the output window
-logfname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_results_run_',num2str(acq,'%02d'),'.log']);
+logfname=fullfile(resultDir,[num2str(subjID),'_clgn_localizer_results_run_',num2str(acq,'%02d'),'.log']);
 diary(logfname);
 warning off; %#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');
 
@@ -883,6 +883,7 @@ for cc=1:1:sparam.numRepeats
           tidx=find(checkerboardID{pp}==task_pos{pp}(task_id));
           checkerboard{pp}(tidx)=checkerboard{pp}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
           checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
+          checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; % put the checkerboard ID back to the default
         else
           tidx=[];
           checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
@@ -901,9 +902,6 @@ for cc=1:1:sparam.numRepeats
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
       end
-
-      % put the checkerboard ID back to the default
-      if ff<=nframe_stim && ~isempty(tidx), checkerboard{pp}(tidx)=checkerboard{pp}(tidx)-2; end
 
       % flip the window
       Screen('DrawingFinished',winPtr);
@@ -1025,12 +1023,12 @@ GammaResetPTB(1.0);
 fprintf('saving data...');
 
 % save data
-savefname=fullfile(resultDir,[num2str(subjID),'_lgn_localizer_results_run_',num2str(acq,'%02d'),'.mat']);
+savefname=fullfile(resultDir,[num2str(subjID),'_clgn_localizer_results_run_',num2str(acq,'%02d'),'.mat']);
 
 % backup the old file(s)
 if ~overwrite_flg
   BackUpObsoleteFiles(fullfile('subjects',num2str(subjID),'results',today),...
-                      [num2str(subjID),'_lgn_localizer_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
+                      [num2str(subjID),'_clgn_localizer_results_run_',num2str(acq,'%02d'),'.mat'],'_old');
 end
 
 eval(sprintf('save %s subjID acq sparam dparam event gamma_table;',savefname));

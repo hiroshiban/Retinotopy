@@ -1,6 +1,6 @@
 function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 
-% a simple wrapper to control all the retinotopy stimulus scripts included in this "Retinotopy" package.
+% ALL-IN-ONE-Retinotopy: a simple wrapper to control all the retinotopy stimulus scripts included in this "Retinotopy" package.
 % function OK=retinotopy(subj,exp_mode,acq_num,:overwrite_pix_per_deg,:TR)
 % (: is optional)
 %
@@ -32,10 +32,27 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %    22. ihrf_fixtask          : object-image-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation
 %    23. ilgnlocalizer_fixtask : object-image-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN
 %    24. ilocalizer_fixtask    : object-image-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
-%    25. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
-%    26. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
-%    27. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
-%    28. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
+%    25. dretinotopy           : disparity(depth, Random-Dot-Stereogram (RDS))-defined retinotopy stimuli with a checker-pattern depth change detection task, for phase-encoded analysis
+%    26. dretinotopy_fixtask   : disparity(depth, Random-Dot-Stereogram (RDS))-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis
+%    27. dbar                  : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar stimuli with a checker-pattern depth change detection task, for pRF analysis
+%    28. dbar_fixtask          : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar stimuli with a fixation luminance change detection task, for pRF analysis
+%    29. ddual                 : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual stimuli (polar wedge + eccentricity annulus) with a checker-pattern depth change detection task, for phase-encoded/pRF analysis
+%    30. ddual_fixtask         : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
+%    31. dmultifocal           : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimuli with a checker-pattern depth change detection task, for GLM or pRF analysis
+%    32. dmultifocal_fixtask   : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis
+%    33. dmeridian             : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a checker-pattern depth change detection task
+%    34. dmeridian_fixtask     : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+%    35. dhrf                  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a checker-pattern depth change detection task, for HRF shape estimation
+%    36. dhrf_fixtask          : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation
+%    37. dlgnlocalizer         : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a checker-pattern depth change detection task, for localizing LGN
+%    38. dlgnlocalizer_fixtask : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN
+%    39. dlocalizer            : disparity(depth, Random-Dot-Stereogram (RDS))-defined stimuli with a checker-pattern depth change detection task, for identifying retinotopic iso-eccentricity subregions
+%    40. dlocalizer_fixtask    : disparity(depth, Random-Dot-Stereogram (RDS))-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+%    41. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
+%    42. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
+%    43. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
+%    44. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
+%
 % For more details, please see each function's help.
 %
 % [example]
@@ -64,6 +81,23 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %           - localizer : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
 %                       to identify specific iso-eccentricity regions
 %
+%           *** task -- depth change detection on the checkerboard
+%           - ccwd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating counter-clockwisely
+%           - cwd     : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating clockwisely
+%           - expd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus expanding from fovea to periphery
+%           - contd   : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus contracting from periphery to fovea
+%           - bard    : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar, a standard pRF (population receptive field) stimulus
+%           - ccwexpd : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - ccwcontd  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - cwexpd  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - cwcontd : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - multifocald  : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimulus
+%           - meridiand  : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedges presented along the horizontal or vertical visual meridian
+%           - lgnd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+%           - hrfd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+%           - localizerd : disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                        to identify specific iso-eccentricity regions
+%
 %           *** task -- luminance change detection on the central fixation
 %           - ccwf    : color/luminance-defined checkerboard wedge rotating counter-clockwisely
 %           - cwf     : color/luminance-defined checkerboard wedge rotating clockwisely
@@ -79,7 +113,7 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %           - lgnf    : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
 %           - hrff    : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
 %           - localizerf : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
-%                       to identify specific iso-eccentricity regions
+%                        to identify specific iso-eccentricity regions
 %
 %           - ccwi    : Object-image-defined wedge rotating counter-clockwisely
 %           - cwi     : Object-image-defined wedge rotating clockwisely
@@ -97,6 +131,22 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %           - localizeri: Object-image-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
 %                       to identify specific iso-eccentricity regions
 %
+%           - ccwdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating counter-clockwisely
+%           - cwdf    : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating clockwisely
+%           - expdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus expanding from fovea to periphery
+%           - contdf  : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus contracting from periphery to fovea
+%           - bardf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar, a standard pRF (population receptive field) stimulus
+%           - ccwexpdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - ccwcontdf : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - cwexpdf : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - cwcontdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+%           - multifocaldf : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimulus
+%           - meridiandf : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedges presented along the horizontal or vertical visual meridian
+%           - lgndf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+%           - hrfdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+%           - localizerdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+%                        to identify specific iso-eccentricity regions
+%
 %           *** these are stimulus windows to generate pRF (population receptive field) model
 %           - ccwwindows     : stimulation windows of wedge rotating counter-clockwisely
 %           - cwwindows      : stimulation windows of wedge rotating clockwisely
@@ -109,7 +159,7 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %           - cwcontwindows  : stimulation windows of a wedge+annulus checkerboard pattern
 %           - multifocalwindows : stimulation windows of a standard multifocal retinotopy stimulus
 %
-%           string or a cell string structure, e.g. 'ccw', or {'ccw','exp'}
+%           a string or a cell string structure, e.g. 'ccw', or {'ccw','exp'}
 %           length(exp_mode) should equal numel(acq_num)
 % acq_num : acquisition number, 1,2,3,...
 %
@@ -128,7 +178,7 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 %
 %
 % Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-04-03 20:33:54 ban"
+% Last Update: "2019-05-22 15:36:55 ban"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -146,8 +196,12 @@ if length(exp_mode)~=numel(acq_num), error('the numbers of exp_mode and acq_num 
 stimtypes={'ccw','cw','exp','cont','bar','ccwexp','cwexp','ccwcont','cwcont',...
            'ccwf','cwf','expf','contf','barf','ccwexpf','cwexpf','ccwcontf','cwcontf',...
            'ccwi','cwi','expi','conti','bari','ccwexpi','cwexpi','ccwconti','cwconti',...
-           'multifocal','multifocalf','multifocali','meridian','meridianf','meridiani',...
-           'hrf','hrff','hrfi','localizer','localizerf','localizeri','lgn','lgnf','lgni'};
+           'ccwd','cwd','expd','contd','bard','ccwexpd','cwexpd','ccwcontd','cwcontd',...
+           'ccwdf','cwdf','expdf','contdf','bardf','ccwexpdf','cwexpdf','ccwcontdf','cwcontdf',...
+           'multifocal','multifocalf','multifocali','multifocald','multifocaldf','meridian',...
+           'meridianf','meridiani','meridiand','meridiandf','hrf','hrff','hrfi','hrfd','hrfdf',...
+           'localizer','localizerf','localizeri','localizerd','localizerdf','lgn','lgnf','lgni',...
+           'lgnd','lgndf'};
 
 windtypes={'ccwwindows','cwwindows','expwindows','contwindows','barwindows',...
            'ccwexpwindows','cwexpwindows','ccwcontwindows','cwcontwindows','multifocalwindows'};
@@ -156,13 +210,18 @@ for ii=1:1:length(exp_mode)
   if isempty(intersect(lower(exp_mode{ii}),stimtypes)) && isempty(intersect(lower(exp_mode{ii}),windtypes))
     % generating warning message like,
     %
-    % exp_mode should be one of 'ccw', 'cw', 'exp', 'cont', 'bar', 'ccwexp', 'cwexp', 'ccwcont', 
-    %                           'cwcont', 'ccwf', 'cwf', 'expf', 'contf', 'barf', 'ccwexpf', 'cwexpf', 
+    % exp_mode should be one of 'ccw', 'cw', 'exp', 'cont', 'bar', 'ccwexp', 'cwexp', 'ccwcont',
+    %                           'cwcont', 'ccwf', 'cwf', 'expf', 'contf', 'barf', 'ccwexpf', 'cwexpf',
     %                           'ccwcontf', 'cwcontf', 'ccwi', 'cwi', 'expi', 'conti', 'bari', 'ccwexpi',
-    %                           'cwexpi', 'ccwconti', 'cwconti', 'multifocal', 'multifocalf', 'multifocali', 'meridian', 'meridianf',
-    %                           'meridiani', 'hrf', 'hrff', 'hrfi', 'localizer', 'localizerf', 'localizeri', 'lgn',
-    %                           'lgnf', 'lgni', 'ccwwindows', 'cwwindows', 'expwindows', 'contwindows', 'barwindows', 'ccwexpwindows',
-    %                           'cwexpwindows', 'ccwcontwindows', 'cwcontwindows', 'multifocalwindows'
+    %                           'cwexpi', 'ccwconti', 'cwconti', 'ccwd', 'cwd', 'expd', 'contd', 'bard',
+    %                           'ccwexpd', 'cwexpd', 'ccwcontd', 'cwcontd', 'ccwdf', 'cwdf', 'expdf', 'contdf',
+    %                           'bardf', 'ccwexpdf', 'cwexpdf', 'ccwcontdf', 'cwcontdf', 'multifocal', 'multifocalf', 'multifocali',
+    %                           'multifocald', 'multifocaldf', 'meridian', 'meridianf', 'meridiani', 'meridiand', 'meridiandf',
+    %                           'hrf', 'hrff', 'hrfi', 'hrfd', 'hrfdf', 'localizer', 'localizerf', 'localizeri',
+    %                           'localizerd', 'localizerdf', 'lgn', 'lgnf', 'lgni', 'lgnd', 'lgndf',
+    %                           'ccwwindows', 'cwwindows', 'expwindows', 'contwindows',
+    %                           'barwindows', 'ccwexpwindows', 'cwexpwindows', 'ccwcontwindows',
+    %                           'cwcontwindows', 'multifocalwindows'
     % check the input variables
 
     msg_str='exp_mode should be one of '; % 26 characters
@@ -226,6 +285,34 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='chrf';                   stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
   elseif strcmpi(exp_mode{ii},'localizer')
     run_fname{ii}='clocalizer';             stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
+  elseif strcmpi(exp_mode{ii},'ccwd')
+    run_fname{ii}='dretinotopy';            stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
+  elseif strcmpi(exp_mode{ii},'cwd')
+    run_fname{ii}='dretinotopy';            stim_mode{ii}='cw';         stim_fname{ii}='c_pol';
+  elseif strcmpi(exp_mode{ii},'expd')
+    run_fname{ii}='dretinotopy';            stim_mode{ii}='exp';        stim_fname{ii}='c_ecc';
+  elseif strcmpi(exp_mode{ii},'contd')
+    run_fname{ii}='dretinotopy';            stim_mode{ii}='cont';       stim_fname{ii}='c_ecc';
+  elseif strcmpi(exp_mode{ii},'bard')
+    run_fname{ii}='dbar';                   stim_mode{ii}='bar';        stim_fname{ii}='c_bar';
+  elseif strcmpi(exp_mode{ii},'ccwexpd')
+    run_fname{ii}='ddual';                  stim_mode{ii}='ccwexp';     stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'cwexpd')
+    run_fname{ii}='ddual';                  stim_mode{ii}='cwexp';      stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'ccwcontd')
+    run_fname{ii}='ddual';                  stim_mode{ii}='ccwcont';    stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'cwcontd')
+    run_fname{ii}='ddual';                  stim_mode{ii}='cwcont';     stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'multifocald')
+    run_fname{ii}='dmultifocal';            stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
+  elseif strcmpi(exp_mode{ii},'meridiand')
+    run_fname{ii}='dmeridian';              stim_mode{ii}='meridian';   stim_fname{ii}='c_meridian';
+  elseif strcmpi(exp_mode{ii},'lgnd')
+    run_fname{ii}='dlgnlocalizer';          stim_mode{ii}='lgn';        stim_fname{ii}='c_lgnlocalizer';
+  elseif strcmpi(exp_mode{ii},'hrfd')
+    run_fname{ii}='dhrf';                   stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
+  elseif strcmpi(exp_mode{ii},'localizerd')
+    run_fname{ii}='dlocalizer';             stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
   elseif strcmpi(exp_mode{ii},'ccwf')
     run_fname{ii}='cretinotopy_fixtask';    stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwf')
@@ -282,6 +369,34 @@ for ii=1:1:length(exp_mode)
     run_fname{ii}='ihrf_fixtask';           stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
   elseif strcmpi(exp_mode{ii},'localizeri')
     run_fname{ii}='ilocalizer_fixtask';     stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
+  elseif strcmpi(exp_mode{ii},'ccwdf')
+    run_fname{ii}='dretinotopy_fixtask';    stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
+  elseif strcmpi(exp_mode{ii},'cwdf')
+    run_fname{ii}='dretinotopy_fixtask';    stim_mode{ii}='cw';         stim_fname{ii}='c_pol';
+  elseif strcmpi(exp_mode{ii},'expdf')
+    run_fname{ii}='dretinotopy_fixtask';    stim_mode{ii}='exp';        stim_fname{ii}='c_ecc';
+  elseif strcmpi(exp_mode{ii},'contdf')
+    run_fname{ii}='dretinotopy_fixtask';    stim_mode{ii}='cont';       stim_fname{ii}='c_ecc';
+  elseif strcmpi(exp_mode{ii},'bardf')
+    run_fname{ii}='dbar_fixtask';           stim_mode{ii}='bar';        stim_fname{ii}='c_bar';
+  elseif strcmpi(exp_mode{ii},'ccwexpdf')
+    run_fname{ii}='ddual_fixtask';          stim_mode{ii}='ccwexp';     stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'cwexpdf')
+    run_fname{ii}='ddual_fixtask';          stim_mode{ii}='cwexp';      stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'ccwcontdf')
+    run_fname{ii}='ddual_fixtask';          stim_mode{ii}='ccwcont';    stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'cwcontdf')
+    run_fname{ii}='ddual_fixtask';          stim_mode{ii}='cwcont';     stim_fname{ii}='c_dual';
+  elseif strcmpi(exp_mode{ii},'multifocaldf')
+    run_fname{ii}='dmultifocal_fixtask';    stim_mode{ii}='multifocal'; stim_fname{ii}='c_multifocal';
+  elseif strcmpi(exp_mode{ii},'meridiandf')
+    run_fname{ii}='dmeridian_fixtask';      stim_mode{ii}='meridian';   stim_fname{ii}='c_meridian';
+  elseif strcmpi(exp_mode{ii},'lgndf')
+    run_fname{ii}='dlgnlocalizer_fixtask';  stim_mode{ii}='lgn';        stim_fname{ii}='c_lgnlocalizer';
+  elseif strcmpi(exp_mode{ii},'hrfdf')
+    run_fname{ii}='dhrf_fixtask';           stim_mode{ii}='hrf';        stim_fname{ii}='c_hrf';
+  elseif strcmpi(exp_mode{ii},'localizerdf')
+    run_fname{ii}='dlocalizer_fixtask';     stim_mode{ii}='localizer';  stim_fname{ii}='c_localizer';
   elseif strcmpi(exp_mode{ii},'ccwwindows')
     run_fname{ii}='gen_retinotopy_windows'; stim_mode{ii}='ccw';        stim_fname{ii}='c_pol';
   elseif strcmpi(exp_mode{ii},'cwwindows')
