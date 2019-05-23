@@ -58,7 +58,7 @@ sparam.ecc_rest_duration =8000; % msec, rest after each cycle, stimulation = cyc
 sparam.ecc_numRepeats=9;
 
 %%% object-image presentation parameters, only for i* object-image-based retinotopy stimuli (e.g. iretinotopy_fixtask)
-sparam.flip_duration=500; % msec
+sparam.flip_duration=250; % msec
 sparam.nimg=120; % number of images to be presented at a frame
 sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 

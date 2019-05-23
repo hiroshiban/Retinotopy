@@ -29,7 +29,7 @@ function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2019-04-03 18:16:24 ban"
-% Last Update: "2019-04-23 15:06:08 ban"
+% Last Update: "2019-05-23 16:44:33 ban"
 %
 %
 %
@@ -162,7 +162,7 @@ function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 % sparam.numRepeats=6;
 %
 % %%% parameters used only for object-image-based retinotopy stimuli
-% sparam.flip_duration=500; % msec
+% sparam.flip_duration=250; % msec
 % sparam.nimg=120; % number of images to be presented at a frame
 % sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 %
@@ -335,7 +335,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'cycle_duration',32000,...
          'rest_duration',16000,...
          'numRepeats',6,...
-         'flip_duration',500,...
+         'flip_duration',250,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
          'waitframes',4,... % Screen('FrameRate',0)*(sparam.cycle_duration/1000) / ((sparam.cycle_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );

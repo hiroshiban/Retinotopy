@@ -41,7 +41,7 @@ function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-05 16:15:44 ban"
-% Last Update: "2019-04-23 15:15:45 ban"
+% Last Update: "2019-05-23 16:44:33 ban"
 %
 %
 %
@@ -194,13 +194,12 @@ function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 % %%% duration in msec for each trial
 % sparam.trial_duration=2000; % msec
-% sparam.flip_duration=500; % msec
 % sparam.rest_duration=0;
 %
 % sparam.numTrials=size(sparam.design,2);
 %
 % %%% parameters used only for object-image-based retinotopy stimuli
-% sparam.flip_duration=500; % msec
+% sparam.flip_duration=250; % msec
 % sparam.nimg=120; % number of images to be presented at a frame
 % sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 %
@@ -374,7 +373,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'trial_duration',2000,...
          'rest_duration',0,...
          'numTrials',255,...
-         'flip_duration',500,...
+         'flip_duration',250,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
          'waitframes',6,... % Screen('FrameRate',0)*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );

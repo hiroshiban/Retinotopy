@@ -33,7 +33,7 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2019-03-05 17:24:24 ban"
-% Last Update: "2019-04-23 15:16:36 ban"
+% Last Update: "2019-05-23 16:44:33 ban"
 %
 %
 %
@@ -170,12 +170,11 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % % Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)
 %
 % sparam.block_duration=16000; % msec, a presentation duration of the target or its compensating pattern
-% sparam.flip_duration=500; % msec
 % sparam.rest_duration =16000; % msec, rest after each block
 % sparam.numRepeats=6;
 %
 % %%% parameters used only for object-image-based retinotopy stimuli
-% sparam.flip_duration=500; % msec
+% sparam.flip_duration=250; % msec
 % sparam.nimg=120; % number of images to be presented at a frame
 % sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 %
@@ -350,7 +349,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'block_duration',16000,...
          'rest_duration',16000,...
          'numRepeats',6,...
-         'flip_duration',500,...
+         'flip_duration',250,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
          'waitframes',6,... % Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 )

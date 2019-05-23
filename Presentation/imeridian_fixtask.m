@@ -39,7 +39,7 @@ function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2019-03-05 17:07:56 ban"
-% Last Update: "2019-04-23 15:16:12 ban"
+% Last Update: "2019-05-23 16:44:34 ban"
 %
 %
 %
@@ -176,12 +176,11 @@ function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 % % Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)
 %
 % sparam.block_duration=16000; % msec
-% sparam.flip_duration=500; % msec
 % sparam.rest_duration =0; % msec, rest after each block
 % sparam.numRepeats=6;
 %
 % %%% parameters used only for object-image-based retinotopy stimuli
-% sparam.flip_duration=500; % msec
+% sparam.flip_duration=250; % msec
 % sparam.nimg=120; % number of images to be presented at a frame
 % sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
 %
@@ -353,7 +352,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'block_duration',16000,...
          'rest_duration',0,...
          'numRepeats',6,...
-         'flip_duration',500,...
+         'flip_duration',250,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
          'waitframes',6,... % Screen('FrameRate',0)*(sparam.block_duration/1000) / ((sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 )
