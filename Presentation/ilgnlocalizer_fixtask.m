@@ -15,6 +15,28 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %   randomly turns to gray. An observer has to press the button if s/he
 %   detects this luminance change. Response keys are defined in displayfile.
 %
+% [about the object images used in this function]
+% The object images used in this function (stored in ~/Retinotopy/object_images/ as object_image_database.mat) are
+% obtained and modified from the databases publicly available from http://konklab.fas.harvard.edu/#
+% I sincerely express my gratitude to the developers, distributors, and scientists in Dr Talia Konkle's research group
+% for their contributions to these databases. When you use this function for your research, please cite the original
+% papers listed below.
+% 
+% - Tripartite Organization of the Ventral Stream by Animacy and Object Size.
+%   Konkle, T., & Caramazza, A. (2013). Journal of Neuroscience, 33 (25), 10235-42.
+% 
+% - A real-world size organization of object responses in occipito-temporal cortex.
+%   Konkle. T., & Oliva, A. (2012). Neuron, 74(6), 1114-24.
+% 
+% - Visual long-term memory has a massive storage capacity for object details.
+%   Brady, T. F., Konkle, T., Alvarez, G. A. & Oliva, A. (2008). Proceedings of the National Academy of Sciences USA, 105(38), 14325-9.
+% 
+% - Conceptual distinctiveness supports detailed visual long-term memory.
+%   Konkle, T., Brady, T. F., Alvarez, G. A., & Oliva, A. (2010). Journal of Experimental Psychology: General, 139(3), 558-578.
+% 
+% - A Familiar Size Stroop Effect: Real-world size is an automatic property of object representation.
+%   Konkle, T., & Oliva, A. (2012). Journal of Experimental Psychology: Human Perception & Performance, 38, 561-9.
+%
 % [note]
 % Behavioral task of (function_name)_fixtask is to detect changes of luminance
 % of the central fixation point, while the task in (function_name) is to detect
@@ -28,7 +50,7 @@ function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2019-03-05 17:27:27 ban"
-% Last Update: "2019-05-24 11:30:22 ban"
+% Last Update: "2019-05-24 13:33:32 ban"
 %
 %
 %
@@ -910,9 +932,9 @@ for ff=1:1:nframe_fixation(1)
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
   Screen('Flip',winPtr,[],[],[],1);
-  cur_frames=cur_frames+1;
 
   % update task
+  cur_frames=cur_frames+1;
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
 end
 
@@ -951,9 +973,8 @@ for cc=1:1:sparam.numRepeats
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
 
-      cur_frames=cur_frames+1;
-
       % update task
+      cur_frames=cur_frames+1;
       if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
 
       %% exit from the loop if the final frame is displayed
@@ -1027,9 +1048,9 @@ for ff=1:1:nframe_fixation(2)
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
   Screen('Flip',winPtr,[],[],[],1);
-  cur_frames=cur_frames+1;
 
   % update task
+  cur_frames=cur_frames+1;
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
 end
 

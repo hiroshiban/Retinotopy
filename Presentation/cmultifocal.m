@@ -40,7 +40,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2019-05-24 09:36:01 ban"
+% Last Update: "2019-05-24 14:21:09 ban"
 %
 %
 %
@@ -1009,7 +1009,9 @@ for cc=1:1:sparam.numTrials
       if mod(cc,20)==0 || cc==sparam.numTrials, fprintf('%03d\n       ',cc); end
     end
 
-    if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+    if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
+       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
+         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Luminance Task',[]); end
 
     % clean up
     if ff<=nframe_stim, Screen('Close',checkertexture); end

@@ -29,7 +29,7 @@ function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2019-01-31 18:08:27 ban"
-% Last Update: "2019-05-24 09:46:09 ban"
+% Last Update: "2019-05-24 14:28:10 ban"
 %
 %
 %
@@ -911,7 +911,9 @@ for cc=1:1:sparam.numRepeats
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
 
-      if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+      if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
+         ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
+           ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) ) ), event=event.add_event('Luminance Task',[]); end
 
       % clean up
       if ff<=nframe_stim, Screen('Close',checkertexture); end

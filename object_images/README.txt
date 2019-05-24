@@ -2,15 +2,15 @@
 README.txt on object image database in this directory
 
 Created    : "2019-04-03 15:30:17 ban"
-Last Update: "2019-04-03 21:33:12 ban"
+Last Update: "2019-05-24 13:32:35 ban"
 **************************************************
 
-The object images stored in the object_image_database.mat is obtained and modified from the databases publicly available from
-http://konklab.fas.harvard.edu/#
-I sincerely express my gratitude to the developers and distributors, scientists in Dr Talia Konkle's research group, for their contributions in these databases.
+The object images used in this function (stored in ~/Retinotopy/object_images/ as object_image_database.mat) are
+obtained and modified from the databases publicly available from http://konklab.fas.harvard.edu/#
+I sincerely express my gratitude to the developers, distributors, and scientists in Dr Talia Konkle's research group
+for their contributions to these databases. When you use this function for your research, please cite the original
+papers listed below.
 
-
-[Original papers of these image datasets]
 - Tripartite Organization of the Ventral Stream by Animacy and Object Size.
   Konkle, T., & Caramazza, A. (2013). Journal of Neuroscience, 33 (25), 10235-42.
 

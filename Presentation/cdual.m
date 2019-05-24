@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-05-24 10:05:35 ban"
+% Last Update: "2019-05-24 14:29:08 ban"
 %
 %
 %
@@ -1099,7 +1099,9 @@ for cc=1:1:length(checkerboard)
       if mod(cc,20)==0 || cc==length(checkerboard), fprintf('%03d\n       ',cc); end
     end
 
-    if do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+    if firsttask_flg==1 && ( do_task(task_id) && ...
+       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
+         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Luminance Task',[]); end
 
     % clean up
     Screen('Close',checkertexture);

@@ -37,7 +37,7 @@ function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2013-11-25 11:34:59 ban"
-% Last Update: "2019-05-24 10:23:33 ban"
+% Last Update: "2019-05-24 14:09:09 ban"
 %
 %
 %
@@ -995,7 +995,9 @@ for cc=1:1:sparam.numRepeats
       fprintf(sprintf('Cycle: %03d...\n',cc));
     end
 
-    if do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+    if firsttask_flg==1 && ( do_task(task_id) && ...
+       ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
+         ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) ) ), event=event.add_event('Luminance Task',[]); end
 
     % clean up
     Screen('Close',checkertexture);

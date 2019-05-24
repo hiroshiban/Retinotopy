@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2019-05-24 10:21:06 ban"
+% Last Update: "2019-05-24 13:35:43 ban"
 %
 %
 %
@@ -919,9 +919,9 @@ for ff=1:1:nframe_fixation(1)
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
   Screen('Flip',winPtr,[],[],[],1);
-  cur_frames=cur_frames+1;
 
   % update task
+  cur_frames=cur_frames+1;
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
 end
 
@@ -952,9 +952,8 @@ for cc=1:1:sparam.numRepeats
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
 
-      cur_frames=cur_frames+1;
-
       % update task
+      cur_frames=cur_frames+1;
       if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
     end
   end
@@ -985,9 +984,8 @@ for cc=1:1:sparam.numRepeats
       fprintf(sprintf('Cycle: %03d...\n',cc));
     end
 
-    cur_frames=cur_frames+1;
-
     % update task
+    cur_frames=cur_frames+1;
     if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
 
     %% exit from the loop if the final frame is displayed
@@ -1010,7 +1008,7 @@ for cc=1:1:sparam.numRepeats
       stim_pos_id=stim_pos_id+1;
       if stim_pos_id>sparam.npositions, stim_pos_id=1; end
     end
-  end % for ff=1:1:cycle_frames
+  end % for ff=1:1:nframe_stim
 
   %% rest perioed
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')
@@ -1026,9 +1024,9 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawingFinished',winPtr);
       while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+(sparam.cycle_duration-sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
       Screen('Flip',winPtr,[],[],[],1);
-      cur_frames=cur_frames+1;
 
       % update task
+      cur_frames=cur_frames+1;
       if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
     end
   end
@@ -1062,9 +1060,9 @@ for ff=1:1:nframe_fixation(2)
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
   Screen('Flip',winPtr,[],[],[],1);
-  cur_frames=cur_frames+1;
 
   % update task
+  cur_frames=cur_frames+1;
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
 end
 

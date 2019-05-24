@@ -40,7 +40,7 @@ function ddual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2019-05-22 18:27:26 ban"
-% Last Update: "2019-05-24 11:00:19 ban"
+% Last Update: "2019-05-24 14:17:15 ban"
 %
 %
 %
@@ -1111,7 +1111,9 @@ for cc=1:1:length(checkerboard)
       if mod(cc,20)==0 || cc==length(checkerboard), fprintf('%03d\n       ',cc); end
     end
 
-    if do_task(task_id) && firsttask_flg==1, event=event.add_event('Depth Task',[]); end
+    if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
+       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
+         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Depth Task',[]); end
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim && cc==length(checkerboard), continue; end

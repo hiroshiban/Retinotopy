@@ -41,7 +41,7 @@ function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2019-05-22 19:29:54 ban"
-% Last Update: "2019-05-24 10:32:33 ban"
+% Last Update: "2019-05-24 14:14:02 ban"
 %
 %
 %
@@ -1005,7 +1005,9 @@ for cc=1:1:sparam.numTrials
       if mod(cc,20)==0 || cc==sparam.numTrials, fprintf('%03d\n       ',cc); end
     end
 
-    if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Depth Task',[]); end
+    if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
+       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
+         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Depth Task',[]); end
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim+nframe_rest && cc==sparam.numTrials, continue; end

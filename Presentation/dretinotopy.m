@@ -37,7 +37,7 @@ function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2019-05-22 15:12:40 ban"
-% Last Update: "2019-05-24 10:28:05 ban"
+% Last Update: "2019-05-24 14:11:43 ban"
 %
 %
 %
@@ -1008,7 +1008,9 @@ for cc=1:1:sparam.numRepeats
       fprintf(sprintf('Cycle: %03d...\n',cc));
     end
 
-    if do_task(task_id) && firsttask_flg==1, event=event.add_event('Depth Task',[]); end
+    if firsttask_flg==1 && ( do_task(task_id) && ...
+       ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
+         ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) ) ), event=event.add_event('Depth Task',[]); end
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim && cc==sparam.numRepeats, continue; end
@@ -1030,7 +1032,7 @@ for cc=1:1:sparam.numRepeats
     %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
     if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
     firsttask_flg=firsttask_flg+1;
-  end % for ff=1:1:cycle_frames
+  end % for ff=1:1:nframe_stim
 
   %% rest perioed
   if strcmpi(sparam.mode,'ccw') || strcmpi(sparam.mode,'exp')

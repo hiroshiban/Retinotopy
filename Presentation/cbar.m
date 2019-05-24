@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-05-24 10:22:51 ban"
+% Last Update: "2019-05-24 14:30:16 ban"
 %
 %
 %
@@ -954,7 +954,9 @@ for cc=1:1:sparam.numRepeats
         fprintf('Cycle: %03d, Direction: %.2f deg...\n',(cc-1)*numel(sparam.rotangles)+aa,sparam.rotangles(aa));
       end
 
-      if ff<=nframe_stim && do_task(task_id) && firsttask_flg==1, event=event.add_event('Luminance Task',[]); end
+      if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
+         ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
+           ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) ) ), event=event.add_event('Luminance Task',[]); end
 
       % clean up
       if ff<=nframe_stim, Screen('Close',checkertexture); end

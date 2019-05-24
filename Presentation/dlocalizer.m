@@ -32,7 +32,7 @@ function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ove
 %
 %
 % Created    : "2019-05-23 10:50:26 ban"
-% Last Update: "2019-05-24 10:48:13 ban"
+% Last Update: "2019-05-24 14:39:55 ban"
 %
 %
 %
@@ -903,10 +903,10 @@ for cc=1:1:sparam.numRepeats
 
         % generate a checkerboard texture with/without a depth detection task
         if do_task(task_id) && ...
-          ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-            ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) )
+          ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
+            ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
           tidx=find(checkerboardID{pp}==task_pos{pp}(task_id));
-          cval=checkerboard{stim_pos_id}(tidx(ceil(numel(tidx)/2))); % ceil(numel(tidx)/2) is required as sometimes tidx(1) is located at the edge of the checkerboard which gives NaN.
+          cval=checkerboard{pp}(tidx(ceil(numel(tidx)/2))); % ceil(numel(tidx)/2) is required as sometimes tidx(1) is located at the edge of the checkerboard which gives NaN.
           checkerboard{pp}(tidx)=3; % as IDs of the original checkerboard are 0|1|2, 3 is assigned to the task patch.
         else
           tidx=[];
@@ -959,7 +959,9 @@ for cc=1:1:sparam.numRepeats
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
 
-      if do_task(task_id) && firsttask_flg==1, event=event.add_event('Depth Task',[]); end
+      if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
+         ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
+           ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) ) ), event=event.add_event('Depth Task',[]); end
 
       %% exit from the loop if the final frame is displayed
       if pp==2 && ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
