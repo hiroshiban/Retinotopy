@@ -37,7 +37,7 @@ function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2019-05-22 15:12:40 ban"
-% Last Update: "2019-05-23 15:44:00 ban"
+% Last Update: "2019-05-24 10:28:05 ban"
 %
 %
 %
@@ -908,8 +908,8 @@ for ff=1:1:nframe_fixation(1)
     Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-  [resps,event]=resps.check_responses(event);
+  while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
 end
 
 
@@ -931,14 +931,13 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+      Screen('Flip',winPtr,[],[],[],1);
 
       if ff==1
         event=event.add_event(sprintf('Cycle: %d',cc),[]);
         fprintf(sprintf('Cycle: %03d...\n',cc));
       end
-
-      [resps,event]=resps.check_responses(event);
     end
   end
 
@@ -982,8 +981,6 @@ for cc=1:1:sparam.numRepeats
       end
     end % if ~mod(ff,nframe_flicker) || ~mod(ff,nframe_movement)
 
-    [resps,event]=resps.check_responses(event);
-
     %% display the current frame
     for nn=1:1:nScr
       Screen('SelectStereoDrawBuffer',winPtr,nn-1);
@@ -999,10 +996,11 @@ for cc=1:1:sparam.numRepeats
     % flip the window
     Screen('DrawingFinished',winPtr);
     if strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont')
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+sparam.rest_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+sparam.rest_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
     else
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
     end
+    Screen('Flip',winPtr,[],[],[],1);
 
     if ff==1 && ( ( ~strcmpi(sparam.mode,'cw') && ~strcmpi(sparam.mode,'cont') ) || ...
                   ( ( strcmpi(sparam.mode,'cw') || strcmpi(sparam.mode,'cont') ) && nframe_rest==0 ) )
@@ -1011,8 +1009,6 @@ for cc=1:1:sparam.numRepeats
     end
 
     if do_task(task_id) && firsttask_flg==1, event=event.add_event('Depth Task',[]); end
-
-    [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim && cc==sparam.numRepeats, continue; end
@@ -1034,9 +1030,6 @@ for cc=1:1:sparam.numRepeats
     %% update task. about task_flg: 1, task is added in the first half period. 2, task is added in the second half period
     if ~mod(ff,nframe_task), task_id=task_id+1; firsttask_flg=0; end
     firsttask_flg=firsttask_flg+1;
-
-    [resps,event]=resps.check_responses(event);
-
   end % for ff=1:1:cycle_frames
 
   %% rest perioed
@@ -1051,8 +1044,8 @@ for cc=1:1:sparam.numRepeats
 
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+(sparam.cycle_duration-sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-      [resps,event]=resps.check_responses(event);
+      while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+(sparam.cycle_duration-sparam.rest_duration)+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+      Screen('Flip',winPtr,[],[],[],1);
     end
   end
 
@@ -1069,7 +1062,8 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
+while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); end
+Screen('Flip',winPtr,[],[],[],1);
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
 
@@ -1081,8 +1075,8 @@ for ff=1:1:nframe_fixation(2)
     Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
-  [resps,event]=resps.check_responses(event);
+  while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
 end
 
 % the final clock up

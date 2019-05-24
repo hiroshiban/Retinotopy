@@ -39,7 +39,7 @@ function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2019-04-23 15:57:29 ban"
+% Last Update: "2019-05-24 10:00:21 ban"
 %
 %
 %
@@ -1028,13 +1028,12 @@ for ff=1:1:nframe_fixation(1)
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
-  [resps,event]=resps.check_responses(event);
 end
 
 
@@ -1055,11 +1054,10 @@ for cc=1:1:length(checkerboard)
       Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
     end
 
-    [resps,event]=resps.check_responses(event);
-
     % flip the window
     Screen('DrawingFinished',winPtr);
-    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+( ((cc-1)*nframe_stim+(ff-1))*sparam.waitframes-0.5 )*dparam.ifi,[],[],1);
+    while GetSecs()<vbl+sparam.initial_fixation_time(1)+( ((cc-1)*nframe_stim+(ff-1))*sparam.waitframes-0.5 )*dparam.ifi, [resps,event]=resps.check_responses(event); end
+    Screen('Flip',winPtr,[],[],[],1);
 
     if ff==1
       event=event.add_event(sprintf('Trial: %d',cc),[]);
@@ -1073,31 +1071,20 @@ for cc=1:1:length(checkerboard)
     % update task
     if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
 
-    [resps,event]=resps.check_responses(event);
-
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim && cc==length(checkerboard), continue; end
 
     %% update IDs
 
     % flickering checkerboard
-    if ff<=nframe_stim
-      if ~mod(ff,nframe_flicker) % color reversal
-        compensate_id=mod(compensate_id,2)+1;
-      end
-
-      if ~mod(ff,2*nframe_flicker) % color change
-        color_id=color_id+1;
-        if color_id>sparam.ncolors, color_id=1; end
-      end
-    else
-      compensate_id=1;
-      color_id=1;
+    if ~mod(ff,nframe_flicker) % color reversal
+      compensate_id=mod(compensate_id,2)+1;
     end
 
-    % get responses
-    [resps,event]=resps.check_responses(event);
-
+    if ~mod(ff,2*nframe_flicker) % color change
+      color_id=color_id+1;
+      if color_id>sparam.ncolors, color_id=1; end
+    end
   end % for ff=1:1:nframe_stim
 end % for cc=1:1:length(checkerboard)
 
@@ -1112,7 +1099,8 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.pol_numRepeats*sparam.pol_cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip
+while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.pol_numRepeats*sparam.pol_cycle_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); end
+Screen('Flip',winPtr,[],[],[],1);
 %cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
@@ -1125,13 +1113,12 @@ for ff=1:1:nframe_fixation(2)
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.pol_numRepeats*sparam.pol_cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.pol_numRepeats*sparam.pol_cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
-  [resps,event]=resps.check_responses(event);
 end
 
 % the final clock up

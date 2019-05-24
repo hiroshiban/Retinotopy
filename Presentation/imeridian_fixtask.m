@@ -39,7 +39,7 @@ function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2019-03-05 17:07:56 ban"
-% Last Update: "2019-05-23 16:44:34 ban"
+% Last Update: "2019-05-24 11:24:25 ban"
 %
 %
 %
@@ -924,13 +924,12 @@ for ff=1:1:nframe_fixation(1)
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
-  [resps,event]=resps.check_responses(event);
 end
 
 
@@ -958,11 +957,10 @@ for cc=1:1:sparam.numRepeats
         Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
       end
 
-      [resps,event]=resps.check_responses(event);
-
       % flip the window
       Screen('DrawingFinished',winPtr);
-      Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*2*sparam.block_duration+(pp-1)*sparam.block_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+      while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*2*sparam.block_duration+(pp-1)*sparam.block_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+      Screen('Flip',winPtr,[],[],[],1);
 
       if pp==1 && ff==1
         event=event.add_event(sprintf('Cycle: %d',cc),[]);
@@ -973,8 +971,6 @@ for cc=1:1:sparam.numRepeats
 
       % update task
       if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
-
-      [resps,event]=resps.check_responses(event);
 
       %% exit from the loop if the final frame is displayed
       if pp==2 && ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
@@ -1015,10 +1011,6 @@ for cc=1:1:sparam.numRepeats
           for mm=1:1:numel(imgids), objecttextures(mm)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(mm))); end
         end
       end
-
-      % get responses
-      [resps,event]=resps.check_responses(event);
-
     end % for ff=1:1:nframe_stim+nframe_rest
   end % for pp=1:1:2 % 2 = horizontal and vertical visual meridians
 
@@ -1035,7 +1027,8 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi,[],[],1); % the first flip;
+while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); end
+Screen('Flip',winPtr,[],[],[],1);
 %cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
@@ -1048,13 +1041,12 @@ for ff=1:1:nframe_fixation(2)
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
-  [resps,event]=resps.check_responses(event);
 end
 
 % the final clock up

@@ -28,7 +28,7 @@ function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-04-23 15:57:10 ban"
+% Last Update: "2019-05-24 09:48:06 ban"
 %
 %
 %
@@ -838,13 +838,12 @@ for ff=1:1:nframe_fixation(1)-1 % -1 is to omit the first frame period above
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
-  [resps,event]=resps.check_responses(event);
 end
 
 
@@ -867,11 +866,10 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
     end
 
-    [resps,event]=resps.check_responses(event);
-
     % flip the window
     Screen('DrawingFinished',winPtr);
-    Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+    while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*sparam.cycle_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+    Screen('Flip',winPtr,[],[],[],1);
 
     if ff==1
       event=event.add_event(sprintf('Cycle: %d',cc),[]);
@@ -882,8 +880,6 @@ for cc=1:1:sparam.numRepeats
 
     % update task
     if task_flg(cur_frames)==2 && task_flg(cur_frames-1)==1, event=event.add_event('Luminance Task',[]); end
-
-    [resps,event]=resps.check_responses(event);
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim+nframe_rest && cc==sparam.numRepeats, continue; end
@@ -904,10 +900,6 @@ for cc=1:1:sparam.numRepeats
       compensate_id=1;
       color_id=1;
     end
-
-    % get responses
-    [resps,event]=resps.check_responses(event);
-
   end % for ff=1:1:nframe_stim+nframe_rest
 
 end % for cc=1:1:sparam.numRepeats
@@ -923,7 +915,8 @@ for nn=1:1:nScr
   Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi,[],[],1); % the first flip;
+while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); end
+Screen('Flip',winPtr,[],[],[],1);
 %cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
@@ -936,13 +929,12 @@ for ff=1:1:nframe_fixation(2)
     Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
   end
   Screen('DrawingFinished',winPtr);
-  Screen('Flip',winPtr,vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi,[],[],1);
+  while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*sparam.cycle_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
+  Screen('Flip',winPtr,[],[],[],1);
   cur_frames=cur_frames+1;
 
   % update task
   if task_flg(cur_frames-1)==2 && task_flg(cur_frames-2)==1, event=event.add_event('Luminance Task',[]); end
-
-  [resps,event]=resps.check_responses(event);
 end
 
 % the final clock up
