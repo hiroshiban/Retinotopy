@@ -61,6 +61,7 @@ sparam.ecc_numRepeats=9;
 sparam.flip_duration=250; % msec
 sparam.nimg=120; % number of images to be presented at a frame
 sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
+sparam.imdepth=[-12,12]; % disparities (arcmins) added to the images, effective only in a stereo mode (e.g. shutter, dual, parallel etc)
 
 %%% set number of frames to flip the screen
 % Here, I set the number as large as I can to minimize vertical cynching error.

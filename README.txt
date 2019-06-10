@@ -3,7 +3,7 @@ README on the "Retinotopy" stimulus package
 
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2019-05-23 16:59:33 ban"
+Last Update: "2019-05-24 20:19:00 ban"
 **********************************************************************
 
 ======================================================================
@@ -235,5 +235,5 @@ I sincerely express my gratitude to the developers and distributors, scientists 
 TODOs
 ======================================================================
 
-1. Update the procedure for getting response more precisely.
+1. *DONE* Update the procedure for getting response more precisely.
 2. *DONE* Generate dretinotopy (3D depth version of the retinotopy stimuli) in which checkerboards consist of Random-Dot-Stereograms

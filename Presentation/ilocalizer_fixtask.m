@@ -26,19 +26,19 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % I sincerely express my gratitude to the developers, distributors, and scientists in Dr Talia Konkle's research group
 % for their contributions to these databases. When you use this function for your research, please cite the original
 % papers listed below.
-% 
+%
 % - Tripartite Organization of the Ventral Stream by Animacy and Object Size.
 %   Konkle, T., & Caramazza, A. (2013). Journal of Neuroscience, 33 (25), 10235-42.
-% 
+%
 % - A real-world size organization of object responses in occipito-temporal cortex.
 %   Konkle. T., & Oliva, A. (2012). Neuron, 74(6), 1114-24.
-% 
+%
 % - Visual long-term memory has a massive storage capacity for object details.
 %   Brady, T. F., Konkle, T., Alvarez, G. A. & Oliva, A. (2008). Proceedings of the National Academy of Sciences USA, 105(38), 14325-9.
-% 
+%
 % - Conceptual distinctiveness supports detailed visual long-term memory.
 %   Konkle, T., Brady, T. F., Alvarez, G. A., & Oliva, A. (2010). Journal of Experimental Psychology: General, 139(3), 558-578.
-% 
+%
 % - A Familiar Size Stroop Effect: Real-world size is an automatic property of object representation.
 %   Konkle, T., & Oliva, A. (2012). Journal of Experimental Psychology: Human Perception & Performance, 38, 561-9.
 %
@@ -199,6 +199,7 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % sparam.flip_duration=250; % msec
 % sparam.nimg=120; % number of images to be presented at a frame
 % sparam.imRatio=[0.2,0.5]; % image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range
+% sparam.imdepth=[-12,12]; % disparities (arcmins) added to the images, effective only in a stereo mode (e.g. shutter, dual, parallel etc)
 %
 % %%% set number of frames to flip the screen
 % % Here, I set the number as large as I can to minimize vertical cynching error.
@@ -230,6 +231,7 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
 % %sparam.pix_per_cm=57.1429;
 % %sparam.vdist=65;
+% %sparam.ipd=6.5;
 %
 %
 % [HOWTO create stimulus files]
@@ -374,6 +376,7 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'flip_duration',250,...
          'nimg',120,...
          'imRatio',[0.2,0.5],...
+         'imdepth',[-12,12],... % effective only when the stimuli are presented in stereo mode (e.g. dual, cross, parallel etc)
          'waitframes',6,... % Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 )
          'initial_fixation_time',[4000,4000],...
          'fixtype',1,...
@@ -386,7 +389,8 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'patch_color1',[255,255,255],...
          'patch_color2',[0,0,0],...
          'pix_per_cm',57.1429,...
-         'vdist',65);
+         'vdist',65,...
+         'ipd',6.5);
 
 % change unit from msec to sec.
 sparam.initial_fixation_time = sparam.initial_fixation_time./1000; %#ok
@@ -638,6 +642,20 @@ imgpos=[round(cpos(:,1)-cszs*imgsz(2)/2)+1,round(cpos(:,2)-cszs*imgsz(1)/2)+1,ro
 % angles
 imgrot=360.*rand(sparam.nimg,1);
 
+% stereo depth
+if nScr>1
+  % compute image shift from disparity
+  depths=(sparam.imdepth(2)-sparam.imdepth(1)).*rand(sparam.nimg,1)+sparam.imdepth(1);
+  zdist=CalcDistFromDisparity(sparam.ipd,depths,sparam.vdist);
+  zdist=sort(zdist,'descend');
+  [Lshift,Rshift]=RayTrace_ScreenPos_X_MEX(zdist,sparam.ipd,sparam.vdist,sparam.pix_per_cm,0);
+  stereopos{1}=[Lshift,zeros(sparam.nimg,1),Lshift,zeros(sparam.nimg,1)]';
+  stereopos{2}=[Rshift,zeros(sparam.nimg,1),Rshift,zeros(sparam.nimg,1)]';
+else
+  stereopos{1}=repmat([0,0,0,0],[sparam.nimg,1])';
+  stereopos{2}=repmat([0,0,0,0],[sparam.nimg,1])';
+end
+
 % generate the object image textures at the first frame
 objecttextures=zeros(numel(imgids),1);
 for pp=1:1:numel(imgids), objecttextures(pp)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(pp))); end
@@ -701,19 +719,35 @@ if strfind(upper(subjID),'DEBUG')
           % angles
           imgrot=360.*rand(sparam.nimg,1);
 
+          % stereo depth
+          if nScr>1
+            % compute image shift from disparity
+            depths=(sparam.imdepth(2)-sparam.imdepth(1)).*rand(sparam.nimg,1)+sparam.imdepth(1);
+            zdist=CalcDistFromDisparity(sparam.ipd,depths,sparam.vdist);
+            zdist=sort(zdist,'descend');
+            [Lshift,Rshift]=RayTrace_ScreenPos_X_MEX(zdist,sparam.ipd,sparam.vdist,sparam.pix_per_cm,0);
+            stereopos{1}=[Lshift,zeros(sparam.nimg,1),Lshift,zeros(sparam.nimg,1)]';
+            stereopos{2}=[Rshift,zeros(sparam.nimg,1),Rshift,zeros(sparam.nimg,1)]';
+          else
+            stereopos{1}=repmat([0,0,0,0],[sparam.nimg,1])';
+            stereopos{2}=repmat([0,0,0,0],[sparam.nimg,1])';
+          end
+
           for mm=1:1:numel(imgids), objecttextures(mm)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(mm))); end
 
-          % drawing
-          Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
-          Screen('DrawTextures',winPtr,objecttextures,[],imgpos,imgrot); % object images
-          Screen('DrawTexture',winPtr,checkertexture{nn},[],CenterRect(stimRect,winRect)); % checkerboard mask
+          for nnnn=1:1:nScr
+            % drawing
+            Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
+            Screen('DrawTextures',winPtr,objecttextures,[],imgpos+stereopos{nnnn},imgrot); % object images
+            Screen('DrawTexture',winPtr,checkertexture{nn},[],CenterRect(stimRect,winRect)); % checkerboard mask
 
-          % flip the window
-          Screen('DrawingFinished',winPtr);
-          Screen('Flip',winPtr,[],[],[],1);
+            % flip the window
+            Screen('DrawingFinished',winPtr);
+            Screen('Flip',winPtr,[],[],[],1);
 
-          % get the current frame and save it
-          imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_cycle_%02d_pos_%02d_type_%02d_%02d.png',sparam.mode,rr,nn,cc,pp)),'png');
+            % get the current frame and save it
+            imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('retinotopy_%s_cycle_%02d_pos_%02d_type_%02d_%02d_stereo_%02d.png',sparam.mode,rr,nn,cc,pp,nnnn)),'png');
+          end
 
           % close the textures and OffScreenWindow
           for mm=1:1:numel(imgids), Screen('Close',objecttextures(mm)); end
@@ -788,7 +822,7 @@ end
 % this mask is required to prevent the object images from being presented in the external regions.
 bgimg=bgimg{1};
 bgimg(:,:,4)=255*ones(size(bgimg,1),size(bgimg,2));
-maskRect=CenterRect([0,0,size(checkerboard{1},2),size(checkerboard{1},1)],[0,0,size(bgimg,2),size(bgimg,1)]);
+maskRect=CenterRect([1,1,size(checkerboard{1},2),size(checkerboard{1},1)],[1,1,size(bgimg,2),size(bgimg,1)]);
 bgimg(maskRect(2)+1:maskRect(4),maskRect(1)+1:maskRect(3),4)=0; % alpha channel, transparency
 
 background=Screen('MakeTexture',winPtr,bgimg);
@@ -908,7 +942,7 @@ Screen('Flip', winPtr,[],[],[],1);
 % prepare the next frame for the initial fixation period
 for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
-  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % fix{1} is valis as no task in the first period
+  Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % fix{1} is valid as no task in the first period
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
 end
 Screen('DrawingFinished',winPtr);
@@ -970,7 +1004,7 @@ for cc=1:1:sparam.numRepeats
         Screen('SelectStereoDrawBuffer',winPtr,nn-1);
         if ff<=nframe_stim
           Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
-          Screen('DrawTextures',winPtr,objecttextures,[],imgpos,imgrot); % object images
+          Screen('DrawTextures',winPtr,objecttextures,[],imgpos+stereopos{nn},imgrot); % object images
           Screen('DrawTexture',winPtr,checkertexture{pp},[],CenterRect(stimRect,winRect)); % checkerboard mask
           if hide_flg, Screen('DrawTexture',winPtr,abackground,[],winRect); end % additional background to hide the external region
         end
@@ -1026,6 +1060,20 @@ for cc=1:1:sparam.numRepeats
 
           % angles
           imgrot=360.*rand(sparam.nimg,1);
+
+          % stereo depth
+          if nScr>1
+            % compute image shift from disparity
+            depths=(sparam.imdepth(2)-sparam.imdepth(1)).*rand(sparam.nimg,1)+sparam.imdepth(1);
+            zdist=CalcDistFromDisparity(sparam.ipd,depths,sparam.vdist);
+            zdist=sort(zdist,'descend');
+            [Lshift,Rshift]=RayTrace_ScreenPos_X_MEX(zdist,sparam.ipd,sparam.vdist,sparam.pix_per_cm,0);
+            stereopos{1}=[Lshift,zeros(sparam.nimg,1),Lshift,zeros(sparam.nimg,1)]';
+            stereopos{2}=[Rshift,zeros(sparam.nimg,1),Rshift,zeros(sparam.nimg,1)]';
+          else
+            stereopos{1}=repmat([0,0,0,0],[sparam.nimg,1])';
+            stereopos{2}=repmat([0,0,0,0],[sparam.nimg,1])';
+          end
 
           % generate object image textures
           for mm=1:1:numel(imgids), objecttextures(mm)=Screen('MakeTexture',winPtr,img(:,:,:,imgids(mm))); end
