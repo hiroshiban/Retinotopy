@@ -28,7 +28,7 @@ function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2019-01-31 17:41:51 ban"
-% Last Update: "2019-05-24 14:28:21 ban"
+% Last Update: "2019-06-13 09:35:40 ban"
 %
 %
 %
@@ -458,7 +458,7 @@ HideCursor();
 if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dpara.ifi=1/dparam.fps;
+    dparam.ifi=1/dparam.fps;
   end
 end
 

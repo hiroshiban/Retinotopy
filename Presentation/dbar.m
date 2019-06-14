@@ -32,7 +32,7 @@ function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2019-05-22 18:45:53 ban"
-% Last Update: "2019-05-24 14:20:05 ban"
+% Last Update: "2019-06-13 16:53:03 ban"
 %
 %
 %
@@ -643,29 +643,31 @@ if strfind(upper(subjID),'DEBUG')
   % processing
   for aa=1:1:numel(sparam.rotangles)
     for nn=1:1:sparam.steps
-      for mm=1:1:sparam.RDSdepth(3) % depth steps
+      for rr=1:1:round(nframe_stim/(sparam.steps*nframe_flicker*sparam.RDSdepth(3)))
+        for mm=1:1:sparam.RDSdepth(3) % depth steps
 
-        % generate/get dot positions/colors
-        if sparam.RDSdepth(3)~=1
-          depth1=sparam.RDSdepth(1)+(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
-          depth2=sparam.RDSdepth(2)-(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
-        else
-          depth1=sparam.RDSdepth(1);
-          depth2=sparam.RDSdepth(2);
-        end
-        [XY,colors]=GetDotPositionsRDS(checkerboard{aa,nn},[0,depth1,depth2],sparam.RDSDense,...
-                                       sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+          % generate/get dot positions/colors
+          if sparam.RDSdepth(3)~=1
+            depth1=sparam.RDSdepth(1)+(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+            depth2=sparam.RDSdepth(2)-(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+          else
+            depth1=sparam.RDSdepth(1);
+            depth2=sparam.RDSdepth(2);
+          end
+          [XY,colors]=GetDotPositionsRDS(checkerboard{aa,nn},[0,depth1,depth2],sparam.RDSDense,...
+                                         sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
 
-        for pp=1:1:2 % left and right images
-          Screen('FillRect',winPtr,sparam.bgcolor,stimRect); % wipe the background just in case
-          Screen('DrawDots',winPtr,XY{pp},2*sparam.RDSradius*sparam.pix_per_deg,colors{pp},[0,0],3); % RDS
+          for pp=1:1:2 % left and right images
+            Screen('FillRect',winPtr,sparam.bgcolor,stimRect); % wipe the background just in case
+            Screen('DrawDots',winPtr,XY{pp},2*sparam.RDSradius*sparam.pix_per_deg,colors{pp},[0,0],3); % RDS
 
-          % flip the window
-          Screen('DrawingFinished',winPtr);
-          Screen('Flip',winPtr,[],[],[],1);
+            % flip the window
+            Screen('DrawingFinished',winPtr);
+            Screen('Flip',winPtr,[],[],[],1);
 
-          % get the current frame and save it
-          imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('bar_angle_%.2f_pos_%02d_depth_%02d_%02d.png',sparam.rotangles(aa),nn,mm,pp)),'png');
+            % get the current frame and save it
+            imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('bar_angle_%02d_pos_%02d_%02d_depth_%02d_%02d.png',aa,nn,rr,mm,pp)),'png');
+          end
         end
       end
     end

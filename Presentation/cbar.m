@@ -681,7 +681,7 @@ if strfind(upper(subjID),'DEBUG')
           colormap(CLUT{cc,pp}(1:3,1:3)./255);
           drawnow;
           pause(0.05);
-          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('bar_angle_%.2f_pos_%02d_lut_%02d_%02d.png',sparam.rotangles(aa),nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
+          imwrite(checkerboard{aa,nn}+1,CLUT{cc,pp}(1:3,1:3)./255,fullfile(save_dir,sprintf('bar_angle_%02d_pos_%02d_lut_%02d_%02d.png',aa,nn,cc,pp)),'png'); % +1 is required as the image index is assumed to be started from 1.
         end
       end
 

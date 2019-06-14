@@ -51,7 +51,7 @@ function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2019-04-03 18:16:24 ban"
-% Last Update: "2019-05-24 13:33:32 ban"
+% Last Update: "2019-06-13 09:35:44 ban"
 %
 %
 %
@@ -460,7 +460,7 @@ HideCursor();
 if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dpara.ifi=1/dparam.fps;
+    dparam.ifi=1/dparam.fps;
   end
 end
 

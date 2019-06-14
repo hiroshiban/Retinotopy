@@ -31,7 +31,7 @@ function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2013-11-25 11:34:54 ban"
-% Last Update: "2019-05-24 13:17:54 ban"
+% Last Update: "2019-06-13 09:35:41 ban"
 %
 %
 %
@@ -467,7 +467,7 @@ HideCursor();
 if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dpara.ifi=1/dparam.fps;
+    dparam.ifi=1/dparam.fps;
   end
 end
 

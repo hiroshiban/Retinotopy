@@ -59,7 +59,7 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-04 16:38:34 ban"
-% Last Update: "2019-05-24 13:33:31 ban"
+% Last Update: "2019-06-13 09:35:46 ban"
 %
 %
 %
@@ -484,7 +484,7 @@ HideCursor();
 if isstructmember(dparam,'force_frame_rate')
   if dparam.force_frame_rate
     dparam.fps=dparam.force_frame_rate;
-    dpara.ifi=1/dparam.fps;
+    dparam.ifi=1/dparam.fps;
   end
 end
 
@@ -780,7 +780,7 @@ if strfind(upper(subjID),'DEBUG')
             % drawing
             Screen('DrawTexture',winPtr,noisetexture,[],CenterRect(stimRect,winRect)); % noise textures
             Screen('DrawTextures',winPtr,objecttextures,[],imgpos+stereopos{nnnn},imgrot); % object images
-            Screen('DrawTexture',winPtr,checkertexture{nnnn},[],CenterRect(stimRect,winRect)); % checkerboard mask
+            Screen('DrawTexture',winPtr,checkertexture{nn},[],CenterRect(stimRect,winRect)); % checkerboard mask
 
             % flip the window
             Screen('DrawingFinished',winPtr);
