@@ -35,7 +35,7 @@ function dmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_ta
 %
 %
 % Created    : "2019-05-20 17:53:42 ban"
-% Last Update: "2019-06-13 16:28:55 ban"
+% Last Update: "2019-06-14 13:33:11 ban"
 %
 %
 %
@@ -1056,7 +1056,7 @@ catch lasterror
   tmp=lasterror; %#ok
   %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

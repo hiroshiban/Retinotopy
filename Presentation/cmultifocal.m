@@ -40,7 +40,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2019-05-24 14:21:09 ban"
+% Last Update: "2019-06-14 13:33:17 ban"
 %
 %
 %
@@ -1171,7 +1171,7 @@ catch lasterror
   tmp=lasterror; %#ok
   %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

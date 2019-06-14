@@ -33,7 +33,7 @@ function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2018-11-20 09:37:46 ban"
-% Last Update: "2019-05-24 14:30:16 ban"
+% Last Update: "2019-06-14 13:33:22 ban"
 %
 %
 %
@@ -1121,7 +1121,7 @@ catch lasterror
   tmp=lasterror; %#ok
   %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

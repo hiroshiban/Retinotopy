@@ -29,7 +29,7 @@ function dlgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamm
 %
 %
 % Created    : "2019-05-20 18:02:16 ban"
-% Last Update: "2019-06-13 15:31:17 ban"
+% Last Update: "2019-06-14 13:33:13 ban"
 %
 %
 %
@@ -1047,7 +1047,7 @@ catch lasterror
   tmp=lasterror; %#ok
   %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

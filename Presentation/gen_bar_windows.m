@@ -13,7 +13,7 @@ function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfi
 %
 %
 % Created    : "2018-11-22 15:33:55 ban"
-% Last Update: "2019-02-27 11:01:35 ban"
+% Last Update: "2019-06-14 13:33:09 ban"
 %
 %
 % [input variables]
@@ -466,7 +466,7 @@ catch lasterror
   % above.  Importantly, it closes the onscreen window if its open.
   tmp=lasterror; %#ok
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

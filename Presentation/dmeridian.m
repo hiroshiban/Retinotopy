@@ -36,7 +36,7 @@ function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2019-05-23 11:05:34 ban"
-% Last Update: "2019-06-13 17:42:09 ban"
+% Last Update: "2019-06-14 13:33:12 ban"
 %
 %
 %
@@ -1080,7 +1080,7 @@ catch lasterror
   tmp=lasterror; %#ok
   %if exist('event','var'), event=event.get_event(); end %#ok % just for debugging
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

@@ -22,7 +22,7 @@ function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusf
 %
 %
 % Created    : "2019-01-25 12:30:39 ban"
-% Last Update: "2019-02-28 17:30:29 ban"
+% Last Update: "2019-06-14 13:33:09 ban"
 %
 %
 %
@@ -567,7 +567,7 @@ catch lasterror
   % above.  Importantly, it closes the onscreen window if its open.
   tmp=lasterror; %#ok
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);

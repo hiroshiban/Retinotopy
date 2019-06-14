@@ -13,7 +13,7 @@ function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2018-11-29 12:27:34 ban"
-% Last Update: "2019-02-22 17:25:06 ban"
+% Last Update: "2019-06-14 13:33:08 ban"
 %
 %
 % [input variables]
@@ -605,7 +605,7 @@ catch lasterror
   % above.  Importantly, it closes the onscreen window if its open.
   tmp=lasterror; %#ok
   diary off;
-  fprintf(['\nErrror detected and the program was terminated.\n',...
+  fprintf(['\nError detected and the program was terminated.\n',...
            'To check error(s), please type ''tmp''.\n',...
            'Please save the current variables now if you need.\n',...
            'Then, quit by ''dbquit''\n']);
