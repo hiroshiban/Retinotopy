@@ -24,7 +24,7 @@ function GammaResetPTB(luminance_ratio)
 %
 %
 % Created    : "2011-09-06 17:44:10 banh"
-% Last Update: "2013-11-22 18:51:04 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2020-02-27 19:05:18 ban"
 
 % check input variable
 if nargin<1, luminance_ratio=1.0; end
@@ -37,6 +37,6 @@ gamma_table=([luminance_ratio(1)*linspace(0.0,1.0,256);luminance_ratio(2)*linspa
 
 % applying the default gamma table
 screencount=size(Screen('Screens'),2)-1;
-for ii=0:screencount, Screen('LoadNormalizedGammaTable',ii,gamma_table); end
+for ii=1:screencount, Screen('LoadNormalizedGammaTable',ii,gamma_table); end
 
 return

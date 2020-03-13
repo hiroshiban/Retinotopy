@@ -3,7 +3,7 @@ README on the "Retinotopy" stimulus package
 
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2019-05-24 20:19:00 ban"
+Last Update: "2020-02-04 21:31:52 ban"
 **********************************************************************
 
 ======================================================================
@@ -87,7 +87,11 @@ Examples
 Details of retinotopy.m
 ======================================================================
 
+[usage]
+>> retinotopy(subj_name,exp_mode,acq_num);
+
 [input]
+subj_name: subject name, e.g. 'HB'
 exp_mode: experiment mode that you want to run, one of
 
           *** task -- luminance change detection on the checkerboard
