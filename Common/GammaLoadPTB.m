@@ -22,7 +22,7 @@ function GammaLoadPTB(gamma_table)
 %
 %
 % Created    : "12-08-22 02:52:30 ban"
-% Last Update: "2015-12-27 17:33:23 ban"
+% Last Update: "2020-03-18 14:07:54 ban"
 
 % check input variable
 if nargin<1 || isempty(gamma_table), gamma_table=(repmat(linspace(0.0,1.0,256),3,1))'; end
@@ -49,7 +49,7 @@ screencount=size(Screen('Screens'),2)-1;
 if screencount==1
   Screen('LoadNormalizedGammaTable',0,gamma_table(:,:,1)); return
 else
-  for ii=0:1:screencount, Screen('LoadNormalizedGammaTable',ii,gamma_table(:,:,1)); end
+  for ii=1:1:screencount, Screen('LoadNormalizedGammaTable',ii,gamma_table(:,:,1)); end
 end
 
 % then, setting each of gamma tables to each of displays
