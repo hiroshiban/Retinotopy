@@ -39,7 +39,7 @@ function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2019-05-21 10:54:40 ban"
-% Last Update: "2019-06-14 13:33:15 ban"
+% Last Update: "2021-03-29 15:50:00 ban"
 %
 %
 %
@@ -442,6 +442,7 @@ fprintf('done.\n');
 fprintf('The Presentation Parameters are as below.\n\n');
 fprintf('************************************************\n');
 fprintf('****** Script, Subject, Acquistion Number ******\n');
+fprintf('Date & Time            : %s\n',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]));
 fprintf('Running Script Name    : %s\n',mfilename());
 fprintf('Subject ID             : %s\n',subjID);
 fprintf('Acquisition Number     : %d\n',acq);

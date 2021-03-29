@@ -21,7 +21,7 @@ function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,sti
 %
 %
 % Created    : "2011-12-03 19:01:09 ban"
-% Last Update: "2019-06-14 13:33:08 ban"
+% Last Update: "2021-03-29 15:49:53 ban"
 %
 %
 % [input variables]
@@ -259,6 +259,7 @@ fprintf('done.\n');
 fprintf('The Presentation Parameters are as below.\n\n');
 fprintf('************************************************\n');
 fprintf('*************** Script, Subject ****************\n');
+fprintf('Date & Time            : %s\n',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]));
 fprintf('Running Script Name    : %s\n',mfilename());
 fprintf('Subject ID             : %s\n',subjID);
 fprintf('Acquisition Number     : %d\n',acq);

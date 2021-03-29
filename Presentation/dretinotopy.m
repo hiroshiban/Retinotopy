@@ -37,7 +37,7 @@ function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2019-05-22 15:12:40 ban"
-% Last Update: "2019-06-14 13:33:10 ban"
+% Last Update: "2021-03-29 15:49:55 ban"
 %
 %
 %
@@ -411,6 +411,7 @@ fprintf('done.\n');
 fprintf('The Presentation Parameters are as below.\n\n');
 fprintf('************************************************\n');
 fprintf('****** Script, Subject, Acquistion Number ******\n');
+fprintf('Date & Time            : %s\n',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]));
 fprintf('Running Script Name    : %s\n',mfilename());
 fprintf('Subject ID             : %s\n',subjID);
 fprintf('Acquisition Number     : %d\n',acq);

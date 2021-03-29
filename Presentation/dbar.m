@@ -32,7 +32,7 @@ function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2019-05-22 18:45:53 ban"
-% Last Update: "2019-06-14 13:33:16 ban"
+% Last Update: "2021-03-29 15:50:01 ban"
 %
 %
 %
@@ -406,6 +406,7 @@ sparam.RunScript = mfilename();
 fprintf('The Presentation Parameters are as below.\n\n');
 fprintf('************************************************\n');
 fprintf('****** Script, Subject, Acquistion Number ******\n');
+fprintf('Date & Time            : %s\n',strcat([datestr(now,'yymmdd'),' ',datestr(now,'HH:mm:ss')]));
 fprintf('Running Script Name    : %s\n',mfilename());
 fprintf('Subject ID             : %s\n',subjID);
 fprintf('Acquisition Number     : %d\n',acq);

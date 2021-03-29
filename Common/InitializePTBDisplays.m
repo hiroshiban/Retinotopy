@@ -54,7 +54,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2018-01-30 23:27:19 ban"
+% Last Update: "2021-01-19 16:28:24 ban"
 
 % initialize
 winPtr=[];
@@ -237,8 +237,8 @@ try
   end
 
   % get screen refresh rate and inter-flip-interval
-  fps=Screen('FrameRate',winPtr);
-  ifi=Screen('GetFlipInterval',winPtr);
+  %fps=Screen('FrameRate',winPtr);
+  %ifi=Screen('GetFlipInterval',winPtr);
   fps=60; ifi=1/60;
   if fps==0, fps=1/ifi; end
   %fps=Screen('FrameRate',winPtr);
