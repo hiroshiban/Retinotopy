@@ -36,7 +36,7 @@ function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2019-05-23 11:05:34 ban"
-% Last Update: "2021-03-29 15:49:56 ban"
+% Last Update: "2021-06-07 17:20:00 ban"
 %
 %
 %
@@ -107,8 +107,8 @@ function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 % % Programmed by Hiroshi Ban Nov 01 2013
 % % ************************************************************
 %
-% % display mode, one of "mono", "dual", "cross", "parallel", "redgreen", "greenred",
-% % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
+% % display mode, one of "mono", "dual", "dualcross", "dualparallel", "cross", "parallel", "redgreen", "greenred",
+% % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn", "propixxmono", "propixxstereo"
 % dparam.ExpMode='mono';
 %
 % dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup
@@ -756,6 +756,24 @@ fix{2}=Screen('MakeTexture',winPtr,fixD);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Prepare blue lines for stereo image flip sync with VPixx PROPixx
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% There seems to be a blueline generation bug on some OpenGL systems.
+% SetStereoBlueLineSyncParameters(winPtr, winRect(4)) corrects the
+% bug on some systems, but breaks on other systems.
+% We'll just disable automatic blueline, and manually draw our own bluelines!
+
+if strcmpi(dparam.ExpMode,'propixxstereo')
+  SetStereoBlueLineSyncParameters(winPtr, winRect(4)+10);
+  blueRectOn(1,:)=[0, winRect(4)-1, winRect(3)/4, winRect(4)];
+  blueRectOn(2,:)=[0, winRect(4)-1, winRect(3)*3/4, winRect(4)];
+  blueRectOff(1,:)=[winRect(3)/4, winRect(4)-1, winRect(3), winRect(4)];
+  blueRectOff(2,:)=[winRect(3)*3/4, winRect(4)-1, winRect(3), winRect(4)];
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Image size adjusting to match the current display resolutions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -812,6 +830,12 @@ for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{2},[],CenterRect(fixRect,winRect));
+
+  % blue line for stereo sync
+  if strcmpi(dparam.ExpMode,'propixxstereo')
+    Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
+    Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
+  end
 end
 Screen('DrawingFinished',winPtr);
 Screen('Flip', winPtr,[],[],[],1);
@@ -821,6 +845,12 @@ for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+
+  % blue line for stereo sync
+  if strcmpi(dparam.ExpMode,'propixxstereo')
+    Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
+    Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
+  end
 end
 Screen('DrawingFinished',winPtr);
 
@@ -854,6 +884,12 @@ for ff=1:1:nframe_fixation(1)
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+
+    % blue line for stereo sync
+    if strcmpi(dparam.ExpMode,'propixxstereo')
+      Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
+      Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
+    end
   end
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
@@ -921,6 +957,12 @@ for cc=1:1:sparam.numRepeats
           end
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
+
+        % blue line for stereo sync
+        if strcmpi(dparam.ExpMode,'propixxstereo')
+          Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
+          Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
+        end
       end
 
       % flip the window
@@ -971,6 +1013,12 @@ for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+
+  % blue line for stereo sync
+  if strcmpi(dparam.ExpMode,'propixxstereo')
+    Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
+    Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
+  end
 end
 Screen('DrawingFinished',winPtr);
 while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); end
@@ -984,6 +1032,12 @@ for ff=1:1:nframe_fixation(2)
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+
+    % blue line for stereo sync
+    if strcmpi(dparam.ExpMode,'propixxstereo')
+      Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
+      Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
+    end
   end
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
@@ -1013,6 +1067,16 @@ fprintf('\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Screen('CloseAll');
+
+% closing datapixx
+if strcmpi(dparam.ExpMode,'propixxmono') || strcmpi(dparam.ExpMode,'propixxstereo')
+  if Datapixx('IsViewpixx3D')
+    Datapixx('DisableVideoLcd3D60Hz');
+    Datapixx('RegWr');
+  end
+  Datapixx('Close');
+end
+
 ShowCursor();
 Priority(0);
 GammaResetPTB(1.0);
@@ -1075,6 +1139,19 @@ catch lasterror
   % this "catch" section executes in case of an error in the "try" section
   % above.  Importantly, it closes the onscreen window if its open.
   Screen('CloseAll');
+
+  if exist('dparam','var')
+    if isstructmember(dparam,'ExpMode')
+      if strcmpi(dparam.ExpMode,'propixxmono') || strcmpi(dparam.ExpMode,'propixxstereo')
+        if Datapixx('IsViewpixx3D')
+          Datapixx('DisableVideoLcd3D60Hz');
+          Datapixx('RegWr');
+        end
+        Datapixx('Close');
+      end
+    end
+  end
+
   ShowCursor();
   Priority(0);
   GammaResetPTB(1.0);

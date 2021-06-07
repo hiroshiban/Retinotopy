@@ -30,7 +30,7 @@ function script_gen_all_windows_BVQX_hbtools(subj,pix_per_deg,TR)
 %
 %
 % Created    : "2019-02-28 17:46:17 ban"
-% Last Update: "2019-03-03 14:53:40 ban"
+% Last Update: "2021-06-07 15:12:30 ban"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% check the input variables
@@ -63,7 +63,7 @@ if ~exist(subj_dir,'dir')
       break;
     elseif (user_entry == 'n')
       fprintf('quiting the script...\n');
-      if nargout, OK=false; end
+      %if nargout, OK=false; end
       return;
     else
       fprintf('Please answer y or n!\n'); continue;

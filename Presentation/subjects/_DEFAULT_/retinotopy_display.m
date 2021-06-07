@@ -4,7 +4,7 @@
 % ************************************************************
 
 % display mode, one of "mono", "dual", "dualcross", "dualparallel", "cross", "parallel", "redgreen", "greenred",
-% "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn"
+% "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn", "propixxmono", "propixxstereo"
 dparam.ExpMode='mono';%'dualparallel';%'mono';
 
 dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup

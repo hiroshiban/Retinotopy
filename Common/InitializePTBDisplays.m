@@ -27,7 +27,8 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 % [input]
 % disp_mode : display mode, one of "mono", "dual", "dualcross", "dualparallel", "cross", "parallel", "redgreen", "greenred",
-%             "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn".
+%             "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn",
+%             "propixxmono", "propixxstereo", "3Dpixx".
 %             "mono" by default.
 % bgcolor   : background color, [r,g,b]. [127,127,127] by default.
 % flipping  : whther flipping displays, 0:none, 1:horizontal, 2:vertical, 3:horizontal & vertical. 0 by default.
@@ -54,7 +55,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2021-01-19 16:28:24 ban"
+% Last Update: "2021-06-03 16:46:25 ban"
 
 % initialize
 winPtr=[];
@@ -97,7 +98,7 @@ if strcmpi(winstr,'w32') || strcmpi(winstr,'w64'), is_windows=true; end
 try
 
   % assign display mode (stereomode)
-  if strcmpi(disp_mode,'mono')
+  if strcmpi(disp_mode,'mono') || strcmpi(disp_mode,'propixxmono')
     display_mode=0; % mono display, no stereo at all.
   elseif strcmpi(disp_mode,'dual')
     display_mode=10; % dual display mode (especially for Mac with Matrox DualHead setups)
@@ -117,7 +118,7 @@ try
     display_mode=8; % stereo view with red/blue glasses
   elseif strcmpi(disp_mode,'bluered')
     display_mode=9; % stereo view with blue/red glasses
-  elseif strcmpi(disp_mode,'shutter')
+  elseif strcmpi(disp_mode,'shutter') || strcmpi(disp_mode,'propixxstereo')
     display_mode=1; % flip frame stereo (temporally interleaved), need shutter glasses
   elseif strcmpi(disp_mode,'topbottom')
     display_mode=2; % top/bottom image stereo with left=top
@@ -172,6 +173,40 @@ try
 
   % prep PTB PsychImaging configuration
   PsychImaging('PrepareConfiguration');
+
+  if strcmpi(disp_mode,'propixxmono') || strcmpi(disp_mode,'propixxstereo')
+    % Tell PTB we want to display on a DataPixx device:
+    PsychImaging('AddTask', 'General', 'UseDataPixx');
+    Datapixx('Open');
+
+    % Enable DATAPixx blueline support, and VIEWPixx scanning backlight for optimal 3D
+    if strcmpi(disp_mode,'propixxstereo')
+      if (Datapixx('IsVIEWPixx')), Datapixx('EnableVideoScanningBacklight'); end % Only required if a VIEWPixx.
+      Datapixx('EnableVideoStereoBlueline');
+      Datapixx('SetVideoStereoVesaWaveform', 2);      % If driving NVIDIA glasses
+
+      % Liquid crystal displays can exhibit an artifact when presenting 2 static images on alternating video frames, such as with frame-sequencial 3D.
+      % The origin of this artifact is related to LCD pixel polarity inversion.
+      % The optical transmission of a liquid crystal cell varies with the magnitude of the voltage applied to the cell.
+      % Liquid crystal cells are designed to be driven by an AC voltage with little or no DC component.
+      % As such, the cell drivers alternate the polarity of the cell's driving voltage on alternate video frames.
+      % The cell will see no net DC driving voltage, as long as the pixel is programmed to the same intensity on even and odd video frames.
+      % Small differences in a pixel's even and odd frame luminance tend to leave the cell unaffected,
+      % and large differences in even and odd frame luminance for short periods of time (10-20 frames?) also do not seem to affect the cell;
+      % however, large differences in luminance for a longer period of time will cause a DC buildup in the pixel's liquid crystal cell.
+      % This can result in the pixel not showing the programmed luminance correctly,
+      % and can also cause the pixel to "stick" for several seconds after the image has been removed, causing an after-image on the display.
+      % VPixx Technologies has developed a strategy for keeping the pixel cells DC balanced.
+      % Instead of alternating the cell driving voltage on every video frame, we can alternate the voltage only on every second frame.
+      % This feature is enabled by calling the function EnableVideoLcd3D60Hz.
+      % Call this routine before presenting static or slowly-moving 3D images, or when presenting 60Hz flickering stimuli.
+      % Be sure to call DisableVideoLcd3D60Hz afterwards to return to normal pixel driving.
+      % Note that this feature is only supported on the VIEWPixx/3D when running with a refresh rate of 120Hz.
+      if Datapixx('IsViewpixx3D'), Datapixx('EnableVideoLcd3D60Hz'); end
+
+      Datapixx('RegWr');
+    end
+  end
 
   % flipping Screen
   if flipping==1
@@ -237,20 +272,17 @@ try
   end
 
   % get screen refresh rate and inter-flip-interval
-  %fps=Screen('FrameRate',winPtr);
-  %ifi=Screen('GetFlipInterval',winPtr);
-  fps=60; ifi=1/60;
-  if fps==0, fps=1/ifi; end
-  %fps=Screen('FrameRate',winPtr);
-  %if fps==0
-  %  dparam.ifi=Screen('GetFlipInterval',winPtr);
-  %  dparam.fps=1/dparam.ifi;
-  %else
-  %  ifi=1/dparam.fps;
-  %end
+  fps=Screen('FrameRate',winPtr);
+  if fps==0
+    ifi=Screen('GetFlipInterval',winPtr);
+    fps=1/ifi;
+  else
+    ifi=1/fps;
+  end
 
   initDisplay_OK=true;
 catch lasterror
+  if strcmpi(disp_mode,'propixxmono') || strcmpi(disp_mode,'propixxstereo'), Datapixx('Close'); end
   display(lasterror);
   nScr=0;
   fps=0;
