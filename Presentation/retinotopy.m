@@ -7,6 +7,9 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 % This function is a simple wrapper to control phase-encoded/pRF retinotopy stimuli.
 % The fMRI responses evoked by the stimuli can be utilized to delineate borders of retinotopic visual areas etc.
 %
+% Created    : "2013-11-25 10:14:26 ban"
+% Last Update: "2021-06-09 14:49:21 ban"
+%
 % The wrapped functions are as below.
 %     1. cretinotopy           : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for phase-encoded analysis
 %     2. cretinotopy_fixtask   : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for phase-encoded analysis
@@ -56,12 +59,21 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 % For more details, please see each function's help.
 %
 % [example]
+% (after moving to ~/Retinotopy/presentation directory)
 % >> retinotopy('HB','ccw',1);
 % >> retinotopy('HB',{'ccw','exp','ccw','exp'},[1,1,2,2]);
 % >> retinotopy('HB',{'ccwwindows','cwwindows','expwindows','contwindows'},[1,1,1,1]);
 %
 % [input]
 % subj    : subject's name, e.g. 'HB'
+%           the directory named as subj_name (e.g. 'HB') should be located in ~/retinotopy/Presentation/subjects/
+%           under which configurations files are included. By changing parameters in the configuration files,
+%           stimulus type, size, colors, moving speed, presentation timing etc can be manipulated as you like.
+%           For details, please see the files in ~/retinotopy/Presentation/subjects/_DEFAULT_.
+%           If subject directory does not exist in the specific directory described above, the parameters in the
+%           _DEFAULT_ directory would be automatically copied as subj_name and the default parameters are used for
+%           stimulus presentation. you can modify the default parameters later once the files are copied and the
+%           script is terminated.
 % exp_mode: experiment mode that you want to run, one of
 %
 %           *** task -- luminance change detection on the checkerboard
@@ -177,8 +189,34 @@ function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)
 % OK      : (optional) flag, whether this script finished without any error [true/false]
 %
 %
-% Created    : "2013-11-25 10:14:26 ban"
-% Last Update: "2019-05-22 15:36:55 ban"
+% [About the object image databases used in the Retinotopy package]
+% 
+% The object images stored in the object_image_database.mat and used in i* retinotopy stimuli are obtained and modified from the databases publicly available from
+% http://konklab.fas.harvard.edu/#
+% I sincerely express my gratitude to the developers and distributors, scientists in Dr Talia Konkle's research group, for their contributions in these databases.
+% 
+% * Original papers of the object image datasets
+% - Tripartite Organization of the Ventral Stream by Animacy and Object Size.
+%   Konkle, T., & Caramazza, A. (2013). Journal of Neuroscience, 33 (25), 10235-42.
+% 
+% - A real-world size organization of object responses in occipito-temporal cortex.
+%   Konkle. T., & Oliva, A. (2012). Neuron, 74(6), 1114-24.
+% 
+% - Visual long-term memory has a massive storage capacity for object details.
+%   Brady, T. F., Konkle, T., Alvarez, G. A. & Oliva, A. (2008). Proceedings of the National Academy of Sciences USA, 105(38), 14325-9.
+% 
+% - Conceptual distinctiveness supports detailed visual long-term memory.
+%   Konkle, T., Brady, T. F., Alvarez, G. A., & Oliva, A. (2010). Journal of Experimental Psychology: General, 139(3), 558-578.
+% 
+% - A Familiar Size Stroop Effect: Real-world size is an automatic property of object representation.
+%   Konkle, T., & Oliva, A. (2012). Journal of Experimental Psychology: Human Perception & Performance, 38, 561-9.
+% 
+% [TODOs]
+% 
+% 1. *DONE* Update the procedure for getting response more precisely.
+% 2. *DONE* Generate dretinotopy (3D depth version of the retinotopy stimuli) in which checkerboards consist of Random-Dot-Stereograms
+% 3. removing code clones (I have not thought that the retinotopy package is getting so huge when we started to write the codes...) and
+%    rewriting the scripts in an object-oriented manner.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -3,7 +3,7 @@ README on the "Retinotopy" stimulus package
 
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2020-02-04 21:31:52 ban"
+Last Update: "2021-06-09 14:52:10 ban"
 **********************************************************************
 
 ======================================================================
@@ -78,6 +78,7 @@ For more details, please see each function's help.
 Examples
 ======================================================================
 
+(after moving to ~/Retinotopy/presentation directory)
 >> retinotopy('HB','ccw',1);
 >> retinotopy('HB',{'ccw','exp','ccw','exp'},[1,1,2,2]);
 >> retinotopy('HB',{'ccwwindows','cwwindows','expwindows','contwindows'},[1,1,1,1]);
@@ -92,6 +93,14 @@ Details of retinotopy.m
 
 [input]
 subj_name: subject name, e.g. 'HB'
+           the directory named as subj_name (e.g. 'HB') should be located in ~/retinotopy/Presentation/subjects/
+           under which configurations files are included. By changing parameters in the configuration files,
+           stimulus type, size, colors, moving speed, presentation timing etc can be manipulated as you like.
+           For details, please see the files in ~/retinotopy/Presentation/subjects/_DEFAULT_.
+           If subject directory does not exist in the specific directory described above, the parameters in the
+           _DEFAULT_ directory would be automatically copied as subj_name and the default parameters are used for
+           stimulus presentation. you can modify the default parameters later once the files are copied and the
+           script is terminated.
 exp_mode: experiment mode that you want to run, one of
 
           *** task -- luminance change detection on the checkerboard
@@ -207,7 +216,7 @@ TR      : (optional) TR used in fMRI scans, in sec, 2 by default
 OK      : (optional) flag, whether this script finished without any error [true/false]
 
 
-For more details, please see the comment lines of retinotopy.m
+For more details, please see the comment lines of retinotopy.m and ~/Retinotopy/doc/index.html
 
 
 ======================================================================
@@ -241,3 +250,5 @@ TODOs
 
 1. *DONE* Update the procedure for getting response more precisely.
 2. *DONE* Generate dretinotopy (3D depth version of the retinotopy stimuli) in which checkerboards consist of Random-Dot-Stereograms
+3. removing code clones (I have not thought that the retinotopy package is getting so huge when we started to write the codes...) and
+   rewriting the scripts in an object-oriented manner.
