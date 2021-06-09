@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of GenerateRandomDotImage</title>
+  <meta name="keywords" content="GenerateRandomDotImage">
+  <meta name="description" content="Generates random-dot image(s)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>GenerateRandomDotImage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates random-dot image(s)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,point_idx]=GenerateRandomDotImage(fieldSize,ranges,dense,mode,nimages,pix_per_deg,display_flg,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates random-dot image(s)
+ function [img,point_idx]=GenerateRandomDotImage(fieldSize,ranges,dense,mode,pix_per_deg,display_flg,save_flg)
+
+ This function generates a random dot image in cartesian or polar coordinate space.
+
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col]
+ ranges      : range of the space in which random dots are scatterd.
+               [min(deg_row),max(deg_row);min(deg_col),max(deg_col)] in cartesian coord
+               [min(r_deg),max(r_deg);min(theta_deg),max(theta_deg)] in polar coord
+               !NOTE! the origin is the center of the image
+ dense       : percentage of the dot in the space, 2 by default.
+ mode        : 0=cartesian coord, 1=polar coord. 0 by default.
+ nimages     : the number of images to be generated. 1 by default.
+ pix_per_deg : pixels per degree, [pixels]. 40 by default.
+ display_flg : if 1, the generated images are displayed. [1/0]. 1 by default.
+ save_flag   : if 1, the generated images are saved. [1/0]. 0 by default.
+
+ [output]
+ img         : generated random dot images, cell structure, img{nimages}
+ point_idx   : random points, cell structure, point_idx{nimages}=[x,y(,z)]
+
+
+ Created    : &quot;2013-08-29 11:47:04 ban&quot;
+ Last Update: &quot;2013-11-22 23:11:01 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,point_idx]=GenerateRandomDotImage(fieldSize,ranges,dense,mode,nimages,pix_per_deg,display_flg,save_flg)</a>
+0002 
+0003 <span class="comment">% Generates random-dot image(s)</span>
+0004 <span class="comment">% function [img,point_idx]=GenerateRandomDotImage(fieldSize,ranges,dense,mode,pix_per_deg,display_flg,save_flg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates a random dot image in cartesian or polar coordinate space.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col]</span>
+0010 <span class="comment">% ranges      : range of the space in which random dots are scatterd.</span>
+0011 <span class="comment">%               [min(deg_row),max(deg_row);min(deg_col),max(deg_col)] in cartesian coord</span>
+0012 <span class="comment">%               [min(r_deg),max(r_deg);min(theta_deg),max(theta_deg)] in polar coord</span>
+0013 <span class="comment">%               !NOTE! the origin is the center of the image</span>
+0014 <span class="comment">% dense       : percentage of the dot in the space, 2 by default.</span>
+0015 <span class="comment">% mode        : 0=cartesian coord, 1=polar coord. 0 by default.</span>
+0016 <span class="comment">% nimages     : the number of images to be generated. 1 by default.</span>
+0017 <span class="comment">% pix_per_deg : pixels per degree, [pixels]. 40 by default.</span>
+0018 <span class="comment">% display_flg : if 1, the generated images are displayed. [1/0]. 1 by default.</span>
+0019 <span class="comment">% save_flag   : if 1, the generated images are saved. [1/0]. 0 by default.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% img         : generated random dot images, cell structure, img{nimages}</span>
+0023 <span class="comment">% point_idx   : random points, cell structure, point_idx{nimages}=[x,y(,z)]</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Created    : &quot;2013-08-29 11:47:04 ban&quot;</span>
+0027 <span class="comment">% Last Update: &quot;2013-11-22 23:11:01 ban (ban.hiroshi@gmail.com)&quot;</span>
+0028 
+0029 <span class="comment">% check input variable</span>
+0030 <span class="keyword">if</span> nargin&lt;2, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;3 || isempty(dense), dense=5; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;4 || isempty(mode), mode=0; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;5 || isempty(nimages), nimages=1; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;6 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;7 || isempty(display_flg), display_flg=1; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;8 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0037 
+0038 <span class="keyword">if</span> mode~=0 &amp;&amp; mode~=1
+0039   error(<span class="string">'mode should be 0 (cartesian) or 1 (polar). check input variable.'</span>);
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="comment">% adjust ranges</span>
+0043 <span class="keyword">if</span> mode==0
+0044   ranges=ranges.*pix_per_deg;
+0045 <span class="keyword">else</span>
+0046   ranges(1,:)=ranges(1,:).*pix_per_deg;
+0047   ranges(2,:)=ranges(2,:).*pi/180;
+0048 <span class="keyword">end</span>
+0049 
+0050 <span class="comment">% generate stimulus field</span>
+0051 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0052 fieldSize=round(fieldSize/2.*pix_per_deg);
+0053 step=1;
+0054 [x,y]=meshgrid(-fieldSize(2):step:fieldSize(2),-fieldSize(1):step:fieldSize(1));
+0055 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0056 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0057 
+0058 <span class="comment">% initializing</span>
+0059 img=cell(nimages,1);
+0060 <span class="keyword">for</span> nn=1:1:nimages, img{nn}=zeros(size(x)); <span class="keyword">end</span>
+0061 point_idx=cell(nimages,1);
+0062 
+0063 <span class="comment">% processing</span>
+0064 <span class="keyword">for</span> nn=1:1:nimages
+0065   <span class="comment">% generate initial random dot image</span>
+0066   randXY=randi(10000,size(x));
+0067   tmp_idx=find(randXY&lt;=dense*100);
+0068   timg=zeros(size(x));
+0069 
+0070   <span class="comment">% spatial thresholding</span>
+0071   <span class="keyword">if</span> mode==0
+0072     <span class="comment">% in cartesian coordinate</span>
+0073     sv_idx=find( ranges(2,1)&lt;=x(tmp_idx) &amp; x(tmp_idx)&lt;=ranges(2,2) &amp; ranges(1,1)&lt;=y(tmp_idx) &amp; y(tmp_idx)&lt;=ranges(1,2) );
+0074   <span class="keyword">else</span>
+0075     <span class="comment">% in polar coordinate</span>
+0076     z=x(tmp_idx).^2+y(tmp_idx).^2;
+0077     phi=cart2pol(x(tmp_idx),y(tmp_idx));
+0078     phi(phi&lt;0)=phi(phi&lt;0)+2*pi;
+0079     sv_idx=find( ranges(1,1).^2&lt;=z &amp; z&lt;=ranges(1,2).^2 &amp; ranges(2,1)&lt;=phi &amp; phi&lt;=ranges(2,2) );
+0080   <span class="keyword">end</span>
+0081 
+0082   <span class="comment">% generate the final random dot image</span>
+0083   [y_idx,x_idx]=ind2sub(size(x),tmp_idx(sv_idx));
+0084   point_idx{nn}=[x_idx';y_idx'];
+0085   timg(tmp_idx(sv_idx))=1;
+0086   img{nn}=timg;
+0087 <span class="keyword">end</span> <span class="comment">% for nn=1:1:nimages</span>
+0088 
+0089 <span class="comment">% displaying the mixtured image</span>
+0090 <span class="keyword">if</span> display_flg
+0091   <span class="keyword">for</span> nn=1:1:nimages
+0092     figure; imshow(img{nn},[0,1]);
+0093     title(sprintf(<span class="string">'generated random dot image #%02d'</span>,nn));
+0094   <span class="keyword">end</span>
+0095 <span class="keyword">end</span>
+0096 
+0097 <span class="keyword">if</span> save_flg
+0098   save rdot.mat img point_idx;
+0099 <span class="keyword">end</span>
+0100 
+0101 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DisableJISkeyTrouble</title>
+  <meta name="keywords" content="DisableJISkeyTrouble">
+  <meta name="description" content="Disables keys which are always ON by default (used to avoid JIS key trouble).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>DisableJISkeyTrouble
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Disables keys which are always ON by default (used to avoid JIS key trouble).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function oldkey=DisableJISkeyTrouble </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Disables keys which are always ON by default (used to avoid JIS key trouble).
+ function DisableJISkeyTrouble
+
+ USAGE: [oldkey]=DisableJISkeyTrouble
+ OUTPUT: oldkey --- old key ON/OFF info
+
+ for Psychtoolbox with JIS or Japanese-106 keyboard
+ This script shoud be added for preventing ASCII or Japanese-106 keyboard
+ trouble (some meta keys are always ON)
+
+ This script disables default-ON Key(s)
+ by checking with [keyIsDown, secs, keyCode] = KbCheck();
+ and disable default-ON key(s) with DisableKeysForKbCheck([keynumber])
+
+ Dec 17 2007 Hiroshi Ban</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CheckImagesPTB.html" class="code" title="function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec,img_size)">CheckImagesPTB</a>	Reads images in the target directory and presents them onto the PTB screen</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function oldkey=DisableJISkeyTrouble</a>
+0002 
+0003 <span class="comment">% Disables keys which are always ON by default (used to avoid JIS key trouble).</span>
+0004 <span class="comment">% function DisableJISkeyTrouble</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% USAGE: [oldkey]=DisableJISkeyTrouble</span>
+0007 <span class="comment">% OUTPUT: oldkey --- old key ON/OFF info</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% for Psychtoolbox with JIS or Japanese-106 keyboard</span>
+0010 <span class="comment">% This script shoud be added for preventing ASCII or Japanese-106 keyboard</span>
+0011 <span class="comment">% trouble (some meta keys are always ON)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% This script disables default-ON Key(s)</span>
+0014 <span class="comment">% by checking with [keyIsDown, secs, keyCode] = KbCheck();</span>
+0015 <span class="comment">% and disable default-ON key(s) with DisableKeysForKbCheck([keynumber])</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Dec 17 2007 Hiroshi Ban</span>
+0018 
+0019 clear all;
+0020 [keyIsDown,secs,keyCode]=KbCheck();
+0021 oldkey=DisableKeysForKbCheck(find(keyCode&gt;0));
+0022 
+0023 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

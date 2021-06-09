@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gauss3d</title>
+  <meta name="keywords" content="gauss3d">
+  <meta name="description" content="Generates a 3D gaussian kernel.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>gauss3d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates a 3D gaussian kernel.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function outArray=gauss3d(hSize,sigma) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates a 3D gaussian kernel.
+ function outArray=gauss3d(hSize,sigma)
+
+ Generates a 3D gaussian
+ If hSize is a scalar, assume a cubic array
+ Otherwise, hSize must be 3x1 vector
+ Same for sigma
+ ARW 042904
+ Example: g=gauss3d([7 7 7],[3 3 3]);
+ See also fspecial
+ NOTE: Gaussians returned have a peak value of '1'</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function outArray=gauss3d(hSize,sigma)</a>
+0002 
+0003 <span class="comment">% Generates a 3D gaussian kernel.</span>
+0004 <span class="comment">% function outArray=gauss3d(hSize,sigma)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Generates a 3D gaussian</span>
+0007 <span class="comment">% If hSize is a scalar, assume a cubic array</span>
+0008 <span class="comment">% Otherwise, hSize must be 3x1 vector</span>
+0009 <span class="comment">% Same for sigma</span>
+0010 <span class="comment">% ARW 042904</span>
+0011 <span class="comment">% Example: g=gauss3d([7 7 7],[3 3 3]);</span>
+0012 <span class="comment">% See also fspecial</span>
+0013 <span class="comment">% NOTE: Gaussians returned have a peak value of '1'</span>
+0014 
+0015 <span class="keyword">if</span> (~exist(<span class="string">'sigma'</span>,<span class="string">'var'</span>));
+0016     sigma=3;
+0017 <span class="keyword">end</span>
+0018 <span class="keyword">if</span> (~exist(<span class="string">'hSize'</span>,<span class="string">'var'</span>));
+0019     hSize=7;
+0020 <span class="keyword">end</span>
+0021 
+0022 sigma=sigma(:);
+0023 hSize=hSize(:);
+0024 
+0025 <span class="keyword">if</span> ((length(hSize)~=3) &amp; (length(hSize)~=1)) <span class="comment">%#ok</span>
+0026     error(<span class="string">'hSize must be scalar or 3x1'</span>);
+0027 <span class="keyword">end</span>
+0028 <span class="keyword">if</span> ((length(sigma)~=3) &amp; (length(sigma)~=1)) <span class="comment">%#ok</span>
+0029     error(<span class="string">'sigma must be scalar or 3x1'</span>);
+0030 <span class="keyword">end</span>
+0031 
+0032 <span class="keyword">if</span> (length(hSize)==1)
+0033     hSize=ones(3,1)*hSize;
+0034 <span class="keyword">end</span>
+0035 <span class="keyword">if</span> (length(sigma)==1)
+0036     sigma=ones(3,1)*sigma;
+0037 <span class="keyword">end</span>
+0038 
+0039 sigma=round(sigma);
+0040 hSize=round(hSize);
+0041 
+0042 <span class="keyword">if</span>(find(sigma&lt;1))
+0043     error(<span class="string">'sigma cannot be less than 1'</span>);
+0044 <span class="keyword">end</span>
+0045 <span class="keyword">if</span>(find(hSize&lt;1))
+0046     error(<span class="string">'hSize cannot be less than 1'</span>);
+0047 <span class="keyword">end</span>
+0048 
+0049 yRange=(-fix(hSize(1)/2)):(fix(hSize(1)/2));
+0050 xRange=(-fix(hSize(2)/2)):(fix(hSize(2)/2));
+0051 zRange=(-fix(hSize(3)/2)):(fix(hSize(3)/2));
+0052 
+0053 [yg,xg,zg]=ndgrid(yRange,xRange,zRange);
+0054 gaussY=exp(-(yg.^2)/(2*sigma(1).^2));
+0055 gaussX=exp(-(xg.^2)/(2*sigma(2).^2));
+0056 gaussZ=exp(-(zg.^2)/(2*sigma(3).^2));
+0057 
+0058 outArray=gaussY.*gaussX.*gaussZ;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

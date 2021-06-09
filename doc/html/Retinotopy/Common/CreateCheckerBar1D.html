@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateCheckerBar1D</title>
+  <meta name="keywords" content="CreateCheckerBar1D">
+  <meta name="description" content="Generates bar-shaped checkerboard patterns masked by a circular aperture (can be used for pRF stimuli) with an individual ID number on each patch.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateCheckerBar1D
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates bar-shaped checkerboard patterns masked by a circular aperture (can be used for pRF stimuli) with an individual ID number on each patch.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [checkerboard,bincheckerboard,mask]=CreateCheckerBar1D(fieldSize,width,angles,steps,pix_per_deg,ndivsL,ndivsS,phase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates bar-shaped checkerboard patterns masked by a circular aperture (can be used for pRF stimuli) with an individual ID number on each patch.
+ function [checkerboard,bincheckerboard,mask]=CreateCheckerBar1D(:fieldSize,:width,:angles,:steps,:pix_per_deg,:ndivsL,:ndivsS,:phase)
+ (: is optional)
+
+ This function generates bar-shaped checkerboards with an individual ID number on each patch, which sweeps the visual field.
+ The bar stimulus starts at the right horizontal meridian and sweeps the visual field leftwards.
+ Each of two checkers have the compensating values of its counterpart.
+ Multiple angles can be accepted.
+
+ [input]
+ fieldSize   : (optional) field size of the stimulus canvas in degree. 12 by default.
+               the bar stimulus is masked by the circular (or ellipse) aperture whose size is fieldSize.
+ width       : (optional) bar width in degree. 3 by default.
+ angles      : (optional) bar angle in degree, 0 = right horizontal meridian, counter-clockwise. 0 by default.
+ steps       : (optional) steps of the bar in sweeping the visual field defined as fieldSize. 16 by default.
+ pix_per_deg : (optional) pixels per degree, [val]. 40 by default.
+ ndivsL      : (optional) the number of divisions of the bar along long axis (row). 12 by default.
+ ndivsS      : (optional) the number of divisions of the bar along short axis (col). 3 by default.
+ phase       : (optional) checker's phase along the short axis. 0 by default.
+
+ [output]
+ checkerboard : output grayscale bar-shaped checkerboard at each of the visual field locations,
+                cell structure, {numel(angles),numel(steps)}
+                each pixel shows each checker patch's ID or background(0)
+ binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) bar-shaped checkerboard patterns,
+                cell structure, {numel(angles),numel(steps)}.
+ mask         : (optional) checkerboard regional mask, cell structure, logical
+
+ Created    : &quot;2018-11-20 11:23:31 ban&quot;
+ Last Update: &quot;2018-12-11 17:42:32 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [checkerboard,bincheckerboard,mask]=CreateCheckerBar1D(fieldSize,width,angles,steps,pix_per_deg,ndivsL,ndivsS,phase)</a>
+0002 
+0003 <span class="comment">% Generates bar-shaped checkerboard patterns masked by a circular aperture (can be used for pRF stimuli) with an individual ID number on each patch.</span>
+0004 <span class="comment">% function [checkerboard,bincheckerboard,mask]=CreateCheckerBar1D(:fieldSize,:width,:angles,:steps,:pix_per_deg,:ndivsL,:ndivsS,:phase)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function generates bar-shaped checkerboards with an individual ID number on each patch, which sweeps the visual field.</span>
+0008 <span class="comment">% The bar stimulus starts at the right horizontal meridian and sweeps the visual field leftwards.</span>
+0009 <span class="comment">% Each of two checkers have the compensating values of its counterpart.</span>
+0010 <span class="comment">% Multiple angles can be accepted.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [input]</span>
+0013 <span class="comment">% fieldSize   : (optional) field size of the stimulus canvas in degree. 12 by default.</span>
+0014 <span class="comment">%               the bar stimulus is masked by the circular (or ellipse) aperture whose size is fieldSize.</span>
+0015 <span class="comment">% width       : (optional) bar width in degree. 3 by default.</span>
+0016 <span class="comment">% angles      : (optional) bar angle in degree, 0 = right horizontal meridian, counter-clockwise. 0 by default.</span>
+0017 <span class="comment">% steps       : (optional) steps of the bar in sweeping the visual field defined as fieldSize. 16 by default.</span>
+0018 <span class="comment">% pix_per_deg : (optional) pixels per degree, [val]. 40 by default.</span>
+0019 <span class="comment">% ndivsL      : (optional) the number of divisions of the bar along long axis (row). 12 by default.</span>
+0020 <span class="comment">% ndivsS      : (optional) the number of divisions of the bar along short axis (col). 3 by default.</span>
+0021 <span class="comment">% phase       : (optional) checker's phase along the short axis. 0 by default.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [output]</span>
+0024 <span class="comment">% checkerboard : output grayscale bar-shaped checkerboard at each of the visual field locations,</span>
+0025 <span class="comment">%                cell structure, {numel(angles),numel(steps)}</span>
+0026 <span class="comment">%                each pixel shows each checker patch's ID or background(0)</span>
+0027 <span class="comment">% binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) bar-shaped checkerboard patterns,</span>
+0028 <span class="comment">%                cell structure, {numel(angles),numel(steps)}.</span>
+0029 <span class="comment">% mask         : (optional) checkerboard regional mask, cell structure, logical</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Created    : &quot;2018-11-20 11:23:31 ban&quot;</span>
+0032 <span class="comment">% Last Update: &quot;2018-12-11 17:42:32 ban&quot;</span>
+0033 
+0034 <span class="comment">%% check the input variables.</span>
+0035 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=12; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;2 || isempty(width), width=3; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;3 || isempty(angles), angles=0; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;4 || isempty(steps), steps=16; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;5 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;6 || isempty(ndivsL), ndivsL=12; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;7 || isempty(ndivsS), ndivsS=3; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;8 || isempty(phase), phase=0; <span class="keyword">end</span>
+0043 
+0044 <span class="comment">%% unit conversion</span>
+0045 
+0046 <span class="comment">% from degrees to pixels</span>
+0047 fieldSize=ceil(fieldSize*pix_per_deg);
+0048 width=ceil(width*pix_per_deg);
+0049 
+0050 <span class="comment">% from degree to radius</span>
+0051 angles=angles.*pi./180;
+0052 phase=phase*pi/180;
+0053 <span class="keyword">if</span> phase&gt;2*pi, phase=mod(phase,2*pi); <span class="keyword">end</span>
+0054 
+0055 <span class="comment">% add small lim in checkerboard image, this is to avoid unwanted juggy edges</span>
+0056 imsize_ratio=1.01;
+0057 
+0058 <span class="comment">%% generate bar checker board</span>
+0059 
+0060 <span class="comment">% base xy distance field</span>
+0061 [xx,yy]=meshgrid((0:1:imsize_ratio*fieldSize)-imsize_ratio*fieldSize/2,(0:1:imsize_ratio*fieldSize)-imsize_ratio*fieldSize/2);
+0062 <span class="comment">%if mod(size(xx,1),2), xx=xx(1:end-1,:); yy=yy(1:end-1,:); end</span>
+0063 <span class="comment">%if mod(size(xx,2),2), xx=xx(:,1:end-1); yy=yy(:,1:end-1); end</span>
+0064 
+0065 <span class="comment">% compute distance</span>
+0066 r=sqrt(xx.^2+yy.^2);
+0067 
+0068 checkerboard=cell(numel(angles),steps);
+0069 <span class="keyword">if</span> nargout&gt;=2, bincheckerboard=cell(numel(angles),steps); <span class="keyword">end</span>
+0070 <span class="keyword">if</span> nargout&gt;=3, mask=cell(numel(angles),steps); <span class="keyword">end</span>
+0071 
+0072 <span class="keyword">for</span> aa=1:1:numel(angles)
+0073 
+0074   <span class="comment">% !!!NOTICE!!!</span>
+0075   <span class="comment">% We need to create each checkerboard following the procedures below</span>
+0076   <span class="comment">%  1. generate radian angle field</span>
+0077   <span class="comment">%  2. rotate it based on angles &amp; phase</span>
+0078   <span class="comment">%  3. generate checkerboard IDs</span>
+0079   <span class="comment">% This consumes much CPU power and time, but it is definitely important.</span>
+0080   <span class="comment">%</span>
+0081   <span class="comment">% To use imrotate after creating one image may look more sophisticated, but we</span>
+0082   <span class="comment">% should not do that. This is because when we use imrotate (or fast_rotate)</span>
+0083   <span class="comment">% or Screen('DrawTexture',....,rotangle,...), the displayed image will result</span>
+0084   <span class="comment">% in low quality with juggy artefact along checker edges.</span>
+0085 
+0086   done_flag=0;
+0087 
+0088   <span class="comment">% just flip dimension and copy, if the currect checkerboard is one of</span>
+0089   <span class="comment">% 180 deg flipped version of previously generated checkerboards.</span>
+0090   <span class="comment">% this is to save calculation time</span>
+0091   <span class="keyword">if</span> aa&gt;=2
+0092     <span class="keyword">for</span> tt=1:1:aa-1
+0093       <span class="comment">%if angles(aa)==mod(angles(tt)+pi,2*pi)</span>
+0094       <span class="keyword">if</span> abs(angles(aa)-mod(angles(tt)+pi,2*pi))&lt;0.01 <span class="comment">% this is to avoid round off error</span>
+0095         <span class="comment">%fprintf('#%d checkerboard is generated by just copying/flipping from #%d checkerboard\n',aa,tt); % debug code</span>
+0096         <span class="keyword">for</span> pp=1:1:size(checkerboard,2)
+0097           checkerboard{aa,pp}=flipdim(flipdim(checkerboard{tt,pp},2),1);
+0098         <span class="keyword">end</span>
+0099         <span class="keyword">if</span> nargout&gt;=2
+0100           <span class="keyword">for</span> pp=1:1:size(checkerboard,2), bincheckerboard{aa,pp}=flipdim(flipdim(bincheckerboard{tt,pp},2),1); <span class="keyword">end</span>
+0101         <span class="keyword">end</span>
+0102         <span class="keyword">if</span> nargout&gt;=3
+0103           <span class="keyword">for</span> pp=1:1:size(checkerboard,2), mask{aa,pp}=flipdim(flipdim(mask{tt,pp},2),1); <span class="keyword">end</span>
+0104         <span class="keyword">end</span>
+0105         done_flag=1;
+0106         <span class="keyword">break</span>;
+0107       <span class="keyword">end</span>
+0108     <span class="keyword">end</span>
+0109   <span class="keyword">end</span>
+0110 
+0111   <span class="keyword">if</span> ~done_flag
+0112 
+0113     pos=linspace(fieldSize/2,-fieldSize/2,steps);
+0114     xxxx=xx*cos(angles(aa))-yy*sin(angles(aa));
+0115     yyyy=xx*cos(angles(aa)+pi/2)-yy*sin(angles(aa)+pi/2);
+0116 
+0117     <span class="keyword">for</span> pp=1:1:numel(pos)
+0118       <span class="comment">% get the target bar region</span>
+0119       inidx=find( (-fieldSize/2&lt;=yyyy &amp; yyyy&lt;=fieldSize/2) &amp; (pos(pp)-width/2&lt;=xxxx &amp; xxxx&lt;=pos(pp)+width/2) );
+0120 
+0121       <span class="comment">% assign indices on the patches along the long axis of the bar</span>
+0122       cidl=zeros(size(yyyy)); <span class="comment">% checker id along the long axis</span>
+0123       cidl(inidx)=ceil(yyyy(inidx)/fieldSize*ndivsL);
+0124       cidl(inidx)=cidl(inidx)-min(unique(cidl(inidx)))+1; <span class="comment">% -min()+1 is required sicne yyyy contains negative (with 0 at the center of the matrix)</span>
+0125 
+0126       <span class="comment">% assign indices on the patches along the short axis of the bar</span>
+0127       <span class="keyword">if</span> phase~=0
+0128         widi=linspace(pos(pp)-width/2-(width/ndivsS*phase/(2*pi)),pos(pp)+width/2+(width/ndivsS-(width/ndivsS*phase/(2*pi))),ndivsS+2); widi(1)=[]; <span class="comment">% checker borders, considering phase shift</span>
+0129       <span class="keyword">else</span>
+0130         widi=linspace(pos(pp)-width/2,pos(pp)+width/2,ndivsS+1); widi(1)=[];
+0131       <span class="keyword">end</span>
+0132       cids=zeros(size(xxxx)); <span class="comment">% checker id along the short axis</span>
+0133       <span class="keyword">for</span> kk=length(widi):-1:1
+0134         cids(pos(pp)-width/2&lt;xxxx &amp; xxxx&lt;=min(widi(kk),pos(pp)+width/2))=kk;
+0135       <span class="keyword">end</span>
+0136 
+0137       <span class="comment">% generate checker's ID</span>
+0138       checkerboard{aa,pp}=zeros(size(xxxx));
+0139       checkerboard{aa,pp}(inidx)=cidl(inidx)+(cids(inidx)-1)*ndivsL;
+0140 
+0141       <span class="comment">% mask the outer retions and delete outliers</span>
+0142       checkerboard{aa,pp}(r&gt;fieldSize/2 | checkerboard{aa,pp}&lt;0)=0;
+0143 
+0144       <span class="comment">% generate a binary (1/2=checker-patterns and 0=background) checkerboard</span>
+0145       <span class="keyword">if</span> nargout&gt;=2
+0146         barL=zeros(size(cidl));
+0147         barL(inidx)=2*mod(cidl(inidx),2)-1; <span class="comment">% -1/1 class;</span>
+0148 
+0149         barS=zeros(size(cids));
+0150         barS(inidx)=2*mod(cids(inidx),2)-1; <span class="comment">% -1/1 class</span>
+0151 
+0152         bincheckerboard{aa,pp}=zeros(size(xxxx));
+0153         bincheckerboard{aa,pp}(inidx)=barS(inidx).*barL(inidx);
+0154         bincheckerboard{aa,pp}(r&gt;fieldSize/2)=0;
+0155         bincheckerboard{aa,pp}(bincheckerboard{aa,pp}&lt;0)=2;
+0156       <span class="keyword">end</span>
+0157 
+0158       <span class="comment">% generate mask</span>
+0159       <span class="keyword">if</span> nargout&gt;=3, mask{aa,pp}=logical(checkerboard{aa,pp}); <span class="keyword">end</span>
+0160     <span class="keyword">end</span> <span class="comment">% for pp=1:1:size(pos,1)</span>
+0161 
+0162   <span class="keyword">end</span> <span class="comment">% if ~done_flag</span>
+0163 
+0164 <span class="keyword">end</span> <span class="comment">% for aa=1:1:numel(angles)</span>
+0165 
+0166 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

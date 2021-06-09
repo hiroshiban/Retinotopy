@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of responselogger</title>
+  <meta name="keywords" content="responselogger">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>responselogger
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="cleanpport.html" class="code" title="function cleanpport">cleanpport</a>	Sets most pins of the parallel port to zero.</li><li><a href="responselogger.html" class="code" title="">responselogger</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="responselogger.html" class="code" title="">responselogger</a>	</li><li><a href="../../Retinotopy/Presentation/cbar.html" class="code" title="function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cbar_fixtask.html" class="code" title="function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar_fixtask</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual.html" class="code" title="function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual_fixtask.html" class="code" title="function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/chrf.html" class="code" title="function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/chrf_fixtask.html" class="code" title="function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer.html" class="code" title="function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer_fixtask.html" class="code" title="function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/cmeridian.html" class="code" title="function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmeridian_fixtask.html" class="code" title="function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian_fixtask</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy.html" class="code" title="function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy_fixtask.html" class="code" title="function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar.html" class="code" title="function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar_fixtask.html" class="code" title="function dbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual.html" class="code" title="function ddual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual_fixtask.html" class="code" title="function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dhrf.html" class="code" title="function dhrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dhrf_fixtask.html" class="code" title="function dhrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer.html" class="code" title="function dlgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer_fixtask.html" class="code" title="function dlgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlocalizer.html" class="code" title="function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer_fixtask.html" class="code" title="function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dmeridian.html" class="code" title="function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmeridian_fixtask.html" class="code" title="function dmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian_fixtask</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal.html" class="code" title="function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal_fixtask.html" class="code" title="function dmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal_fixtask</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy.html" class="code" title="function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy_fixtask.html" class="code" title="function dretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy_fixtask</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ibar_fixtask.html" class="code" title="function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ibar_fixtask</a>	Object-image-defined bar stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/ilgnlocalizer_fixtask.html" class="code" title="function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilgnlocalizer_fixtask</a>	Object-image-defined wedge stimulus with fixation luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/imeridian_fixtask.html" class="code" title="function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imeridian_fixtask</a>	Object-image-defined dual wedge stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj=responselogger(key_codes)</a></li><li><a href="#_sub2" class="code">function obj=delete(obj)</a></li><li><a href="#_sub3" class="code">function obj=set_keycodes(obj,key_codes)</a></li><li><a href="#_sub4" class="code">function obj=reset_keystatus(obj)</a></li><li><a href="#_sub5" class="code">function obj=display_keycodes(obj)</a></li><li><a href="#_sub6" class="code">function obj=unify_keys(obj)</a></li><li><a href="#_sub7" class="code">function [obj,oldkey]=disable_jis_key_trouble(obj)</a></li><li><a href="#_sub8" class="code">function obj=initialize(obj,event)</a></li><li><a href="#_sub9" class="code">function [obj,event,keyCode]=check_responses(obj,event,specific_time,display_flg)</a></li><li><a href="#_sub10" class="code">function [user_answer,obj]=wait_to_proceed(obj,my_message)</a></li><li><a href="#_sub11" class="code">function [pstart,obj]=wait_stimulus_presentation(obj,mode,start_key)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 classdef <a href="responselogger.html" class="code" title="">responselogger</a>
+0002 
+0003 <span class="comment">% a class to handle participant's key responses and event log for your bahavior/fMRI/TMS experiments.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% [method]</span>
+0006 <span class="comment">% &gt;&gt; resps=resps.responselogger();</span>
+0007 <span class="comment">% &gt;&gt; resps=resps.set_keycodes(key_codes)                       : set key codes to be checked by the methods defined in this class.</span>
+0008 <span class="comment">% &gt;&gt; resps=resps.reset_keystatus()                             : reset all the key status.</span>
+0009 <span class="comment">% &gt;&gt; resps=resps.display_keycodes()                            : display key codes currently set in this class.</span>
+0010 <span class="comment">% &gt;&gt; resps=resps.unify_keys()                                  : unify key names across different operating systems</span>
+0011 <span class="comment">% &gt;&gt; [resps,oldkey]=resps.disable_jis_key_trouble()            : disable JIS key-related trouble (must run before the actual response acquisitions).</span>
+0012 <span class="comment">% &gt;&gt; [resps,event,keyCode]=resps.check_responses(event,reference_time) : check participant's key resonses and record them to the event log.</span>
+0013 <span class="comment">% &gt;&gt; [user_answer,resps]=resps.wait_to_proceed(:my_message)    : wait until the user responds to the question by 'y' (yes) or 'n' (no).</span>
+0014 <span class="comment">% &gt;&gt; [pstart,resps]=resps.wait_stimulus_presentation(:mode,:tgt_key) : wait for stimulus presentation.</span>
+0015 <span class="comment">% (: is optional)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% [about input/output variables]</span>
+0018 <span class="comment">% reference_time : reference time point to be used in logging the latter event time.</span>
+0019 <span class="comment">%                  e.g. reference_time=GetSecs();</span>
+0020 <span class="comment">% key_codes      : array of key codes, [1xn] matrix in which keycodes you want to check should be included.</span>
+0021 <span class="comment">%                  'q' and 'escape' are reserved to tell the program to force to quit.</span>
+0022 <span class="comment">% oldkey         : old key status before disabling default-ON JIS keys.</span>
+0023 <span class="comment">% event          : a MATLAB object generated by eventlogger.m</span>
+0024 <span class="comment">%                  event.event consists of MATLAB cell structure. each of cell has 3 elements below.</span>
+0025 <span class="comment">%                  {event_time(GetSecs()-reference_time),name_of_the_event,parameter_of_the_event}</span>
+0026 <span class="comment">% my_message     : message you want to display when waiting for participant's response to proceed the experiment.</span>
+0027 <span class="comment">% mode           : method to start the stimulus presentation</span>
+0028 <span class="comment">%                  0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),</span>
+0029 <span class="comment">%                  3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port</span>
+0030 <span class="comment">%                  or 4:custom key trigger (wait for a key input that you specify as tgt_key).</span>
+0031 <span class="comment">%                  0 by default.</span>
+0032 <span class="comment">% start_key      : target key that you specify to detect a trigger to start a presentation. a character.</span>
+0033 <span class="comment">%                  the stimulus presentation will start when it gets tgt_key pressed.</span>
+0034 <span class="comment">%                  's' by default. But note that the tgt_key is used only when you set mode to 4.</span>
+0035 <span class="comment">% pstart         : 0 when some error happens, 1 when the presentation start correctly.</span>
+0036 <span class="comment">% user_answer    : 'true' or 'false'.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% [dependency]</span>
+0039 <span class="comment">% 1. Psychtoolbox ver.3 or above. Should be installed independently.</span>
+0040 <span class="comment">% 2. eventlogger.m</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% Created    : &quot;2013-11-17 21:42:47 ban&quot;</span>
+0044 <span class="comment">% Last Update: &quot;2017-12-29 15:52:32 ban&quot;</span>
+0045 
+0046 properties (Hidden)  <span class="comment">%(SetAccess = protected)</span>
+0047   key_codes=[37,39]; <span class="comment">% array of key codes, [1xn] matrix in which keycodes you want to check should be included.</span>
+0048                      <span class="comment">% 'q' and 'escape' are reserved to tell the program to force to quit.</span>
+0049   key_status=[0,0];  <span class="comment">% array of key status, [1xn] matrix. generally all 0 by default. 1 when key is down.</span>
+0050   my_message=<span class="string">'Are you ready to proceed? (y/n) : '</span>; <span class="comment">% message you want to display when waiting for participant's response to proceed the experiment.</span>
+0051   mode=0;
+0052   start_key=<span class="string">'s'</span>;
+0053   quit_flg=0;
+0054 <span class="keyword">end</span>
+0055 
+0056 methods
+0057 
+0058   <span class="comment">% constructor</span>
+0059   <a name="_sub0" href="#_subfunctions" class="code">function obj=responselogger(key_codes)</a>
+0060     <span class="keyword">if</span> nargin==1 &amp;&amp; ~isempty(key_codes)
+0061       obj.key_codes=key_codes;
+0062       obj.key_status=zeros(1,numel(obj.key_codes));
+0063     <span class="keyword">end</span>
+0064     <span class="comment">%KbName('UnifyKeyNames');</span>
+0065   <span class="keyword">end</span>
+0066 
+0067   <span class="comment">% destructor</span>
+0068   <a name="_sub1" href="#_subfunctions" class="code">function obj=delete(obj)</a>
+0069     <span class="comment">% do nothing</span>
+0070   <span class="keyword">end</span>
+0071 
+0072   <span class="comment">% set key codes</span>
+0073   <a name="_sub2" href="#_subfunctions" class="code">function obj=set_keycodes(obj,key_codes)</a>
+0074     <span class="keyword">if</span> nargin&lt;2 || isempty(key_codes), key_codes=[37,39]; <span class="keyword">end</span>
+0075     obj.key_codes=key_codes;
+0076     obj.key_status=zeros(1,numel(obj.key_codes));
+0077   <span class="keyword">end</span>
+0078 
+0079   <span class="comment">% rest key status</span>
+0080   <a name="_sub3" href="#_subfunctions" class="code">function obj=reset_keystatus(obj)</a>
+0081     obj.key_status(:)=0;
+0082   <span class="keyword">end</span>
+0083 
+0084   <span class="comment">% display key codes</span>
+0085   <a name="_sub4" href="#_subfunctions" class="code">function obj=display_keycodes(obj)</a>
+0086     <span class="keyword">for</span> ii=1:1:numel(obj.key_codes), fprintf(<span class="string">'Key %02d: %d (%s)\n'</span>,ii,obj.key_codes(ii),KbName(obj.key_codes(ii))); <span class="keyword">end</span>
+0087   <span class="keyword">end</span>
+0088 
+0089   <span class="comment">% unify key names across different operating systems</span>
+0090   <a name="_sub5" href="#_subfunctions" class="code">function obj=unify_keys(obj)</a>
+0091     KbName(<span class="string">'UnifyKeyNames'</span>);
+0092   <span class="keyword">end</span>
+0093 
+0094   <span class="comment">% disable JIS key-related trouble (must run before the actual response acquisitions)</span>
+0095   <a name="_sub6" href="#_subfunctions" class="code">function [obj,oldkey]=disable_jis_key_trouble(obj)</a>
+0096     [keyIsDown,secs,keyCode]=KbCheck();
+0097     oldkey=DisableKeysForKbCheck(find(keyCode&gt;0));
+0098   <span class="keyword">end</span>
+0099 
+0100   <span class="comment">% initialize responselogger</span>
+0101   <a name="_sub7" href="#_subfunctions" class="code">function obj=initialize(obj,event)</a>
+0102     obj.unify_keys();        <span class="comment">% unifying the key name</span>
+0103     obj.check_responses(event);    <span class="comment">% load function(s) once before running the main trial loop</span>
+0104     obj.disable_jis_key_trouble(); <span class="comment">% force to set 0 for the keys that are ON by default.</span>
+0105   <span class="keyword">end</span>
+0106 
+0107   <span class="comment">% check participant's key responses and record them to the event log</span>
+0108   <a name="_sub8" href="#_subfunctions" class="code">function [obj,event,keyCode]=check_responses(obj,event,specific_time,display_flg)</a>
+0109     [keyIsDown,keysecs,keyCode]=KbCheck();
+0110     <span class="keyword">if</span> keyIsDown
+0111       <span class="keyword">if</span> (keyCode(KbName(<span class="string">'q'</span>))==1 || keyCode(KbName(<span class="string">'escape'</span>))==1) &amp;&amp; ~obj.quit_flg <span class="comment">% quit events - Q key or ESC</span>
+0112         Screen(<span class="string">'CloseAll'</span>);
+0113         <span class="keyword">if</span> nargin==2
+0114           event=event.add_event(<span class="string">'Force quit'</span>,[]);
+0115         <span class="keyword">elseif</span> nargin==3
+0116           event=event.add_event(<span class="string">'Force quit'</span>,[],specific_time);
+0117         <span class="keyword">elseif</span> nargin==4
+0118           event=event.add_event(<span class="string">'Force quit'</span>,[],specific_time,display_flg);
+0119         <span class="keyword">end</span>
+0120         obj.quit_flg=1;
+0121       <span class="keyword">end</span>
+0122 
+0123       <span class="keyword">for</span> ii=1:1:numel(obj.key_codes)
+0124         <span class="keyword">if</span> keyCode(obj.key_codes(ii))==1 &amp;&amp; obj.key_status(ii)==0 <span class="comment">% check the target key press and the previous status</span>
+0125           <span class="keyword">if</span> nargin==2
+0126             event=event.add_event(<span class="string">'Response'</span>,sprintf(<span class="string">'key%d'</span>,ii));
+0127           <span class="keyword">elseif</span> nargin==3
+0128             event=event.add_event(<span class="string">'Response'</span>,sprintf(<span class="string">'key%d'</span>,ii),specific_time);
+0129           <span class="keyword">elseif</span> nargin==4
+0130             event=event.add_event(<span class="string">'Response'</span>,sprintf(<span class="string">'key%d'</span>,ii),specific_time,display_flg);
+0131           <span class="keyword">end</span>
+0132           obj.key_status(:)=0; obj.key_status(ii)=1;
+0133         <span class="keyword">end</span>
+0134       <span class="keyword">end</span>
+0135     <span class="keyword">else</span>
+0136       obj.key_status(:)=0;
+0137     <span class="keyword">end</span>
+0138   <span class="keyword">end</span>
+0139 
+0140   <span class="comment">% wait until the user responds to the question by 'y' (yes) or 'n' (no).</span>
+0141   <a name="_sub9" href="#_subfunctions" class="code">function [user_answer,obj]=wait_to_proceed(obj,my_message)</a>
+0142     <span class="keyword">if</span> nargin==2, obj.my_message=my_message; <span class="keyword">end</span>
+0143     <span class="keyword">while</span> 1
+0144       user_answer=input(obj.my_message,<span class="string">'s'</span>);
+0145       <span class="keyword">if</span> user_answer==<span class="string">'y'</span>
+0146         user_answer=true; <span class="keyword">break</span>;
+0147       <span class="keyword">elseif</span> user_answer==<span class="string">'n'</span>
+0148         user_answer=false; <span class="keyword">break</span>;
+0149       <span class="keyword">else</span>
+0150         disp(<span class="string">'Please press y or n!'</span>); <span class="keyword">continue</span>;
+0151       <span class="keyword">end</span>
+0152     <span class="keyword">end</span>
+0153     obj.my_message=<span class="string">'Are you ready to proceed? (y/n) : '</span>; <span class="comment">% put back to the default message.</span>
+0154     obj.key_status(:)=0;
+0155     pause(0.5);
+0156   <span class="keyword">end</span>
+0157 
+0158   <span class="comment">% wait for stimulus presentation.</span>
+0159   <a name="_sub10" href="#_subfunctions" class="code">function [pstart,obj]=wait_stimulus_presentation(obj,mode,start_key)</a>
+0160     <span class="keyword">if</span> nargin&gt;=2 &amp;&amp; ~isempty(mode), obj.mode=mode; <span class="keyword">end</span>
+0161     <span class="keyword">if</span> nargin==3 &amp;&amp; ~isempty(start_key), obj.start_key=start_key; <span class="keyword">end</span>
+0162     <span class="keyword">if</span> isempty(intersect(obj.mode,0:1:4))
+0163       <span class="comment">% 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),</span>
+0164       <span class="comment">% 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,</span>
+0165       <span class="comment">% or 4:custom key trigger (wait for a key input that you specify as tgt_key).</span>
+0166       error(<span class="string">'mode should be one of 0-4. check input variable.'</span>);
+0167     <span class="keyword">end</span>
+0168 
+0169     pstart=0;
+0170     <span class="keyword">if</span> obj.mode==0 <span class="comment">% in the lab or test, start with button press (SPACE or RETURN key)</span>
+0171       <span class="keyword">while</span> pstart==0
+0172         [keyIsDown,junk4,keyCode]=KbCheck();
+0173         <span class="keyword">if</span> keyCode(KbName(<span class="string">'space'</span>)) || keyCode(KbName(<span class="string">'return'</span>)), pstart=1; <span class="keyword">end</span>
+0174       <span class="keyword">end</span>
+0175     <span class="keyword">elseif</span> obj.mode==1 <span class="comment">% left-mouse button</span>
+0176       <span class="keyword">while</span> pstart==0
+0177         [x,y,mousebutton]=GetMouse();
+0178         <span class="keyword">if</span> mousebutton(1), pstart=1; <span class="keyword">end</span>
+0179       <span class="keyword">end</span>
+0180     <span class="keyword">elseif</span> obj.mode==2 <span class="comment">% MR trigger at CiNet</span>
+0181       <span class="keyword">while</span> pstart==0
+0182         [keyIsDown,junk4,keyCode]=KbCheck();
+0183         <span class="keyword">if</span> keyCode(KbName(<span class="string">'t'</span>)) || keyCode(KbName(<span class="string">'T'</span>)), pstart=1; <span class="keyword">end</span>
+0184       <span class="keyword">end</span>
+0185     <span class="keyword">elseif</span> obj.mode==3 <span class="comment">% waiting the first MR trigger from parallel port (BUIC)</span>
+0186       <a href="cleanpport.html" class="code" title="function cleanpport">cleanpport</a>(); <span class="comment">%clear all parallel pins</span>
+0187       dio=digitalio(<span class="string">'parallel'</span>,<span class="string">'LPT1'</span>);  <span class="comment">% set up parallel port</span>
+0188       addline(dio,1:16,<span class="string">'in'</span>);
+0189       addline(dio,0,<span class="string">'out'</span>);
+0190       pins=getvalue(dio);
+0191       <span class="keyword">while</span> pins(11)==0
+0192         pins=getvalue(dio);
+0193         <span class="keyword">if</span>(pins(11)), pstart=1; <span class="keyword">break</span>; <span class="keyword">end</span>
+0194       <span class="keyword">end</span>
+0195     <span class="keyword">elseif</span> obj.mode==4 <span class="comment">% custom key trigger</span>
+0196       <span class="keyword">while</span> pstart==0
+0197         [keyIsDown,junk4,keyCode]=KbCheck();
+0198         <span class="keyword">if</span> keyCode(KbName(obj.start_key)), pstart=1; <span class="keyword">end</span>
+0199       <span class="keyword">end</span>
+0200     <span class="keyword">end</span> <span class="comment">% if mode</span>
+0201   <span class="keyword">end</span>
+0202 
+0203 <span class="keyword">end</span> <span class="comment">% methods</span>
+0204 
+0205 <span class="keyword">end</span> <span class="comment">% classdef responselogger</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

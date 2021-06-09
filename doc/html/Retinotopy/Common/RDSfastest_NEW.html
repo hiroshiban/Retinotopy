@@ -1,0 +1,352 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of RDSfastest_NEW</title>
+  <meta name="keywords" content="RDSfastest_NEW">
+  <meta name="description" content="function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor,skipzero_flg,avoid_bias_flg,use_mex_flg)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>RDSfastest_NEW
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor,skipzero_flg,avoid_bias_flg,use_mex_flg)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor,skipzero_flg,avoid_bias_flg,use_mex_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor,skipzero_flg,avoid_bias_flg,use_mex_flg)
+
+ Generate left/right Random Dot Stereogram (RDS) Image (fastest version without any duplicated processing)
+ The generated image are the same size with heightfield image.
+
+ -- modified from RDSbyOval for speeding up and for matching the purpose of the
+    current experiment
+
+ [input]
+ posL        : position shifts for left RDS image [row,col]
+ posR        : position shifts for right RDS image [row,col]
+ wdot        : oval 1 to be used in RDS image [row,col]
+ bdot        : oval 2 to be used in RDS image [row,col]
+ dotalpha    : alpha value of oval 1&amp;2 [row,col] (same size with wdot &amp; bdot)
+ dotDens     : density (percentage) of ovals filling the generated RDS image [1-100]
+ bgcolor     : background color, grayscale, [0-255]
+ skipzero_flg : a flag that decides whether the random dots are filled in the
+               background (zero-disparity) regions or not.
+               if 1, the zero-disparity regions are masked and put not RDS.
+ avoid_bias_flg : whether avoiding dot overlaps and density biases due to the shifts of dots
+               as much as possible.
+ use_mex_flg : whether using a mex function to put white and black dots.
+
+ [output]
+ imgL        : generated image(s) for left eye, [row,col], same size with posL/posR
+ imgR        : generated image(s) for right eye, [row,col], same size with posL/posR
+
+ !!! NOTICE !!!
+ for speeding up image generation process,
+ I will not put codes for nargin checks.
+ Please be careful.
+
+ Created:     &quot;2010-04-03 14:05:21 ban&quot;
+ Last Update: &quot;2019-05-17 16:13:35 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>	Randomly sorts the input array.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [Y,index]=shuffle(X)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor,skipzero_flg,avoid_bias_flg,use_mex_flg)</a>
+0002 
+0003 <span class="comment">% function [imgL,imgR]=RDSfastest_NEW(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor,skipzero_flg,avoid_bias_flg,use_mex_flg)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Generate left/right Random Dot Stereogram (RDS) Image (fastest version without any duplicated processing)</span>
+0006 <span class="comment">% The generated image are the same size with heightfield image.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% -- modified from RDSbyOval for speeding up and for matching the purpose of the</span>
+0009 <span class="comment">%    current experiment</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% [input]</span>
+0012 <span class="comment">% posL        : position shifts for left RDS image [row,col]</span>
+0013 <span class="comment">% posR        : position shifts for right RDS image [row,col]</span>
+0014 <span class="comment">% wdot        : oval 1 to be used in RDS image [row,col]</span>
+0015 <span class="comment">% bdot        : oval 2 to be used in RDS image [row,col]</span>
+0016 <span class="comment">% dotalpha    : alpha value of oval 1&amp;2 [row,col] (same size with wdot &amp; bdot)</span>
+0017 <span class="comment">% dotDens     : density (percentage) of ovals filling the generated RDS image [1-100]</span>
+0018 <span class="comment">% bgcolor     : background color, grayscale, [0-255]</span>
+0019 <span class="comment">% skipzero_flg : a flag that decides whether the random dots are filled in the</span>
+0020 <span class="comment">%               background (zero-disparity) regions or not.</span>
+0021 <span class="comment">%               if 1, the zero-disparity regions are masked and put not RDS.</span>
+0022 <span class="comment">% avoid_bias_flg : whether avoiding dot overlaps and density biases due to the shifts of dots</span>
+0023 <span class="comment">%               as much as possible.</span>
+0024 <span class="comment">% use_mex_flg : whether using a mex function to put white and black dots.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% [output]</span>
+0027 <span class="comment">% imgL        : generated image(s) for left eye, [row,col], same size with posL/posR</span>
+0028 <span class="comment">% imgR        : generated image(s) for right eye, [row,col], same size with posL/posR</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% !!! NOTICE !!!</span>
+0031 <span class="comment">% for speeding up image generation process,</span>
+0032 <span class="comment">% I will not put codes for nargin checks.</span>
+0033 <span class="comment">% Please be careful.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% Created:     &quot;2010-04-03 14:05:21 ban&quot;</span>
+0036 <span class="comment">% Last Update: &quot;2019-05-17 16:13:35 ban&quot;</span>
+0037 
+0038 <span class="comment">% --- generate RDS images</span>
+0039 imgL=double(bgcolor*ones(size(posL)));
+0040 imgR=double(bgcolor*ones(size(posL)));
+0041 
+0042 <span class="comment">% create initial random dot image</span>
+0043 randXY=randi(round(100/dotDens),size(posL));
+0044 randXY(mod(randXY,round(100/dotDens))~=0)=0;
+0045 randXY(randXY~=0)=1;
+0046 <span class="keyword">if</span> skipzero_flg, randXY(posL==0 &amp; posR==0)=0; <span class="keyword">end</span> <span class="comment">% mask the regions to be processed</span>
+0047 idx=<a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>(find(randXY==1));
+0048 
+0049 <span class="comment">% create ID field</span>
+0050 idXY=NaN(size(randXY));
+0051 idXY(idx)=1:numel(idx);
+0052 
+0053 <span class="keyword">if</span> avoid_bias_flg
+0054 
+0055   <span class="comment">% create left/right images, taking biases of dot density in the image into account</span>
+0056   <span class="comment">%% left image(s)</span>
+0057   tmp=NaN*ones(size(randXY));
+0058   hiddensurf=ones(size(randXY));
+0059   pos=unique(posL(~isnan(posL)))';
+0060   <span class="keyword">for</span> k=pos <span class="comment">% from near to far % min(min(posL)):max(max(posL))</span>
+0061     <span class="keyword">if</span> k&lt;0
+0062       level=size(randXY,2)+k;
+0063       TT=[idXY(:,level+1:end),idXY(:,1:level)];
+0064     <span class="keyword">elseif</span> k&gt;0
+0065       level=k;
+0066       TT=[idXY(:,level+1:end),idXY(:,1:level)];
+0067     <span class="keyword">elseif</span> k==0
+0068       TT=idXY;
+0069     <span class="keyword">end</span>
+0070     tidx=find(posL==k);
+0071     tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+0072     hiddensurf(tidx)=NaN;
+0073     <span class="comment">%imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code</span>
+0074   <span class="keyword">end</span>
+0075   <span class="keyword">if</span> use_mex_flg
+0076     imgLids=uint32(tmp);
+0077   <span class="keyword">else</span>
+0078     imgLids=tmp;
+0079   <span class="keyword">end</span>
+0080 
+0081   <span class="comment">%% right image(s)</span>
+0082   tmp=NaN*ones(size(randXY));
+0083   hiddensurf=ones(size(randXY));
+0084   pos=unique(posR(~isnan(posR)))';
+0085   <span class="keyword">for</span> k=pos <span class="comment">% from near to far % min(min(posR)):max(max(posR))</span>
+0086     <span class="keyword">if</span> k&lt;0
+0087       level=size(randXY,2)+k;
+0088       TT=[idXY(:,level+1:end),idXY(:,1:level)];
+0089     <span class="keyword">elseif</span> k&gt;0
+0090       level=k;
+0091       TT=[idXY(:,level+1:end),idXY(:,1:level)];
+0092     <span class="keyword">elseif</span> k==0
+0093       TT=idXY;
+0094     <span class="keyword">end</span>
+0095     tidx=find(posR==k);
+0096     tmp(tidx)=TT(tidx).*hiddensurf(tidx);
+0097     hiddensurf(tidx)=NaN;
+0098     <span class="comment">%imshow(tmp,[0,255]); drawnow(); pause(0.1); % DEBUG code</span>
+0099   <span class="keyword">end</span>
+0100 
+0101   <span class="keyword">if</span> use_mex_flg
+0102     imgRids=uint32(tmp);
+0103   <span class="keyword">else</span>
+0104     imgRids=tmp;
+0105   <span class="keyword">end</span>
+0106 
+0107 <span class="keyword">else</span> <span class="comment">% avoid_bias_flg</span>
+0108 
+0109   <span class="comment">% without considering biases of dot density in the image</span>
+0110   tmpL=NaN*ones(size(randXY));
+0111   tmpR=NaN*ones(size(randXY));
+0112 
+0113   idx=find(~isnan(idXY));
+0114   [row,col]=ind2sub(size(idXY),idx);
+0115 
+0116   <span class="keyword">for</span> ii=1:1:size(row,1)
+0117     <span class="keyword">if</span> ~isnan(posL(row(ii),col(ii))) &amp;&amp; ~isnan(posR(row(ii),col(ii)))
+0118       <span class="comment">% here the 'hole' in the image is filled by shifting the dot position cyclically</span>
+0119       <span class="keyword">if</span> col(ii)+posL(row(ii),col(ii)) &lt; 1
+0120         tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+0121       <span class="keyword">elseif</span> size(idXY,2) &lt; col(ii)+posL(row(ii),col(ii))
+0122         tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+0123       <span class="keyword">else</span>
+0124         tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+0125       <span class="keyword">end</span>
+0126 
+0127       <span class="keyword">if</span> col(ii)+posR(row(ii),col(ii)) &lt; 1
+0128         tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+0129       <span class="keyword">elseif</span> size(idXY,2) &lt; col(ii)+posR(row(ii),col(ii))
+0130         tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+0131       <span class="keyword">else</span>
+0132         tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+0133       <span class="keyword">end</span>
+0134     <span class="keyword">end</span>
+0135   <span class="keyword">end</span>
+0136   <span class="comment">%imgLids=tmpL;</span>
+0137   <span class="comment">%imgRids=tmpR;</span>
+0138 
+0139   <span class="keyword">if</span> use_mex_flg
+0140     imgLids=uint32(tmpL);
+0141     imgRids=uint32(tmpR);
+0142   <span class="keyword">else</span>
+0143     imgLids=tmpL;
+0144     imgRids=tmpR;
+0145   <span class="keyword">end</span>
+0146 
+0147 <span class="keyword">end</span> <span class="comment">% if avoid_bias_flg</span>
+0148 
+0149 <span class="keyword">if</span> use_mex_flg
+0150 
+0151   <span class="comment">% replace dots to ovals with MEX</span>
+0152 
+0153   <span class="comment">%ids_idx=shuffle(find(logical(imgLids)));</span>
+0154   ids_idx=sort(find(logical(imgLids)));
+0155   noise_dot_num=0;<span class="comment">%round(numel(ids_idx)*noise_psc/100); % convert noise_psc to the number of dots;</span>
+0156   imgL=ReplaceDots2Ovals(imgLids,ids_idx,noise_dot_num,wdot,bdot,dotalpha,bgcolor,1); <span class="comment">% MEX function</span>
+0157 
+0158   <span class="comment">%ids_idx=shuffle(find(logical(imgRids)));</span>
+0159   ids_idx=sort(find(logical(imgRids)));
+0160   noise_dot_num=0;<span class="comment">%round(numel(ids_idx)*noise_psc/100); % convert noise_psc to the number of dots</span>
+0161   imgR=ReplaceDots2Ovals(imgRids,ids_idx,noise_dot_num,wdot,bdot,dotalpha,bgcolor,0); <span class="comment">% MEX function</span>
+0162 
+0163 <span class="keyword">else</span> <span class="comment">% if use_mex_flg</span>
+0164 
+0165   <span class="comment">% replace dots to ovals without MEX</span>
+0166 
+0167   [rowL,colL]=find(~isnan(imgLids));
+0168   <span class="keyword">for</span> rr=1:1:size(rowL,1)
+0169     <span class="comment">% select white/black dot</span>
+0170     <span class="keyword">if</span> mod(imgLids(rowL(rr),colL(rr)),2) <span class="comment">%mod(comval(rr),2)</span>
+0171       dot=wdot;
+0172     <span class="keyword">else</span>
+0173       dot=bdot;
+0174     <span class="keyword">end</span>
+0175 
+0176     <span class="comment">% set ovals to the left image</span>
+0177     idxr=max(1,rowL(rr)-round(size(dot,1)/2)+1):min(rowL(rr)+round(size(dot,1)/2),size(imgL,1));
+0178     idxc=max(1,colL(rr)-round(size(dot,2)/2)+1):min(colL(rr)+round(size(dot,2)/2),size(imgL,2));
+0179 
+0180     <span class="keyword">if</span> 1 &lt;= rowL(rr)-round(size(dot,1)/2)
+0181       didxr=1:min(size(dot,1),size(idxr,2));
+0182     <span class="keyword">else</span>
+0183       <span class="keyword">if</span> rowL(rr)+round(size(dot,1)/2) &lt;= size(imgL,1)
+0184         didxr=round(size(dot,1)/2)-rowL(rr)+1:size(dot,1);
+0185       <span class="keyword">else</span>
+0186         didxr=round(size(dot,1)/2)-rowL(rr)+1:size(idxr,1);
+0187       <span class="keyword">end</span>
+0188     <span class="keyword">end</span>
+0189 
+0190     <span class="keyword">if</span> 1&lt;=colL(rr)-round(size(dot,2)/2)
+0191       didxc=1:min(size(dot,2),size(idxc,2));
+0192     <span class="keyword">else</span>
+0193       <span class="keyword">if</span> colL(rr)+round(size(dot,2)/2) &lt;= size(imgL,2)
+0194         didxc=round(size(dot,2)/2)-colL(rr)+1:size(dot,2);
+0195       <span class="keyword">else</span>
+0196         didxc=round(size(dot,2)/2)-colL(rr)+1:size(idxr,2);
+0197       <span class="keyword">end</span>
+0198     <span class="keyword">end</span>
+0199 
+0200     <span class="comment">% put ovals considering alpha value</span>
+0201     imgL(idxr,idxc)=(1-dotalpha(didxr,didxc)).*imgL(idxr,idxc)+dotalpha(didxr,didxc).*dot(didxr,didxc);
+0202   <span class="keyword">end</span>
+0203 
+0204   [rowR,colR]=find(~isnan(imgRids));
+0205   <span class="keyword">for</span> rr=1:1:size(rowR,1)
+0206     <span class="comment">% select white/black dot</span>
+0207     <span class="keyword">if</span> mod(imgRids(rowR(rr),colR(rr)),2) <span class="comment">%mod(comval(rr),2)</span>
+0208       dot=wdot;
+0209     <span class="keyword">else</span>
+0210       dot=bdot;
+0211     <span class="keyword">end</span>
+0212 
+0213     <span class="comment">% prevent edge removal problem</span>
+0214     idxr=max(1,rowR(rr)-round(size(dot,1)/2)+1):min(rowR(rr)+round(size(dot,1)/2),size(imgR,1));
+0215     idxc=max(1,colR(rr)-round(size(dot,2)/2)+1):min(colR(rr)+round(size(dot,2)/2),size(imgR,2));
+0216 
+0217     <span class="keyword">if</span> 1 &lt;= rowR(rr)-round(size(dot,1)/2)
+0218       didxr=1:min(size(dot,1),size(idxr,2));
+0219     <span class="keyword">else</span>
+0220       <span class="keyword">if</span> rowR(rr)+round(size(dot,1)/2) &lt;= size(imgR,1)
+0221         didxr=round(size(dot,1)/2)-rowR(rr)+1:size(dot,1);
+0222       <span class="keyword">else</span>
+0223         didxr=round(size(dot,1)/2)-rowR(rr)+1:size(idxr,1);
+0224       <span class="keyword">end</span>
+0225     <span class="keyword">end</span>
+0226 
+0227     <span class="keyword">if</span> 1&lt;=colR(rr)-round(size(dot,2)/2)
+0228       didxc=1:min(size(dot,2),size(idxc,2));
+0229     <span class="keyword">else</span>
+0230       <span class="keyword">if</span> colR(rr)+round(size(dot,2)/2) &lt;= size(imgR,2)
+0231         didxc=round(size(dot,2)/2)-colR(rr)+1:size(dot,2);
+0232       <span class="keyword">else</span>
+0233         didxc=round(size(dot,2)/2)-colR(rr)+1:size(idxr,2);
+0234       <span class="keyword">end</span>
+0235     <span class="keyword">end</span>
+0236 
+0237     <span class="comment">% put ovals considering alpha value</span>
+0238     imgR(idxr,idxc)=(1-dotalpha(didxr,didxc)).*imgR(idxr,idxc)+dotalpha(didxr,didxc).*dot(didxr,didxc);
+0239   <span class="keyword">end</span>
+0240 
+0241 <span class="keyword">end</span> <span class="comment">% if use_mex_flg</span>
+0242 
+0243 imgL=uint8(imgL);
+0244 imgR=uint8(imgR);
+0245 
+0246 <span class="keyword">return</span>;
+0247 
+0248 <span class="comment">%% subfunction</span>
+0249 <a name="_sub1" href="#_subfunctions" class="code">function [Y,index]=shuffle(X)</a>
+0250 <span class="comment">% [Y,index]=shuffle(X)</span>
+0251 <span class="comment">%</span>
+0252 <span class="comment">% Randomly sorts X.</span>
+0253 <span class="comment">% If X is a vector, sorts all of X, so Y=X(index).</span>
+0254 <span class="comment">% If X is an m-by-n matrix, sorts each column of X, so</span>
+0255 <span class="comment">% for j=1:n, Y(:,j)=X(index(:,j),j).</span>
+0256 
+0257 [null,index]=sort(rand(size(X)));
+0258 [n,m]=size(X);
+0259 Y=zeros(size(X));
+0260 
+0261 <span class="keyword">if</span> (n == 1 || m == 1)
+0262   Y=X(index);
+0263 <span class="keyword">else</span>
+0264   <span class="keyword">for</span> j=1:m
+0265     Y(:,j) =X(index(:,j),j);
+0266   <span class="keyword">end</span>
+0267 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

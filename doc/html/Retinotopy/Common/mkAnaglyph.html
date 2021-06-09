@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mkAnaglyph</title>
+  <meta name="keywords" content="mkAnaglyph">
+  <meta name="description" content="Generates a red/green or color-optimized anaglyph image (e.g. for stereo viewing).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>mkAnaglyph
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates a red/green or color-optimized anaglyph image (e.g. for stereo viewing).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates a red/green or color-optimized anaglyph image (e.g. for stereo viewing).
+ function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)
+
+ This function generates red/green anaglyph image from img1 &amp; img2
+
+ [input]
+ img1 : input image 1 with relative path, e.g. '/imgs/scene_left.bmp'
+ img2 : input image 2 with relative path, e.g. '/imgs/scene_right.bmp'
+ mode : anaglyph mode
+        1: optimized anaglyph
+        2: color anaglyph
+        3: half-color anaglyph
+ display_flg : whether displaying the generated image, [0|1]
+               0 (not displaying) by default
+ save_flg    : whether saving the generated image, [0|1]
+               0 (not displaying) by default
+
+ [output]
+ oimg : generated anaglyph image
+
+
+ Created    : &quot;2012-01-18 14:13:37 banh&quot;
+ Last Update: &quot;2013-11-22 23:39:11 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mkAnaglyph.html" class="code" title="function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)">mkAnaglyph</a>	Generates a red/green or color-optimized anaglyph image (e.g. for stereo viewing).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mkAnaglyph.html" class="code" title="function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)">mkAnaglyph</a>	Generates a red/green or color-optimized anaglyph image (e.g. for stereo viewing).</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)</a>
+0002 
+0003 <span class="comment">% Generates a red/green or color-optimized anaglyph image (e.g. for stereo viewing).</span>
+0004 <span class="comment">% function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates red/green anaglyph image from img1 &amp; img2</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% img1 : input image 1 with relative path, e.g. '/imgs/scene_left.bmp'</span>
+0010 <span class="comment">% img2 : input image 2 with relative path, e.g. '/imgs/scene_right.bmp'</span>
+0011 <span class="comment">% mode : anaglyph mode</span>
+0012 <span class="comment">%        1: optimized anaglyph</span>
+0013 <span class="comment">%        2: color anaglyph</span>
+0014 <span class="comment">%        3: half-color anaglyph</span>
+0015 <span class="comment">% display_flg : whether displaying the generated image, [0|1]</span>
+0016 <span class="comment">%               0 (not displaying) by default</span>
+0017 <span class="comment">% save_flg    : whether saving the generated image, [0|1]</span>
+0018 <span class="comment">%               0 (not displaying) by default</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% [output]</span>
+0021 <span class="comment">% oimg : generated anaglyph image</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Created    : &quot;2012-01-18 14:13:37 banh&quot;</span>
+0025 <span class="comment">% Last Update: &quot;2013-11-22 23:39:11 ban (ban.hiroshi@gmail.com)&quot;</span>
+0026 
+0027 <span class="comment">% check input variables</span>
+0028 <span class="keyword">if</span> nargin&lt;3, help <a href="mkAnaglyph.html" class="code" title="function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)">mkAnaglyph</a>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;4 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;5 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0031 
+0032 <span class="comment">% loading input images</span>
+0033 fprintf(<span class="string">'input 1: %s\n'</span>,fullfile(pwd,img1));
+0034 fprintf(<span class="string">'input 2: %s\n'</span>,fullfile(pwd,img2));
+0035 im1=double(imread(fullfile(pwd,img1)));
+0036 im2=double(imread(fullfile(pwd,img2)));
+0037 
+0038 <span class="keyword">if</span> mode==1
+0039   <span class="comment">%% optimized anaglyph</span>
+0040   modestr=<span class="string">'optimized'</span>;
+0041   trfmtx1=[0,0.7,0.3;0,0,0;0,0,0];
+0042   trfmtx2=[0,0,0;0,1,0;0,0,1];
+0043 <span class="keyword">elseif</span> mode==2
+0044   <span class="comment">%% half color anaglyph</span>
+0045   modestr=<span class="string">'color'</span>;
+0046   trfmtx1=[1,0,0;0,0,0;0,0,0];
+0047   trfmtx2=[0,0,0;0,1,0;0,0,1];
+0048 <span class="keyword">elseif</span> mode==3
+0049   <span class="comment">%% color anaglyph</span>
+0050   modestr=<span class="string">'half-color'</span>;
+0051   trfmtx1=[0.299,0.587,0.114;0,0,0;0,0,0];
+0052   trfmtx2=[0,0,0;0,1,0;0,0,1];
+0053 <span class="keyword">else</span>
+0054   error(<span class="string">'mode should be one of 1 (optimized), 2 (color), or 3 (half-color). check input variable'</span>);
+0055 <span class="keyword">end</span>
+0056 
+0057 fprintf(<span class="string">'generating anaglyph image with %s mode...'</span>,modestr);
+0058 oimg=zeros(size(im1));
+0059 <span class="keyword">for</span> ii=1:1:size(im1,1)
+0060   <span class="keyword">for</span> jj=1:1:size(im1,2)
+0061     oimg(ii,jj,:)=trfmtx1*[im1(ii,jj,1);im1(ii,jj,2);im1(ii,jj,3)]+<span class="keyword">...</span>
+0062                   trfmtx2*[im2(ii,jj,1);im2(ii,jj,2);im2(ii,jj,3)];
+0063   <span class="keyword">end</span>
+0064 <span class="keyword">end</span>
+0065 oimg=uint8(oimg);
+0066 disp(<span class="string">'done.'</span>);
+0067 
+0068 <span class="keyword">if</span> display_flg
+0069   fprintf(<span class="string">'displaying generated anaglyph...'</span>);
+0070   figure;
+0071   imshow(oimg);
+0072   disp(<span class="string">'done.'</span>);
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="keyword">if</span> save_flg
+0076   fprintf(<span class="string">'saving generated anaglyph as anaglyph_img.bmp...'</span>);
+0077   imwrite(oimg,<span class="string">'anaglyph_img.bmp'</span>,<span class="string">'bmp'</span>);
+0078   disp(<span class="string">'done.'</span>);
+0079 <span class="keyword">end</span>
+0080 
+0081 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

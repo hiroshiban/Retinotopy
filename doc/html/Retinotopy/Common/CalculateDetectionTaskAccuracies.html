@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CalculateDetectionTaskAccuracies</title>
+  <meta name="keywords" content="CalculateDetectionTaskAccuracies">
+  <meta name="description" content="Gathers subject's responses and computes performances of multiple-detection/identification tasks.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CalculateDetectionTaskAccuracies
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Gathers subject's responses and computes performances of multiple-detection/identification tasks.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [numTasks,numHits,numErrors,numResponses,RT]=CalculateDetectionTaskAccuracies(event,correct_event) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Gathers subject's responses and computes performances of multiple-detection/identification tasks.
+ function [numTasks,numHits,numErrors,RT]=CalculateDetectionTaskAccuracies(event,correct_event)
+
+ Calculates subject's responses and accuracies through the experiment
+
+ [note]
+ The difference between CalculateDetectionTaskAccuracy and CalculateDetectionTaskAccuracies
+ CalculateDetectionTaskAccuracy  : use when a single task sequence is applied.
+ CalculateDetectionTaskAccuracies: use when multiple sequences and the corresponding multiple responses are obtained.
+
+ [input]
+ event  : cell structure in which all the stimulus presentation protocols and responses
+          are stored. each cell of event structure contains 3 elemtns, and should be
+          {event_time, event_name, comment/record}
+          For details, please see AddEvent.m
+ correct_events : cell structure to indicate the combination of task IDs and the corresponding correct responses
+                  e.g. correct_event{1}={1,'key1'}; correct_event{2}={2,'key2'};
+
+ [output]
+ numTasks  : the number of tasks, [1 x correct_event] matrix
+ numHits   : the number of hit (correct) responses, [1 x correct_event] matrix
+ numErrors : the number of error responses, [1 x correct_event] matrix
+
+
+ Created    : &quot;2013-11-11 12:04:42 ban&quot;
+ Last Update: &quot;2013-11-22 18:17:21 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [numTasks,numHits,numErrors,numResponses,RT]=CalculateDetectionTaskAccuracies(event,correct_event)</a>
+0002 
+0003 <span class="comment">% Gathers subject's responses and computes performances of multiple-detection/identification tasks.</span>
+0004 <span class="comment">% function [numTasks,numHits,numErrors,RT]=CalculateDetectionTaskAccuracies(event,correct_event)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Calculates subject's responses and accuracies through the experiment</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [note]</span>
+0009 <span class="comment">% The difference between CalculateDetectionTaskAccuracy and CalculateDetectionTaskAccuracies</span>
+0010 <span class="comment">% CalculateDetectionTaskAccuracy  : use when a single task sequence is applied.</span>
+0011 <span class="comment">% CalculateDetectionTaskAccuracies: use when multiple sequences and the corresponding multiple responses are obtained.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% [input]</span>
+0014 <span class="comment">% event  : cell structure in which all the stimulus presentation protocols and responses</span>
+0015 <span class="comment">%          are stored. each cell of event structure contains 3 elemtns, and should be</span>
+0016 <span class="comment">%          {event_time, event_name, comment/record}</span>
+0017 <span class="comment">%          For details, please see AddEvent.m</span>
+0018 <span class="comment">% correct_events : cell structure to indicate the combination of task IDs and the corresponding correct responses</span>
+0019 <span class="comment">%                  e.g. correct_event{1}={1,'key1'}; correct_event{2}={2,'key2'};</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% numTasks  : the number of tasks, [1 x correct_event] matrix</span>
+0023 <span class="comment">% numHits   : the number of hit (correct) responses, [1 x correct_event] matrix</span>
+0024 <span class="comment">% numErrors : the number of error responses, [1 x correct_event] matrix</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Created    : &quot;2013-11-11 12:04:42 ban&quot;</span>
+0028 <span class="comment">% Last Update: &quot;2013-11-22 18:17:21 ban (ban.hiroshi@gmail.com)&quot;</span>
+0029 
+0030 <span class="comment">% check input variable</span>
+0031 <span class="keyword">if</span> nargin&lt;1 || isempty(event), help(mfilename()); <span class="keyword">end</span>
+0032 
+0033 <span class="comment">% count the number of subject's responses</span>
+0034 numResponses=0;
+0035 <span class="keyword">for</span> ii=1:length(event)-1
+0036   <span class="keyword">if</span> (strcmp(event{ii,2}, <span class="string">'Response'</span>)), numResponses=numResponses + 1; <span class="keyword">end</span>
+0037 <span class="keyword">end</span>
+0038 
+0039 eventIDs=zeros(1,length(correct_event));
+0040 <span class="keyword">for</span> ii=1:1:length(correct_event), eventIDs(ii)=correct_event{ii}{1}; <span class="keyword">end</span>
+0041 
+0042 <span class="comment">% calculate Hit rate</span>
+0043 numTasks=zeros(1,length(correct_event));
+0044 numHits=zeros(1,length(correct_event));
+0045 numErrors=zeros(1,length(correct_event));
+0046 RT=cell(1,length(correct_event));
+0047 <span class="keyword">for</span> ii=1:length(event)-1
+0048   <span class="comment">% check subject responses</span>
+0049   <span class="keyword">if</span> strfind(event{ii,2},<span class="string">'Task'</span>)
+0050     idx=find(eventIDs==event{ii,3});
+0051     numTasks(idx)=numTasks(idx)+1;
+0052     <span class="keyword">for</span> jj=ii+1:1:length(event)-1
+0053       <span class="keyword">if</span> strfind(event{jj,2},<span class="string">'Task'</span>) <span class="comment">% check observer responses: whether observer responded before the next task event occured</span>
+0054         RT{idx}=[RT{idx},NaN];
+0055         numErrors(idx)=numErrors(idx)+1;
+0056         <span class="keyword">break</span>
+0057       <span class="keyword">elseif</span> strcmp(event{jj,2},<span class="string">'Response'</span>)
+0058         <span class="keyword">if</span> strcmp(event{jj,3},correct_event{idx}{2}) <span class="comment">% correct response</span>
+0059           RT{idx}=[RT{idx},event{jj,1}-event{ii,1}];
+0060           numHits(idx)=numHits(idx)+1;
+0061           <span class="keyword">break</span>
+0062         <span class="keyword">else</span> <span class="comment">% incorrect response</span>
+0063           RT{idx}=[RT{idx},NaN];
+0064           numErrors(idx)=numErrors(idx)+1;
+0065           <span class="keyword">break</span>
+0066         <span class="keyword">end</span>
+0067       <span class="keyword">end</span>
+0068     <span class="keyword">end</span>
+0069   <span class="keyword">end</span>
+0070 <span class="keyword">end</span>
+0071 
+0072 <span class="comment">% displaying the results</span>
+0073 disp(<span class="string">'******************************'</span>);
+0074 disp([<span class="string">'Total Tasks     : '</span>,num2str(sum(numTasks))]);
+0075 disp([<span class="string">'Total Responses : '</span>,num2str(sum(numResponses))]);
+0076 disp([<span class="string">'Hit Rate        : '</span>,num2str(sum(numHits)/sum(numTasks)*100),<span class="string">'%'</span>]);
+0077 <span class="comment">%disp(['False alarms    : ',num2str(numResponses-sum(numHits))]);</span>
+0078 disp([<span class="string">'Median RT (Hit) : '</span>,num2str(nanmedian(cell2mat(RT))*1000),<span class="string">' ms'</span>]);
+0079 disp(<span class="string">'******************************'</span>);
+0080 
+0081 <span class="comment">% plotting the results</span>
+0082 figure; hold on;
+0083 h1=plot(numHits./numTasks.*100,<span class="string">'ro-'</span>,<span class="string">'LineWidth'</span>,2);  <span class="comment">% hits</span>
+0084 h2=plot(numErrors./numTasks.*100,<span class="string">'bo-'</span>,<span class="string">'LineWidth'</span>,1); <span class="comment">% false alarms</span>
+0085 
+0086 title(<span class="string">'Behavior detection accuracies'</span>);
+0087 legend([h1,h2],<span class="string">'Hit Rate'</span>,<span class="string">'FalseAlarm Rate'</span>);
+0088 set(gca,<span class="string">'XLim'</span>,[0,length(correct_event)+1]);
+0089 set(gca,<span class="string">'XTick'</span>,0:length(correct_event)+1);
+0090 set(gca,<span class="string">'XTickLabel'</span>,{<span class="string">''</span>,1:length(correct_event),<span class="string">''</span>});
+0091 set(gca,<span class="string">'YLim'</span>,[0,100]);
+0092 set(gca,<span class="string">'YTick'</span>,0:10:100);
+0093 set(gca,<span class="string">'YTickLabel'</span>,0:10:100);
+0094 xlabel(<span class="string">'task type'</span>);
+0095 ylabel(<span class="string">'Percentage (%)'</span>);
+0096 
+0097 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of voronoi2mask</title>
+  <meta name="keywords" content="voronoi2mask">
+  <meta name="description" content="voronoi2mask Converts Voronoi cells to region mask">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>voronoi2mask
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>voronoi2mask Converts Voronoi cells to region mask</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [mask,bmask,vx,vy,x,y] = voronoi2mask(x,y,szImg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> voronoi2mask Converts Voronoi cells to region mask
+
+   [mask,bmask,vx,vy,x,y] = voronoi2mask(x,y,szImg) computes a mask of the Voronoi cells
+   given points,'x' and 'y' and a 2d-image size 'szImg', which
+   the points are extracted from. The voronoi diagram is created
+   using Matlab's voronoi function.
+
+   [input]
+   x     : x positions of the centroids
+   y     : y positions of the centroids
+   szImg : size of the image in which centroids are located
+
+   [output]
+   mask  : mask of voronoi cells
+   bmask : mask of voronoi diagram's borders
+   vx    : x positions of the vertices
+   vy    : y positions of the vertices
+   x     : x positions of the centroids (slightly smoothed)
+   y     : y positions of the centroids (slightly smoothed)
+
+     Example
+     -------
+
+         % get image from steve's blog at mathworks.com
+         if ~exist('nuclei.png','file')
+            img = imread('http://blogs.mathworks.com/images/steve/60/nuclei.png');
+            imwrite(img,'nuclei.png');
+         else
+            img = imread('/nuclei.png');
+         end
+         img = double(img);
+
+         % crop image
+         img = img(1:300,1:350);
+
+         % &quot;blur&quot; image with imopen
+         se = strel('disk', 15);
+         imgo = imopen(img, se);
+
+         % find regional max
+         imgPros = imregionalmax(imgo,4);
+
+         % get centroids of regional max
+         objects = regionprops(imgPros,{'Centroid', 'BoundingBox','Image'});
+
+         % save centroids to array
+         centroids = nan([numel(objects),2]);
+         for i = 1:numel(objects)
+             centroids(i,:) = objects(i).Centroid;
+         end
+
+         % based on the centroids, create the voronoi diagram
+         % and transform the Voronoi cells to an image.
+         mask = voronoi2mask(centroids(:,1),centroids(:,2),size(img));
+         mask = label2rgb(mask, 'jet', 'c', 'shuffle');
+
+         % show results
+         subplot(2,1,1)
+         imagesc(img);colormap('gray');
+         hold on;
+         h = voronoi(centroids(:,1),centroids(:,2));
+         set(h(:),'Color',[0 1 0]);
+         axis image;
+         title('original image with voronoi diagram');
+
+         subplot(2,1,2)
+         imshow(mask);
+         hold on;
+         h = voronoi(centroids(:,1),centroids(:,2));
+         set(h(:),'Color',[0 0 0]);
+         axis image;
+         title('output image with voronoi diagram');
+
+     See also poly2mask, roipoly.
+
+
+ $Created: 1.0 $ $Date: 2013/08/11 20:00$ $Author: Pangyu Teng $
+ Last Update: &quot;2013-11-22 23:51:53 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="makelinefun.html" class="code" title="function fun = makelinefun(x1,y1,x2,y2,o)">makelinefun</a>	Returns a function handle to generates line segment(s) to be plotted on the image.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="GenerateVoronoiMaskPatterns.html" class="code" title="function [vmask,vbmask,vx,vy,x,y]=GenerateVoronoiMaskPatterns(fieldSize,dense,jitterratio,mode,nimages,pix_per_deg,display_flg,save_flg)">GenerateVoronoiMaskPatterns</a>	Generates Voronoi texture mask patterns.</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function fun = makelinefun(x1,y1,x2,y2,o)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [mask,bmask,vx,vy,x,y] = voronoi2mask(x,y,szImg)</a>
+0002 
+0003 <span class="comment">% voronoi2mask Converts Voronoi cells to region mask</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   [mask,bmask,vx,vy,x,y] = voronoi2mask(x,y,szImg) computes a mask of the Voronoi cells</span>
+0006 <span class="comment">%   given points,'x' and 'y' and a 2d-image size 'szImg', which</span>
+0007 <span class="comment">%   the points are extracted from. The voronoi diagram is created</span>
+0008 <span class="comment">%   using Matlab's voronoi function.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   [input]</span>
+0011 <span class="comment">%   x     : x positions of the centroids</span>
+0012 <span class="comment">%   y     : y positions of the centroids</span>
+0013 <span class="comment">%   szImg : size of the image in which centroids are located</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   [output]</span>
+0016 <span class="comment">%   mask  : mask of voronoi cells</span>
+0017 <span class="comment">%   bmask : mask of voronoi diagram's borders</span>
+0018 <span class="comment">%   vx    : x positions of the vertices</span>
+0019 <span class="comment">%   vy    : y positions of the vertices</span>
+0020 <span class="comment">%   x     : x positions of the centroids (slightly smoothed)</span>
+0021 <span class="comment">%   y     : y positions of the centroids (slightly smoothed)</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%     Example</span>
+0024 <span class="comment">%     -------</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%         % get image from steve's blog at mathworks.com</span>
+0027 <span class="comment">%         if ~exist('nuclei.png','file')</span>
+0028 <span class="comment">%            img = imread('http://blogs.mathworks.com/images/steve/60/nuclei.png');</span>
+0029 <span class="comment">%            imwrite(img,'nuclei.png');</span>
+0030 <span class="comment">%         else</span>
+0031 <span class="comment">%            img = imread('/nuclei.png');</span>
+0032 <span class="comment">%         end</span>
+0033 <span class="comment">%         img = double(img);</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%         % crop image</span>
+0036 <span class="comment">%         img = img(1:300,1:350);</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%         % &quot;blur&quot; image with imopen</span>
+0039 <span class="comment">%         se = strel('disk', 15);</span>
+0040 <span class="comment">%         imgo = imopen(img, se);</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%         % find regional max</span>
+0043 <span class="comment">%         imgPros = imregionalmax(imgo,4);</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%         % get centroids of regional max</span>
+0046 <span class="comment">%         objects = regionprops(imgPros,{'Centroid', 'BoundingBox','Image'});</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%         % save centroids to array</span>
+0049 <span class="comment">%         centroids = nan([numel(objects),2]);</span>
+0050 <span class="comment">%         for i = 1:numel(objects)</span>
+0051 <span class="comment">%             centroids(i,:) = objects(i).Centroid;</span>
+0052 <span class="comment">%         end</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">%         % based on the centroids, create the voronoi diagram</span>
+0055 <span class="comment">%         % and transform the Voronoi cells to an image.</span>
+0056 <span class="comment">%         mask = voronoi2mask(centroids(:,1),centroids(:,2),size(img));</span>
+0057 <span class="comment">%         mask = label2rgb(mask, 'jet', 'c', 'shuffle');</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">%         % show results</span>
+0060 <span class="comment">%         subplot(2,1,1)</span>
+0061 <span class="comment">%         imagesc(img);colormap('gray');</span>
+0062 <span class="comment">%         hold on;</span>
+0063 <span class="comment">%         h = voronoi(centroids(:,1),centroids(:,2));</span>
+0064 <span class="comment">%         set(h(:),'Color',[0 1 0]);</span>
+0065 <span class="comment">%         axis image;</span>
+0066 <span class="comment">%         title('original image with voronoi diagram');</span>
+0067 <span class="comment">%</span>
+0068 <span class="comment">%         subplot(2,1,2)</span>
+0069 <span class="comment">%         imshow(mask);</span>
+0070 <span class="comment">%         hold on;</span>
+0071 <span class="comment">%         h = voronoi(centroids(:,1),centroids(:,2));</span>
+0072 <span class="comment">%         set(h(:),'Color',[0 0 0]);</span>
+0073 <span class="comment">%         axis image;</span>
+0074 <span class="comment">%         title('output image with voronoi diagram');</span>
+0075 <span class="comment">%</span>
+0076 <span class="comment">%     See also poly2mask, roipoly.</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">%</span>
+0079 <span class="comment">% $Created: 1.0 $ $Date: 2013/08/11 20:00$ $Author: Pangyu Teng $</span>
+0080 <span class="comment">% Last Update: &quot;2013-11-22 23:51:53 ban (ban.hiroshi@gmail.com)&quot;</span>
+0081 
+0082 <span class="keyword">if</span> nargin &lt; 3
+0083     display(<span class="string">'requires 3 inputs. (voronoi2mask.m)'</span>);
+0084     <span class="keyword">return</span>;
+0085 <span class="keyword">end</span>
+0086 
+0087 <span class="comment">% format x, y to be column wise</span>
+0088 <span class="keyword">if</span> size(x,1) &lt; size(x,2)
+0089     x = x';
+0090 <span class="keyword">end</span>
+0091 
+0092 <span class="keyword">if</span> size(x,1) &lt; size(x,2)
+0093     y = y';
+0094 <span class="keyword">end</span>
+0095 
+0096 <span class="comment">% create voronoi diagram and get its finite vertices</span>
+0097 [vx, vy] = voronoi(x,y);
+0098 
+0099 <span class="comment">% create a mask to draw the vertices</span>
+0100 border = logical(false(szImg));
+0101 mask = zeros(szImg);
+0102 bmask = logical(false(szImg));
+0103 
+0104 <span class="comment">% draw vertices on mask</span>
+0105 
+0106 <span class="keyword">for</span> i = 1:size(vx,2)
+0107     <span class="comment">% create line function between 2 points</span>
+0108     f = <a href="makelinefun.html" class="code" title="function fun = makelinefun(x1,y1,x2,y2,o)">makelinefun</a>(vy(1,i),vx(1,i),vy(2,i),vx(2,i),2);
+0109 
+0110     <span class="comment">% get distance between 2 points</span>
+0111     dist = round(1.5*sqrt(diff(vx(:,i)).^2+diff(vy(:,i)).^2));
+0112 
+0113     <span class="comment">% create 'dist' points on the line</span>
+0114     [vxLine, vyLine] = f(dist);
+0115 
+0116     <span class="comment">% round the line</span>
+0117     vxLine = round(vxLine);
+0118     vyLine = round(vyLine);
+0119 
+0120     <span class="comment">% contrain line to be within the image</span>
+0121     validInd = vxLine &gt;= 1 &amp; vxLine &lt;= szImg(1) &amp; vyLine &gt;= 1 &amp; vyLine &lt;= szImg(2);
+0122     vxLine = vxLine(validInd);
+0123     vyLine = vyLine(validInd);
+0124 
+0125     <span class="comment">% draw the line to an image</span>
+0126     newInd = sub2ind(szImg,vxLine,vyLine);
+0127     border(newInd) = true;
+0128     bmask(newInd) = true;
+0129 <span class="keyword">end</span>
+0130 
+0131 <span class="comment">% round xs and yx</span>
+0132 x = round(x);
+0133 y = round(y);
+0134 
+0135 <span class="comment">% number each region based on the index of the centroids</span>
+0136 <span class="comment">% (xs and ys are &quot;flipped&quot; ...)</span>
+0137 <span class="keyword">for</span> i = 1:numel(x)
+0138 
+0139     bw = imfill(border,sub2ind(szImg,y(i),x(i)));
+0140     mask(bw(:)==1) = i;
+0141 <span class="keyword">end</span>
+0142 mask=~bmask.*mask;
+0143 
+0144 
+0145 <span class="comment">%%% subfuctions</span>
+0146 
+0147 <a name="_sub1" href="#_subfunctions" class="code">function fun = makelinefun(x1,y1,x2,y2,o)</a>
+0148 <span class="comment">%ref http://stackoverflow.com/questions/13209373/matlab-straight-line-between-2-points-with-n-points-between</span>
+0149 <span class="keyword">if</span> nargin &lt; 5
+0150     o = 1;
+0151 <span class="keyword">end</span>
+0152 <span class="keyword">if</span> o == 2,
+0153     fun  = @(N) deal(linspace(x1,x2,N), linspace(y1,y2,N));
+0154 <span class="keyword">else</span>
+0155     fun  = @(N) [linspace(x1,x2,N) ; linspace(y1,y2,N)];
+0156 <span class="keyword">end</span>
+0157 
+0158 
+0159 <span class="comment">%</span>
+0160 <span class="comment">% USAGE:</span>
+0161 <span class="comment">%</span>
+0162 <span class="comment">% f = makelinefun(0,0,6,9);</span>
+0163 <span class="comment">% xy = f(4)</span>
+0164 <span class="comment">%</span>
+0165 <span class="comment">%   xy =</span>
+0166 <span class="comment">%       0     2     4     6</span>
+0167 <span class="comment">%       0     3     6     9</span>
+0168 <span class="comment">%</span>
+0169 <span class="comment">%       f = makelinefun(0,0,6,9);</span>
+0170 <span class="comment">% [x,y] = f(4)</span>
+0171 <span class="comment">%</span>
+0172 <span class="comment">%   x =</span>
+0173 <span class="comment">%       0     2     4     6</span>
+0174 <span class="comment">%   y =</span>
+0175 <span class="comment">%       0     3     6     9</span>
+0176 <span class="comment">%</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Generate_gabor_nonlin_orientation_filter</title>
+  <meta name="keywords" content="Generate_gabor_nonlin_orientation_filter">
+  <meta name="description" content="Generates nonlinear 2D Gabor orientation filter(s).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>Generate_gabor_nonlin_orientation_filter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates nonlinear 2D Gabor orientation filter(s).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function H = generate_gabor_nonlin_orientation_filter(d_center,d_range,num_detectors,y_size,theta,lambda,psi,display_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates nonlinear 2D Gabor orientation filter(s).
+ function H = generate_gabor_nonlin_orientation_filter(d_center,d_range,num_detectors,y_size,theta,lambda,psi,display_flg)
+
+ This function generates nonlinear 2D Gabor orientation filter(s)
+
+ [input]
+ d_center : filter center, disparity, -2&lt;=d_center&lt;=2, 1 shifts the filter to 1 radius
+ d_range  : range of filter, 'radius' in disparity
+ num_detectors : the number of detectors in d_range
+ y_size   : size in pixels along y-axis of the generated detectors
+ theta    : orientation(s) of carrier, multiple values are acceptable
+ lambda   : frequency of the carrier
+ psi      : phase offset of the carrier
+ display_flg   : whether displaying the generated response patterns, [0|1], 0 by default
+
+ [output]
+ H        : output filter bank(s), 3D matrix, [size(x,1) x size(x,2) x numel(theta)]
+
+ [example]
+ &gt;&gt; H=generate_gabor_nonlin_orientation_filter(0,4,17,[],1.8,[],1);
+
+ [note &amp; reference]
+ all the equations were from Lehky and Sejnowski, JNS, 1990
+
+
+ Created    : &quot;2011-07-18 10:17:48 banh&quot;
+ Last Update: &quot;2013-11-22 18:49:52 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function max_id=calc_range(d_max)</a></li><li><a href="#_sub2" class="code">function disparity_peak=calc_disparity(disparity_ids)</a></li><li><a href="#_sub3" class="code">function disparity_sigma=calc_sigma(disparity_ids)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function H = generate_gabor_nonlin_orientation_filter(d_center,d_range,num_detectors,y_size,theta,lambda,psi,display_flg)</a>
+0002 
+0003 <span class="comment">% Generates nonlinear 2D Gabor orientation filter(s).</span>
+0004 <span class="comment">% function H = generate_gabor_nonlin_orientation_filter(d_center,d_range,num_detectors,y_size,theta,lambda,psi,display_flg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates nonlinear 2D Gabor orientation filter(s)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% d_center : filter center, disparity, -2&lt;=d_center&lt;=2, 1 shifts the filter to 1 radius</span>
+0010 <span class="comment">% d_range  : range of filter, 'radius' in disparity</span>
+0011 <span class="comment">% num_detectors : the number of detectors in d_range</span>
+0012 <span class="comment">% y_size   : size in pixels along y-axis of the generated detectors</span>
+0013 <span class="comment">% theta    : orientation(s) of carrier, multiple values are acceptable</span>
+0014 <span class="comment">% lambda   : frequency of the carrier</span>
+0015 <span class="comment">% psi      : phase offset of the carrier</span>
+0016 <span class="comment">% display_flg   : whether displaying the generated response patterns, [0|1], 0 by default</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% [output]</span>
+0019 <span class="comment">% H        : output filter bank(s), 3D matrix, [size(x,1) x size(x,2) x numel(theta)]</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [example]</span>
+0022 <span class="comment">% &gt;&gt; H=generate_gabor_nonlin_orientation_filter(0,4,17,[],1.8,[],1);</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% [note &amp; reference]</span>
+0025 <span class="comment">% all the equations were from Lehky and Sejnowski, JNS, 1990</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Created    : &quot;2011-07-18 10:17:48 banh&quot;</span>
+0029 <span class="comment">% Last Update: &quot;2013-11-22 18:49:52 ban (ban.hiroshi@gmail.com)&quot;</span>
+0030 
+0031 <span class="comment">% check input variables</span>
+0032 <span class="keyword">if</span> nargin&lt;3, help generate_gabor_nonlin_orientation_filter; <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;4 || isempty(y_size)
+0034   <span class="comment">%scaling_factor=10; % constant variable</span>
+0035   <span class="comment">%y_size=(3*num_detectors*scaling_factor-1)/2+1;</span>
+0036   y_size=3*456/2; <span class="comment">% actual stimulus size used at BUIC, temporal setting</span>
+0037 <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;5 || isempty(theta), theta=[0,15,30,45,60,75,90,105,120,135,150,165]; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;6 || isempty(lambda), lambda=1.5; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;7 || isempty(psi), psi=0; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;8 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0042 
+0043 <span class="keyword">if</span> d_center&lt;-2 || 2&lt;d_center
+0044   error(<span class="string">'d_center should be -2&lt;=d_center&lt;=2. check input variable.'</span>);
+0045 <span class="keyword">end</span>
+0046 
+0047 <span class="comment">% nonlinear transformations, considering center shift</span>
+0048 d_max=3*abs(d_range);
+0049 xmaxval=<a href="#_sub1" class="code" title="subfunction max_id=calc_range(d_max)">calc_range</a>(d_max);
+0050 disparity_ids=linspace(1,xmaxval,y_size);
+0051 
+0052 d_peak=<a href="#_sub2" class="code" title="subfunction disparity_peak=calc_disparity(disparity_ids)">calc_disparity</a>(disparity_ids);
+0053 d_peak=[-d_peak(end:-1:2),0,d_peak(2:end)];
+0054 
+0055 d_sigma=<a href="#_sub3" class="code" title="subfunction disparity_sigma=calc_sigma(disparity_ids)">calc_sigma</a>(disparity_ids);
+0056 d_sigma=[d_sigma(end:-1:2),d_sigma(1),d_sigma(2:end)];
+0057 
+0058 <span class="comment">% store the center positions of the filter</span>
+0059 tgt_ids_x=(ceil(2*numel(d_peak)/6)+1:ceil(4*numel(d_peak)/6))-ceil(d_center*numel(d_peak)/6);
+0060 tgt_ids_y=ceil(2*numel(d_peak)/6)+1:ceil(4*numel(d_peak)/6);
+0061 
+0062 <span class="comment">% generte nonlinear filter field parameters</span>
+0063 x=repmat(d_peak,size(d_peak,2),1);
+0064 y=(1:1:size(x,1))'; y=y-mean(y); y=repmat(y,1,size(y,1)); y=y./max(y(:))*max(abs(x(:)));
+0065 sigma=repmat(d_sigma,size(d_sigma,2),1)./4;
+0066 sigma_x_cor_factor=1;
+0067 sigma_y_cor_factor=3;
+0068 sigma_x=sigma_x_cor_factor*sigma;
+0069 sigma_y=sigma_y_cor_factor*sigma;
+0070 
+0071 <span class="comment">% processing</span>
+0072 H=zeros(numel(tgt_ids_y),numel(tgt_ids_x),numel(theta));
+0073 rtheta=theta*pi/180;
+0074 <span class="keyword">for</span> ii=1:1:numel(theta)
+0075 
+0076   <span class="comment">% rotate filter fileds</span>
+0077   x_theta=x*cos(rtheta(ii))+y*sin(rtheta(ii));
+0078   y_theta=-x*sin(rtheta(ii))+y*cos(rtheta(ii));
+0079 
+0080   <span class="comment">% generate Gabor orientation filter</span>
+0081   <span class="comment">%H(:,:,ii) = 1./(2*pi.*sigma_x.*sigma_y).*...</span>
+0082   <span class="comment">%    exp(-0.5*(x_theta.^2./sigma_x.^2+y_theta.^2./sigma_y.^2)).*cos(2*pi/lambda.*x_theta+psi);</span>
+0083   tmp = 1./(2*pi.*sigma_x.*sigma_y).*<span class="keyword">...</span>
+0084         exp(-0.5*(x_theta.^2./sigma_x.^2+y_theta.^2./sigma_y.^2)).*cos(2*pi/lambda.*x_theta+psi);
+0085   H(:,:,ii)=tmp(tgt_ids_y,tgt_ids_x);
+0086 
+0087   <span class="comment">% scaling the filter</span>
+0088   H(:,:,ii)=H(:,:,ii)./max(max(abs(H(:,:,ii))));
+0089 
+0090 <span class="keyword">end</span>
+0091 
+0092 <span class="comment">% adjust the filter size and scaling to the final one</span>
+0093 Hc=zeros([size(H,1),num_detectors]);
+0094 <span class="keyword">for</span> ii=1:1:numel(theta)
+0095   Hc(:,:,ii)=imresize(H(:,:,ii),[size(H,1),num_detectors]);
+0096   <span class="comment">%Hc(:,:,ii)=Hc(:,:,ii)./max(max(abs(Hc(:,:,ii))));</span>
+0097 <span class="keyword">end</span>
+0098 H=Hc;
+0099 
+0100 <span class="comment">% % for masking the filters</span>
+0101 <span class="comment">% [x,y]=meshgrid((1:size(H,2))-mean(1:size(H,2)),(1:size(H,2))-mean(1:size(H,1)));</span>
+0102 <span class="comment">% r=sqrt(x.*x+y.*y);</span>
+0103 <span class="comment">% mask=zeros(size(r));</span>
+0104 <span class="comment">% mask(r&lt;=size(x,1)/2)=1;</span>
+0105 <span class="comment">% mask(r&gt;size(x,1)/2)=0;</span>
+0106 
+0107 <span class="comment">% visualizing</span>
+0108 <span class="keyword">if</span> display_flg
+0109   figure;
+0110   <span class="keyword">for</span> ii=1:1:size(H,3)
+0111     subplot(3,ceil(size(H,3)/3),ii);
+0112     <span class="comment">%imagesc(H(:,:,ii),'AlphaData',mask);</span>
+0113     imagesc(H(:,:,ii));
+0114     <span class="comment">%set(gca,'CLim',[-1,1]);</span>
+0115     colormap(generate_RWB_colormap);
+0116     <span class="comment">%colormap(jet);</span>
+0117     axis square;
+0118     axis off;
+0119     title_str=sprintf(<span class="string">'orient: %.2f'</span>,theta(ii));
+0120     title(title_str);
+0121   <span class="keyword">end</span>
+0122 <span class="keyword">end</span>
+0123 
+0124 <span class="keyword">return</span>
+0125 
+0126 
+0127 <span class="comment">%% subfunctions</span>
+0128 <a name="_sub1" href="#_subfunctions" class="code">function max_id=calc_range(d_max)</a>
+0129 max_id=0.0002*d_max.^3-0.0203*d_max.^2+0.6541*d_max+0.7822;
+0130 
+0131 <a name="_sub2" href="#_subfunctions" class="code">function disparity_peak=calc_disparity(disparity_ids)</a>
+0132 disparity_peak=0.0965*disparity_ids.^3-0.9331*disparity_ids.^2+4.609*disparity_ids-3.7943;
+0133 
+0134 <a name="_sub3" href="#_subfunctions" class="code">function disparity_sigma=calc_sigma(disparity_ids)</a>
+0135 <span class="comment">%disparity_sigma=0.0437*disparity_ids.^3+0.4372*disparity_ids.^2-2.0937*disparity_ids+5.5352;</span>
+0136 disparity_sigma=1.8637*exp(0.3718*disparity_ids);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

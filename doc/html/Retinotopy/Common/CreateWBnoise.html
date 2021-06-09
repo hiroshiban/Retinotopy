@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateWBnoise</title>
+  <meta name="keywords" content="CreateWBnoise">
+  <meta name="description" content="Creates a white/black patch-based noise image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateWBnoise
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a white/black patch-based noise image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function img = CreateWBnoise(idims, sdims, num, save_flag, show_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a white/black patch-based noise image.
+ function img = CreateWBnoise(idims, sdims, num)
+ 
+ This function generates white/black patch-based noise image
+ 
+ &lt;input&gt;
+ idims : image dimension [row,col] to create
+ sdims : patch size [row,col]
+ num   : the number of image files you want to create
+ save_flag : if 1, the created noise patterns
+             will be saved as BMP files.
+ show_flag : if 1, the created noise patterns
+             are showed in the figure windows.
+ 
+ * NOTICE mod(idims,sdims) should be 0
+          mod(mdims,2) should be 0
+ 
+ &lt;output&gt;
+ img   : output image W/B mosaic noise
+ 
+ Nov. 29 2006 Hiroshi Ban</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img = CreateWBnoise(idims, sdims, num, save_flag, show_flag)</a>
+0002 
+0003 <span class="comment">% Creates a white/black patch-based noise image.</span>
+0004 <span class="comment">% function img = CreateWBnoise(idims, sdims, num)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates white/black patch-based noise image</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% &lt;input&gt;</span>
+0009 <span class="comment">% idims : image dimension [row,col] to create</span>
+0010 <span class="comment">% sdims : patch size [row,col]</span>
+0011 <span class="comment">% num   : the number of image files you want to create</span>
+0012 <span class="comment">% save_flag : if 1, the created noise patterns</span>
+0013 <span class="comment">%             will be saved as BMP files.</span>
+0014 <span class="comment">% show_flag : if 1, the created noise patterns</span>
+0015 <span class="comment">%             are showed in the figure windows.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% * NOTICE mod(idims,sdims) should be 0</span>
+0018 <span class="comment">%          mod(mdims,2) should be 0</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% &lt;output&gt;</span>
+0021 <span class="comment">% img   : output image W/B mosaic noise</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Nov. 29 2006 Hiroshi Ban</span>
+0024 
+0025 <span class="comment">% check input variable</span>
+0026 <span class="keyword">if</span> nargin &lt; 1, idims=[480,640]; sdims=[4,4]; <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin &lt; 2, sdims=[4,4]; <span class="keyword">end</span>
+0028 <span class="keyword">if</span> nargin &lt; 3, num=1; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin &lt; 4, save_flag=0; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin &lt; 5, show_flag=1; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> length(idims)==1, idims=[idims,idims]; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> length(sdims)==1, sdims=[sdims,sdims]; <span class="keyword">end</span>
+0033 
+0034 <span class="comment">% matrix dimension check</span>
+0035 <span class="keyword">if</span> mod(idims(1),sdims(1)) || mod(idims(2),sdims(2))
+0036     error(<span class="string">'matrix dimension mismatch. idims is not dividable by sdims'</span>);
+0037 <span class="keyword">end</span>
+0038 
+0039 mdims=idims./sdims;
+0040 
+0041 <span class="comment">% create initial checker board -- a dice (pane) image</span>
+0042 tcb = [zeros(1,sdims(1)) ones(1,sdims(1))]; <span class="comment">% Temporal CheckerBoard</span>
+0043 tcb = repmat(tcb,sdims(2),1);
+0044 tcb = [tcb; fliplr(tcb)];
+0045 
+0046 cb = repmat(tcb,mdims(1)/2,mdims(2)/2); <span class="comment">% dice image</span>
+0047 
+0048 img=ones(idims(1),idims(2),num);
+0049 <span class="keyword">for</span> ii=1:1:num
+0050     <span class="comment">% randomize dice image</span>
+0051     tmp = reshape(cb,[sdims(1),mdims(1),sdims(2),mdims(2)]); <span class="comment">% sdims(1)*mdims(1)*sdims(2)*mdims(2)</span>
+0052     tmp = permute(tmp, [1 3 2 4]); <span class="comment">% sdims(1) * sdims(2) * mdims(1) * mdims(2)</span>
+0053     tmp = reshape(tmp, [sdims(1),sdims(2),prod(mdims)]);
+0054     <span class="comment">% shuffle checker board</span>
+0055     sidx=randperm(prod(mdims)); <span class="comment">% shuffle index</span>
+0056     tmp = tmp(:,:,sidx,:); <span class="comment">% shuffle image</span>
+0057     <span class="comment">% reshape back</span>
+0058     tmp = reshape(tmp, [sdims(1),sdims(2),mdims(1),mdims(2)]);
+0059     tmp = ipermute(tmp, [1 3 2 4]);
+0060     img(:,:,ii) = reshape(tmp,idims);
+0061 <span class="keyword">end</span>
+0062 
+0063 <span class="keyword">if</span> save_flag
+0064     <span class="keyword">for</span> ii=1:1:num
+0065         <span class="comment">% write rimg to BMP</span>
+0066         eval(sprintf(<span class="string">'imwrite(img(:,:,ii),''noise_%03d.bmp'',''bmp'');'</span>,ii));
+0067     <span class="keyword">end</span>
+0068 <span class="keyword">end</span>
+0069 
+0070 <span class="keyword">if</span> show_flag
+0071     <span class="keyword">for</span> ii=1:1:num
+0072         figure;
+0073         imshow(img(:,:,ii));
+0074         axis off;
+0075     <span class="keyword">end</span>
+0076 <span class="keyword">end</span>
+0077 
+0078 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

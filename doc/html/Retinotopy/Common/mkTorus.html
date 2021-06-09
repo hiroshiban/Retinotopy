@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mkTorus</title>
+  <meta name="keywords" content="mkTorus">
+  <meta name="description" content="Returns [x,y,z] coordinate of a torus object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>mkTorus
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Returns [x,y,z] coordinate of a torus object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function xyz=mkTorus(aL,bL,center_xyz,rad,steps,display_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Returns [x,y,z] coordinate of a torus object.
+ function xyz=mkTorus(aL,bL,center_xyz,rad,steps,display_flg)
+
+ This function generates (x,y,z) coordinates of a torus object
+
+ [input]
+ aL         : torus major radius along x-axis, [val]
+ bL         : torus major radius along y-axis, [val]
+ center_xyz : center position of the torus, [x,y,z]
+ rad        : torus minor radius, [val]
+ steps      : division steps along u and v angles, [num_u,num_v]
+ display_flg: whether displaying the generated torus object.
+              if 1, the object will be displayed on MATLAB window
+
+ [output]
+ xyz        : xyz coords of the generated torus object
+              [num_steps(1),num_steps(2),3(xyz)]
+
+
+ Created    : &quot;2012-01-12 13:42:04 banh&quot;
+ Last Update: &quot;2013-11-22 23:37:19 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function xyz=mkTorus(aL,bL,center_xyz,rad,steps,display_flg)</a>
+0002 
+0003 <span class="comment">% Returns [x,y,z] coordinate of a torus object.</span>
+0004 <span class="comment">% function xyz=mkTorus(aL,bL,center_xyz,rad,steps,display_flg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates (x,y,z) coordinates of a torus object</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% aL         : torus major radius along x-axis, [val]</span>
+0010 <span class="comment">% bL         : torus major radius along y-axis, [val]</span>
+0011 <span class="comment">% center_xyz : center position of the torus, [x,y,z]</span>
+0012 <span class="comment">% rad        : torus minor radius, [val]</span>
+0013 <span class="comment">% steps      : division steps along u and v angles, [num_u,num_v]</span>
+0014 <span class="comment">% display_flg: whether displaying the generated torus object.</span>
+0015 <span class="comment">%              if 1, the object will be displayed on MATLAB window</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% [output]</span>
+0018 <span class="comment">% xyz        : xyz coords of the generated torus object</span>
+0019 <span class="comment">%              [num_steps(1),num_steps(2),3(xyz)]</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Created    : &quot;2012-01-12 13:42:04 banh&quot;</span>
+0023 <span class="comment">% Last Update: &quot;2013-11-22 23:37:19 ban (ban.hiroshi@gmail.com)&quot;</span>
+0024 
+0025 <span class="comment">%% check input variables</span>
+0026 <span class="keyword">if</span> nargin&lt;1 || isempty(aL), aL=4; <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin&lt;2 || isempty(bL), bL=2; <span class="keyword">end</span>
+0028 <span class="keyword">if</span> nargin&lt;3 || isempty(center_xyz), center_xyz=[0,0,0]; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;4 || isempty(rad), rad=1; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;5 || isempty(steps), steps=[50,20]; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;6 || isempty(display_flg), display_flg=1; <span class="keyword">end</span>
+0032 
+0033 <span class="comment">%% generate torus coordinates</span>
+0034 
+0035 <span class="comment">% division of the space</span>
+0036 theta=linspace(0,2*pi,steps(1));
+0037 phi=linspace(0,2*pi,steps(2));
+0038 
+0039 <span class="comment">% bese ellipse</span>
+0040 xe=center_xyz(1)+aL*cos(theta');
+0041 ye=center_xyz(2)+bL*sin(theta');
+0042 ze=center_xyz(3)+zeros(numel(theta),1);
+0043 
+0044 <span class="comment">% torus</span>
+0045 xt=zeros(numel(theta),numel(phi));
+0046 yt=zeros(numel(theta),numel(phi));
+0047 zt=zeros(numel(theta),numel(phi));
+0048 <span class="keyword">for</span> pp=1:1:numel(phi)
+0049   xt(:,pp)=xe+rad*cos(phi(pp))*cos(theta');
+0050   yt(:,pp)=ye+rad*cos(phi(pp))*sin(theta');
+0051   zt(:,pp)=ze+rad*sin(phi(pp));
+0052 <span class="keyword">end</span>
+0053 xyz(:,:,1)=xt;
+0054 xyz(:,:,2)=yt;
+0055 xyz(:,:,3)=zt;
+0056 
+0057 <span class="comment">%% display the generated torus objcect</span>
+0058 <span class="keyword">if</span> display_flg
+0059   figure; hold on;
+0060   set(gcf,<span class="string">'Color'</span>,[1,1,1]);
+0061   plot3(xyz(:,:,1),xyz(:,:,2),xyz(:,:,3));
+0062   <span class="keyword">for</span> tt=1:2:numel(theta)
+0063     plot3(xyz(tt,:,1),xyz(tt,:,2),xyz(tt,:,3),<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>,1.5);
+0064   <span class="keyword">end</span>
+0065   axis equal;
+0066   axis off;
+0067   drawnow;
+0068 <span class="keyword">end</span>
+0069 
+0070 
+0071 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

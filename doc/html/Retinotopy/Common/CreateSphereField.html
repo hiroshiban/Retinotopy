@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateSphereField</title>
+  <meta name="keywords" content="CreateSphereField">
+  <meta name="description" content="Creates a spheric height field image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateSphereField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a spheric height field image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function field=CreateSphereField(fieldSize,radius,meanval,pix_per_deg,flip) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a spheric height field image.
+ function field=CreateSphereField(fieldSize,radius,meanval,pix_per_deg,flip)
+
+ This function generates a spheric field with values varying between -amp and amp
+
+ [input]
+ fieldSize   : the size of the graing in degrees, [deg]
+ radius      : the radius of the sphere in degrees, [deg]
+ meanval     : baseline magnitude of gratings, [val]
+ pix_per_deg : pixels per degree, [val]
+ flip        : [1|-1], depth is flipped or not
+
+ [output]
+ field       : spheric height image, double format, [row,col]
+
+ Created: &quot;2010-04-03 15:03:25 ban&quot;
+ Last Update: &quot;2013-11-22 23:03:16 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function field=CreateSphereField(fieldSize,radius,meanval,pix_per_deg,flip)</a>
+0002 
+0003 <span class="comment">% Creates a spheric height field image.</span>
+0004 <span class="comment">% function field=CreateSphereField(fieldSize,radius,meanval,pix_per_deg,flip)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates a spheric field with values varying between -amp and amp</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize   : the size of the graing in degrees, [deg]</span>
+0010 <span class="comment">% radius      : the radius of the sphere in degrees, [deg]</span>
+0011 <span class="comment">% meanval     : baseline magnitude of gratings, [val]</span>
+0012 <span class="comment">% pix_per_deg : pixels per degree, [val]</span>
+0013 <span class="comment">% flip        : [1|-1], depth is flipped or not</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% [output]</span>
+0016 <span class="comment">% field       : spheric height image, double format, [row,col]</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Created: &quot;2010-04-03 15:03:25 ban&quot;</span>
+0019 <span class="comment">% Last Update: &quot;2013-11-22 23:03:16 ban (ban.hiroshi@gmail.com)&quot;</span>
+0020 
+0021 <span class="comment">% check input variables</span>
+0022 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0023 <span class="keyword">if</span> nargin&lt;2 || isempty(radius), radius=1; <span class="keyword">end</span>
+0024 <span class="keyword">if</span> nargin&lt;3 || isempty(meanval), meanval=0; <span class="keyword">end</span>
+0025 <span class="keyword">if</span> nargin&lt;4 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0026 <span class="keyword">if</span> nargin&lt;5 || isempty(flip), flip=1; <span class="keyword">end</span>
+0027 
+0028 <span class="comment">% convert to pixels and radians</span>
+0029 fieldSize=round(fieldSize.*pix_per_deg);
+0030 radius=round(radius.*pix_per_deg)^2;
+0031 
+0032 <span class="comment">% create distance field</span>
+0033 hemifield=round(fieldSize/2);
+0034 [x,y]=meshgrid(-hemifield:1:hemifield,-hemifield:1:hemifield);
+0035 r=x.^2+y.^2;
+0036 
+0037 <span class="comment">% create sphere</span>
+0038 tmp=zeros(size(r));
+0039 idx=find(r&lt;=radius);
+0040 tmp(idx)=sqrt(radius-x(idx).^2-y(idx).^2);
+0041 
+0042 <span class="comment">% create images</span>
+0043 field=flip*tmp+meanval;
+0044 
+0045 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

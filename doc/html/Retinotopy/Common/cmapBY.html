@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cmapBY</title>
+  <meta name="keywords" content="cmapBY">
+  <meta name="description" content="Generates a Blue-Yellow colormap.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>cmapBY
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates a Blue-Yellow colormap.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function cmap=cmapBY(num_colors) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates a Blue-Yellow colormap.
+ function cmaps=cmapBY(num_colors)
+
+ This function generates Blue-Yellow colormap which will be useful
+ to visualize negative-zero-positive values such as correlation matrix
+
+ [input]
+ num_colors : the number of colors you want to generate
+
+ [output]
+ cmaps      : Blue-Yellow colormaps with num_colors step
+
+ [reference]
+ the original code is from Dr A.E. Welchman
+
+
+ Created    : &quot;2011-07-06 12:54:33 banh&quot;
+ Last Update: &quot;2013-11-26 11:20:28 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function cmap=cmapBY(num_colors)</a>
+0002 
+0003 <span class="comment">% Generates a Blue-Yellow colormap.</span>
+0004 <span class="comment">% function cmaps=cmapBY(num_colors)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates Blue-Yellow colormap which will be useful</span>
+0007 <span class="comment">% to visualize negative-zero-positive values such as correlation matrix</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% num_colors : the number of colors you want to generate</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [output]</span>
+0013 <span class="comment">% cmaps      : Blue-Yellow colormaps with num_colors step</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% [reference]</span>
+0016 <span class="comment">% the original code is from Dr A.E. Welchman</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Created    : &quot;2011-07-06 12:54:33 banh&quot;</span>
+0020 <span class="comment">% Last Update: &quot;2013-11-26 11:20:28 ban (ban.hiroshi@gmail.com)&quot;</span>
+0021 
+0022 <span class="keyword">if</span> nargin&lt;1 || isempty(num_colors), num_colors=256; <span class="keyword">end</span>
+0023 
+0024 step=(num_colors+1)/num_colors;
+0025 r=[(num_colors:-step:0)/num_colors];
+0026 g=[(num_colors:-step:0)/num_colors];
+0027 b=[(0:step:num_colors)/num_colors];
+0028 cmap=[r(:),g(:),b(:)];
+0029 
+0030 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

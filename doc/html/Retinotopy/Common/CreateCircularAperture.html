@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateCircularAperture</title>
+  <meta name="keywords" content="CreateCircularAperture">
+  <meta name="description" content="Creates a circular apertures that can be used to mask the other images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateCircularAperture
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a circular apertures that can be used to mask the other images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function img=CreateCircularAperture(fieldSize,apertureSize,gauss_params,pix_per_deg,fine_coefficient,show_flg,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a circular apertures that can be used to mask the other images.
+ function img=CreateCircularAperture(fieldSize,apertureSize,gauss_params,pix_per_deg,fine_coefficient,show_flg,save_flg)
+
+ Generates circular aperture field.
+
+ [input]
+ fieldSize    : the size of the field in degrees, [row,col]
+ apertureSize : the size of the circular aperture in degrees, [row,col]
+ gauss_params : gaussian filter parameters, [width_in_deg,sd_in_deg].
+                if not 0, gaussian filter will be applied on the edge of the aperture. [0,0] by default.
+ pix_per_deg  : pixels per degree, [pixels]. 40 by default.
+ fine_coefficient : if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val](default=5)
+ show_flg     : if 1, the generated images are displayed. [1/0]
+ save_flg     : if 1, the generated images are saved. [1/0]
+
+ [output]
+ img          : oval image, [row x col]. [0.0-1.0] binary mask.
+                can be used for image mask
+
+
+ Created    : &quot;2013-08-29 11:49:49 ban&quot;
+ Last Update: &quot;2013-11-22 18:35:46 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img=CreateCircularAperture(fieldSize,apertureSize,gauss_params,pix_per_deg,fine_coefficient,show_flg,save_flg)</a>
+0002 
+0003 <span class="comment">% Creates a circular apertures that can be used to mask the other images.</span>
+0004 <span class="comment">% function img=CreateCircularAperture(fieldSize,apertureSize,gauss_params,pix_per_deg,fine_coefficient,show_flg,save_flg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Generates circular aperture field.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize    : the size of the field in degrees, [row,col]</span>
+0010 <span class="comment">% apertureSize : the size of the circular aperture in degrees, [row,col]</span>
+0011 <span class="comment">% gauss_params : gaussian filter parameters, [width_in_deg,sd_in_deg].</span>
+0012 <span class="comment">%                if not 0, gaussian filter will be applied on the edge of the aperture. [0,0] by default.</span>
+0013 <span class="comment">% pix_per_deg  : pixels per degree, [pixels]. 40 by default.</span>
+0014 <span class="comment">% fine_coefficient : if larger, the generated oval become finer,</span>
+0015 <span class="comment">%                    but comsumes much CPU power. [val](default=5)</span>
+0016 <span class="comment">% show_flg     : if 1, the generated images are displayed. [1/0]</span>
+0017 <span class="comment">% save_flg     : if 1, the generated images are saved. [1/0]</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% img          : oval image, [row x col]. [0.0-1.0] binary mask.</span>
+0021 <span class="comment">%                can be used for image mask</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Created    : &quot;2013-08-29 11:49:49 ban&quot;</span>
+0025 <span class="comment">% Last Update: &quot;2013-11-22 18:35:46 ban (ban.hiroshi@gmail.com)&quot;</span>
+0026 
+0027 <span class="comment">% check input variables</span>
+0028 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;2 || isempty(apertureSize), apertureSize=6; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;3 || isempty(gauss_params), gauss_params=[0,0]; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;4 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin &lt; 5 || isempty(fine_coefficient), fine_coefficient=5; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin &lt; 7 || isempty(show_flg), show_flg=1; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin &lt; 8 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> numel(apertureSize)==1, apertureSize=[apertureSize,apertureSize]; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> numel(gauss_params)==1, error(<span class="string">'gauss_params should be [width,sd]. check input variable.'</span>); <span class="keyword">end</span>
+0039 
+0040 <span class="comment">% convert to pixels and radians</span>
+0041 fieldSize=round(fieldSize./2*pix_per_deg);
+0042 apertureSize=round(apertureSize./2*pix_per_deg);
+0043 gauss_params=gauss_params.*pix_per_deg;
+0044 
+0045 <span class="comment">% dissociate inner/outer region of the oval</span>
+0046 step=1/fine_coefficient;
+0047 [x,y]=meshgrid(-fieldSize(2):step:fieldSize(2),-fieldSize(1):step:fieldSize(1));
+0048 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0049 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0050 
+0051 idx=logical( 1&gt;=( x.^2/apertureSize(2).^2 + y.^2/apertureSize(1).^2 ) );
+0052 <span class="comment">%idxbg=logical( 1&lt;( x.^2/apertureSize(2).^2 + y.^2/apertureSize(1).^2 ) );</span>
+0053 
+0054 <span class="comment">% generate oval image</span>
+0055 img=zeros(size(x)); img(idx)=255.0;
+0056 
+0057 <span class="keyword">if</span> gauss_params(1)~=0
+0058   <span class="comment">% gaussian filtering</span>
+0059   <span class="comment">% create gaussian kernel, using fspecial('gaussian',winwidth,sd);</span>
+0060   h = fspecial(<span class="string">'gaussian'</span>,gauss_params(1),gauss_params(2));
+0061 
+0062   <span class="comment">% apply gaussian filter</span>
+0063   <span class="comment">%img=imfilter(uint8(img),h,0); % for speeding up</span>
+0064   img=imfilter(uint8(img),h,<span class="string">'replicate'</span>); <span class="comment">% for speeding up;</span>
+0065 <span class="keyword">end</span>
+0066 
+0067 <span class="comment">% resizing</span>
+0068 img=imresize(img,step,<span class="string">'bilinear'</span>); <span class="comment">% not bicubic</span>
+0069 img=double(img)./255;
+0070 
+0071 <span class="comment">% show image</span>
+0072 <span class="keyword">if</span> show_flg
+0073   figure;
+0074   imshow(img,[0,1]);
+0075   drawnow;
+0076   <span class="comment">%axis off;</span>
+0077 <span class="keyword">end</span>
+0078 
+0079 <span class="comment">% save image data</span>
+0080 <span class="keyword">if</span> save_flg
+0081   save aperture.mat img;
+0082 <span class="keyword">end</span>
+0083 
+0084 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

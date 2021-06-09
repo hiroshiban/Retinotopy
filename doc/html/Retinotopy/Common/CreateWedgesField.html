@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateWedgesField</title>
+  <meta name="keywords" content="CreateWedgesField">
+  <meta name="description" content="Creates a wedge-shaped field image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateWedgesField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a wedge-shaped field image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function field=CreateWedgeField(fieldSize,radiusMin,radiusMax,height,nwedges,wedgeangle,rot_angle,pix_per_deg,fine_coefficient) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a wedge-shaped field image.
+ function field=CreateWedgeField(fieldSize,radiusMin,radiusMax,height,nwedges,...
+                                 wedgeangle,rot_angle,pix_per_deg,fine_coefficient)
+
+ This function creates a wedge-shaped (Baumkuchen) field image.
+ 
+ [input]
+ fieldSize   : the whole image size in deg, [row,col]
+ radiusMin   : the min size of the wedge in degrees, [val]
+ radiusMax   : the max size of the wedge in degrees, [val]
+ height      : field height, [val]
+ nwedges     : the number of wedges in the field, [val]
+ wedgeangle  : angle of each wedge in deg, [val]
+ rot_angle   : wedge rotation angle along the center of the field in deg, [val]
+ pix_per_deg : pixels per degree.
+ fine_coefficient : (optional) if larger, the generated field becomes finer
+                    along x- &amp; y-axis but comsumes much CPU power. [val]
+                    (default=1, as is, no tuning)
+ 
+ [output]
+ field       : generated wedge field
+               the drawing start from right horizontal meridian, counter-clockwise
+ 
+
+ Created    : &quot;2010-08-05 01:15:18 ban&quot;
+ Last Update: &quot;2013-11-22 22:57:38 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function field=CreateWedgeField(fieldSize,radiusMin,radiusMax,height,nwedges,</a><span class="keyword">...</span>
+0002                                 wedgeangle,rot_angle,pix_per_deg,fine_coefficient)
+0003 
+0004 <span class="comment">% Creates a wedge-shaped field image.</span>
+0005 <span class="comment">% function field=CreateWedgeField(fieldSize,radiusMin,radiusMax,height,nwedges,...</span>
+0006 <span class="comment">%                                 wedgeangle,rot_angle,pix_per_deg,fine_coefficient)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% This function creates a wedge-shaped (Baumkuchen) field image.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% fieldSize   : the whole image size in deg, [row,col]</span>
+0012 <span class="comment">% radiusMin   : the min size of the wedge in degrees, [val]</span>
+0013 <span class="comment">% radiusMax   : the max size of the wedge in degrees, [val]</span>
+0014 <span class="comment">% height      : field height, [val]</span>
+0015 <span class="comment">% nwedges     : the number of wedges in the field, [val]</span>
+0016 <span class="comment">% wedgeangle  : angle of each wedge in deg, [val]</span>
+0017 <span class="comment">% rot_angle   : wedge rotation angle along the center of the field in deg, [val]</span>
+0018 <span class="comment">% pix_per_deg : pixels per degree.</span>
+0019 <span class="comment">% fine_coefficient : (optional) if larger, the generated field becomes finer</span>
+0020 <span class="comment">%                    along x- &amp; y-axis but comsumes much CPU power. [val]</span>
+0021 <span class="comment">%                    (default=1, as is, no tuning)</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [output]</span>
+0024 <span class="comment">% field       : generated wedge field</span>
+0025 <span class="comment">%               the drawing start from right horizontal meridian, counter-clockwise</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Created    : &quot;2010-08-05 01:15:18 ban&quot;</span>
+0029 <span class="comment">% Last Update: &quot;2013-11-22 22:57:38 ban (ban.hiroshi@gmail.com)&quot;</span>
+0030 
+0031 <span class="comment">% check input variables</span>
+0032 <span class="keyword">if</span> nargin&lt;8, help CreateWedgeField; <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;9, fine_coefficient=1; <span class="keyword">end</span>
+0034 
+0035 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> radiusMin&lt;0, radiusMin=0; <span class="keyword">end</span>
+0037 
+0038 <span class="comment">% calculate gap between adjacent wedges</span>
+0039 gap=(360-nwedges*wedgeangle)/nwedges;
+0040 <span class="keyword">if</span> gap&lt;0, error(<span class="string">'nwedge*wedgeangle exceeds 360 deg! Check input variables'</span>); <span class="keyword">end</span>
+0041 
+0042 <span class="comment">% convert from deg to pixels</span>
+0043 fieldSize=round(fieldSize.*pix_per_deg);
+0044 
+0045 radiusMin=round(radiusMin/2*pix_per_deg);
+0046 radiusMax=round(radiusMax/2*pix_per_deg);
+0047 
+0048 <span class="comment">% calculate distance &amp; angles</span>
+0049 step=1/fine_coefficient; <span class="comment">% over sampling</span>
+0050 [x,y]=meshgrid(0:step:fieldSize(2),0:step:fieldSize(1));
+0051 x=x-fieldSize(2)/2; y=y-fieldSize(1)/2;
+0052 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0053 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0054 r=sqrt(x.*x+y.*y);
+0055 theta=mod(180*atan2(y,x)./pi+360+rot_angle,360); <span class="comment">% adjust 0-360 deg</span>
+0056 
+0057 <span class="comment">% generate wedge field</span>
+0058 field=zeros(size(y));
+0059 <span class="keyword">for</span> ii=1:1:nwedges <span class="comment">% wedges</span>
+0060   field( (ii*gap + (ii-1)*wedgeangle &lt;= theta) &amp; <span class="keyword">...</span>
+0061          (theta &lt;= ii*gap + ii*wedgeangle) &amp; <span class="keyword">...</span>
+0062          (radiusMin &lt; r) &amp; (r &lt; radiusMax) )=height;
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="comment">% image resize</span>
+0066 <span class="keyword">if</span> fine_coefficient&gt;1
+0067   field=imresize(field,step,<span class="string">'bilinear'</span>);
+0068 <span class="keyword">end</span>
+0069 
+0070 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

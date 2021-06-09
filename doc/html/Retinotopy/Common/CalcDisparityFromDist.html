@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CalcDisparityFromDist</title>
+  <meta name="keywords" content="CalcDisparityFromDist">
+  <meta name="description" content="Calculates binocular disparity (arcmin) from physical distances.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CalcDisparityFromDist
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates binocular disparity (arcmin) from physical distances.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function disparity = CalcDisparityFromDist(ipd,zdist,viewdist) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Calculates binocular disparity (arcmin) from physical distances.
+ function disparity = CalcDisparityFromDist(ipd,zdist,viewdist)
+ 
+ [INPUT]
+ ipd       : distance between left and right eyes (cm)
+ zdist     : distance from the reference plane (cm)
+ viewdist  : viewing distance from eye to the screen (cm)
+
+ [OUTPUT]
+ disparity : disparity (arcmin)
+ 
+ June 29 2009 Hiroshi Ban</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disparity = CalcDisparityFromDist(ipd,zdist,viewdist)</a>
+0002 
+0003 <span class="comment">% Calculates binocular disparity (arcmin) from physical distances.</span>
+0004 <span class="comment">% function disparity = CalcDisparityFromDist(ipd,zdist,viewdist)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% [INPUT]</span>
+0007 <span class="comment">% ipd       : distance between left and right eyes (cm)</span>
+0008 <span class="comment">% zdist     : distance from the reference plane (cm)</span>
+0009 <span class="comment">% viewdist  : viewing distance from eye to the screen (cm)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% [OUTPUT]</span>
+0012 <span class="comment">% disparity : disparity (arcmin)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% June 29 2009 Hiroshi Ban</span>
+0015 
+0016 disparity = ipd * zdist / (viewdist*viewdist + viewdist*zdist) * 360 * 60 / (2 * pi);
+0017 
+0018 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

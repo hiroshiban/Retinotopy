@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of FileRename</title>
+  <meta name="keywords" content="FileRename">
+  <meta name="description" content="Rename file or folder">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- ../menu.html Common --><!-- menu.html filerename -->
+<h1>FileRename
+&nbsp;&nbsp;<img src="../../../c.png" alt="Windows 32, Windows 64" border="0" title="Windows 32, Windows 64"></h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Rename file or folder</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [Status, Msg] = FileRename(Source, Dest, Mode) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top"><pre class="comment"> Rename file or folder
+ This function renames the existing file or folder specified by the string
+ Source to the name given by the string Dest. You can use FileRename to move
+ a file from one folder to another folder or drive, but folders can be renamed
+ only, not moved.
+
+ Files and folders can be renamed by Matlab's MOVEFILE also, but this C-Mex is
+ faster (timings vary with the size and number of the files due to the
+ caching of write operations by the hard disk and the OS):
+    Matlab 2009a: 4 to 50 times faster,
+    Matlab 6.5:   1600 times faster (!).
+
+ [Status, Msg] = FileRename(Source, Dest, [Mode])
+ INPUT:
+   Source: String, name of the source file or folder.
+           Unicode and UNC paths are considered.
+   Dest:   String, name of the destination file or folder.
+   Mode:   String, if 'forced' an existing Dest file is overwritten,
+           if it is not write protected. Folders are *not* overwritten.
+           Optional, default: 'DoNotOverwrite'.
+
+ OUTPUT:
+   Status: Scalar DOUBLE. Optional.
+            0: Success
+           -1: Source is not existing
+           -2: Dest is existing already
+           -3: Dest is write protected, in forced [Mode] only
+           -4: Unknown problems:
+               Source or Dest is accessed from another program,
+               Source is a folder and Dest is on another drive.
+   Msg: String, empty on success, some information in case of problems.
+
+ COMPILE: The fast C-Mex file must be compiled before using.
+   See FileRename.c for details.
+
+ Tested: Matlab 6.5, 7.7, 7.8, WinXP, 32bit
+         Compiler: LCC2.4, OWC1.8, BCC5.5, MSVC2008
+ Assumed Compatibility: higher Matlab versions, Mac, Linux, 64bit
+ Author: Jan Simon, Heidelberg, (C) 2006-2010 matlab.THISYEAR(a)nMINUSsimon.de</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="uTest_FileRename.html" class="code" title="function uTest_FileRename(doSpeed)">uTest_FileRename</a>	Automatic test: FileRename</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Status, Msg] = FileRename(Source, Dest, Mode)</a>
+0002 <span class="comment">% Rename file or folder</span>
+0003 <span class="comment">% This function renames the existing file or folder specified by the string</span>
+0004 <span class="comment">% Source to the name given by the string Dest. You can use FileRename to move</span>
+0005 <span class="comment">% a file from one folder to another folder or drive, but folders can be renamed</span>
+0006 <span class="comment">% only, not moved.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Files and folders can be renamed by Matlab's MOVEFILE also, but this C-Mex is</span>
+0009 <span class="comment">% faster (timings vary with the size and number of the files due to the</span>
+0010 <span class="comment">% caching of write operations by the hard disk and the OS):</span>
+0011 <span class="comment">%    Matlab 2009a: 4 to 50 times faster,</span>
+0012 <span class="comment">%    Matlab 6.5:   1600 times faster (!).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% [Status, Msg] = FileRename(Source, Dest, [Mode])</span>
+0015 <span class="comment">% INPUT:</span>
+0016 <span class="comment">%   Source: String, name of the source file or folder.</span>
+0017 <span class="comment">%           Unicode and UNC paths are considered.</span>
+0018 <span class="comment">%   Dest:   String, name of the destination file or folder.</span>
+0019 <span class="comment">%   Mode:   String, if 'forced' an existing Dest file is overwritten,</span>
+0020 <span class="comment">%           if it is not write protected. Folders are *not* overwritten.</span>
+0021 <span class="comment">%           Optional, default: 'DoNotOverwrite'.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% OUTPUT:</span>
+0024 <span class="comment">%   Status: Scalar DOUBLE. Optional.</span>
+0025 <span class="comment">%            0: Success</span>
+0026 <span class="comment">%           -1: Source is not existing</span>
+0027 <span class="comment">%           -2: Dest is existing already</span>
+0028 <span class="comment">%           -3: Dest is write protected, in forced [Mode] only</span>
+0029 <span class="comment">%           -4: Unknown problems:</span>
+0030 <span class="comment">%               Source or Dest is accessed from another program,</span>
+0031 <span class="comment">%               Source is a folder and Dest is on another drive.</span>
+0032 <span class="comment">%   Msg: String, empty on success, some information in case of problems.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% COMPILE: The fast C-Mex file must be compiled before using.</span>
+0035 <span class="comment">%   See FileRename.c for details.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Tested: Matlab 6.5, 7.7, 7.8, WinXP, 32bit</span>
+0038 <span class="comment">%         Compiler: LCC2.4, OWC1.8, BCC5.5, MSVC2008</span>
+0039 <span class="comment">% Assumed Compatibility: higher Matlab versions, Mac, Linux, 64bit</span>
+0040 <span class="comment">% Author: Jan Simon, Heidelberg, (C) 2006-2010 matlab.THISYEAR(a)nMINUSsimon.de</span>
+0041 
+0042 <span class="comment">% $JRev: R0c V:002 Sum:k2h6PfSIX+16 Date:29-Nov-2010 01:15:58 $</span>
+0043 <span class="comment">% $License: BSD $</span>
+0044 <span class="comment">% $UnitTest: uTest_FileRename $</span>
+0045 <span class="comment">% $File: Tools\GLFile\FileRename.m $</span>
+0046 <span class="comment">% History:</span>
+0047 
+0048 <span class="comment">% Initialize: ==================================================================</span>
+0049 <span class="keyword">persistent</span> Warned
+0050 <span class="keyword">if</span> isempty(Warned)
+0051    warning([<span class="string">'JSimon:'</span>, mfilename, <span class="string">':NoMex'</span>], <span class="keyword">...</span>
+0052       <span class="string">'Cannot find compiled Mex. MOVEFILE is used instead.'</span>);
+0053 <span class="keyword">end</span>
+0054 
+0055 <span class="comment">% Do the work: =================================================================</span>
+0056 <span class="comment">% Fast alternative, but slower than the C-Mex:</span>
+0057 <span class="comment">%   java.io.File(Source).renameTo(java.io.File(Dest));</span>
+0058 
+0059 <span class="keyword">if</span> nargin == 2
+0060    [Status, Msg] = movefile(Source, Dest);
+0061 <span class="keyword">elseif</span> nargin == 3
+0062    [Status, Msg] = movefile(Source, Dest, Mode);
+0063 <span class="keyword">else</span>
+0064    error([<span class="string">'JSimon:'</span>, mfilename, <span class="string">':BadNInput'</span>], <span class="keyword">...</span>
+0065       [mfilename, <span class="string">': 2 or 3 inputs required.'</span>]);
+0066 <span class="keyword">end</span>
+0067 
+0068 <span class="comment">% Handle problems:</span>
+0069 <span class="keyword">if</span> Status ~= 1
+0070    <span class="keyword">if</span> ~exist(Source, <span class="string">'file'</span>)
+0071       Status = -1;
+0072    <span class="keyword">elseif</span> exist(Dest, <span class="string">'file'</span>)
+0073       Status = -2;
+0074    <span class="keyword">elseif</span> exist(Dest, <span class="string">'dir'</span>)  <span class="comment">% Or write protected</span>
+0075       Status = -3;
+0076    <span class="keyword">else</span>
+0077       Status = -4;
+0078    <span class="keyword">end</span>
+0079 <span class="keyword">end</span>
+0080 
+0081 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

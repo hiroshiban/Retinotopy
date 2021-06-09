@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of RDSfastest</title>
+  <meta name="keywords" content="RDSfastest">
+  <meta name="description" content="Generates left/right Random-Dot-Stereogram images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>RDSfastest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates left/right Random-Dot-Stereogram images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [imgL,imgR]=RDSfastest(heightfield,posL,posR,colors,dotDens) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates left/right Random-Dot-Stereogram images.
+ function [imgL,imgR]=RDSfastest(heightfield,posL,posR,colors,dotDens)
+
+ Generate left/right Random Dot Stereogram (RDS) Image (fastest version without any duplicated processing)
+ The generated image are the same size with heightfield image.
+
+ -- modified from RDSfast for speeding up and for matching the purpose of the
+    current experiment
+
+ [input]
+ heightfield : height field to generate RDS, [row,col]
+               *NOTICE* the unit of the height should be cm
+ posL        : position shifts for left RDS image [row,col] (same size with heightfield)
+ posR        : position shifts for right RDS image [row,col] (same size with heightfield)
+ colors      : dot/background colors, [0-255(dot1),0-255(dot2),0-255(background)]
+ dotDens     : density (percentage) of ovals filling the generated RDS image [1-100]
+
+ [output]
+ imgL        : generated image(s) for left eye, [row,col]
+ imgR        : generated image(s) for right eye, [row,col]
+
+ Created:     &quot;2010-04-03 14:05:21 ban&quot;
+ Last Update: &quot;2019-05-17 16:13:30 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="RDSbyOvalFastest.html" class="code" title="function [imgL,imgR]=RDSbyOvalFastest(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor)">RDSbyOvalFastest</a>	Generates left/right Random-Dot-Stereogram images.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [imgL,imgR]=RDSfastest(heightfield,posL,posR,colors,dotDens)</a>
+0002 
+0003 <span class="comment">% Generates left/right Random-Dot-Stereogram images.</span>
+0004 <span class="comment">% function [imgL,imgR]=RDSfastest(heightfield,posL,posR,colors,dotDens)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Generate left/right Random Dot Stereogram (RDS) Image (fastest version without any duplicated processing)</span>
+0007 <span class="comment">% The generated image are the same size with heightfield image.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% -- modified from RDSfast for speeding up and for matching the purpose of the</span>
+0010 <span class="comment">%    current experiment</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [input]</span>
+0013 <span class="comment">% heightfield : height field to generate RDS, [row,col]</span>
+0014 <span class="comment">%               *NOTICE* the unit of the height should be cm</span>
+0015 <span class="comment">% posL        : position shifts for left RDS image [row,col] (same size with heightfield)</span>
+0016 <span class="comment">% posR        : position shifts for right RDS image [row,col] (same size with heightfield)</span>
+0017 <span class="comment">% colors      : dot/background colors, [0-255(dot1),0-255(dot2),0-255(background)]</span>
+0018 <span class="comment">% dotDens     : density (percentage) of ovals filling the generated RDS image [1-100]</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% [output]</span>
+0021 <span class="comment">% imgL        : generated image(s) for left eye, [row,col]</span>
+0022 <span class="comment">% imgR        : generated image(s) for right eye, [row,col]</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Created:     &quot;2010-04-03 14:05:21 ban&quot;</span>
+0025 <span class="comment">% Last Update: &quot;2019-05-17 16:13:30 ban&quot;</span>
+0026 
+0027 <span class="comment">% check input variables</span>
+0028 <span class="keyword">if</span> nargin&lt;3, help <a href="RDSbyOvalFastest.html" class="code" title="function [imgL,imgR]=RDSbyOvalFastest(posL,posR,wdot,bdot,dotalpha,dotDens,bgcolor)">RDSbyOvalFastest</a>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;4 || isempty(colors), colors=[255,0,128]; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;5 || isempty(dotDens), dotDens=10; <span class="keyword">end</span>
+0031 
+0032 <span class="comment">% check sizes of input data</span>
+0033 [r1,c1]=size(heightfield);
+0034 [r2,c2]=size(posL);
+0035 <span class="keyword">if</span> r1~=r2 || c1~=c2, error(<span class="string">'the size heightfield &amp; posL mismatched! Check input variables'</span>); <span class="keyword">end</span>
+0036 [r3,c3]=size(posR);
+0037 <span class="keyword">if</span> r2~=r3 || c2~=c3, error(<span class="string">'the size posL &amp; posR mismatched! Check input variables'</span>); <span class="keyword">end</span>
+0038 
+0039 <span class="comment">% --- generate RDS images</span>
+0040 
+0041 <span class="comment">% create initial random dot image</span>
+0042 randXY=randi(round(100/dotDens),size(heightfield));
+0043 randXY(randXY~=round(100/dotDens))=0;
+0044 randXY(logical(randXY))=1;
+0045 randXY(randXY==0)=colors(3); <span class="comment">% background;</span>
+0046 
+0047 <span class="comment">% set 2 colors</span>
+0048 [row,col]=find(randXY==1);
+0049 <span class="keyword">for</span> ii=1:1:size(row,1)
+0050   <span class="keyword">if</span> mod(randi(2),2)
+0051     randXY(row(ii),col(ii))=colors(1); <span class="comment">% dot1;</span>
+0052   <span class="keyword">else</span>
+0053     randXY(row(ii),col(ii))=colors(2); <span class="comment">% dot2;</span>
+0054   <span class="keyword">end</span>
+0055 <span class="keyword">end</span>
+0056 
+0057 <span class="comment">% create left/right images</span>
+0058 tmpL=colors(3)*ones(size(randXY));
+0059 tmpR=colors(3)*ones(size(randXY));
+0060 
+0061 <span class="keyword">for</span> ii=1:1:size(row,1)
+0062   <span class="keyword">if</span> ~isnan(posL(row(ii),col(ii))) &amp;&amp; ~isnan(posR(row(ii),col(ii)))
+0063     <span class="comment">% here the 'hole' in the image is filled by shifting the dot position cyclically</span>
+0064     <span class="keyword">if</span> col(ii)+posL(row(ii),col(ii)) &lt; 1
+0065       tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=randXY(row(ii),col(ii));
+0066     <span class="keyword">elseif</span> size(randXY,2) &lt; col(ii)+posL(row(ii),col(ii))
+0067       tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=randXY(row(ii),col(ii));
+0068     <span class="keyword">else</span>
+0069       tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=randXY(row(ii),col(ii));
+0070     <span class="keyword">end</span>
+0071 
+0072     <span class="keyword">if</span> col(ii)+posR(row(ii),col(ii)) &lt; 1
+0073       tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=randXY(row(ii),col(ii));
+0074     <span class="keyword">elseif</span> size(randXY,2) &lt; col(ii)+posR(row(ii),col(ii))
+0075       tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=randXY(row(ii),col(ii));
+0076     <span class="keyword">else</span>
+0077       tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=randXY(row(ii),col(ii));
+0078     <span class="keyword">end</span>
+0079   <span class="keyword">end</span>
+0080 <span class="keyword">end</span>
+0081 imgL=uint8(tmpL);
+0082 imgR=uint8(tmpR);
+0083 
+0084 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

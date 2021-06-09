@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateCheckerBoard</title>
+  <meta name="keywords" content="CreateCheckerBoard">
+  <meta name="description" content="Creates checkerboards with compensating colors.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateCheckerBoard
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates checkerboards with compensating colors.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [checkerboard,mask,checkerID]=CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates checkerboards with compensating colors.
+ function [checkerboard,mask,checkerID]=...
+    CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase)
+
+ generates checkerboards with compensating colors
+
+ [input]
+ rmin        : checkerboard's minimum radius in deg, [val]
+ rmax        : checkerboard's maximum radius in deg, [val]
+ width       : checker width in deg, [val]
+ startangle  : checker board start angle, from right horizontal meridian, clockwise
+ pix_per_deg : pixels per degree, [val]
+ nwedges     : number of wedges, [val]
+ nrings      : number of rings, [val]
+ colors      : checkerboard colors, [(1+2*n)x3(RGB)] or [1x3](gray-scale) matrix
+               {RGB checkerboard}
+               1=background color, 2*n=compensating color
+               e.g. colors=[128, 128, 128;
+                            255,   0,   0; 0, 255,   0;
+                            255, 255,   0; 0,   0, 255]
+               then, checkerborad{1,1} with { [255,0,0] vs [0,255,0] }
+                     checkerboard{1,2} with { [0,255,0] vs [255,0,0] }(compensating)
+                     checkerborad{2,1} with { [255,255,0] vs [0,0,255] }
+                     checkerboard{2,2} with { [0,0,255] vs [255,255,0] }(compensating)
+               will be generated.
+               {grayscale checkerboard}
+               colors=[background,check1,check2]
+ phase       : (optional) checker's phase
+
+ [output]
+ checkerboard : output checkerboard, cell structure, {(size(colors,1)-1)/2,2}
+                2 is for compensating colors
+ mask        : (optional) checkerboard regional mask, logical
+ checkerID   : (optional) each checker patch's ID
+
+
+ Created    : &quot;2011-04-14 23:51:29 ban&quot;
+ Last Update: &quot;2013-11-22 18:36:03 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreateCheckerBoard.html" class="code" title="function [checkerboard,mask,checkerID]=CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase)">CreateCheckerBoard</a>	Creates checkerboards with compensating colors.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreateCheckerBoard.html" class="code" title="function [checkerboard,mask,checkerID]=CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase)">CreateCheckerBoard</a>	Creates checkerboards with compensating colors.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [checkerboard,mask,checkerID]=CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase)</a>
+0002 
+0003 <span class="comment">% Creates checkerboards with compensating colors.</span>
+0004 <span class="comment">% function [checkerboard,mask,checkerID]=...</span>
+0005 <span class="comment">%    CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% generates checkerboards with compensating colors</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% rmin        : checkerboard's minimum radius in deg, [val]</span>
+0011 <span class="comment">% rmax        : checkerboard's maximum radius in deg, [val]</span>
+0012 <span class="comment">% width       : checker width in deg, [val]</span>
+0013 <span class="comment">% startangle  : checker board start angle, from right horizontal meridian, clockwise</span>
+0014 <span class="comment">% pix_per_deg : pixels per degree, [val]</span>
+0015 <span class="comment">% nwedges     : number of wedges, [val]</span>
+0016 <span class="comment">% nrings      : number of rings, [val]</span>
+0017 <span class="comment">% colors      : checkerboard colors, [(1+2*n)x3(RGB)] or [1x3](gray-scale) matrix</span>
+0018 <span class="comment">%               {RGB checkerboard}</span>
+0019 <span class="comment">%               1=background color, 2*n=compensating color</span>
+0020 <span class="comment">%               e.g. colors=[128, 128, 128;</span>
+0021 <span class="comment">%                            255,   0,   0; 0, 255,   0;</span>
+0022 <span class="comment">%                            255, 255,   0; 0,   0, 255]</span>
+0023 <span class="comment">%               then, checkerborad{1,1} with { [255,0,0] vs [0,255,0] }</span>
+0024 <span class="comment">%                     checkerboard{1,2} with { [0,255,0] vs [255,0,0] }(compensating)</span>
+0025 <span class="comment">%                     checkerborad{2,1} with { [255,255,0] vs [0,0,255] }</span>
+0026 <span class="comment">%                     checkerboard{2,2} with { [0,0,255] vs [255,255,0] }(compensating)</span>
+0027 <span class="comment">%               will be generated.</span>
+0028 <span class="comment">%               {grayscale checkerboard}</span>
+0029 <span class="comment">%               colors=[background,check1,check2]</span>
+0030 <span class="comment">% phase       : (optional) checker's phase</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% [output]</span>
+0033 <span class="comment">% checkerboard : output checkerboard, cell structure, {(size(colors,1)-1)/2,2}</span>
+0034 <span class="comment">%                2 is for compensating colors</span>
+0035 <span class="comment">% mask        : (optional) checkerboard regional mask, logical</span>
+0036 <span class="comment">% checkerID   : (optional) each checker patch's ID</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Created    : &quot;2011-04-14 23:51:29 ban&quot;</span>
+0040 <span class="comment">% Last Update: &quot;2013-11-22 18:36:03 ban (ban.hiroshi@gmail.com)&quot;</span>
+0041 
+0042 
+0043 <span class="comment">%% check input variables</span>
+0044 <span class="keyword">if</span> nargin&lt;8, help <a href="CreateCheckerBoard.html" class="code" title="function [checkerboard,mask,checkerID]=CreateCheckerBoard(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,colors,phase)">CreateCheckerBoard</a>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0045 <span class="keyword">if</span> nargin&lt;9, phase=0; <span class="keyword">end</span>
+0046 
+0047 <span class="keyword">if</span> mod(size(colors,1)-1,2)~=0
+0048   error(<span class="string">'mod(size(colors,1)-1,2) shoud be 0. check input variable.'</span>);
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="keyword">if</span> size(colors,1)==1
+0052   isRGB=0;
+0053   fprintf(<span class="string">'generating grayscale checkerboard(s)...'</span>);
+0054 <span class="keyword">else</span>
+0055   isRGB=1;
+0056   fprintf(<span class="string">'generating RGB checkerboard(s)...'</span>);
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="comment">% convert deg to pixels</span>
+0060 rmin=rmin*pix_per_deg;
+0061 rmax=rmax*pix_per_deg;
+0062 
+0063 <span class="comment">% convert deg to radians</span>
+0064 startangle=mod(startangle*pi/180,2*pi);
+0065 width=width*pi/180;
+0066 <span class="comment">%if phase&gt;width/nwedges, phase=mod(phase,width/nwedges); end</span>
+0067 phase=phase*pi/180;
+0068 
+0069 <span class="comment">% lims of checkerboard image</span>
+0070 imsize_ratio=1.01;
+0071 
+0072 
+0073 <span class="comment">%% processing</span>
+0074 
+0075 <span class="comment">% base xy distance field</span>
+0076 [xx,yy]=meshgrid((0:1:imsize_ratio*2*rmax)-imsize_ratio*rmax,(0:1:imsize_ratio*2*rmax)-imsize_ratio*rmax);
+0077 <span class="comment">%if mod(size(xx,1),2), xx=xx(1:end-1,:); yy=yy(1:end-1,:); end</span>
+0078 <span class="comment">%if mod(size(xx,2),2), xx=xx(:,1:end-1); yy=yy(:,1:end-1); end</span>
+0079 r=sqrt(xx.^2+yy.^2); <span class="comment">% radius</span>
+0080 
+0081 <span class="comment">% convert distance field to radians and degree fields</span>
+0082 thetafield=mod(atan2(yy,xx),2*pi);
+0083 
+0084 <span class="comment">% calculate checkerboard's inner regions</span>
+0085 minlim=startangle;
+0086 maxlim=mod(startangle+width,2*pi);
+0087 <span class="keyword">if</span> minlim==maxlim <span class="comment">% whole annulus</span>
+0088   inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) );
+0089 <span class="keyword">elseif</span> minlim&gt;maxlim
+0090   inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) &amp; ( (minlim&lt;=thetafield &amp; thetafield&lt;=2*pi) | (0&lt;=thetafield &amp; thetafield&lt;=maxlim) ) );
+0091 <span class="keyword">else</span>
+0092   inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) &amp; ( (minlim&lt;=thetafield) &amp; (thetafield&lt;=maxlim) ) );
+0093 <span class="keyword">end</span>
+0094 
+0095 <span class="comment">%(rmin&lt;=r &amp; r&lt;=rmax) &amp;</span>
+0096 
+0097 <span class="comment">% calculate binary class (-1/1) along eccentricity for checkerboard (anuulus)</span>
+0098 radii=linspace(rmin,rmax,nrings+1); radii(1)=[]; <span class="comment">% annulus width</span>
+0099 cide=zeros(size(xx)); <span class="comment">% checker id, eccentricity</span>
+0100 <span class="keyword">for</span> i=length(radii):-1:1
+0101   cide(rmin&lt;r &amp; r&lt;=radii(i))=i;
+0102 <span class="keyword">end</span>
+0103 rings=zeros(size(cide));
+0104 rings(inidx)=2*mod(cide(inidx),2)-1; <span class="comment">% -1/1 class;</span>
+0105 
+0106 <span class="comment">% calculate binary class (-1/1) along eccentricity for checkerboard (anuulus)</span>
+0107 th=thetafield(inidx)-startangle+phase;
+0108 th=mod(th,2*pi);
+0109 cidp=zeros(size(thetafield));
+0110 cidp(inidx)=ceil(th/width*nwedges); <span class="comment">% checker id, polar angle</span>
+0111 wedges=zeros(size(cidp));
+0112 wedges(inidx)=2*mod(cidp(inidx),2)-1; <span class="comment">% -1/1 class</span>
+0113 
+0114 <span class="comment">% generate base checkerboard</span>
+0115 basecheckerboard=zeros(size(xx));
+0116 basecheckerboard(inidx)=wedges(inidx).*rings(inidx);
+0117 basecheckerboard(r&gt;rmax)=0;
+0118 [sy,sx]=size(basecheckerboard);
+0119 
+0120 <span class="comment">% generate mask</span>
+0121 <span class="keyword">if</span> nargout&gt;=2
+0122   mask=logical(basecheckerboard);
+0123 <span class="keyword">end</span>
+0124 
+0125 <span class="comment">% generate checkerboard ID</span>
+0126 <span class="keyword">if</span> nargout==3
+0127   <span class="comment">% correct wedge IDs</span>
+0128   <span class="keyword">if</span> phase~=0 <span class="comment">%mod(phase,width/nwedges)~=0</span>
+0129     cidp(inidx)=mod(cidp(inidx)-(2*pi/(width/nwedges)-1),2*pi/(width/nwedges))+1;
+0130     minval=unique(cidp); minval=minval(2); <span class="comment">% not 1 because the first value is 0 = background;</span>
+0131     cidp(cidp&gt;0)=cidp(cidp&gt;0)-minval+1;
+0132     true_nwedges=numel(unique(cidp))-1; <span class="comment">% -1 is to omit 0 = background;</span>
+0133   <span class="keyword">else</span>
+0134     true_nwedges=nwedges;
+0135   <span class="keyword">end</span>
+0136 
+0137   <span class="comment">% generate checkerID</span>
+0138   checkerID=zeros(size(basecheckerboard));
+0139   checkerID(inidx)=cidp(inidx)+(cide(inidx)-1)*true_nwedges;
+0140 
+0141   <span class="comment">% exclude outliers</span>
+0142   <span class="comment">%checkerID(r&lt;rmin | rmax&lt;r)=0;</span>
+0143   checkerID(checkerID&lt;0)=0;
+0144 <span class="keyword">end</span>
+0145 
+0146 <span class="comment">% generate colored/grayscale checkerboards</span>
+0147 <span class="keyword">if</span> isRGB
+0148 
+0149   checkerboard=cell((size(colors,1)-1)/2,2);
+0150   checker_id=0;
+0151   <span class="keyword">for</span> cc=2:2:size(colors,1)-1
+0152     checker_id=checker_id+1;
+0153     <span class="keyword">for</span> nn=1:1:2 <span class="comment">% compensating patterns</span>
+0154 
+0155       id=-1*(-1)^nn; <span class="comment">% id to process 1 &amp; -1</span>
+0156 
+0157       tmpR=zeros(sy,sx); <span class="comment">%basecheckerboard;</span>
+0158       tmpG=zeros(sy,sx); <span class="comment">%basecheckerboard;</span>
+0159       tmpB=zeros(sy,sx); <span class="comment">%basecheckerboard;</span>
+0160 
+0161       tmpR(basecheckerboard==id)=colors(cc,1);
+0162       tmpG(basecheckerboard==id)=colors(cc,2);
+0163       tmpB(basecheckerboard==id)=colors(cc,3);
+0164 
+0165       tmpR(basecheckerboard==-id)=colors(cc+1,1);
+0166       tmpG(basecheckerboard==-id)=colors(cc+1,2);
+0167       tmpB(basecheckerboard==-id)=colors(cc+1,3);
+0168 
+0169       tmpR(basecheckerboard==0)=colors(1,1);
+0170       tmpG(basecheckerboard==0)=colors(1,2);
+0171       tmpB(basecheckerboard==0)=colors(1,3);
+0172 
+0173       checkerboard{checker_id,nn}=reshape([tmpR,tmpG,tmpB],[sy,sx,3]);
+0174 
+0175     <span class="keyword">end</span>
+0176   <span class="keyword">end</span>
+0177 
+0178 <span class="keyword">else</span> <span class="comment">% if isRGB</span>
+0179 
+0180   checkerboard=cell(2,1);
+0181   <span class="keyword">for</span> nn=1:1:2
+0182     checkerboard{nn}=colors(1)*ones(sy,sx);
+0183     id=-1*(-1)^nn; <span class="comment">% id to process 1 &amp; -1</span>
+0184     checkerboard{nn}(basecheckerboard==id)=colors(2);
+0185     checkerboard{nn}(basecheckerboard==-id)=colors(3);
+0186   <span class="keyword">end</span>
+0187 
+0188 <span class="keyword">end</span> <span class="comment">% if isRGB</span>
+0189 
+0190 disp(<span class="string">'done.'</span>);
+0191 
+0192 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

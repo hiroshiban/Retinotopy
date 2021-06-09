@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_generate_OLTs_for_pRF_maps</title>
+  <meta name="keywords" content="script_generate_OLTs_for_pRF_maps">
+  <meta name="description" content="script_generate_OLTs_for_pRF_maps.m">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- # pRF --><!-- menu.html olt -->
+<h1>script_generate_OLTs_for_pRF_maps
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>script_generate_OLTs_for_pRF_maps.m</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top"><pre class="comment"> script_generate_OLTs_for_pRF_maps.m
+
+ a simple script to generate BrainVoyager color lookup tables (*.olt)
+ for visualizing pRF and the other statistical mapping results
+
+
+ Created    : &quot;2018-08-31 09:47:37 ban&quot;
+ Last Update: &quot;2018-09-04 17:14:42 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top"><pre>0001 <span class="comment">% script_generate_OLTs_for_pRF_maps.m</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% a simple script to generate BrainVoyager color lookup tables (*.olt)</span>
+0004 <span class="comment">% for visualizing pRF and the other statistical mapping results</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Created    : &quot;2018-08-31 09:47:37 ban&quot;</span>
+0008 <span class="comment">% Last Update: &quot;2018-09-04 17:14:42 ban&quot;</span>
+0009 
+0010 cv_hbtools_BVQX_setup(1);
+0011 
+0012 <span class="comment">% constants</span>
+0013 nLUT=20; <span class="comment">% default #LUT of BrainVoyager</span>
+0014 
+0015 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0016 <span class="comment">%% colormap for pRF eccentricity representation</span>
+0017 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0018 
+0019 lut_pRF_rho=ceil(255.*imresize(generate_colormap_BrainFactory(360,64,-90,1,0,0,0),[nLUT/2,3]));
+0020 <span class="comment">%lut_pRF_rho=lut_pRF_rho([3:nLUT/2,1:2],:);</span>
+0021 lut_pRF_rho(lut_pRF_rho&lt;0)=0; lut_pRF_rho(lut_pRF_rho&gt;255)=255;
+0022 lut_pRF_rho=flip(lut_pRF_rho,1);
+0023 
+0024 fid=fopen(<span class="string">'pRF_eccentricity_BVQX_hbtools.olt'</span>,<span class="string">'w'</span>);
+0025 <span class="keyword">for</span> ii=1:1:nLUT/2
+0026   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii,lut_pRF_rho(ii,1),lut_pRF_rho(ii,2),lut_pRF_rho(ii,3)));
+0027 <span class="keyword">end</span>
+0028 <span class="keyword">for</span> ii=1:1:nLUT/2
+0029   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii+nLUT/2,lut_pRF_rho(ii,1),lut_pRF_rho(ii,2),lut_pRF_rho(ii,3)));
+0030 <span class="keyword">end</span>
+0031 fclose(fid);
+0032 
+0033 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0034 <span class="comment">%% colormap for pRF polar-angle representation</span>
+0035 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0036 
+0037 lut_pol=ceil(255.*imresize(generate_colormap_BrainFactory(360,64,0,2,0,0,0),[nLUT,3]));
+0038 lut_pol(lut_pol&lt;0)=0; lut_pol(lut_pol&gt;255)=255;
+0039 
+0040 fid=fopen(<span class="string">'pRF_polar_BVQX_hbtools.olt'</span>,<span class="string">'w'</span>);
+0041 <span class="keyword">for</span> ii=1:1:size(lut_pol,1)
+0042   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii,lut_pol(ii,1),lut_pol(ii,2),lut_pol(ii,3)));
+0043 <span class="keyword">end</span>
+0044 fclose(fid);
+0045 
+0046 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0047 <span class="comment">%% colormap for amplitude etc (hot_cool)</span>
+0048 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0049 
+0050 lut_hot=zeros(nLUT,3);
+0051 lut_hot(1:1:nLUT/2,1)=255;
+0052 lut_hot(1:1:nLUT/2,2)=ceil(linspace(0,255,nLUT/2));
+0053 lut_hot(1:1:nLUT/2,3)=0;
+0054 lut_hot(nLUT/2+1:1:nLUT,1)=0;
+0055 lut_hot(nLUT/2+1:1:nLUT,2)=ceil(linspace(0,255,nLUT/2));
+0056 lut_hot(nLUT/2+1:1:nLUT,3)=255;
+0057 
+0058 fid=fopen(<span class="string">'pRF_hot_cool_BVQX_hbtools.olt'</span>,<span class="string">'w'</span>);
+0059 <span class="keyword">for</span> ii=1:1:size(lut_hot,1)
+0060   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii,lut_hot(ii,1),lut_hot(ii,2),lut_hot(ii,3)));
+0061 <span class="keyword">end</span>
+0062 fclose(fid);
+0063 
+0064 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0065 <span class="comment">%% colormap for correlation etc</span>
+0066 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0067 
+0068 <span class="comment">%lut_corr=load(fullfile(fileparts(mfilename('fullpath')),'..','lut','corr.lut'));</span>
+0069 <span class="comment">%lut_corr=ceil(255.*imresize(lut_corr(:,1:3),[nLUT,3]));</span>
+0070 <span class="comment">%lut_corr(lut_corr&lt;0)=0; lut_corr(lut_corr&gt;255)=255;</span>
+0071 
+0072 lut_corr(1:1:nLUT/2,1:3)=ceil([255*ones(nLUT/2,1),linspace(0,255,nLUT/2)',zeros(nLUT/2,1)]);
+0073 lut_corr(nLUT/2+1:1:nLUT,1:3)=ceil([linspace(255,0,nLUT/2)',zeros(nLUT/2,1),255*ones(nLUT/2,1)]);
+0074 lut_corr(lut_corr&lt;0)=0; lut_corr(lut_corr&gt;255)=255;
+0075 
+0076 fid=fopen(<span class="string">'pRF_corr_BVQX_hbtools.olt'</span>,<span class="string">'w'</span>);
+0077 <span class="keyword">for</span> ii=1:1:size(lut_corr,1)
+0078   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii,lut_corr(ii,1),lut_corr(ii,2),lut_corr(ii,3)));
+0079 <span class="keyword">end</span>
+0080 fclose(fid);
+0081 
+0082 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0083 <span class="comment">%% colormap for sigma</span>
+0084 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0085 
+0086 lut_sigma=load(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'..'</span>,<span class="string">'lut'</span>,<span class="string">'sigma.lut'</span>));
+0087 lut_sigma=ceil(255.*imresize(lut_sigma(:,1:3),[nLUT/2,3]));
+0088 lut_sigma(lut_sigma&lt;0)=0; lut_sigma(lut_sigma&gt;255)=255;
+0089 <span class="comment">%lut_sigma(nLUT/2+1:nLUT,:)=lut_sigma(nLUT/2:-1:1,:);</span>
+0090 lut_sigma=[lut_sigma;lut_sigma];
+0091 
+0092 fid=fopen(<span class="string">'pRF_sigma_BVQX_hbtools.olt'</span>,<span class="string">'w'</span>);
+0093 <span class="keyword">for</span> ii=1:1:size(lut_sigma,1)
+0094   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii,lut_sigma(ii,1),lut_sigma(ii,2),lut_sigma(ii,3)));
+0095 <span class="keyword">end</span>
+0096 fclose(fid);
+0097 
+0098 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0099 <span class="comment">%% colormap for standard maps (BrainVoyager default)</span>
+0100 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0101 
+0102 lut_standard=[
+0103 255 75 0;
+0104 255 95 0;
+0105 255 115 0;
+0106 255 135 0;
+0107 255 155 0;
+0108 255 175 0;
+0109 255 195 0;
+0110 255 215 0;
+0111 255 235 0;
+0112 255 255 0;
+0113 0 75 255;
+0114 0 95 235;
+0115 0 115 215;
+0116 0 135 195;
+0117 0 155 175;
+0118 0 175 155;
+0119 0 195 135;
+0120 0 215 115;
+0121 0 235 95;
+0122 0 255 75];
+0123 
+0124 fid=fopen(<span class="string">'pRF_standard_BVQX_hbtools.olt'</span>,<span class="string">'w'</span>);
+0125 <span class="keyword">for</span> ii=1:1:size(lut_standard,1)
+0126   fprintf(fid,sprintf(<span class="string">'Color%d: % 3d % 3d % 3d\n'</span>,ii,lut_standard(ii,1),lut_standard(ii,2),lut_standard(ii,3)));
+0127 <span class="keyword">end</span>
+0128 fclose(fid);
+0129 
+0130 cv_hbtools_BVQX_setup(0);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

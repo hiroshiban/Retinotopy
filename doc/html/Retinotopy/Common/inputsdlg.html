@@ -1,0 +1,2308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of inputsdlg</title>
+  <meta name="keywords" content="inputsdlg">
+  <meta name="description" content="INPUTSDLG Enhanced input dialog box supporting multiple data types">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>inputsdlg
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>INPUTSDLG Enhanced input dialog box supporting multiple data types</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [Answer,Canceled] = inputsdlg(Prompt, Title, Formats, DefAns, Options) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> INPUTSDLG Enhanced input dialog box supporting multiple data types
+ ANSWER = INPUTSDLG(PROMPT) creates a modal dialog box that returns user
+ input for multiple prompts in the cell array ANSWER. PROMPT is a 1-D
+ cell array containing the PROMPT strings.
+
+ Alternatively, PROMPT can be a two-column cell array where the prompt
+ string is supplied in the first column. Output ANSWER of the function is
+ then in a structure with the field names defined in the second column of
+ the PROMPT cell array.
+
+ Moreover, PROMPT may have three columns, where the third column gives
+ units (i.e., post-fix labels to the right of controls) to display.
+
+ INPUTSDLG uses UIWAIT to suspend execution until the user responds.
+
+ ANSWER = INPUTSDLG(PROMPT,NAME) specifies the title for the dialog.
+
+ Note that INPUTSDLG(PROMPT) &amp; INPUTSDLG(PROMPT,NAME) are similar to the
+ standard INPUTDLG function, except for the dialog layout.
+
+ ANSWER = INPUTSDLG(PROMPT,NAME,FORMATS) can be used to specify the type
+ of parameters to display with FORMATS matrix of structures. The
+ dimension of FORMATS defines how PROMPT items are laid out in the dialog
+ box. For example, if PROMPT has 6 elements and the size of FORMATS is
+ 2x3 then, the items are shown in 2 rows, 3 columns format.
+ The items in PROMPT correspond to a column-first traversal of FORMATS.
+
+ The fields in FORMATS structure are:
+
+   type   - Type of control ['check',{'edit'},'list','range','text','none']
+   style  - UI control type used. One of:
+            [{'checkbox'},       for 'check' type
+             {'edit'}            for 'edit' type
+              'listbox',{'popupmenu'},'radiobutton','togglebutton'
+                                 for 'list' type
+             {'slider'}          for 'range' type
+             {'text'}]           for 'text' type
+   items  - Selection items for 'list' type (cell of strings)
+   format - Data format: ['string','date','float','integer','file','dir']
+   limits - [min max] (see below for details)
+   size   - [width height] in pixels. Alternatively, 0 to auto-size or -1
+            to auto-expand when figure is resized.
+   enable - Defines how to respond to mouse button clicks, including which
+            callback routines execute. One of:
+            [{'on'}      - UI control is operational.
+              'inactive' ・UI control is not operational, but looks the
+                           same as when Enable is on.
+              'off'      ・UI uicontrol is not operational and its image
+                           is grayed out.
+
+ FORMATS type field defines what type of prompt item to be shown.
+
+   type  Description
+   -------------------------------------------------------------------
+   edit  Standard edit box (single or multi-line mode)
+   check Check box for boolean item
+   list  Chose from a list of items ('listbox' style allows multiple item
+         selection)
+   range Use slider to chose a value over a range
+   text  Static text (e.g., for instructions)
+   none  A placeholder. May be used for its neighboring item to extend
+         over multiple columns or rows (i.e., &quot;to merge cells&quot;)
+
+ The allowed data format depends on the type of the field:
+
+   type    allowed format
+   --------------------------------------------
+   check   integer
+   edit    {text}, date, float, integer, file, dir
+   list    integer
+   range   float
+
+ By leaving format field empty, a proper format is automatically chosen
+ (or default to text format for edit type).
+
+ Formats 'file' and 'dir' for 'edit' type uses the standard UIGETFILE,
+ UIPUTFILE, and UIGETDIR functions to retrieve a file or directory name.
+
+ The role of limits field varies depending on other parameters:
+
+   style         role of limits
+   ---------------------------------------------------
+   checkbox      limits(1) is the ANSWER value if the check box is not
+                 selected  box is not selected and limits(2) is the ANSWER
+                 if the check box is selected.
+   edit (text format)
+                 If diff(limits)&gt;1, multi-line mode; else, single-line
+                 mode
+   edit (date format)
+                 limits must be a free-format date format string
+                 or a scalar value specifying the date format.
+                 Supported format numbers are: 0,1,2,6,13,14,15,16,23.
+                 The default date format is 0 ('dd-mmm-yyyy HH:MM:SS').
+                 See the tables in DATESTR help for the format definitions.
+                 As long as the user entry is a valid date/time
+                 expression, the dialog box automatically converts to the
+                 assigned format.
+   edit (numeric format)
+                 This style defines the range of allowed values
+   edit (file format)
+                 If 0&lt;=diff(limits)&lt;=1 uses UIGETFILE in single select
+                 mode with single-line edit. If diff(limits)&gt;1 uses
+                 UIGETFILE in multi-select mode with multi-line edit. If
+                 diff(limits)&lt;0 usees UIPUTFILE with single- line edit
+   listbox       If diff(limits)&gt;1, multiple items can be selected. If
+                 limits(1)&gt;0, a maximum of limits(1) lines will be shown.
+   slider        limits(1) defines the smallest value while
+                 limits(2) defines the largest value
+   none          If diff(limits)==0 space is left empty
+                 If diff(limits)&gt;0 : lets the item from left to extend
+                 If diff(limits)&lt;0 : lets the item from above to extend
+
+ Similar to how PROMPT strings are laid out, when FORMATS.style is set to
+ either 'radiobutton' or 'togglebutton', FORMATS.items are laid out
+ according to the dimension of FORMATS.items.
+
+ There are two quick format options as well:
+
+  Quick Format Option 1 (mimicing INPUTDLG behavior):
+   FORMATS can specify the number of lines for each edit-type prompt in
+   FORMATS. FORMATS may be a constant value or a column vector having
+   one element per PROMPT that specifies how many lines per input field.
+   FORMATS may also be a matrix where the first column specifies how
+   many rows for the input field and the second column specifies how
+   many columns wide the input field should be.
+
+  Quick Format Option 2:
+   FORMATS can specify the types of controls and use their default
+   configurations. This option, however, cannot be used to specify
+   'list' control as its items are not specified. To use this option,
+   provide a string (if only 1 control) or a cell array of strings. If
+   a cell array is given, its dimension is used for the dialog
+   layout.
+
+ ANSWER = INPUTSDLG(PROMPT,NAME,FORMATS,DEFAULTANSWER) specifies the
+ default answer to display for each PROMPT. DEFAULTANSWER must contain
+ the same number of elements as PROMPT (that are not of 'none' style). If
+ PROMPT does not provide ANSWER structure fields, DEFAULTANSWER should be
+ a cell array with element type corresponding to FORMATS.format. Leave the
+ cell element empty for a prompt with 'text' type. If ANSWER is a
+ structure, DEFAULTANSWER must be a structure with the specified fields.
+ (If additional fields are present in DEFAULTANSWER, they will be returned
+ as parts of ANSWER.)
+
+ For edit::file controls, a default answer that does not correspond to an
+ existing file will be used as a default path and/or file name in the
+ browse window.  It is passed as the DefaultName parameter to UIGETFILE or
+ UIPUTFILE.
+
+ ANSWER = INPUTSDLG(PROMPT,NAME,FORMATS,DEFAULTANSWER,OPTIONS) specifies
+ additional options. If OPTIONS is the string 'on', the dialog is made
+ resizable. If OPTIONS is a structure, the fields recognized are:
+
+  Option Field Description {} indicates the default value
+  ----------------------------------------------------------------------
+  Resize        Make dialog resizable: 'on' | {'off'}
+  WindowStyle   Sets dialog window style: {'normal'} | 'modal'
+  Interpreter   Label text interpreter: 'latex' | {'tex'} | 'none'
+  CancelButton  Show Cancel button: {'on'} | 'off'
+  ApplyButton   Adds Apply button: 'on' | {'off'}
+  Sep           Space b/w prompts in pixels: {10}
+  ButtonNames   Customize OK|Cancel|Apply button names: {up to 3 elements}
+  AlignControls Align adjacent controls in the same column: 'on' | {'off'}
+  UnitsMargin   Space between each control and its unit text in pixels: {5}
+
+ [ANSWER,CANCELED] = INPUTSDLG(...) returns CANCELED = TRUE if user
+ pressed Cancel button, closed the dialog, or pressed ESC. In such event,
+ the content of ANSWER is set to the default values.
+
+ Note on Apply Button feature. Pressing the Apply button makes the current
+ change permanent. That is, pressing Cancel button after pressing Apply
+ button only reverts ANSWER back to the states when the Apply button was
+ pressed last. Also, if user pressed Apply button, CANCELED flag will not
+ be set even if user canceled out of the dialog box.
+
+ Examples:
+
+ prompt={'Enter the matrix size for x^2:';'Enter the colormap name:'};
+ name='Input for Peaks function';
+ formats(1) = struct('type','edit','format','integer','limits',[1 inf]);
+ formats(2) = struct('type','edit','format','text','limits',[0 1]);
+ defaultanswer={20,'hsv'};
+
+ [answer,canceled] = inputsdlg(prompt,name,formats,defaultanswer);
+
+ formats(2).size = -1; % auto-expand width and auto-set height
+ options.Resize='on';
+ options.WindowStyle='normal';
+ options.Interpreter='tex';
+
+ answer = inputsdlg(prompt,name,formats,defaultanswer,options);
+
+ prompt(:,2) = {'Ndim';'Cmap'};
+ defaultanswer = struct(defaultanswer,prompt(:,2),1);
+
+ answer = inputsdlg(prompt,name,formats,defaultanswer,options);
+
+ See also INPUTDLG, DIALOG, ERRORDLG, HELPDLG, LISTDLG, MSGBOX,
+  QUESTDLG, TEXTWRAP, UIWAIT, WARNDLG, UIGETFILE, UIPUTFILE, UIGETDIR,
+  DATESTR.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function answer = getAnswer(answer,ansstr)</a></li><li><a href="#_sub2" class="code">function doApply(hObj,evd)</a></li><li><a href="#_sub3" class="code">function checkRange(hObj,evd,k,lim)</a></li><li><a href="#_sub4" class="code">function checkDate(hObj,evd,k,format)</a></li><li><a href="#_sub5" class="code">function doFigureKeyPress(obj, evd)</a></li><li><a href="#_sub6" class="code">function doControlKeyPress(obj, evd, varargin)</a></li><li><a href="#_sub7" class="code">function doCallback(obj, evd, isok)</a></li><li><a href="#_sub8" class="code">function openFilePrompt(hObj,evd,spec,prompt,mode)</a></li><li><a href="#_sub9" class="code">function openDirPrompt(hObj,evd,prompt)</a></li><li><a href="#_sub10" class="code">function doResize(hObj,evd)</a></li><li><a href="#_sub11" class="code">function [handles,Formats,sinfo] = buildgui(Prompt,Unit,Title,Formats,Options)</a></li><li><a href="#_sub12" class="code">function [Prompt,FieldNames,Units,err] = checkprompt(Prompt)</a></li><li><a href="#_sub13" class="code">function [Formats,err] = checkformats(Formats,NumQuest)</a></li><li><a href="#_sub14" class="code">function [DefAns,DefStr,err] = checkdefaults(DefAns,Formats,FieldNames)</a></li><li><a href="#_sub15" class="code">function [Options,err] = checkoptions(UserOptions)</a></li><li><a href="#_sub16" class="code">function [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Answer,Canceled] = inputsdlg(Prompt, Title, Formats, DefAns, Options)</a>
+0002 <span class="comment">% INPUTSDLG Enhanced input dialog box supporting multiple data types</span>
+0003 <span class="comment">% ANSWER = INPUTSDLG(PROMPT) creates a modal dialog box that returns user</span>
+0004 <span class="comment">% input for multiple prompts in the cell array ANSWER. PROMPT is a 1-D</span>
+0005 <span class="comment">% cell array containing the PROMPT strings.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Alternatively, PROMPT can be a two-column cell array where the prompt</span>
+0008 <span class="comment">% string is supplied in the first column. Output ANSWER of the function is</span>
+0009 <span class="comment">% then in a structure with the field names defined in the second column of</span>
+0010 <span class="comment">% the PROMPT cell array.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Moreover, PROMPT may have three columns, where the third column gives</span>
+0013 <span class="comment">% units (i.e., post-fix labels to the right of controls) to display.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% INPUTSDLG uses UIWAIT to suspend execution until the user responds.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% ANSWER = INPUTSDLG(PROMPT,NAME) specifies the title for the dialog.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Note that INPUTSDLG(PROMPT) &amp; INPUTSDLG(PROMPT,NAME) are similar to the</span>
+0020 <span class="comment">% standard INPUTDLG function, except for the dialog layout.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% ANSWER = INPUTSDLG(PROMPT,NAME,FORMATS) can be used to specify the type</span>
+0023 <span class="comment">% of parameters to display with FORMATS matrix of structures. The</span>
+0024 <span class="comment">% dimension of FORMATS defines how PROMPT items are laid out in the dialog</span>
+0025 <span class="comment">% box. For example, if PROMPT has 6 elements and the size of FORMATS is</span>
+0026 <span class="comment">% 2x3 then, the items are shown in 2 rows, 3 columns format.</span>
+0027 <span class="comment">% The items in PROMPT correspond to a column-first traversal of FORMATS.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% The fields in FORMATS structure are:</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   type   - Type of control ['check',{'edit'},'list','range','text','none']</span>
+0032 <span class="comment">%   style  - UI control type used. One of:</span>
+0033 <span class="comment">%            [{'checkbox'},       for 'check' type</span>
+0034 <span class="comment">%             {'edit'}            for 'edit' type</span>
+0035 <span class="comment">%              'listbox',{'popupmenu'},'radiobutton','togglebutton'</span>
+0036 <span class="comment">%                                 for 'list' type</span>
+0037 <span class="comment">%             {'slider'}          for 'range' type</span>
+0038 <span class="comment">%             {'text'}]           for 'text' type</span>
+0039 <span class="comment">%   items  - Selection items for 'list' type (cell of strings)</span>
+0040 <span class="comment">%   format - Data format: ['string','date','float','integer','file','dir']</span>
+0041 <span class="comment">%   limits - [min max] (see below for details)</span>
+0042 <span class="comment">%   size   - [width height] in pixels. Alternatively, 0 to auto-size or -1</span>
+0043 <span class="comment">%            to auto-expand when figure is resized.</span>
+0044 <span class="comment">%   enable - Defines how to respond to mouse button clicks, including which</span>
+0045 <span class="comment">%            callback routines execute. One of:</span>
+0046 <span class="comment">%            [{'on'}      - UI control is operational.</span>
+0047 <span class="comment">%              'inactive' ・UI control is not operational, but looks the</span>
+0048 <span class="comment">%                           same as when Enable is on.</span>
+0049 <span class="comment">%              'off'      ・UI uicontrol is not operational and its image</span>
+0050 <span class="comment">%                           is grayed out.</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">% FORMATS type field defines what type of prompt item to be shown.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">%   type  Description</span>
+0055 <span class="comment">%   -------------------------------------------------------------------</span>
+0056 <span class="comment">%   edit  Standard edit box (single or multi-line mode)</span>
+0057 <span class="comment">%   check Check box for boolean item</span>
+0058 <span class="comment">%   list  Chose from a list of items ('listbox' style allows multiple item</span>
+0059 <span class="comment">%         selection)</span>
+0060 <span class="comment">%   range Use slider to chose a value over a range</span>
+0061 <span class="comment">%   text  Static text (e.g., for instructions)</span>
+0062 <span class="comment">%   none  A placeholder. May be used for its neighboring item to extend</span>
+0063 <span class="comment">%         over multiple columns or rows (i.e., &quot;to merge cells&quot;)</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">% The allowed data format depends on the type of the field:</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">%   type    allowed format</span>
+0068 <span class="comment">%   --------------------------------------------</span>
+0069 <span class="comment">%   check   integer</span>
+0070 <span class="comment">%   edit    {text}, date, float, integer, file, dir</span>
+0071 <span class="comment">%   list    integer</span>
+0072 <span class="comment">%   range   float</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">% By leaving format field empty, a proper format is automatically chosen</span>
+0075 <span class="comment">% (or default to text format for edit type).</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">% Formats 'file' and 'dir' for 'edit' type uses the standard UIGETFILE,</span>
+0078 <span class="comment">% UIPUTFILE, and UIGETDIR functions to retrieve a file or directory name.</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">% The role of limits field varies depending on other parameters:</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">%   style         role of limits</span>
+0083 <span class="comment">%   ---------------------------------------------------</span>
+0084 <span class="comment">%   checkbox      limits(1) is the ANSWER value if the check box is not</span>
+0085 <span class="comment">%                 selected  box is not selected and limits(2) is the ANSWER</span>
+0086 <span class="comment">%                 if the check box is selected.</span>
+0087 <span class="comment">%   edit (text format)</span>
+0088 <span class="comment">%                 If diff(limits)&gt;1, multi-line mode; else, single-line</span>
+0089 <span class="comment">%                 mode</span>
+0090 <span class="comment">%   edit (date format)</span>
+0091 <span class="comment">%                 limits must be a free-format date format string</span>
+0092 <span class="comment">%                 or a scalar value specifying the date format.</span>
+0093 <span class="comment">%                 Supported format numbers are: 0,1,2,6,13,14,15,16,23.</span>
+0094 <span class="comment">%                 The default date format is 0 ('dd-mmm-yyyy HH:MM:SS').</span>
+0095 <span class="comment">%                 See the tables in DATESTR help for the format definitions.</span>
+0096 <span class="comment">%                 As long as the user entry is a valid date/time</span>
+0097 <span class="comment">%                 expression, the dialog box automatically converts to the</span>
+0098 <span class="comment">%                 assigned format.</span>
+0099 <span class="comment">%   edit (numeric format)</span>
+0100 <span class="comment">%                 This style defines the range of allowed values</span>
+0101 <span class="comment">%   edit (file format)</span>
+0102 <span class="comment">%                 If 0&lt;=diff(limits)&lt;=1 uses UIGETFILE in single select</span>
+0103 <span class="comment">%                 mode with single-line edit. If diff(limits)&gt;1 uses</span>
+0104 <span class="comment">%                 UIGETFILE in multi-select mode with multi-line edit. If</span>
+0105 <span class="comment">%                 diff(limits)&lt;0 usees UIPUTFILE with single- line edit</span>
+0106 <span class="comment">%   listbox       If diff(limits)&gt;1, multiple items can be selected. If</span>
+0107 <span class="comment">%                 limits(1)&gt;0, a maximum of limits(1) lines will be shown.</span>
+0108 <span class="comment">%   slider        limits(1) defines the smallest value while</span>
+0109 <span class="comment">%                 limits(2) defines the largest value</span>
+0110 <span class="comment">%   none          If diff(limits)==0 space is left empty</span>
+0111 <span class="comment">%                 If diff(limits)&gt;0 : lets the item from left to extend</span>
+0112 <span class="comment">%                 If diff(limits)&lt;0 : lets the item from above to extend</span>
+0113 <span class="comment">%</span>
+0114 <span class="comment">% Similar to how PROMPT strings are laid out, when FORMATS.style is set to</span>
+0115 <span class="comment">% either 'radiobutton' or 'togglebutton', FORMATS.items are laid out</span>
+0116 <span class="comment">% according to the dimension of FORMATS.items.</span>
+0117 <span class="comment">%</span>
+0118 <span class="comment">% There are two quick format options as well:</span>
+0119 <span class="comment">%</span>
+0120 <span class="comment">%  Quick Format Option 1 (mimicing INPUTDLG behavior):</span>
+0121 <span class="comment">%   FORMATS can specify the number of lines for each edit-type prompt in</span>
+0122 <span class="comment">%   FORMATS. FORMATS may be a constant value or a column vector having</span>
+0123 <span class="comment">%   one element per PROMPT that specifies how many lines per input field.</span>
+0124 <span class="comment">%   FORMATS may also be a matrix where the first column specifies how</span>
+0125 <span class="comment">%   many rows for the input field and the second column specifies how</span>
+0126 <span class="comment">%   many columns wide the input field should be.</span>
+0127 <span class="comment">%</span>
+0128 <span class="comment">%  Quick Format Option 2:</span>
+0129 <span class="comment">%   FORMATS can specify the types of controls and use their default</span>
+0130 <span class="comment">%   configurations. This option, however, cannot be used to specify</span>
+0131 <span class="comment">%   'list' control as its items are not specified. To use this option,</span>
+0132 <span class="comment">%   provide a string (if only 1 control) or a cell array of strings. If</span>
+0133 <span class="comment">%   a cell array is given, its dimension is used for the dialog</span>
+0134 <span class="comment">%   layout.</span>
+0135 <span class="comment">%</span>
+0136 <span class="comment">% ANSWER = INPUTSDLG(PROMPT,NAME,FORMATS,DEFAULTANSWER) specifies the</span>
+0137 <span class="comment">% default answer to display for each PROMPT. DEFAULTANSWER must contain</span>
+0138 <span class="comment">% the same number of elements as PROMPT (that are not of 'none' style). If</span>
+0139 <span class="comment">% PROMPT does not provide ANSWER structure fields, DEFAULTANSWER should be</span>
+0140 <span class="comment">% a cell array with element type corresponding to FORMATS.format. Leave the</span>
+0141 <span class="comment">% cell element empty for a prompt with 'text' type. If ANSWER is a</span>
+0142 <span class="comment">% structure, DEFAULTANSWER must be a structure with the specified fields.</span>
+0143 <span class="comment">% (If additional fields are present in DEFAULTANSWER, they will be returned</span>
+0144 <span class="comment">% as parts of ANSWER.)</span>
+0145 <span class="comment">%</span>
+0146 <span class="comment">% For edit::file controls, a default answer that does not correspond to an</span>
+0147 <span class="comment">% existing file will be used as a default path and/or file name in the</span>
+0148 <span class="comment">% browse window.  It is passed as the DefaultName parameter to UIGETFILE or</span>
+0149 <span class="comment">% UIPUTFILE.</span>
+0150 <span class="comment">%</span>
+0151 <span class="comment">% ANSWER = INPUTSDLG(PROMPT,NAME,FORMATS,DEFAULTANSWER,OPTIONS) specifies</span>
+0152 <span class="comment">% additional options. If OPTIONS is the string 'on', the dialog is made</span>
+0153 <span class="comment">% resizable. If OPTIONS is a structure, the fields recognized are:</span>
+0154 <span class="comment">%</span>
+0155 <span class="comment">%  Option Field Description {} indicates the default value</span>
+0156 <span class="comment">%  ----------------------------------------------------------------------</span>
+0157 <span class="comment">%  Resize        Make dialog resizable: 'on' | {'off'}</span>
+0158 <span class="comment">%  WindowStyle   Sets dialog window style: {'normal'} | 'modal'</span>
+0159 <span class="comment">%  Interpreter   Label text interpreter: 'latex' | {'tex'} | 'none'</span>
+0160 <span class="comment">%  CancelButton  Show Cancel button: {'on'} | 'off'</span>
+0161 <span class="comment">%  ApplyButton   Adds Apply button: 'on' | {'off'}</span>
+0162 <span class="comment">%  Sep           Space b/w prompts in pixels: {10}</span>
+0163 <span class="comment">%  ButtonNames   Customize OK|Cancel|Apply button names: {up to 3 elements}</span>
+0164 <span class="comment">%  AlignControls Align adjacent controls in the same column: 'on' | {'off'}</span>
+0165 <span class="comment">%  UnitsMargin   Space between each control and its unit text in pixels: {5}</span>
+0166 <span class="comment">%</span>
+0167 <span class="comment">% [ANSWER,CANCELED] = INPUTSDLG(...) returns CANCELED = TRUE if user</span>
+0168 <span class="comment">% pressed Cancel button, closed the dialog, or pressed ESC. In such event,</span>
+0169 <span class="comment">% the content of ANSWER is set to the default values.</span>
+0170 <span class="comment">%</span>
+0171 <span class="comment">% Note on Apply Button feature. Pressing the Apply button makes the current</span>
+0172 <span class="comment">% change permanent. That is, pressing Cancel button after pressing Apply</span>
+0173 <span class="comment">% button only reverts ANSWER back to the states when the Apply button was</span>
+0174 <span class="comment">% pressed last. Also, if user pressed Apply button, CANCELED flag will not</span>
+0175 <span class="comment">% be set even if user canceled out of the dialog box.</span>
+0176 <span class="comment">%</span>
+0177 <span class="comment">% Examples:</span>
+0178 <span class="comment">%</span>
+0179 <span class="comment">% prompt={'Enter the matrix size for x^2:';'Enter the colormap name:'};</span>
+0180 <span class="comment">% name='Input for Peaks function';</span>
+0181 <span class="comment">% formats(1) = struct('type','edit','format','integer','limits',[1 inf]);</span>
+0182 <span class="comment">% formats(2) = struct('type','edit','format','text','limits',[0 1]);</span>
+0183 <span class="comment">% defaultanswer={20,'hsv'};</span>
+0184 <span class="comment">%</span>
+0185 <span class="comment">% [answer,canceled] = inputsdlg(prompt,name,formats,defaultanswer);</span>
+0186 <span class="comment">%</span>
+0187 <span class="comment">% formats(2).size = -1; % auto-expand width and auto-set height</span>
+0188 <span class="comment">% options.Resize='on';</span>
+0189 <span class="comment">% options.WindowStyle='normal';</span>
+0190 <span class="comment">% options.Interpreter='tex';</span>
+0191 <span class="comment">%</span>
+0192 <span class="comment">% answer = inputsdlg(prompt,name,formats,defaultanswer,options);</span>
+0193 <span class="comment">%</span>
+0194 <span class="comment">% prompt(:,2) = {'Ndim';'Cmap'};</span>
+0195 <span class="comment">% defaultanswer = struct(defaultanswer,prompt(:,2),1);</span>
+0196 <span class="comment">%</span>
+0197 <span class="comment">% answer = inputsdlg(prompt,name,formats,defaultanswer,options);</span>
+0198 <span class="comment">%</span>
+0199 <span class="comment">% See also INPUTDLG, DIALOG, ERRORDLG, HELPDLG, LISTDLG, MSGBOX,</span>
+0200 <span class="comment">%  QUESTDLG, TEXTWRAP, UIWAIT, WARNDLG, UIGETFILE, UIPUTFILE, UIGETDIR,</span>
+0201 <span class="comment">%  DATESTR.</span>
+0202 
+0203 <span class="comment">% Version 1.3 (August 13, 2010)</span>
+0204 <span class="comment">% Written by: Takeshi Ikuma</span>
+0205 <span class="comment">% Contributors: Andreas Greuer, Luke Reisner</span>
+0206 <span class="comment">% Created: Nov. 16, 2009</span>
+0207 <span class="comment">% Revision History:</span>
+0208 <span class="comment">%  v.1.1 (Nov. 19, 2009)</span>
+0209 <span class="comment">%  * Fixed bugs (reported by AG):</span>
+0210 <span class="comment">%   - not returning Canceled output</span>
+0211 <span class="comment">%   - erroneous struct output behavior</span>
+0212 <span class="comment">%   - error if all row elements of a column are auto-expandable</span>
+0213 <span class="comment">%  * Added Apply button option</span>
+0214 <span class="comment">%  * Added support for Units (label to the right of controls)</span>
+0215 <span class="comment">%  * Updated the help text</span>
+0216 <span class="comment">%  v.1.11 (Nov. 20, 2009)</span>
+0217 <span class="comment">%  * Fixed bugs (reported by AG):</span>
+0218 <span class="comment">%   - incorrect Canceled output when Cancel button is pressed</span>
+0219 <span class="comment">%  v.1.12 (Nov. 20, 2009)</span>
+0220 <span class="comment">%  * Fixed bugs (reported by AG):</span>
+0221 <span class="comment">%   - again incorrect Canceled output behavior</span>
+0222 <span class="comment">%  v.1.2 (May 20, 2010)</span>
+0223 <span class="comment">%  * Fixed bugs (reported by AG &amp; Jason):</span>
+0224 <span class="comment">%   - Apply button-&gt;Canel button does not revert back to post-apply answers.</span>
+0225 <span class="comment">%   - Line 265 handles.Figure -&gt; handles.fig</span>
+0226 <span class="comment">%  * Added edit::date support</span>
+0227 <span class="comment">%  * Added formats.enable support</span>
+0228 <span class="comment">%  * Added options.CancelButton support</span>
+0229 <span class="comment">%  * Added options.ButtonNames support</span>
+0230 <span class="comment">%  v.1.2.1 (June 11, 2010)</span>
+0231 <span class="comment">%  * Fixed default option bug (reported by Jason)</span>
+0232 <span class="comment">%  v.1.2.2 (July 15, 2010)</span>
+0233 <span class="comment">%  * Rewritten checkoptions() (to correct issues reported by Jason)</span>
+0234 <span class="comment">%  * Bug Fix: file &amp; dir control enable config were interpreted backwards</span>
+0235 <span class="comment">%  v.1.2.3 (July 19, 2010)</span>
+0236 <span class="comment">%  * checkoptions() bug fix (to correct issues reported by Kevin)</span>
+0237 <span class="comment">%  v.1.3 (August 13, 2010, by Luke Reisner)</span>
+0238 <span class="comment">%  * Improved dialog layout:</span>
+0239 <span class="comment">%   - Less wasted space, better control distribution, more consistent margins</span>
+0240 <span class="comment">%   - Buttons are right-aligned per OS standards</span>
+0241 <span class="comment">%  * Changed edit::date to return a simple date vector (see DATEVEC help)</span>
+0242 <span class="comment">%  * Added support for free-form date format specifiers to edit::date</span>
+0243 <span class="comment">%  * Added ability to limit the number of displayed lines for a listbox</span>
+0244 <span class="comment">%  * Added ability to set default browse path/filename for edit::file controls</span>
+0245 <span class="comment">%  * Added options.AlignControls to align adjacent controls in the same column</span>
+0246 <span class="comment">%  * Added options.UnitsMargin to control spacing between controls and units</span>
+0247 <span class="comment">%  * Fixed bugs:</span>
+0248 <span class="comment">%   - Flickering or misplaced controls when dialog first appears</span>
+0249 <span class="comment">%   - Radiobutton and togglebutton controls couldn't be disabled</span>
+0250 <span class="comment">%   - Edit::integer controls allowed non-integer values</span>
+0251 <span class="comment">%   - Slider controls didn't auto-size properly</span>
+0252 <span class="comment">%   - Other minor miscellaneous bugs</span>
+0253 
+0254 <span class="comment">%%%%%%%%%%%%%%%%%%%%</span>
+0255 <span class="comment">%%% Nargin Check %%%</span>
+0256 <span class="comment">%%%%%%%%%%%%%%%%%%%%</span>
+0257 error(nargchk(0,5,nargin));
+0258 error(nargoutchk(0,2,nargout));
+0259 
+0260 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0261 <span class="comment">%%% Handle Input Args %%%</span>
+0262 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0263 <span class="keyword">if</span> nargin&lt;1, Prompt=<span class="string">''</span>; <span class="keyword">end</span>
+0264 <span class="keyword">if</span> nargin&lt;2, Title = <span class="string">''</span>; <span class="keyword">end</span>
+0265 <span class="keyword">if</span> nargin&lt;3, Formats=struct([]); <span class="keyword">end</span>
+0266 <span class="keyword">if</span> nargin&lt;4, DefAns = {}; <span class="keyword">end</span>
+0267 <span class="keyword">if</span> nargin&lt;5, Options = struct([]); <span class="keyword">end</span>
+0268 
+0269 <span class="comment">% Check Prompt input</span>
+0270 [Prompt,FieldNames,Units,err] = <a href="#_sub12" class="code" title="subfunction [Prompt,FieldNames,Units,err] = checkprompt(Prompt)">checkprompt</a>(Prompt);
+0271 <span class="keyword">if</span> ~isempty(err), error(err{:}); <span class="keyword">end</span>
+0272 NumQuest = numel(Prompt); <span class="comment">% number of prompts</span>
+0273 
+0274 <span class="keyword">if</span> isempty(Title)
+0275    Title = <span class="string">' '</span>;
+0276 <span class="keyword">elseif</span> iscellstr(Title)
+0277    Title = Title{1}; <span class="comment">% take the first entry</span>
+0278 <span class="keyword">elseif</span> ~ischar(Title)
+0279    error(<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'Title must be a string of cell string.'</span>);
+0280 <span class="keyword">end</span>
+0281 
+0282 <span class="comment">% make sure that the Formats structure is valid &amp; fill it in default</span>
+0283 <span class="comment">% values as needed</span>
+0284 [Formats,err] = <a href="#_sub13" class="code" title="subfunction [Formats,err] = checkformats(Formats,NumQuest)">checkformats</a>(Formats,NumQuest);
+0285 <span class="keyword">if</span> ~isempty(err), error(err{:}); <span class="keyword">end</span>
+0286 
+0287 <span class="comment">% make sure that the DefAns is valid &amp; set Answer using DefAns and default</span>
+0288 <span class="comment">% values if DefAns not given</span>
+0289 [Answer,AnsStr,err] = <a href="#_sub14" class="code" title="subfunction [DefAns,DefStr,err] = checkdefaults(DefAns,Formats,FieldNames)">checkdefaults</a>(DefAns,Formats,FieldNames);
+0290 <span class="keyword">if</span> ~isempty(err), error(err{:}); <span class="keyword">end</span>
+0291 
+0292 <span class="comment">% make sure that the Options is valid</span>
+0293 [Options,err] = <a href="#_sub15" class="code" title="subfunction [Options,err] = checkoptions(UserOptions)">checkoptions</a>(Options);
+0294 <span class="keyword">if</span> ~isempty(err), error(err{:}); <span class="keyword">end</span>
+0295 
+0296 Applied = false; <span class="comment">% set true by pressing Apply Button</span>
+0297 Resized = 0;  <span class="comment">% Used to ensure doResize() is called exactly once during initialization</span>
+0298 
+0299 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0300 <span class="comment">%%% Create Dialog GUI %%%</span>
+0301 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0302 <span class="comment">% lay contents out on a dialog box</span>
+0303 [handles,Formats,sinfo] = <a href="#_sub11" class="code" title="subfunction [handles,Formats,sinfo] = buildgui(Prompt,Unit,Title,Formats,Options)">buildgui</a>(Prompt,Units,Title,Formats,Options);
+0304 
+0305 <span class="comment">% set default values</span>
+0306 <span class="keyword">for</span> k = 1:NumQuest
+0307    <span class="keyword">switch</span> Formats(k).style
+0308       <span class="keyword">case</span> {<span class="string">'checkbox'</span> <span class="string">'listbox'</span> <span class="string">'popupmenu'</span> <span class="string">'slider'</span>}
+0309          set(handles.ctrl(k),<span class="string">'Value'</span>,Answer{k});
+0310       <span class="keyword">case</span> <span class="string">'edit'</span>
+0311          <span class="keyword">if</span> any(strcmp(Formats(k).format,{<span class="string">'integer'</span>,<span class="string">'float'</span>}))
+0312             set(handles.ctrl(k),<span class="string">'String'</span>,num2str(Answer{k}));
+0313          <span class="keyword">elseif</span> strcmp(Formats(k).format, <span class="string">'file'</span>)
+0314             file_list = cellstr(Answer{k});
+0315             <span class="keyword">if</span> (diff(Formats(k).limits) &gt;= 0) <span class="comment">% Control associated with uigetfile()</span>
+0316                <span class="keyword">if</span> (length(file_list) == 1) &amp;&amp; ((exist(file_list{1}, <span class="string">'file'</span>) ~= 2) || isempty(fileparts(file_list{1})))
+0317                <span class="comment">% There is one file argument that either is not an existing file or lacks a path</span>
+0318                   h = get(handles.ctrl(k),<span class="string">'UserData'</span>);
+0319                   h{1} = file_list{1};  <span class="comment">% Use the argument as the DefaultName parameter but not the default answer</span>
+0320                   set(handles.ctrl(k),<span class="string">'String'</span>,<span class="string">''</span>,<span class="string">'UserData'</span>,h);
+0321                <span class="keyword">else</span>
+0322                   set(handles.ctrl(k),<span class="string">'String'</span>,Answer{k});  <span class="comment">% Use the file(s) as the default answer</span>
+0323                   <span class="keyword">if</span> (diff(Formats(k).limits) &gt;= 2) &amp;&amp; ~isempty(file_list) &amp;&amp; ~isempty(file_list{1})
+0324                   <span class="comment">% The control is associated with a multi-file uigetfile() and has default filename(s)</span>
+0325                      <span class="comment">% Store the path/file names in UserData</span>
+0326                      h = get(handles.ctrl(k),<span class="string">'UserData'</span>);
+0327                      h{1} = fileparts(file_list{1});  <span class="comment">% Store the (already verified) common path</span>
+0328                      <span class="keyword">for</span> file_index = 1 : length(file_list)
+0329                         [file_path, file_partial_name, file_extension] = fileparts(file_list{file_index}); <span class="comment">%#ok</span>
+0330                         h{2}{file_index} = [file_partial_name, file_extension];  <span class="comment">% Store the file name</span>
+0331                      <span class="keyword">end</span>
+0332                      set(handles.ctrl(k),<span class="string">'UserData'</span>,h);
+0333                   <span class="keyword">end</span>
+0334                <span class="keyword">end</span>
+0335             <span class="keyword">else</span> <span class="comment">% Control associated with uiputfile()</span>
+0336                <span class="keyword">if</span> isdir(file_list{1}) || isempty(fileparts(file_list{1}))  <span class="comment">% One file argument specifying a directory or lacking a path</span>
+0337                   h = get(handles.ctrl(k),<span class="string">'UserData'</span>);
+0338                   h{1} = file_list{1};  <span class="comment">% Use the argument as the DefaultName parameter but not the default answer</span>
+0339                   set(handles.ctrl(k),<span class="string">'String'</span>,<span class="string">''</span>,<span class="string">'UserData'</span>,h);
+0340                <span class="keyword">else</span>
+0341                   set(handles.ctrl(k),<span class="string">'String'</span>,Answer{k});  <span class="comment">% Use the file as the default answer</span>
+0342                <span class="keyword">end</span>
+0343             <span class="keyword">end</span>
+0344          <span class="keyword">else</span> <span class="comment">% if {'text','date','dir'}</span>
+0345             set(handles.ctrl(k),<span class="string">'String'</span>,Answer{k});
+0346          <span class="keyword">end</span>
+0347       <span class="keyword">case</span> {<span class="string">'radiobutton'</span> <span class="string">'togglebutton'</span>}
+0348          h = get(handles.ctrl(k),<span class="string">'UserData'</span>);
+0349          set(handles.ctrl(k),<span class="string">'SelectedObject'</span>,h(Answer{k}));
+0350    <span class="keyword">end</span>
+0351 <span class="keyword">end</span>
+0352 
+0353 <span class="comment">% Set callback functions and 'Enable' states</span>
+0354 <span class="keyword">for</span> k = 1:NumQuest <span class="comment">% for all non-'text' controls</span>
+0355    <span class="keyword">if</span> strcmp(Formats(k).style,<span class="string">'edit'</span>)
+0356       <span class="keyword">switch</span> Formats(k).format
+0357          <span class="keyword">case</span> <span class="string">'date'</span>
+0358             set(handles.ctrl(k),<span class="string">'Callback'</span>,@(hObj,evd)<a href="#_sub4" class="code" title="subfunction checkDate(hObj,evd,k,format) ">checkDate</a>(hObj,evd,k,Formats(k).limits),<span class="keyword">...</span>
+0359                <span class="string">'Enable'</span>,Formats(k).enable);
+0360          <span class="keyword">case</span> {<span class="string">'float'</span>,<span class="string">'integer'</span>}
+0361             <span class="comment">% for numeric edit box, check for the range &amp; set mouse down behavior</span>
+0362             set(handles.ctrl(k),<span class="string">'Callback'</span>,@(hObj,evd)<a href="#_sub3" class="code" title="subfunction checkRange(hObj,evd,k,lim) ">checkRange</a>(hObj,evd,k,Formats(k).limits),<span class="keyword">...</span>
+0363                <span class="string">'Enable'</span>,Formats(k).enable);
+0364          <span class="keyword">case</span> <span class="string">'file'</span>
+0365             <span class="keyword">if</span> strcmp(Formats(k).enable,<span class="string">'on'</span>)
+0366                ena = <span class="string">'inactive'</span>;
+0367                mode = diff(Formats(k).limits);
+0368                fcn = @(hObj,evd)<a href="#_sub8" class="code" title="subfunction openFilePrompt(hObj,evd,spec,prompt,mode) ">openFilePrompt</a>(hObj,evd,Formats(k).items,Prompt{k},mode);
+0369             <span class="keyword">else</span>
+0370                ena = Formats(k).enable;
+0371                fcn = {};
+0372             <span class="keyword">end</span>
+0373             set(handles.ctrl(k),<span class="string">'ButtonDownFcn'</span>,fcn,<span class="string">'Enable'</span>,ena);
+0374          <span class="keyword">case</span> <span class="string">'dir'</span>
+0375             <span class="keyword">if</span> strcmp(Formats(k).enable,<span class="string">'on'</span>)
+0376                ena = <span class="string">'inactive'</span>;
+0377                fcn = @(hObj,evd)<a href="#_sub9" class="code" title="subfunction openDirPrompt(hObj,evd,prompt) ">openDirPrompt</a>(hObj,evd,Prompt{k});
+0378             <span class="keyword">else</span>
+0379                ena = Formats(k).enable;
+0380                fcn = {};
+0381             <span class="keyword">end</span>
+0382             set(handles.ctrl(k),<span class="string">'ButtonDownFcn'</span>,fcn,<span class="string">'Enable'</span>,ena);
+0383          <span class="keyword">otherwise</span>
+0384             set(handles.ctrl(k),<span class="string">'Enable'</span>,Formats(k).enable);
+0385       <span class="keyword">end</span>
+0386    <span class="keyword">elseif</span> any(strcmp(Formats(k).style, {<span class="string">'radiobutton'</span>, <span class="string">'togglebutton'</span>}))
+0387       button_handles = get(handles.ctrl(k), <span class="string">'UserData'</span>);  <span class="comment">% Disable the child buttons instead of the uibuttongroup container</span>
+0388       valid_indexes = (button_handles ~= 0);
+0389       set(button_handles(valid_indexes), <span class="string">'Enable'</span>, Formats(k).enable);
+0390    <span class="keyword">elseif</span> ~strcmp(Formats(k).style, <span class="string">'text'</span>)
+0391       set(handles.ctrl(k), <span class="string">'Enable'</span>, Formats(k).enable);
+0392    <span class="keyword">end</span>
+0393 <span class="keyword">end</span>
+0394 
+0395 set(handles.fig, <span class="string">'UserData'</span>, <span class="string">'Cancel'</span>);
+0396 <span class="keyword">for</span> k = 1 : numel(handles.btns)
+0397    <span class="keyword">switch</span> get(handles.btns(k), <span class="string">'UserData'</span>)
+0398       <span class="keyword">case</span> <span class="string">'OK'</span>
+0399          set(handles.btns(k), <span class="string">'KeyPressFcn'</span>, @(hObj,evd)<a href="#_sub6" class="code" title="subfunction doControlKeyPress(obj, evd, varargin)">doControlKeyPress</a>(hObj,evd,true), <span class="string">'Callback'</span>, @(hObj,evd)<a href="#_sub7" class="code" title="subfunction doCallback(obj, evd, isok) ">doCallback</a>(hObj,evd,true));
+0400       <span class="keyword">case</span> <span class="string">'Cancel'</span>
+0401          set(handles.btns(k), <span class="string">'KeyPressFcn'</span>, @(hObj,evd)<a href="#_sub6" class="code" title="subfunction doControlKeyPress(obj, evd, varargin)">doControlKeyPress</a>(hObj,evd,false), <span class="string">'Callback'</span>, @(hObj,evd)<a href="#_sub7" class="code" title="subfunction doCallback(obj, evd, isok) ">doCallback</a>(hObj,evd,false));
+0402       <span class="keyword">case</span> <span class="string">'Apply'</span>
+0403          set(handles.btns(k), <span class="string">'KeyPressFcn'</span>, @(hObj,evd)<a href="#_sub6" class="code" title="subfunction doControlKeyPress(obj, evd, varargin)">doControlKeyPress</a>(hObj,evd), <span class="string">'Callback'</span>, @<a href="#_sub2" class="code" title="subfunction doApply(hObj,evd) ">doApply</a>);
+0404    <span class="keyword">end</span>
+0405 <span class="keyword">end</span>
+0406 set(handles.fig, <span class="string">'KeyPressFcn'</span>, @<a href="#_sub5" class="code" title="subfunction doFigureKeyPress(obj, evd)">doFigureKeyPress</a>, <span class="string">'ResizeFcn'</span>, @<a href="#_sub10" class="code" title="subfunction doResize(hObj,evd) ">doResize</a>);
+0407 
+0408 <span class="comment">% make sure we are on screen</span>
+0409 movegui(handles.fig)
+0410 
+0411 <span class="comment">% if there is a figure out there and it's modal, we need to be modal too</span>
+0412 <span class="keyword">if</span> ~isempty(gcbf) &amp;&amp; strcmp(get(gcbf,<span class="string">'WindowStyle'</span>),<span class="string">'modal'</span>)
+0413    set(handles.fig,<span class="string">'WindowStyle'</span>,<span class="string">'modal'</span>);
+0414 <span class="keyword">end</span>
+0415 
+0416 <span class="comment">% ready to begin the show!</span>
+0417 <span class="keyword">if</span> (Resized == 0)  <span class="comment">% In some Matlab configurations, doResize() may not have been called yet</span>
+0418    <a href="#_sub10" class="code" title="subfunction doResize(hObj,evd) ">doResize</a>(handles.fig);  <span class="comment">% Ensure the GUI controls are put in their proper places</span>
+0419 <span class="keyword">end</span>
+0420 set(handles.fig,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0421 drawnow;
+0422 Resized = 2;  <span class="comment">% Initialization complete; allow all future calls to doResize()</span>
+0423 
+0424 <span class="comment">% set focus on the first uicontol</span>
+0425 h = handles.ctrl(find(~strcmp(<span class="string">'text'</span>,{Formats.type}),1,<span class="string">'first'</span>));
+0426 <span class="keyword">if</span> ~isempty(h)
+0427    <span class="keyword">switch</span> get(h,<span class="string">'type'</span>)
+0428       <span class="keyword">case</span> <span class="string">'uicontrol'</span>, uicontrol(h);
+0429       <span class="keyword">case</span> <span class="string">'uitoggletool'</span>, uicontrol(get(h,<span class="string">'SelectedObject'</span>));
+0430    <span class="keyword">end</span>
+0431 <span class="keyword">end</span>
+0432 
+0433 <span class="comment">% Go into uiwait if the figure handle is still valid.</span>
+0434 <span class="comment">% This is mostly the case during regular use.</span>
+0435 <span class="keyword">if</span> ishghandle(handles.fig), uiwait(handles.fig); <span class="keyword">end</span>
+0436 
+0437 <span class="comment">% Check handle validity again since we may be out of uiwait because the</span>
+0438 <span class="comment">% figure was deleted.</span>
+0439 Canceled = ~(ishghandle(handles.fig) &amp;&amp; strcmp(get(handles.fig,<span class="string">'UserData'</span>),<span class="string">'OK'</span>));
+0440 <span class="keyword">if</span> Canceled <span class="comment">% return the default answer</span>
+0441    <span class="keyword">if</span> isempty(FieldNames), Answer = DefAns;
+0442    <span class="keyword">else</span> Answer = AnsStr; <span class="keyword">end</span> <span class="comment">% AnsStr contains the default value until getAnswer is called</span>
+0443 <span class="keyword">else</span>
+0444    Answer = <a href="#_sub1" class="code" title="subfunction answer = getAnswer(answer,ansstr)">getAnswer</a>(Answer,AnsStr); <span class="comment">% get the final answers</span>
+0445 <span class="keyword">end</span>
+0446 
+0447 Canceled = Canceled &amp;&amp; ~Applied;
+0448 
+0449 <span class="comment">% Close the figure if it's still open</span>
+0450 <span class="keyword">if</span> ishghandle(handles.fig), delete(handles.fig); <span class="keyword">end</span>
+0451 
+0452 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0453 <span class="comment">%%% NESTED FUNCTIONS</span>
+0454 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0455    <a name="_sub1" href="#_subfunctions" class="code">function answer = getAnswer(answer,ansstr)</a>
+0456       <span class="comment">% retrieve answer from controls</span>
+0457       <span class="keyword">for</span> i = 1:numel(answer)
+0458          <span class="keyword">switch</span> Formats(i).style
+0459             <span class="keyword">case</span> {<span class="string">'checkbox'</span> <span class="string">'listbox'</span> <span class="string">'popupmenu'</span> <span class="string">'slider'</span>}
+0460                answer{i} = get(handles.ctrl(i),<span class="string">'Value'</span>);
+0461             <span class="keyword">case</span> <span class="string">'edit'</span>
+0462                <span class="keyword">switch</span> Formats(i).format
+0463                   <span class="keyword">case</span> {<span class="string">'text'</span> <span class="string">'dir'</span>}
+0464                      answer{i} = get(handles.ctrl(i),<span class="string">'String'</span>);
+0465                   <span class="keyword">case</span> <span class="string">'date'</span>
+0466                      date_string = get(handles.ctrl(i), <span class="string">'String'</span>);
+0467                      <span class="keyword">if</span> isempty(date_string)
+0468                         answer{i} = [];  <span class="comment">% Return an empty date vector if no date was entered</span>
+0469                      <span class="keyword">else</span>
+0470                         answer{i} = datevec(date_string, Formats(i).limits);
+0471                      <span class="keyword">end</span>
+0472                   <span class="keyword">case</span> <span class="string">'file'</span>
+0473                      data = get(handles.ctrl(i),<span class="string">'UserData'</span>);
+0474                      <span class="keyword">if</span> (length(data) == 1)  <span class="comment">% Single-file selection</span>
+0475                         answer{i} = get(handles.ctrl(i),<span class="string">'String'</span>);
+0476                      <span class="keyword">else</span> <span class="comment">% multi-select</span>
+0477                         <span class="keyword">if</span> isempty(data{2})  <span class="comment">% No files were selected</span>
+0478                            answer{i} = {};
+0479                         <span class="keyword">else</span>
+0480                            answer{i} = strcat(data{1}, cellstr(data{2}));
+0481                         <span class="keyword">end</span>
+0482                      <span class="keyword">end</span>
+0483                   <span class="keyword">otherwise</span>
+0484                      answer{i} = str2double(get(handles.ctrl(i),<span class="string">'String'</span>));
+0485                <span class="keyword">end</span>
+0486             <span class="keyword">case</span> {<span class="string">'radiobutton'</span> <span class="string">'togglebutton'</span>}
+0487                answer{i} = find(get(handles.ctrl(i),<span class="string">'SelectedObject'</span>)==get(handles.ctrl(i),<span class="string">'UserData'</span>));
+0488          <span class="keyword">end</span>
+0489       <span class="keyword">end</span>
+0490       
+0491       <span class="comment">% if struct answer expected, copy</span>
+0492       <span class="keyword">if</span> ~isempty(FieldNames)
+0493          idx = find(~cellfun(<span class="string">'isempty'</span>,FieldNames))';
+0494          <span class="keyword">for</span> i = idx
+0495             ansstr.(FieldNames{i}) = answer{i};
+0496          <span class="keyword">end</span>
+0497          answer = ansstr;
+0498       <span class="keyword">end</span>
+0499    <span class="keyword">end</span>
+0500 
+0501    <a name="_sub2" href="#_subfunctions" class="code">function doApply(hObj,evd) </a><span class="comment">%#ok</span>
+0502       Applied = true; <span class="comment">% set the flag</span>
+0503       DefAns = <a href="#_sub1" class="code" title="subfunction answer = getAnswer(answer,ansstr)">getAnswer</a>(Answer,AnsStr);
+0504       <span class="keyword">if</span> isstruct(DefAns)
+0505          AnsStr = DefAns;
+0506          DefAns = cell(size(FieldNames));
+0507          idx = find(~cellfun(<span class="string">'isempty'</span>,FieldNames))';
+0508          <span class="keyword">for</span> i = idx
+0509             DefAns{i} = AnsStr.(FieldNames{i});
+0510          <span class="keyword">end</span>
+0511       <span class="keyword">end</span>
+0512    <span class="keyword">end</span>
+0513 
+0514    <a name="_sub3" href="#_subfunctions" class="code">function checkRange(hObj,evd,k,lim) </a><span class="comment">%#ok</span>
+0515       val = str2double(get(hObj,<span class="string">'String'</span>));
+0516       <span class="keyword">if</span> strcmp(Formats(k).format, <span class="string">'integer'</span>)
+0517          val = round(val);  <span class="comment">% Round to the nearest integer</span>
+0518       <span class="keyword">end</span>
+0519       <span class="keyword">if</span> ~isnan(val) &amp;&amp; val&gt;=lim(1) &amp;&amp; val&lt;=lim(2)
+0520          Answer{k} = val;
+0521          set(hObj, <span class="string">'String'</span>, num2str(Answer{k}));  <span class="comment">% If necessary, eliminates spaces or changes to the rounded integer</span>
+0522       <span class="keyword">else</span>
+0523          <span class="keyword">if</span> strcmp(Formats(k).format,<span class="string">'integer'</span>)
+0524             msg = sprintf(<span class="string">'%d, %d'</span>,lim(1),lim(2));
+0525          <span class="keyword">else</span>
+0526             msg = sprintf(<span class="string">'%g, %g'</span>,lim(1),lim(2));
+0527          <span class="keyword">end</span>
+0528          h = errordlg(sprintf(<span class="string">'This parameter must be within the range [%s].'</span>,msg),<span class="string">'Invalid Value'</span>,<span class="string">'modal'</span>);
+0529          uiwait(h);
+0530          set(hObj,<span class="string">'String'</span>,num2str(Answer{k}));
+0531       <span class="keyword">end</span>
+0532    <span class="keyword">end</span>
+0533 
+0534    <a name="_sub4" href="#_subfunctions" class="code">function checkDate(hObj,evd,k,format) </a><span class="comment">%#ok</span>
+0535       str = get(hObj,<span class="string">'string'</span>);
+0536       <span class="keyword">if</span> isempty(str)  <span class="comment">% Avoid calling datenum() which prints a warning for empty strings</span>
+0537          Answer{k} = <span class="string">''</span>;
+0538          set(hObj, <span class="string">'String'</span>, Answer{k});
+0539          <span class="keyword">return</span>;
+0540       <span class="keyword">end</span>
+0541       <span class="keyword">try</span>
+0542          num = datenum(str, format);  <span class="comment">% Check if the input matches the custom date format first</span>
+0543       <span class="keyword">catch</span>  <span class="comment">%#ok</span>
+0544          <span class="keyword">try</span>
+0545             num = datenum(str);  <span class="comment">% Check if the input matches any other supported date format</span>
+0546          <span class="keyword">catch</span>  <span class="comment">%#ok</span>
+0547             h = errordlg(sprintf(<span class="string">'Unsupported date format.'</span>),<span class="string">'Invalid Value'</span>,<span class="string">'modal'</span>);
+0548             uiwait(h);
+0549             set(hObj,<span class="string">'String'</span>,Answer{k});
+0550             <span class="keyword">return</span>;
+0551          <span class="keyword">end</span>
+0552       <span class="keyword">end</span>
+0553       Answer{k} = datestr(num,format);
+0554       set(hObj,<span class="string">'String'</span>,Answer{k});
+0555    <span class="keyword">end</span>
+0556 
+0557    <a name="_sub5" href="#_subfunctions" class="code">function doFigureKeyPress(obj, evd)</a>
+0558       <span class="keyword">switch</span>(evd.Key)
+0559          <span class="keyword">case</span> {<span class="string">'return'</span>,<span class="string">'space'</span>}
+0560             set(obj,<span class="string">'UserData'</span>,<span class="string">'OK'</span>);
+0561             uiresume(obj);
+0562          <span class="keyword">case</span> {<span class="string">'escape'</span>}
+0563             delete(obj);
+0564       <span class="keyword">end</span>
+0565    <span class="keyword">end</span>
+0566 
+0567    <a name="_sub6" href="#_subfunctions" class="code">function doControlKeyPress(obj, evd, varargin)</a>
+0568       <span class="keyword">switch</span>(evd.Key)
+0569          <span class="keyword">case</span> {<span class="string">'return'</span>} <span class="comment">% execute its callback function with varargin</span>
+0570             cbfcn = get(obj,<span class="string">'Callback'</span>);
+0571             cbfcn(obj,evd);
+0572          <span class="keyword">case</span> <span class="string">'escape'</span>
+0573             delete(gcbf)
+0574       <span class="keyword">end</span>
+0575    <span class="keyword">end</span>
+0576 
+0577    <a name="_sub7" href="#_subfunctions" class="code">function doCallback(obj, evd, isok) </a><span class="comment">%#ok</span>
+0578       <span class="keyword">if</span> isok || Applied
+0579          <span class="keyword">if</span> isok, set(gcbf,<span class="string">'UserData'</span>,<span class="string">'OK'</span>); <span class="keyword">end</span>
+0580          uiresume(gcbf);
+0581       <span class="keyword">else</span>
+0582          delete(gcbf)
+0583       <span class="keyword">end</span>
+0584    <span class="keyword">end</span>
+0585 
+0586    <a name="_sub8" href="#_subfunctions" class="code">function openFilePrompt(hObj,evd,spec,prompt,mode) </a><span class="comment">%#ok</span>
+0587       
+0588       <span class="keyword">if</span> mode&lt;0 <span class="comment">% uiputfile</span>
+0589          <span class="keyword">if</span> isempty(get(hObj,<span class="string">'String'</span>))  <span class="comment">% No file is selected yet</span>
+0590             data = get(hObj,<span class="string">'UserData'</span>);  <span class="comment">% Get the DefaultName parameter from the UserData</span>
+0591             [f,p] = uiputfile(spec,prompt,data{1});
+0592          <span class="keyword">else</span>  <span class="comment">% A file is already selected</span>
+0593             [f,p] = uiputfile(spec,prompt,get(hObj,<span class="string">'String'</span>));
+0594          <span class="keyword">end</span>
+0595          <span class="keyword">if</span> f~=0, set(hObj,<span class="string">'String'</span>,[p f]); <span class="keyword">end</span>
+0596       <span class="keyword">elseif</span> mode&lt;=1 <span class="comment">% uigetfile, single-select</span>
+0597          <span class="keyword">if</span> isempty(get(hObj,<span class="string">'String'</span>))  <span class="comment">% No file is selected yet</span>
+0598             data = get(hObj,<span class="string">'UserData'</span>);  <span class="comment">% Get the DefaultName parameter from the UserData</span>
+0599             [f,p] = uigetfile(spec,prompt,data{1});
+0600          <span class="keyword">else</span>  <span class="comment">% A file is already selected</span>
+0601             [f,p] = uigetfile(spec,prompt,get(hObj,<span class="string">'String'</span>));
+0602          <span class="keyword">end</span>
+0603          <span class="keyword">if</span> f~=0, set(hObj,<span class="string">'String'</span>,[p f]); <span class="keyword">end</span>
+0604       <span class="keyword">else</span> <span class="comment">% uigetfile multi-select</span>
+0605          <span class="comment">% previously chosen files are lost, but directory is kept</span>
+0606          data = get(hObj,<span class="string">'UserData'</span>);
+0607          [f,p] = uigetfile(spec,prompt,data{1},<span class="string">'MultiSelect'</span>,<span class="string">'on'</span>);
+0608          <span class="keyword">if</span> p~=0
+0609             data = {p f};
+0610             <span class="keyword">if</span> ischar(f) <span class="comment">% single file selected</span>
+0611                set(hObj,<span class="string">'String'</span>,[p f],<span class="string">'UserData'</span>,data);
+0612             <span class="keyword">else</span> <span class="comment">% multiple files selected</span>
+0613                str = sprintf(<span class="string">'%s%s'</span>,p,f{1});
+0614                <span class="keyword">for</span> n = 2:length(f)
+0615                   str = sprintf(<span class="string">'%s\n%s%s'</span>,str,p,f{n});
+0616                <span class="keyword">end</span>
+0617                set(hObj,<span class="string">'String'</span>,str,<span class="string">'UserData'</span>,data);
+0618             <span class="keyword">end</span>
+0619          <span class="keyword">end</span>
+0620       <span class="keyword">end</span>
+0621       uicontrol(hObj);
+0622    <span class="keyword">end</span>
+0623 
+0624    <a name="_sub9" href="#_subfunctions" class="code">function openDirPrompt(hObj,evd,prompt) </a><span class="comment">%#ok</span>
+0625       p = uigetdir(get(hObj,<span class="string">'String'</span>),prompt);
+0626       <span class="keyword">if</span> p~=0, set(hObj,<span class="string">'String'</span>,p); <span class="keyword">end</span>
+0627       uicontrol(hObj);
+0628    <span class="keyword">end</span>
+0629 
+0630    <a name="_sub10" href="#_subfunctions" class="code">function doResize(hObj,evd) </a><span class="comment">%#ok</span>
+0631       <span class="comment">% This function places all controls in proper place.</span>
+0632       <span class="comment">% Must be called before the GUI is made visible as buildgui function</span>
+0633       <span class="comment">% just creates uicontrols and do not place them in proper places.</span>
+0634       
+0635       <span class="comment">% Ensure doResize() is called exactly once during initialization</span>
+0636       <span class="keyword">switch</span> Resized
+0637          <span class="keyword">case</span> 0  <span class="comment">% Not resized yet</span>
+0638             Resized = 1;
+0639          <span class="keyword">case</span> 1  <span class="comment">% Still initializing, and initial resize has already occurred</span>
+0640             <span class="keyword">return</span>;
+0641          <span class="comment">% otherwise allow resizing because initialization is complete</span>
+0642       <span class="keyword">end</span>
+0643       
+0644       <span class="comment">% get current figure size</span>
+0645       figPos = get(hObj,<span class="string">'Position'</span>);
+0646       figSize = figPos(3:4);
+0647       
+0648       <span class="comment">% determine the column width &amp; row heights</span>
+0649       workarea = [Options.Sep Options.Sep figSize - 2*Options.Sep]; <span class="comment">% Options.Sep margins around the figure</span>
+0650       btnarea = [0,0,workarea(3),sinfo.h_btns];
+0651       ctrlarea = [0,btnarea(4)+Options.Sep,workarea(3),workarea(4)-sinfo.h_btns-Options.Sep];
+0652       
+0653       dim = size(sinfo.map);
+0654       num = numel(handles.ctrl);
+0655       
+0656       <span class="comment">% determine the column widths &amp; margin</span>
+0657       w = sinfo.w_ctrls+sinfo.w_labels+sinfo.w_units; <span class="comment">% minimum widths of elements</span>
+0658       width = zeros(size(sinfo.map));
+0659       cext = false(1,dim(2));
+0660       <span class="keyword">for</span> n = 1:dim(2)
+0661          cmap = sinfo.map(:,n);
+0662          cext(n) = any(sinfo.autoextend(cmap(cmap~=0),1));
+0663       <span class="keyword">end</span>
+0664       <span class="keyword">if</span> any(cext) <span class="comment">% found auto-extendable element(s)</span>
+0665          m_col = Options.Sep; <span class="comment">% column margin fixed</span>
+0666          w_total = ctrlarea(3)-(dim(2)-1)*m_col;
+0667          
+0668          <span class="comment">% record the widths of non-expandable elements</span>
+0669          <span class="keyword">for</span> n = find(~sinfo.autoextend(:,1))'
+0670             idx = find(sinfo.map==n);
+0671             [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0672             J = unique(j);
+0673             n_col = numel(J);
+0674             <span class="keyword">if</span> (n_col == 1)
+0675                width(idx) = w(n);
+0676             <span class="keyword">end</span>
+0677          <span class="keyword">end</span>
+0678          width = <a href="#_sub16" class="code" title="subfunction [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)">distribute_spanned_controls</a>(sinfo.map, width, [], w, [], sinfo.autoextend, m_col);
+0679          w_col = max(width,[],1); <span class="comment">% column width based on non-expandables</span>
+0680          
+0681          <span class="comment">% figure out how to distribute extra spaces among auto-expandable columns</span>
+0682          w_avail = w_total - sum(w_col(~cext)); <span class="comment">% available width</span>
+0683          idx = w_col(cext)==0; <span class="comment">% column where all elements are auto-expandable</span>
+0684          <span class="keyword">if</span> all(idx) <span class="comment">% all columns auto-expandable</span>
+0685             w_col(cext) = w_avail/sum(cext); <span class="comment">% equally distributed</span>
+0686          <span class="keyword">else</span>
+0687             w_xcol = w_col(cext);
+0688             <span class="keyword">if</span> any(idx)
+0689                w_xcol(idx) = mean(w_xcol(~idx));
+0690             <span class="keyword">end</span> <span class="comment">% some columns are auto-expandable</span>
+0691             w_xcol = w_xcol + (w_avail-sum(w_xcol))/sum(cext); <span class="comment">% equally distribute the excess</span>
+0692             w_col(cext) = w_xcol;
+0693          <span class="keyword">end</span>
+0694          
+0695          w_col = max(w_col,1); <span class="comment">% make sure it's positive</span>
+0696          
+0697          <span class="comment">% set the expandable controls' width</span>
+0698          <span class="keyword">for</span> n = find(sinfo.autoextend(:,1))'
+0699             idx = find(sinfo.map==n);
+0700             [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0701             J = unique(j);
+0702             <span class="keyword">if</span> strcmp(Formats(n).type,<span class="string">'text'</span>)
+0703                sinfo.w_labels(n) = sum(w_col(J));
+0704             <span class="keyword">else</span>
+0705                sinfo.w_ctrls(n) = max(sum(w_col(J)) - sinfo.w_labels(n) - sinfo.w_units(n), 1);
+0706             <span class="keyword">end</span>
+0707          <span class="keyword">end</span>
+0708       <span class="keyword">else</span> <span class="comment">% no auto-extension, adjust column margin</span>
+0709          <span class="keyword">for</span> n = 1:num
+0710             idx = find(sinfo.map==n);
+0711             [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0712             J = unique(j);
+0713             n_col = numel(J);
+0714             <span class="keyword">if</span> (n_col == 1)
+0715                width(idx) = w(n);
+0716             <span class="keyword">end</span>
+0717          <span class="keyword">end</span>
+0718          width = <a href="#_sub16" class="code" title="subfunction [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)">distribute_spanned_controls</a>(sinfo.map, width, [], w, [], [], Options.Sep);
+0719          w_col = max(width,[],1);
+0720          <span class="keyword">if</span> (dim(2) == 1)
+0721             m_col = 0;  <span class="comment">% No margins for a single column</span>
+0722          <span class="keyword">else</span>
+0723             m_col = (ctrlarea(3)-sum(w_col))/(dim(2)-1);
+0724          <span class="keyword">end</span>
+0725       <span class="keyword">end</span>
+0726       
+0727       <span class="comment">% resize static text with auto-height</span>
+0728       aex = sinfo.autoextend;
+0729       <span class="keyword">for</span> m = find(strcmp(<span class="string">'text'</span>,{Formats.type}) &amp; any(sinfo.autoextend(:,2)))
+0730          idx = find(sinfo.map==m);
+0731          [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0732          J = unique(j);
+0733          w = sum(w_col(J)) + (numel(J)-1)*m_col;
+0734          <span class="keyword">if</span> w&lt;=100, w = 100; <span class="keyword">end</span>
+0735          
+0736          <span class="comment">% create dummy uicontrol to wrap text</span>
+0737          h = uicontrol(<span class="string">'Parent'</span>,hObj,<span class="string">'Style'</span>,<span class="string">'text'</span>,<span class="string">'Position'</span>,[0 0 w 20],<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0738          msg = textwrap(h,Prompt(m));
+0739          delete(h);
+0740          str = msg{1};
+0741          <span class="keyword">for</span> n = 2:length(msg)
+0742             str = sprintf(<span class="string">'%s\n%s'</span>,str,msg{n});
+0743          <span class="keyword">end</span>
+0744          
+0745          <span class="comment">% update the text wrapping</span>
+0746          set(handles.labels(m),<span class="string">'String'</span>,str);
+0747          
+0748          <span class="comment">% get updated size</span>
+0749          pos = get(handles.labels(m),<span class="string">'Extent'</span>);
+0750          sinfo.w_labels(m) = pos(3);
+0751          sinfo.h_labels(m) = pos(4);
+0752          sinfo.h_ctrls(m) = pos(4);
+0753          
+0754          aex(m,2) = false;
+0755       <span class="keyword">end</span>
+0756       
+0757       <span class="comment">% determine the row heights &amp; margin</span>
+0758       h = max([sinfo.h_ctrls,sinfo.h_labels,sinfo.h_units],[],2);
+0759       height = zeros(size(sinfo.map));
+0760       rext = false(dim(1),1);
+0761       <span class="keyword">for</span> n = 1:dim(1)
+0762          cmap = sinfo.map(n,:);
+0763          rext(n) = any(aex(cmap(cmap~=0),2));
+0764       <span class="keyword">end</span>
+0765       <span class="keyword">if</span> any(rext)
+0766          m_row = Options.Sep; <span class="comment">% column margin fixed</span>
+0767          h_total = ctrlarea(4)-(dim(1)-1)*m_row; <span class="comment">% sum of control width</span>
+0768          
+0769          <span class="comment">% record the heights of non-expandable elements</span>
+0770          <span class="keyword">for</span> n = find(~aex(:,2))'
+0771             idx = find(sinfo.map==n);
+0772             [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0773             I = unique(i);
+0774             n_row = numel(I);
+0775             <span class="keyword">if</span> (n_row == 1)
+0776                height(idx) = h(n);
+0777             <span class="keyword">end</span>
+0778          <span class="keyword">end</span>
+0779          [temp, height] = <a href="#_sub16" class="code" title="subfunction [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)">distribute_spanned_controls</a>(sinfo.map, [], height, [], h, aex, m_row); <span class="comment">%#ok</span>
+0780          h_row = max(height,[],2); <span class="comment">% column width based on non-expandables</span>
+0781          
+0782          <span class="comment">% figure out how to distribute extra spaces among auto-expandable rows</span>
+0783          h_avail = h_total - sum(h_row(~rext)); <span class="comment">% available width</span>
+0784          idx = h_row(rext)==0; <span class="comment">% column where all elements are auto-expandable</span>
+0785          <span class="keyword">if</span> all(idx) <span class="comment">% all columns auto-expandable</span>
+0786             h_row(rext) = h_avail/sum(rext); <span class="comment">% equally distributed</span>
+0787          <span class="keyword">else</span>
+0788             h_xrow = h_row(rext);
+0789             <span class="keyword">if</span> any(idx), h_xrow(idx) = mean(h_xrow(~idx)); <span class="keyword">end</span> <span class="comment">% some columns are auto-expandable</span>
+0790             h_xrow = h_xrow + (h_avail-sum(h_xrow))/sum(rext); <span class="comment">% equally distribute the excess</span>
+0791             h_row(rext) = h_xrow;
+0792          <span class="keyword">end</span>
+0793          
+0794          h_row = max(h_row,1);
+0795          
+0796          <span class="comment">% set the expandable controls height</span>
+0797          <span class="keyword">for</span> n = find(aex(:,2))'
+0798             idx = find(sinfo.map==n);
+0799             [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0800             I = unique(i);
+0801             n_row = numel(I);
+0802             newh = sum(h_row(I)) + (n_row-1)*m_row;
+0803             change = newh - sinfo.h_ctrls(n);
+0804             sinfo.h_ctrls(n) = newh;
+0805             sinfo.CLoffset(n) = sinfo.CLoffset(n) + change;
+0806             sinfo.CUoffset(n) = sinfo.CUoffset(n) + change;
+0807          <span class="keyword">end</span>
+0808       <span class="keyword">else</span> <span class="comment">% no auto-extension in heights, adjust row margin</span>
+0809          <span class="keyword">for</span> n = 1:num
+0810             idx = find(sinfo.map==n);
+0811             [i,j] = ind2sub(dim,idx); <span class="comment">%#ok</span>
+0812             I = unique(i);
+0813             n_row = numel(I);
+0814             <span class="keyword">if</span> (n_row == 1)
+0815                height(idx) = h(n);
+0816             <span class="keyword">end</span>
+0817          <span class="keyword">end</span>
+0818          [temp, height] = <a href="#_sub16" class="code" title="subfunction [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)">distribute_spanned_controls</a>(sinfo.map, [], height, [], h, [], Options.Sep); <span class="comment">%#ok</span>
+0819          h_row = max(height,[],2);
+0820          <span class="keyword">if</span> (dim(1) == 1)
+0821             m_row = 0;  <span class="comment">% No margins for a single row</span>
+0822          <span class="keyword">else</span>
+0823             m_row = (ctrlarea(4)-sum(h_row))/(dim(1)-1);
+0824          <span class="keyword">end</span>
+0825       <span class="keyword">end</span>
+0826       
+0827       <span class="comment">% set control positions</span>
+0828       <span class="keyword">for</span> m = 1:num
+0829          [i,j] = ind2sub(dim,find(sinfo.map==m));
+0830          x0 = sum(w_col(1:j(1)-1)) + m_col*(j(1)-1) + ctrlarea(1) + workarea(1);
+0831          y0 = sum(h_row(i(1):end)) - sinfo.h_ctrls(m) + m_row*(dim(1)-i(1)) + ctrlarea(2) + workarea(2);
+0832          
+0833          posL = [x0,y0+sinfo.CLoffset(m)];
+0834          posC = [x0+sinfo.w_labels(m),y0,sinfo.w_ctrls(m),sinfo.h_ctrls(m)];
+0835          posU = [x0+sinfo.w_labels(m)+sinfo.w_ctrls(m)+Options.UnitsMargin,y0+sinfo.CUoffset(m)];
+0836          
+0837          <span class="keyword">if</span> handles.labels(m)~=0, set(handles.labels(m),<span class="string">'Position'</span>,posL); <span class="keyword">end</span>
+0838          <span class="keyword">if</span> handles.ctrl(m)~=0, set(handles.ctrl(m),<span class="string">'Position'</span>,posC); <span class="keyword">end</span>
+0839          <span class="keyword">if</span> handles.units(m)~=0, set(handles.units(m),<span class="string">'Position'</span>,posU); <span class="keyword">end</span>
+0840       <span class="keyword">end</span>
+0841       
+0842       <span class="comment">% set positions of buttons</span>
+0843       nbtns = numel(handles.btns);
+0844       w_allbtns = Options.Sep*(nbtns-1) + nbtns*sinfo.w_btns;
+0845       pos = [workarea(1) + btnarea(3) - w_allbtns, workarea(2), sinfo.w_btns, sinfo.h_btns];  <span class="comment">% Right-align buttons</span>
+0846       <span class="keyword">for</span> n = 1:nbtns
+0847          set(handles.btns(n),<span class="string">'Position'</span>,pos);
+0848          pos(1) = pos(1) + sinfo.w_btns + Options.Sep;
+0849       <span class="keyword">end</span>
+0850    <span class="keyword">end</span>
+0851 
+0852 <span class="keyword">end</span>
+0853 
+0854 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0855 <span class="comment">%%% BUILDGUI :: Builds the dialog box and returns handles</span>
+0856 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0857 <a name="_sub11" href="#_subfunctions" class="code">function [handles,Formats,sinfo] = buildgui(Prompt,Unit,Title,Formats,Options)</a>
+0858 
+0859 DefaultSize.text = [0 0]; <span class="comment">% auto size (max width: 250)</span>
+0860 DefaultSize.edit = [165 0]; <span class="comment">% auto size height (base:20)</span>
+0861 DefaultSize.popupmenu = [0 20]; <span class="comment">% auto size width</span>
+0862 DefaultSize.listbox = [0 0];   <span class="comment">% auto size</span>
+0863 DefaultSize.togglebutton = [0 0]; <span class="comment">% auto size</span>
+0864 DefaultSize.radiobutton = [0 0]; <span class="comment">% auto size</span>
+0865 DefaultSize.checkbox = [0 18]; <span class="comment">% auto size width</span>
+0866 DefaultSize.slider = [75 15];
+0867 DefaultSize.pushbutton = [69 22];
+0868 
+0869 <span class="comment">% determine how to utilize 'none' space</span>
+0870 <span class="comment">% Place all the elements at (0,0)</span>
+0871 free = reshape(strcmp(<span class="string">'none'</span>,{Formats.type}),size(Formats)); <span class="comment">% location of empty block to be occupied by neighbor entry</span>
+0872 num = sum(~free(:)); <span class="comment">% number of controls</span>
+0873 dim = size(Formats); <span class="comment">% display grid dimension</span>
+0874 map = zeros(dim); <span class="comment">% determine which control occupies which block(s)</span>
+0875 order = zeros(1,num); <span class="comment">% uicontrol placement order</span>
+0876 n = 1;
+0877 <span class="keyword">for</span> f = 1:prod(dim)
+0878    <span class="comment">% traverse row-first</span>
+0879    [j,i] = ind2sub(dim([2 1]),f);
+0880    m = sub2ind(dim,i,j);
+0881    
+0882    <span class="keyword">if</span> free(m)
+0883       mode = diff(Formats(m).limits);
+0884       [i,j] = ind2sub(dim,m);
+0885       <span class="keyword">if</span> mode&gt;0 &amp;&amp; j&gt;1, map(m) = map(sub2ind(dim,i,j-1)); <span class="comment">% left</span>
+0886       <span class="keyword">elseif</span> mode&lt;0 &amp;&amp; i&gt;1, map(m) = map(sub2ind(dim,i-1,j)); <span class="comment">% above</span>
+0887       <span class="keyword">end</span> <span class="comment">% other wise, 0 (nothing occupying)</span>
+0888    <span class="keyword">else</span>
+0889       map(m) = n;
+0890       order(n) = m;
+0891       n = n + 1;
+0892    <span class="keyword">end</span>
+0893 <span class="keyword">end</span>
+0894 
+0895 <span class="comment">% remove none's from Formats and order the rest in Prompt order</span>
+0896 Formats = Formats(order);
+0897 
+0898 <span class="comment">% assign default size if Formats.size is non-positive</span>
+0899 autosize = false(num,2);
+0900 autoextend = false(num,2);
+0901 <span class="keyword">for</span> m = 1:num
+0902    autoextend(m,:) = Formats(m).size&lt;0;
+0903    
+0904    <span class="comment">% get default size if size not specified</span>
+0905    <span class="keyword">if</span> Formats(m).size(1) &lt;=0
+0906       Formats(m).size(1) = DefaultSize.(Formats(m).style)(1);
+0907    <span class="keyword">end</span>
+0908    <span class="keyword">if</span> Formats(m).size(2) &lt;=0
+0909       Formats(m).size(2) = DefaultSize.(Formats(m).style)(2);
+0910    <span class="keyword">end</span>
+0911    
+0912    <span class="comment">% if fixed size, turn autosize off</span>
+0913    autosize(m,:) = Formats(m).size&lt;=0;
+0914 <span class="keyword">end</span>
+0915 
+0916 
+0917 FigColor=get(0,<span class="string">'DefaultUicontrolBackgroundcolor'</span>);
+0918 
+0919 fig = dialog(           <span class="keyword">...</span>
+0920    <span class="string">'Visible'</span>     ,<span class="string">'off'</span>   , <span class="keyword">...</span>
+0921    <span class="string">'Name'</span>       ,Title   , <span class="keyword">...</span>
+0922    <span class="string">'Pointer'</span>     ,<span class="string">'arrow'</span>  , <span class="keyword">...</span>
+0923    <span class="string">'Units'</span>      ,<span class="string">'pixels'</span>  , <span class="keyword">...</span>
+0924    <span class="string">'UserData'</span>     ,<span class="string">'Cancel'</span>  , <span class="keyword">...</span>
+0925    <span class="string">'Tag'</span>       ,<span class="string">'Figure'</span>   , <span class="keyword">...</span>
+0926    <span class="string">'HandleVisibility'</span> ,<span class="string">'on'</span> , <span class="keyword">...</span>
+0927    <span class="string">'Color'</span>      ,FigColor  , <span class="keyword">...</span>
+0928    <span class="string">'NextPlot'</span>     ,<span class="string">'add'</span>   , <span class="keyword">...</span>
+0929    <span class="string">'WindowStyle'</span>   ,Options.WindowStyle, <span class="keyword">...</span>
+0930    <span class="string">'DoubleBuffer'</span>   ,<span class="string">'on'</span>    , <span class="keyword">...</span>
+0931    <span class="string">'Resize'</span>      ,Options.Resize    <span class="keyword">...</span>
+0932    );
+0933 
+0934 figSize = get(fig,<span class="string">'Position'</span>);
+0935 
+0936 <span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
+0937 <span class="comment">%%% Set Positions %%%</span>
+0938 <span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
+0939 CommonInfo = {<span class="string">'Units'</span>  <span class="string">'pixels'</span>;
+0940    <span class="string">'FontSize'</span>      get(0,<span class="string">'FactoryUIControlFontSize'</span>);
+0941    <span class="string">'HandleVisibility'</span>  <span class="string">'callback'</span>}';
+0942 
+0943 props.edit = [CommonInfo {<span class="keyword">...</span>
+0944    <span class="string">'FontWeight'</span>   get(fig,<span class="string">'DefaultUicontrolFontWeight'</span>);
+0945    <span class="string">'Style'</span>      <span class="string">'edit'</span>;
+0946    <span class="string">'HorizontalAlignment'</span> <span class="string">'left'</span>;
+0947    <span class="string">'BackgroundColor'</span> <span class="string">'white'</span>}'];
+0948 
+0949 props.checkbox = [CommonInfo {<span class="keyword">...</span>
+0950    <span class="string">'Style'</span>      <span class="string">'checkbox'</span>;
+0951    <span class="string">'FontWeight'</span>   get(fig,<span class="string">'DefaultUicontrolFontWeight'</span>);
+0952    <span class="string">'HorizontalAlignment'</span> <span class="string">'left'</span>;
+0953    <span class="string">'BackgroundColor'</span> FigColor}'];
+0954 
+0955 props.popupmenu = [CommonInfo {<span class="keyword">...</span>
+0956    <span class="string">'FontWeight'</span>   get(fig,<span class="string">'DefaultUicontrolFontWeight'</span>);
+0957    <span class="string">'Style'</span>      <span class="string">'popupmenu'</span>;
+0958    <span class="string">'HorizontalAlignment'</span> <span class="string">'left'</span>;
+0959    <span class="string">'BackgroundColor'</span> <span class="string">'white'</span>}'];
+0960 
+0961 props.listbox = [CommonInfo {<span class="keyword">...</span>
+0962    <span class="string">'FontWeight'</span>   get(fig,<span class="string">'DefaultUicontrolFontWeight'</span>);
+0963    <span class="string">'Style'</span>      <span class="string">'listbox'</span>;
+0964    <span class="string">'HorizontalAlignment'</span> <span class="string">'left'</span>;
+0965    <span class="string">'BackgroundColor'</span> <span class="string">'white'</span>}'];
+0966 
+0967 props.slider = [CommonInfo {<span class="keyword">...</span>
+0968    <span class="string">'Style'</span>      <span class="string">'slider'</span>;
+0969    }'];
+0970 
+0971 props.uibuttongroup = [CommonInfo {<span class="keyword">...</span>
+0972    <span class="string">'FontWeight'</span>   get(fig,<span class="string">'DefaultUicontrolFontWeight'</span>);
+0973    <span class="string">'BackgroundColor'</span> FigColor;
+0974    }'];
+0975 
+0976 props.radiobutton = props.checkbox;
+0977 props.radiobutton{2,4} = <span class="string">'radiobutton'</span>;
+0978 
+0979 props.pushbutton = [CommonInfo {<span class="keyword">...</span>
+0980    <span class="string">'Style'</span>        <span class="string">'pushbutton'</span>;
+0981    <span class="string">'FontWeight'</span>     get(fig,<span class="string">'DefaultUicontrolFontWeight'</span>);
+0982    <span class="string">'HorizontalAlignment'</span> <span class="string">'center'</span>}'];
+0983 
+0984 props.togglebutton = props.pushbutton;
+0985 props.togglebutton{2,4} = <span class="string">'togglebutton'</span>;
+0986 
+0987 <span class="comment">% Add VerticalAlignment here as it is not applicable to the above.</span>
+0988 TextInfo = [CommonInfo {<span class="keyword">...</span>
+0989    <span class="string">'BackgroundColor'</span>   FigColor;
+0990    <span class="string">'HorizontalAlignment'</span> <span class="string">'left'</span>;
+0991    <span class="string">'VerticalAlignment'</span>  <span class="string">'bottom'</span>;
+0992    <span class="string">'Color'</span>        get(0,<span class="string">'FactoryUIControlForegroundColor'</span>);
+0993    <span class="string">'Interpreter'</span>     Options.Interpreter}'];
+0994 
+0995 <span class="comment">% Place the container (UIPANEL &amp; AXES) for the elements (for the ease of</span>
+0996 <span class="comment">% resizing)</span>
+0997 ax = axes(<span class="string">'Parent'</span>,fig,<span class="string">'Units'</span>,<span class="string">'pixels'</span>,<span class="string">'Visible'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+0998    <span class="string">'Position'</span>,[0 0 figSize(3:4)],<span class="string">'XLim'</span>,[0 figSize(3)],<span class="string">'YLim'</span>,[0 figSize(4)]);
+0999 
+1000 hPrompt = zeros(num,1);
+1001 hEdit = zeros(num,1);
+1002 hUnit = zeros(num,1);
+1003 Cwidth = zeros(num,1);
+1004 Cheight = zeros(num,1);
+1005 Lwidth = zeros(num,1);
+1006 Lheight = zeros(num,1);
+1007 Uwidth = zeros(num,1);
+1008 Uheight = zeros(num,1);
+1009 CLoffset = zeros(num,1);
+1010 CUoffset = zeros(num,1);
+1011 <span class="keyword">for</span> m = 1:num
+1012    Formats(m).size(autosize(m,:)) = 1; <span class="comment">% temporary width</span>
+1013    
+1014    idx = strcmp(Formats(m).style,{<span class="string">'radiobutton'</span>,<span class="string">'togglebutton'</span>});
+1015    <span class="keyword">if</span> any(idx)
+1016       <span class="comment">% create the UI Button Group object</span>
+1017       hEdit(m) = uibuttongroup(<span class="string">'Parent'</span>,fig,props.uibuttongroup{:},<span class="keyword">...</span>
+1018          <span class="string">'Position'</span>,[0 0 Formats(m).size],<span class="string">'Title'</span>,Prompt{m});
+1019       
+1020       <span class="keyword">if</span> idx(1),margin = [15 0]; <span class="comment">% radiobutton</span>
+1021       <span class="keyword">else</span> margin = [10 2]; <span class="keyword">end</span> <span class="comment">% togglebutton</span>
+1022       
+1023       num_btns = numel(Formats(m).items);
+1024       dim_btns = size(Formats(m).items);
+1025       hButtons = zeros(dim_btns);
+1026       btn_w = zeros(dim_btns);
+1027       btn_h = zeros(dim_btns);
+1028       <span class="keyword">for</span> k = 1:num_btns
+1029          [j,i] = ind2sub(dim_btns([2 1]),k);
+1030          <span class="keyword">if</span> isempty(Formats(m).items{i,j}), <span class="keyword">continue</span>; <span class="keyword">end</span> <span class="comment">% if empty string, no button at this position</span>
+1031          hButtons(i,j) = uicontrol(<span class="string">'Parent'</span>,hEdit(m),<span class="string">'Style'</span>,Formats(m).style,props.(Formats(m).style){:},<span class="keyword">...</span>
+1032             <span class="string">'String'</span>,Formats(m).items{i,j},<span class="string">'Min'</span>,0,<span class="string">'Max'</span>,1,<span class="string">'UserData'</span>,k);
+1033          pos = get(hButtons(i,j),<span class="string">'Extent'</span>);
+1034          btn_w(i,j) = pos(3);
+1035          btn_h(i,j) = pos(4);
+1036       <span class="keyword">end</span>
+1037       
+1038       set(hEdit(m),<span class="string">'UserData'</span>,hButtons);
+1039       
+1040       btn_w = btn_w + margin(1);
+1041       btn_h = btn_h + margin(2);
+1042       
+1043       col_w = max(btn_w,[],1);
+1044       row_h = max(btn_h,[],2);
+1045       
+1046       <span class="comment">% set positions of buttons</span>
+1047       kvalid = find(hButtons~=0);
+1048       <span class="keyword">for</span> k = reshape(kvalid,1,numel(kvalid))
+1049          [i,j] = ind2sub(dim_btns,k); <span class="comment">% i-col, j-row</span>
+1050          pos = [sum(col_w(1:j-1))+Options.Sep*j sum(row_h(i+1:end)) + Options.Sep*(dim_btns(1)-i+0.5) btn_w(k) btn_h(k)];
+1051          set(hButtons(i,j),<span class="string">'Position'</span>,pos);
+1052       <span class="keyword">end</span>
+1053       
+1054       Cwidth(m) = sum(col_w)+Options.Sep*(dim_btns(2)+1);
+1055       Cheight(m) = sum(row_h)+Options.Sep*(dim_btns(1)+1);
+1056       
+1057       <span class="comment">% no auto-extension</span>
+1058       autoextend(m,:) = false;
+1059    <span class="keyword">elseif</span> strcmp(Formats(m).type,<span class="string">'text'</span>) <span class="comment">% static text (only a label)</span>
+1060       <span class="comment">% create label</span>
+1061       <span class="keyword">if</span> autosize(m,1) <span class="comment">% if not autosize, wrap as needed</span>
+1062          str = Prompt{m};
+1063       <span class="keyword">else</span>
+1064          h = uicontrol(<span class="string">'Parent'</span>,fig,<span class="string">'Style'</span>,<span class="string">'text'</span>,<span class="string">'Position'</span>,[0 0 Formats(m).size]);
+1065          msg = textwrap(h,Prompt(m));
+1066          delete(h);
+1067          str = msg{1};
+1068          <span class="keyword">for</span> n = 2:length(msg)
+1069             str = sprintf(<span class="string">'%s\n%s'</span>,str,msg{n});
+1070          <span class="keyword">end</span>
+1071       <span class="keyword">end</span>
+1072       
+1073       hPrompt(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,str);
+1074       pos = get(hPrompt(m),<span class="string">'Extent'</span>);
+1075       Lwidth(m) = pos(3);
+1076       Lheight(m) = pos(4);
+1077       Cheight(m) = pos(4);
+1078       CLoffset(m) = 1;
+1079    <span class="keyword">else</span>
+1080       hEdit(m) = uicontrol(<span class="string">'Parent'</span>,fig,<span class="string">'Style'</span>,Formats(m).style,props.(Formats(m).style){:},<span class="keyword">...</span>
+1081          <span class="string">'Position'</span>,[0 0 Formats(m).size]);
+1082       
+1083       Cwidth(m) = Formats(m).size(1);
+1084       Cheight(m) = Formats(m).size(2);
+1085       
+1086       <span class="comment">% set min and max if not a numeric edit box</span>
+1087       <span class="keyword">if</span> ~strcmp(Formats(m).style,<span class="string">'edit'</span>) || ~any(strcmp(Formats(m).format,{<span class="string">'float'</span>,<span class="string">'integer'</span>,<span class="string">'date'</span>}))
+1088          set(hEdit(m),<span class="string">'Min'</span>,Formats(m).limits(1),<span class="string">'Max'</span>,Formats(m).limits(2));
+1089       <span class="keyword">end</span>
+1090       
+1091       <span class="keyword">switch</span> lower(Formats(m).style)
+1092          <span class="keyword">case</span> <span class="string">'edit'</span>
+1093             textmode = any(strcmp(Formats(m).format,{<span class="string">'text'</span>,<span class="string">'file'</span>}));
+1094             <span class="keyword">if</span> autosize(m,2) <span class="comment">% auto-height</span>
+1095                <span class="keyword">if</span> textmode
+1096                   dlim = diff(Formats(m).limits);
+1097                   <span class="keyword">if</span> (strcmp(Formats(m).format,<span class="string">'file'</span>) &amp;&amp; dlim&lt;1), dlim = 1; <span class="keyword">end</span>
+1098                   Cheight(m) = 15*dlim + 5;
+1099                <span class="keyword">else</span> <span class="comment">% numeric -&gt; force single-line</span>
+1100                   Cheight(m) = 20;
+1101                <span class="keyword">end</span>
+1102                set(hEdit(m),<span class="string">'Position'</span>,[0 0 Formats(m).size]);
+1103             <span class="keyword">end</span>
+1104             
+1105             <span class="comment">% If format is not text, reset Min &amp; Max to single-line mode</span>
+1106             <span class="keyword">if</span> ~textmode, set(hEdit(m),<span class="string">'Min'</span>,0,<span class="string">'Max'</span>,1); <span class="keyword">end</span>
+1107             
+1108             <span class="comment">% create label</span>
+1109             hPrompt(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Prompt{m});
+1110             pos = get(hPrompt(m),<span class="string">'Extent'</span>);
+1111             Lwidth(m) = pos(3); <span class="comment">% label element width</span>
+1112             Lheight(m) = pos(4); <span class="comment">% label element height</span>
+1113             
+1114             <span class="keyword">if</span> ~isempty(Unit{m})
+1115                hUnit(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Unit{m});
+1116                pos = get(hUnit(m),<span class="string">'Extent'</span>);
+1117                Uwidth(m) = pos(3)+Options.UnitsMargin; <span class="comment">% label element width</span>
+1118                Uheight(m) = pos(4); <span class="comment">% label element height</span>
+1119             <span class="keyword">end</span>
+1120             
+1121             <span class="comment">% Align label with the editbox text location</span>
+1122             <span class="comment">% editbox first-line text location varies depending on single- or multi-line mode</span>
+1123             <span class="keyword">if</span> strcmp(Formats(m).format, <span class="string">'date'</span>)
+1124                multline = 0;
+1125             <span class="keyword">else</span>
+1126                multline = textmode &amp;&amp; diff(Formats(m).limits)&gt;1;
+1127             <span class="keyword">end</span>
+1128             <span class="keyword">if</span> multline
+1129                CLoffset(m) = 3 + Cheight(m) - Lheight(m);
+1130                CUoffset(m) = 3 + Cheight(m) - Uheight(m);
+1131             <span class="keyword">else</span>
+1132                CLoffset(m) = 3 + (Cheight(m) - Lheight(m))/2;
+1133                CUoffset(m) = 3 + (Cheight(m) - Uheight(m))/2;
+1134             <span class="keyword">end</span>
+1135             
+1136             <span class="comment">% height auto-extension posible only if multiline</span>
+1137             autoextend(m,2) = autoextend(m,2) &amp;&amp; multline;
+1138             <span class="keyword">if</span> autoextend(m,1)
+1139                Cwidth(m) = Formats(m).size(1);  <span class="comment">% Reasonable minimum width for a resizable edit control (TODO?: Use a smaller value)</span>
+1140             <span class="keyword">end</span>
+1141             
+1142             <span class="keyword">if</span> strcmp(Formats(m).format,<span class="string">'file'</span>) &amp;&amp; diff(Formats(m).limits)&gt;1  <span class="comment">% Multi-file uigetfile()</span>
+1143                set(hEdit(m),<span class="string">'UserData'</span>,{<span class="string">''</span> <span class="string">''</span>});  <span class="comment">% UserData stores {path|DefaultName, filenames}</span>
+1144             <span class="keyword">elseif</span> strcmp(Formats(m).format,<span class="string">'file'</span>)  <span class="comment">% Single-file uigetfile() or uiputfile()</span>
+1145                set(hEdit(m),<span class="string">'UserData'</span>,{<span class="string">''</span>});  <span class="comment">% UserData stores {DefaultName} parameter</span>
+1146             <span class="keyword">end</span>
+1147          <span class="keyword">case</span> <span class="string">'checkbox'</span> <span class="comment">% no labels</span>
+1148             <span class="keyword">if</span> autosize(m,1) <span class="comment">% auto-width</span>
+1149                set(hEdit(m),<span class="string">'String'</span>,Prompt{m});
+1150                pos = get(hEdit(m),<span class="string">'Extent'</span>);
+1151                pos(3) = pos(3) + 15;
+1152                Cwidth(m) = pos(3);<span class="comment">%Formats(m).size(1) = pos(3);</span>
+1153                set(hEdit(m),<span class="string">'Position'</span>,pos);
+1154             <span class="keyword">end</span>
+1155             
+1156             <span class="comment">% width auto-extension possible only if width too short</span>
+1157             autoextend(m,2) = false; <span class="comment">% no height auto-extend</span>
+1158          <span class="keyword">case</span> <span class="string">'popupmenu'</span>
+1159             <span class="comment">% force the height</span>
+1160             Cheight(m) = DefaultSize.popupmenu(2);
+1161             
+1162             <span class="comment">% get the width of the widest entry</span>
+1163             <span class="keyword">if</span> autosize(m,1) <span class="comment">% auto-width</span>
+1164                <span class="keyword">for</span> itm = 1:numel(Formats(m).items)
+1165                   set(hEdit(m),<span class="string">'String'</span>,Formats(m).items{itm},<span class="string">'Value'</span>,1);
+1166                   p = get(hEdit(m),<span class="string">'Extent'</span>);
+1167                   <span class="keyword">if</span> p(3)&gt;Cwidth(m), Cwidth(m) = p(3); <span class="keyword">end</span>
+1168                <span class="keyword">end</span>
+1169                Cwidth(m) = Cwidth(m) + 19;
+1170             <span class="keyword">end</span>
+1171             
+1172             <span class="comment">% re-set position</span>
+1173             set(hEdit(m),<span class="string">'Position'</span>,[0 0 Cwidth(m) Cheight(m)]);
+1174             
+1175             <span class="comment">% set menu &amp; choose the first entry</span>
+1176             set(hEdit(m),<span class="string">'String'</span>,Formats(m).items',<span class="string">'Value'</span>,1);
+1177             
+1178             <span class="comment">% create label</span>
+1179             hPrompt(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Prompt{m});
+1180             pos = get(hPrompt(m),<span class="string">'Extent'</span>);
+1181             Lwidth(m) = pos(3); <span class="comment">% label element width</span>
+1182             Lheight(m) = pos(4); <span class="comment">% label element height</span>
+1183             
+1184             <span class="keyword">if</span> ~isempty(Unit{m})
+1185                hUnit(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Unit{m});
+1186                pos = get(hUnit(m),<span class="string">'Extent'</span>);
+1187                Uwidth(m) = pos(3)+Options.UnitsMargin; <span class="comment">% label element width</span>
+1188                Uheight(m) = pos(4); <span class="comment">% label element height</span>
+1189             <span class="keyword">end</span>
+1190             
+1191             <span class="comment">% Align label with the editbox text location</span>
+1192             <span class="comment">% editbox first-line text location varies depending on single- or multi-line mode</span>
+1193             CLoffset(m) = 1 + Cheight(m) - Lheight(m);
+1194             CUoffset(m) = 1 + Cheight(m) - Uheight(m);
+1195             
+1196             autoextend(m,:) = false;  <span class="comment">% The width is already sized to the contents and the height can't change</span>
+1197          <span class="keyword">case</span> <span class="string">'listbox'</span>
+1198             <span class="comment">% get the max extent</span>
+1199             pos = [0 0 0 0];
+1200             <span class="keyword">for</span> itm = 1:numel(Formats(m).items)
+1201                set(hEdit(m),<span class="string">'String'</span>,Formats(m).items{itm},<span class="string">'Value'</span>,1);
+1202                p = get(hEdit(m),<span class="string">'Extent'</span>);
+1203                <span class="keyword">if</span> p(3)&gt;pos(3), pos(3) = p(3); <span class="keyword">end</span>
+1204             <span class="keyword">end</span>
+1205             pos(3) = pos(3) + 19;
+1206             pos(4) = 13*numel(Formats(m).items)+2;
+1207             
+1208             <span class="comment">% Restrict the height if a maximum number of lines was specified</span>
+1209             <span class="keyword">if</span> (Formats(m).limits(1) &gt; 0)
+1210                pos(4) = min(pos(4), 13*Formats(m).limits(1)+2);
+1211             <span class="keyword">end</span>
+1212             
+1213             <span class="comment">% auto-size &amp; set autoextend</span>
+1214             <span class="keyword">if</span> autosize(m,1), Cwidth(m) = pos(3); <span class="keyword">end</span>
+1215             <span class="keyword">if</span> autosize(m,2), Cheight(m) = pos(4); <span class="keyword">end</span>
+1216             <span class="keyword">if</span> any(autosize(m,:)), set(hEdit(m),<span class="string">'Position'</span>,pos); <span class="keyword">end</span>
+1217             
+1218             <span class="comment">% set table &amp; leave it unselected</span>
+1219             <span class="keyword">if</span> diff(Formats(m).limits)&gt;1, val = [];
+1220             <span class="keyword">else</span> val = 1; <span class="keyword">end</span>
+1221             set(hEdit(m),<span class="string">'String'</span>,Formats(m).items',<span class="string">'Value'</span>,val);
+1222             
+1223             <span class="comment">% create label</span>
+1224             hPrompt(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Prompt{m});
+1225             pos = get(hPrompt(m),<span class="string">'Extent'</span>);
+1226             Lwidth(m) = pos(3); <span class="comment">% label element width</span>
+1227             Lheight(m) = pos(4); <span class="comment">% label element height</span>
+1228             
+1229             <span class="keyword">if</span> ~isempty(Unit{m})
+1230                hUnit(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Unit{m});
+1231                pos = get(hUnit(m),<span class="string">'Extent'</span>);
+1232                Uwidth(m) = pos(3)+Options.UnitsMargin; <span class="comment">% label element width</span>
+1233                Uheight(m) = pos(4); <span class="comment">% label element height</span>
+1234             <span class="keyword">end</span>
+1235             
+1236             <span class="comment">% Align label with the editbox text location</span>
+1237             <span class="comment">% editbox first-line text location varies depending on single- or multi-line mode</span>
+1238             CLoffset(m) = Cheight(m)-12;
+1239             CUoffset(m) = Cheight(m)-12;
+1240             
+1241             autoextend(m,1) = false;  <span class="comment">% The width is already sized to the contents</span>
+1242          <span class="keyword">case</span> <span class="string">'slider'</span>
+1243             <span class="comment">% set slider initial value</span>
+1244             val = mean(Formats(m).limits);
+1245             set(hEdit(m),<span class="string">'Value'</span>,val,<span class="string">'TooltipString'</span>,num2str(val),<span class="string">'Callback'</span>,@(hObj,evt)set(hObj,<span class="string">'TooltipString'</span>,num2str(get(hObj,<span class="string">'Value'</span>))));
+1246             
+1247             <span class="comment">% create label</span>
+1248             hPrompt(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Prompt{m});
+1249             pos = get(hPrompt(m),<span class="string">'Extent'</span>);
+1250             Lwidth(m) = pos(3); <span class="comment">% label element width</span>
+1251             Lheight(m) = pos(4); <span class="comment">% label element height</span>
+1252             
+1253             <span class="keyword">if</span> ~isempty(Unit{m})
+1254                hUnit(m) = text(<span class="string">'Parent'</span>,ax,TextInfo{:},<span class="string">'Position'</span>,[0,0],<span class="string">'String'</span>,Unit{m});
+1255                pos = get(hUnit(m),<span class="string">'Extent'</span>);
+1256                Uwidth(m) = pos(3)+Options.UnitsMargin; <span class="comment">% label element width</span>
+1257                Uheight(m) = pos(4); <span class="comment">% label element height</span>
+1258             <span class="keyword">end</span>
+1259             
+1260             <span class="keyword">if</span> all(autoextend(m,:))
+1261                <span class="comment">% only resizable in the direction of slider</span>
+1262                <span class="keyword">if</span> (diff(Formats(m).size) &gt;= 0)  <span class="comment">% Vertically extending slider</span>
+1263                   autoextend(m,1) = false;
+1264                <span class="keyword">else</span>  <span class="comment">% Horizontally extending slider</span>
+1265                   autoextend(m,2) = false;
+1266                <span class="keyword">end</span>
+1267             <span class="keyword">end</span>
+1268             
+1269             <span class="keyword">if</span> autoextend(m,1)  <span class="comment">% Horizontally extending slider</span>
+1270                Cwidth(m) = Formats(m).size(1);  <span class="comment">% Reasonable minimum length for a resizable slider control (TODO?: Use a smaller value)</span>
+1271             <span class="keyword">end</span>
+1272             <span class="keyword">if</span> autoextend(m,2)  <span class="comment">% Vertically extending slider</span>
+1273                Cheight(m) = Formats(m).size(1);  <span class="comment">% Reasonable minimum length for a resizable slider control (TODO?: Use a smaller value)</span>
+1274                <span class="keyword">if</span> (Cwidth(m) == Formats(m).size(1))  <span class="comment">% The user probably asked to auto-size (TODO?: Save and use actual autosize value)</span>
+1275                   Cwidth(m) = Formats(m).size(2);  <span class="comment">% Reasonable minimum breadth for a resizable slider control</span>
+1276                <span class="keyword">end</span>
+1277             <span class="keyword">end</span>
+1278             
+1279             <span class="comment">% Align the label and unit text with the control</span>
+1280             CLoffset(m) = Cheight(m) - Lheight(m) + 4;
+1281             CUoffset(m) = Cheight(m) - Uheight(m) + 4;
+1282       <span class="keyword">end</span>
+1283    <span class="keyword">end</span>
+1284 <span class="keyword">end</span>
+1285 
+1286 hBtn(1) = uicontrol(fig,props.pushbutton{:}, <span class="string">'String'</span>, Options.ButtonNames{1}, <span class="keyword">...</span>
+1287                     <span class="string">'Position'</span>, [0 0 DefaultSize.pushbutton], <span class="string">'UserData'</span>, <span class="string">'OK'</span>);
+1288 <span class="keyword">if</span> strcmpi(Options.CancelButton,<span class="string">'on'</span>)
+1289    hBtn(end+1) = uicontrol(fig,props.pushbutton{:}, <span class="string">'String'</span>, Options.ButtonNames{2}, <span class="keyword">...</span>
+1290                            <span class="string">'Position'</span>, [0 0 DefaultSize.pushbutton], <span class="string">'UserData'</span>, <span class="string">'Cancel'</span>);
+1291 <span class="keyword">end</span>
+1292 <span class="keyword">if</span> strcmpi(Options.ApplyButton,<span class="string">'on'</span>)
+1293    hBtn(end+1) = uicontrol(fig,props.pushbutton{:}, <span class="string">'String'</span>, Options.ButtonNames{3}, <span class="keyword">...</span>
+1294                            <span class="string">'Position'</span>, [0 0 DefaultSize.pushbutton], <span class="string">'UserData'</span>, <span class="string">'Apply'</span>);
+1295 <span class="keyword">end</span>
+1296 
+1297 <span class="comment">% output handle struct</span>
+1298 handles.fig = fig;
+1299 handles.labels = hPrompt';
+1300 handles.ctrl = hEdit';
+1301 handles.units = hUnit';
+1302 handles.btns = hBtn;
+1303 
+1304 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1305 
+1306 <span class="comment">% Optionally align adjacent controls in each column</span>
+1307 <span class="keyword">if</span> strcmpi(Options.AlignControls, <span class="string">'on'</span>)
+1308    <span class="keyword">for</span> n = 1 : size(map, 2)
+1309       current_map_column = map(:,n);
+1310       num_controls = length(current_map_column);
+1311       alignable = false(num_controls, 1);  <span class="comment">% Controls in this column that can be aligned</span>
+1312       
+1313       <span class="keyword">for</span> m = 1 : num_controls
+1314          control_index = current_map_column(m);
+1315          <span class="keyword">if</span> (control_index &gt; 0) &amp;&amp; ~any(strcmp(Formats(control_index).type, {<span class="string">'text'</span>, <span class="string">'check'</span>, <span class="string">'none'</span>})) <span class="keyword">...</span><span class="comment">  % Not static text, a checkbox, or a placeholder</span>
+1316                &amp;&amp; ~(strcmp(Formats(control_index).type, <span class="string">'list'</span>) &amp;&amp; any(strcmp(Formats(control_index).style, {<span class="string">'radiobutton'</span>, <span class="string">'togglebutton'</span>})))  <span class="comment">% Not a radiobutton or togglebutton</span>
+1317             alignable(m) = true;  <span class="comment">% Only controls with a label on the left are alignable</span>
+1318          <span class="keyword">end</span>
+1319       <span class="keyword">end</span>
+1320       
+1321       <span class="keyword">if</span> (n &gt; 1)
+1322          [temp, already_handled] = intersect(current_map_column, map(:,n-1)); <span class="comment">%#ok</span>
+1323          alignable(already_handled) = false;  <span class="comment">% Controls spanned from a previous column have already been handled</span>
+1324       <span class="keyword">end</span>
+1325       
+1326       <span class="comment">% Align controls in groups consisting of all adjacent alignable controls</span>
+1327       m = 1;
+1328       <span class="keyword">while</span> (m &lt;= num_controls)
+1329          <span class="keyword">while</span> (m &lt;= num_controls) &amp;&amp; ~alignable(m)  <span class="comment">% Skip until the first alignable control of the next group</span>
+1330             m = m + 1;
+1331          <span class="keyword">end</span>
+1332          group_start = m;
+1333          
+1334          <span class="keyword">while</span> (m &lt;= num_controls) &amp;&amp; alignable(m)  <span class="comment">% Skip until the last alignable control of the group</span>
+1335             m = m + 1;
+1336          <span class="keyword">end</span>
+1337          group_end = m - 1;
+1338          
+1339          alignment_group = current_map_column(group_start:group_end);
+1340          Lwidth(alignment_group) = max(Lwidth(alignment_group));  <span class="comment">% Align controls by giving them the same label width</span>
+1341       <span class="keyword">end</span>
+1342    <span class="keyword">end</span>
+1343 <span class="keyword">end</span>
+1344 
+1345 <span class="comment">% determine the minimum figure size</span>
+1346 w = Cwidth+Lwidth+Uwidth;
+1347 h = max([Cheight,Lheight,Uheight],[],2);
+1348 
+1349 <span class="comment">% distribute width &amp; height according to map</span>
+1350 width = zeros(size(map));
+1351 height = zeros(size(map));
+1352 <span class="keyword">for</span> n = 1:num
+1353    idx = find(map==n);
+1354    [i,j] = ind2sub(dim,idx);
+1355    I = unique(i);
+1356    J = unique(j);
+1357    n_row = numel(I);
+1358    n_col = numel(J);
+1359    
+1360    <span class="keyword">if</span> (n_col == 1)
+1361       width(idx) = w(n);
+1362    <span class="keyword">end</span>
+1363    <span class="keyword">if</span> (n_row == 1)
+1364       height(idx) = h(n);
+1365    <span class="keyword">end</span>
+1366 <span class="keyword">end</span>
+1367 [width, height] = <a href="#_sub16" class="code" title="subfunction [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)">distribute_spanned_controls</a>(map, width, height, w, h, [], Options.Sep);
+1368 col_w = max(width,[],1);
+1369 row_h = max(height,[],2);
+1370 
+1371 wmin_ctrls = sum(col_w) + Options.Sep*(dim(2)-1);
+1372 hmin_ctrls = sum(row_h) + Options.Sep*(dim(1)-1);
+1373 nbtns = numel(handles.btns);
+1374 btns_w = nbtns*DefaultSize.pushbutton(1) + (nbtns-1)*Options.Sep;
+1375 btns_h = DefaultSize.pushbutton(2);
+1376 
+1377 figSize(3:4) = [max(wmin_ctrls,btns_w)+2*Options.Sep hmin_ctrls+btns_h+2*Options.Sep];
+1378 
+1379 set(fig,<span class="string">'Position'</span>,figSize);
+1380 
+1381 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1382 
+1383 sinfo.minfigsize = figSize(3:4);  <span class="comment">% minimum figure size</span>
+1384 sinfo.map = map;        <span class="comment">% uicontrol map</span>
+1385 sinfo.autoextend = autoextend; <span class="comment">% auto-extend when resize (to use the full span of figure window)</span>
+1386 sinfo.w_labels = Lwidth;    <span class="comment">% width of labels</span>
+1387 sinfo.w_ctrls = Cwidth;    <span class="comment">% width of controls</span>
+1388 sinfo.w_units = Uwidth;
+1389 sinfo.h_labels = Lheight;   <span class="comment">% height of labels</span>
+1390 sinfo.h_ctrls = Cheight;    <span class="comment">% height of controls</span>
+1391 sinfo.h_units = Uheight;
+1392 sinfo.CLoffset = CLoffset;   <span class="comment">% label y offset w.r.t. control</span>
+1393 sinfo.CUoffset = CUoffset;
+1394 sinfo.w_btns = DefaultSize.pushbutton(1);
+1395 sinfo.h_btns = DefaultSize.pushbutton(2);
+1396 
+1397 <span class="keyword">end</span>
+1398 
+1399 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1400 <span class="comment">%%% CHECKPROMPT :: Check Prompt input is valid &amp; fill default values</span>
+1401 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1402 <a name="_sub12" href="#_subfunctions" class="code">function [Prompt,FieldNames,Units,err] = checkprompt(Prompt)</a>
+1403 
+1404 <span class="comment">% default configuration</span>
+1405 FieldNames = {}; <span class="comment">% answer in a cell</span>
+1406 Units = {}; <span class="comment">% no units</span>
+1407 
+1408 <span class="comment">% standard error</span>
+1409 err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'Prompt must be a cell string with up to three columns.'</span>};
+1410 
+1411 <span class="keyword">if</span> isempty(Prompt), Prompt = {<span class="string">'Input:'</span>};
+1412 <span class="keyword">elseif</span> ~iscell(Prompt), Prompt = cellstr(Prompt);
+1413 <span class="keyword">end</span>
+1414 
+1415 [nrow,ncol] = size(Prompt);
+1416 
+1417 <span class="comment">% prompt given in a row -&gt; transpose</span>
+1418 <span class="keyword">if</span> ncol&gt;3
+1419    <span class="keyword">if</span> nrow&lt;3, Prompt = Prompt'; [nrow,ncol] = size(Prompt);
+1420    <span class="keyword">else</span> <span class="keyword">return</span>; <span class="keyword">end</span>
+1421 <span class="keyword">end</span>
+1422 
+1423 <span class="comment">% struct fields defined</span>
+1424 <span class="keyword">if</span> ncol&gt;1 &amp;&amp; ~all(cellfun(<span class="string">'isempty'</span>,Prompt(:,2))), FieldNames = Prompt(:,2); <span class="keyword">end</span>
+1425 
+1426 <span class="comment">% unit labels defined</span>
+1427 <span class="keyword">if</span> ncol&gt;2, Units = Prompt(:,3);
+1428 <span class="keyword">else</span> Units = repmat({<span class="string">''</span>},nrow,1); <span class="keyword">end</span>
+1429 
+1430 <span class="comment">% return only the labels</span>
+1431 Prompt = Prompt(:,1);
+1432 
+1433 err = {}; <span class="comment">% all cleared</span>
+1434 
+1435 <span class="keyword">end</span>
+1436 
+1437 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1438 <span class="comment">%%% CHECKFORMATS :: Check Formats input is valid &amp; fill default values</span>
+1439 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1440 <a name="_sub13" href="#_subfunctions" class="code">function [Formats,err] = checkformats(Formats,NumQuest)</a>
+1441 
+1442 fields  = [{<span class="string">'type'</span> <span class="string">'style'</span> <span class="string">'items'</span> <span class="string">'format'</span> <span class="string">'limits'</span>  <span class="string">'size'</span> <span class="string">'enable'</span>};<span class="keyword">...</span>
+1443    {<span class="string">'edit'</span> <span class="string">'edit'</span>  {<span class="string">''</span>}  <span class="string">'text'</span>  [0 1]   [0 0] <span class="string">'on'</span>}]; <span class="comment">% defaults</span>
+1444 err = {};
+1445 
+1446 <span class="keyword">if</span> isempty(Formats)
+1447    Formats = repmat(struct(fields{:}),NumQuest,1);
+1448    <span class="keyword">return</span>
+1449 <span class="keyword">end</span>
+1450 
+1451 <span class="comment">% backward compatibility (NumLines)</span>
+1452 <span class="keyword">if</span> isnumeric(Formats)
+1453    [rw,cl]=size(Formats);
+1454    ok = rw==1;
+1455    <span class="keyword">if</span> ok
+1456       OneVect = ones(NumQuest,1);
+1457       <span class="keyword">if</span> cl == 2, NumLines=Formats(OneVect,:);
+1458       <span class="keyword">elseif</span> cl == 1, NumLines=Formats(OneVect);
+1459       <span class="keyword">elseif</span> cl == NumQuest, NumLines = Formats';
+1460       <span class="keyword">else</span> ok = false;
+1461       <span class="keyword">end</span>
+1462    <span class="keyword">end</span>
+1463    <span class="keyword">if</span> rw == NumQuest &amp;&amp; any(cl == [1 2]), NumLines = Formats;
+1464    <span class="keyword">elseif</span> ~ok
+1465       err = {<span class="string">'MATLAB:inputdlg:IncorrectSize'</span>, <span class="string">'NumLines size is incorrect.'</span>};
+1466       <span class="keyword">return</span>;
+1467    <span class="keyword">end</span>
+1468    
+1469    <span class="comment">% set to default edit control (column stacked)</span>
+1470    Formats = repmat(struct(fields{:}),NumQuest,1);
+1471    
+1472    <span class="comment">% set limits according to NumLines(:,1)</span>
+1473    numlines = mat2cell([zeros(NumQuest,1) NumLines(:,1)],ones(NumQuest,1),2);
+1474    [Formats.limits] = deal(numlines{:});
+1475    
+1476    <span class="comment">% sets the width to be 10*NumLines(:,2)</span>
+1477    <span class="keyword">if</span> (size(NumLines,2) == 2)
+1478       sizes = mat2cell([zeros(NumQuest,1) NumLines(:,2)],ones(NumQuest,1),2);
+1479       [Formats.size] = deal(sizes{:});
+1480    <span class="keyword">end</span>
+1481    
+1482    <span class="keyword">return</span>;
+1483 <span class="keyword">elseif</span> ischar(Formats) || iscellstr(Formats) <span class="comment">% given type</span>
+1484    <span class="keyword">if</span> ischar(Formats), Formats = cellstr(Formats); <span class="keyword">end</span>
+1485    Formats = cell2struct(Formats,<span class="string">'type'</span>,3);
+1486 <span class="keyword">elseif</span> ~isstruct(Formats)
+1487    err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS must be an array of structure.'</span>};
+1488    <span class="keyword">return</span>
+1489 <span class="keyword">end</span>
+1490 
+1491 <span class="comment">% check fields</span>
+1492 <span class="comment">% for n = 1:size(fields,2)</span>
+1493 <span class="comment">%    if ~isfield(Formats,fields{1,n})</span>
+1494 <span class="comment">%       Formats.(fields{1,n}) = [];</span>
+1495 <span class="comment">%    end</span>
+1496 <span class="comment">% end</span>
+1497 idx = find(~isfield(Formats,fields(1,:)));
+1498 <span class="keyword">for</span> n = idx <span class="comment">% if does not exist, use default</span>
+1499 <span class="comment">%    [Formats.(fields{1,n})] = deal([]);</span>
+1500    [Formats.(fields{1,n})] = deal(fields{2,n});
+1501 <span class="keyword">end</span>
+1502 
+1503 <span class="comment">% set string fields to lower case</span>
+1504 c = lower(cellfun(@char,{Formats.type},<span class="string">'UniformOutput'</span>,false));
+1505 [Formats.type] = deal(c{:});
+1506 c = lower(cellfun(@char,{Formats.style},<span class="string">'UniformOutput'</span>,false));
+1507 [Formats.style] = deal(c{:});
+1508 c = lower(cellfun(@char,{Formats.format},<span class="string">'UniformOutput'</span>,false));
+1509 [Formats.format] = deal(c{:});
+1510 
+1511 <span class="comment">% check number of entries matching NumQuest (number of PROMPT elements)</span>
+1512 <span class="keyword">if</span> sum(~strcmp(<span class="string">'none'</span>,{Formats.type})&amp;~strcmp(<span class="string">''</span>,{Formats.type}))~=NumQuest
+1513    err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS must have matching number of elements to PROMPT (exluding ''none'' type).'</span>};
+1514    <span class="keyword">return</span>
+1515 <span class="keyword">end</span>
+1516 
+1517 <span class="comment">% check type field contents</span>
+1518 <span class="keyword">if</span> ~isempty(setdiff({Formats.type},{<span class="string">'check'</span>,<span class="string">'edit'</span>,<span class="string">'list'</span>,<span class="string">'range'</span>,<span class="string">'text'</span>,<span class="string">'none'</span>,<span class="string">''</span>}))
+1519    err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.type must be one of {''check'',''edit'',''list'',''range'',''none''}.'</span>};
+1520    <span class="keyword">return</span>
+1521 <span class="keyword">end</span>
+1522 
+1523 <span class="comment">% check format</span>
+1524 <span class="keyword">if</span> ~isempty(setdiff({Formats.format},{<span class="string">'text'</span>,<span class="string">'date'</span>,<span class="string">'float'</span>,<span class="string">'integer'</span>,<span class="string">'file'</span>,<span class="string">'dir'</span>,<span class="string">''</span>}))
+1525    err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.format must be one of {''text'', ''float'', or ''integer''}.'</span>};
+1526    <span class="keyword">return</span>
+1527 <span class="keyword">end</span>
+1528 
+1529 num = numel(Formats);
+1530 <span class="keyword">for</span> n = 1:num
+1531    <span class="keyword">if</span> isempty(Formats(n).type), Formats(n).type = <span class="string">'none'</span>; <span class="keyword">end</span>
+1532    
+1533    <span class="keyword">switch</span> Formats(n).type
+1534       <span class="keyword">case</span> <span class="string">'none'</span>
+1535          <span class="keyword">if</span> isempty(Formats(n).limits), Formats(n).limits = [0 0]; <span class="keyword">end</span>
+1536       <span class="keyword">case</span> <span class="string">'text'</span>
+1537          <span class="keyword">if</span> isempty(Formats(n).style)
+1538             Formats(n).style = <span class="string">'text'</span>;
+1539          <span class="keyword">elseif</span> ~strcmp(Formats(n).style,<span class="string">'text'</span>);
+1540             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.style for ''text'' type must be ''text''.'</span>};
+1541             <span class="keyword">return</span>
+1542          <span class="keyword">end</span>
+1543       <span class="keyword">case</span> <span class="string">'check'</span>
+1544          <span class="comment">% check style</span>
+1545          <span class="keyword">if</span> isempty(Formats(n).style)
+1546             Formats(n).style = <span class="string">'checkbox'</span>;
+1547          <span class="keyword">elseif</span> ~strcmp(Formats(n).style,<span class="string">'checkbox'</span>)
+1548             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.style for ''check'' type must be ''checkbox''.'</span>};
+1549             <span class="keyword">return</span>
+1550          <span class="keyword">end</span>
+1551          
+1552          <span class="comment">% check format</span>
+1553          <span class="keyword">if</span> isempty(Formats(n).format)
+1554             Formats(n).format = <span class="string">'integer'</span>;
+1555          <span class="keyword">elseif</span> any(strcmp(Formats(n).format,{<span class="string">'text'</span>,<span class="string">'float'</span>}))
+1556             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.format for ''check'' type must be ''integer''.'</span>};
+1557             <span class="keyword">return</span>
+1558          <span class="keyword">end</span>
+1559       <span class="keyword">case</span> <span class="string">'edit'</span>
+1560          <span class="comment">% check style</span>
+1561          <span class="keyword">if</span> isempty(Formats(n).style)
+1562             Formats(n).style = <span class="string">'edit'</span>;
+1563          <span class="keyword">elseif</span> ~strcmp(Formats(n).style,<span class="string">'edit'</span>)
+1564             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.style for ''edit'' type must be ''edit''.'</span>};
+1565             <span class="keyword">return</span>
+1566          <span class="keyword">end</span>
+1567          
+1568          <span class="comment">% check format</span>
+1569          <span class="keyword">if</span> isempty(Formats(n).format)
+1570             Formats(n).format = <span class="string">'text'</span>;
+1571          <span class="keyword">elseif</span> strcmp(Formats(n).format,<span class="string">'file'</span>) &amp;&amp; isempty(Formats(n).items)
+1572             Formats(n).items = {<span class="string">'*.*'</span> <span class="string">'All Files'</span>};
+1573          <span class="keyword">end</span>
+1574       <span class="keyword">case</span> <span class="string">'list'</span>
+1575          <span class="comment">% check style</span>
+1576          <span class="keyword">if</span> isempty(Formats(n).style)
+1577             Formats(n).style = <span class="string">'popupmenu'</span>;
+1578          <span class="keyword">elseif</span> ~any(strcmp(Formats(n).style,{<span class="string">'listbox'</span>,<span class="string">'popupmenu'</span>,<span class="string">'radiobutton'</span>,<span class="string">'togglebutton'</span>}))
+1579             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.style for ''list'' type must be either ''listbox'', ''popupmenu'', ''radiobutton'', or ''togglebutton''.'</span>};
+1580             <span class="keyword">return</span>
+1581          <span class="keyword">end</span>
+1582          
+1583          <span class="comment">% check items</span>
+1584          <span class="keyword">if</span> isempty(Formats(n).items)
+1585             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.items must contain strings for the ''list'' type.'</span>};
+1586             <span class="keyword">return</span>
+1587          <span class="keyword">end</span>
+1588          <span class="keyword">if</span> ~iscell(Formats(n).items)
+1589             <span class="keyword">if</span> ischar(Formats(n).items)
+1590                Formats(n).items = cellstr(Formats(n).items);
+1591             <span class="keyword">elseif</span> isnumeric(Formats(n).items)
+1592                Formats(n).items = cellfun(@num2str,num2cell(Formats(n).items),<span class="string">'UniformOutput'</span>,false);
+1593             <span class="keyword">else</span>
+1594                err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.items must be either a cell of strings or of numbers.'</span>};
+1595                <span class="keyword">return</span>
+1596             <span class="keyword">end</span>
+1597          <span class="keyword">end</span>
+1598          
+1599          <span class="comment">% check format</span>
+1600          <span class="keyword">if</span> isempty(Formats(n).format)
+1601             Formats(n).format = <span class="string">'integer'</span>;
+1602          <span class="keyword">elseif</span> any(strcmp(Formats(n).format,{<span class="string">'text'</span>,<span class="string">'float'</span>}))
+1603             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.format must be ''integer'' for the ''list'' type.'</span>};
+1604             <span class="keyword">return</span>
+1605          <span class="keyword">end</span>
+1606       <span class="keyword">case</span> <span class="string">'range'</span>
+1607          <span class="comment">% check style</span>
+1608          <span class="keyword">if</span> isempty(Formats(n).style)
+1609             Formats(n).style = <span class="string">'slider'</span>;
+1610          <span class="keyword">elseif</span> ~strcmp(Formats(n).style,<span class="string">'slider'</span>)
+1611             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.style for ''range'' type must be ''slider''.'</span>};
+1612             <span class="keyword">return</span>
+1613          <span class="keyword">end</span>
+1614          
+1615          <span class="keyword">if</span> isempty(Formats(n).format)
+1616             Formats(n).format = <span class="string">'float'</span>;
+1617          <span class="keyword">elseif</span> ~strcmp(Formats(n).format,<span class="string">'float'</span>)
+1618             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.format for ''range'' type must be ''float''.'</span>};
+1619             <span class="keyword">return</span>
+1620          <span class="keyword">end</span>
+1621    <span class="keyword">end</span>
+1622    
+1623    <span class="comment">% check limits</span>
+1624    <span class="keyword">if</span> isempty(Formats(n).limits)
+1625       <span class="keyword">if</span> strcmp(Formats(n).style,<span class="string">'edit'</span>) &amp;&amp; any(strcmp(Formats(n).format,{<span class="string">'integer'</span>,<span class="string">'float'</span>}))
+1626          Formats(n).limits = [-inf inf]; <span class="comment">% default for numeric edit box</span>
+1627       <span class="keyword">elseif</span> strcmp(Formats(n).style,<span class="string">'edit'</span>) &amp;&amp; any(strcmp(Formats(n).format,{<span class="string">'date'</span>}))
+1628          Formats(n).limits = 0; <span class="comment">% default to 'dd-mmm-yyyy HH:MM:SS'</span>
+1629       <span class="keyword">else</span>
+1630          Formats(n).limits = [0 1]; <span class="comment">% default for all other controls</span>
+1631       <span class="keyword">end</span>
+1632    <span class="keyword">else</span>
+1633       <span class="keyword">if</span> strcmp(Formats(n).type,<span class="string">'edit'</span>) &amp;&amp; any(strcmp(Formats(n).format,{<span class="string">'date'</span>}))
+1634          <span class="keyword">if</span> ischar(Formats(n).limits) &amp;&amp; ~isempty(Formats(n).limits) &amp;&amp; (size(Formats(n).limits, 1) == 1)
+1635             <span class="keyword">try</span>
+1636                datestr(1, Formats(n).limits);  <span class="comment">% Try forming a string with the given free-form format string</span>
+1637             <span class="keyword">catch</span>  <span class="comment">%#ok</span>
+1638                err = {<span class="string">'inputsdlg:InvalidInput'</span>, <span class="string">'Invalid free-form format string in FORMATS.limits for ''date'' control.'</span>};
+1639                <span class="keyword">return</span>;
+1640             <span class="keyword">end</span>
+1641          <span class="keyword">elseif</span> ~isnumeric(Formats(n).limits) || numel(Formats(n).limits)~=1 || isnan(Formats(n).limits)<span class="keyword">...</span>
+1642                || ~any(Formats(n).limits==[0 1 2 6 13 14 15 16 23])
+1643             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.limits for ''date'' format must be one of 0,1,2,6,13,14,15,16,23.'</span>};
+1644             <span class="keyword">return</span>;
+1645          <span class="keyword">end</span>
+1646       <span class="keyword">else</span>
+1647          <span class="keyword">if</span> strcmp(Formats(n).type, <span class="string">'edit'</span>) &amp;&amp; strcmp(Formats(n).format, <span class="string">'integer'</span>)
+1648             Formats(n).limits(1) = ceil(Formats(n).limits(1));   <span class="comment">% Round any floating point limits</span>
+1649             Formats(n).limits(2) = floor(Formats(n).limits(2));  <span class="comment">% to the nearest acceptable integers</span>
+1650          <span class="keyword">end</span>
+1651          <span class="keyword">if</span> ~isnumeric(Formats(n).limits) || ~any(numel(Formats(n).limits)==[1 2]) || any(isnan(Formats(n).limits)) <span class="keyword">...</span><span class="comment"> % 2-element numeric vector and cannot be NaN</span>
+1652                || (~(strcmp(Formats(n).type,<span class="string">'check'</span>)||(strcmp(Formats(n).type,<span class="string">'edit'</span>)&amp;&amp;any(strcmp(Formats(n).format,{<span class="string">'file'</span>,<span class="string">'integer'</span>,<span class="string">'float'</span>})))||strcmp(Formats(n).type,<span class="string">'none'</span>)) &amp;&amp; Formats(n).limits(1)&gt;=Formats(n).limits(2)) <span class="keyword">...</span>
+1653                <span class="keyword">...</span><span class="comment"> % if not check, edit::file/integer/float, or none, has to be increasing</span>
+1654                || (strcmp(Formats(n).type, <span class="string">'edit'</span>) &amp;&amp; any(strcmp(Formats(n).format, {<span class="string">'integer'</span>, <span class="string">'float'</span>})) &amp;&amp; (Formats(n).limits(1) &gt; Formats(n).limits(2))) <span class="keyword">...</span>
+1655                <span class="keyword">...</span><span class="comment"> % if edit::integer/float, has to be equal or increasing</span>
+1656                || (~(strcmp(Formats(n).type,<span class="string">'edit'</span>) &amp;&amp; any(strcmp(Formats(n).format,{<span class="string">'float'</span>,<span class="string">'integer'</span>}))) &amp;&amp; any(isinf(Formats(n).limits))) <span class="comment">% if not edit::float/integer, has to be finite</span>
+1657             
+1658             err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.limits must be increasing and non-NaN.'</span>};
+1659             <span class="keyword">return</span>
+1660          <span class="keyword">end</span>
+1661          <span class="keyword">if</span> numel(Formats(n).limits)==1, Formats(n).limits(2) = 0; <span class="keyword">end</span>
+1662       <span class="keyword">end</span>
+1663    <span class="keyword">end</span>
+1664    
+1665    <span class="comment">% check size</span>
+1666    <span class="keyword">if</span> isempty(Formats(n).size)
+1667       Formats(n).size = [0 0]; <span class="comment">% default to auto-size</span>
+1668    <span class="keyword">else</span>
+1669       <span class="keyword">if</span> ~isnumeric(Formats(n).size) || ~any(numel(Formats(n).size)==[1 2]) || any(isnan(Formats(n).size))
+1670          err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.size must be non-NaN.'</span>};
+1671          <span class="keyword">return</span>
+1672       <span class="keyword">end</span>
+1673       <span class="keyword">if</span> numel(Formats(n).size)==1
+1674          Formats(n).size(2) = 0;
+1675       <span class="keyword">end</span>
+1676    <span class="keyword">end</span>
+1677    
+1678    <span class="comment">% check enable</span>
+1679    <span class="keyword">if</span> isempty(Formats(n).enable)
+1680       Formats(n).enable = fields{2,7};
+1681    <span class="keyword">elseif</span> ~any(strcmpi(Formats(n).enable,{<span class="string">'on'</span>,<span class="string">'inactive'</span>,<span class="string">'off'</span>}))
+1682          err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'FORMATS.enable must be one of {''on'',''inactive'',''off''}.'</span>};
+1683          <span class="keyword">return</span>;
+1684    <span class="keyword">end</span>
+1685 <span class="keyword">end</span>
+1686 
+1687 <span class="keyword">end</span>
+1688 
+1689 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1690 <span class="comment">%%% CHECKDEFAULTS :: Check the specified default values are compatible</span>
+1691 <span class="comment">%%% with Formats and if one not given fill in an initial value</span>
+1692 <a name="_sub14" href="#_subfunctions" class="code">function [DefAns,DefStr,err] = checkdefaults(DefAns,Formats,FieldNames)</a>
+1693 
+1694 DefStr = struct([]); <span class="comment">% struct not used</span>
+1695 
+1696 <span class="comment">% trim Formats to only include relevant entries (non-'none' types)</span>
+1697 Formats = Formats'; <span class="comment">% go through row first</span>
+1698 Formats = Formats(~strcmp(<span class="string">'none'</span>,{Formats.type}));
+1699 len = numel(Formats);
+1700 
+1701 <span class="keyword">if</span> isempty(DefAns) <span class="comment">% if DefAns not given</span>
+1702    DefAns = cell(len,1); <span class="comment">% will set DefAns to default values</span>
+1703 <span class="keyword">elseif</span> isstruct(DefAns)
+1704    <span class="keyword">if</span> isempty(FieldNames) <span class="comment">% struct return</span>
+1705       err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'Default answer given in a structure but the prompts do not have associated answer field names in the second column.'</span>};
+1706       <span class="keyword">return</span>;
+1707    <span class="keyword">end</span>
+1708    <span class="keyword">if</span> ~all(isfield(DefAns,FieldNames)|cellfun(<span class="string">'isempty'</span>,FieldNames))
+1709       err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'Default answer structure is missing at least one answer field.'</span>};
+1710       <span class="keyword">return</span>;
+1711    <span class="keyword">end</span>
+1712    DefStr = DefAns;
+1713    DefAns = cell(len,1);
+1714    <span class="keyword">for</span> k = 1:len
+1715       <span class="keyword">if</span> ~isempty(FieldNames{k}), DefAns{k} = DefStr.(FieldNames{k}); <span class="keyword">end</span>
+1716    <span class="keyword">end</span>
+1717 <span class="keyword">elseif</span> ~iscell(DefAns)
+1718    err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'Default answer must be given in a cell array or a structure.'</span>};
+1719    <span class="keyword">return</span>;
+1720 <span class="keyword">elseif</span> length(DefAns)~=len
+1721    err = {<span class="string">'inputsdlg:InvalidINput'</span>,<span class="string">'Default answer cell dimension disagrees with the number of prompt'</span>};
+1722    <span class="keyword">return</span>;
+1723 <span class="keyword">end</span>
+1724 
+1725 err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">'Default value is not consistent with Formats.'</span>};
+1726 
+1727 <span class="comment">% go through each default values</span>
+1728 <span class="keyword">for</span> k = 1:len
+1729    <span class="keyword">if</span> isempty(DefAns{k}) <span class="comment">% set non-empty default values</span>
+1730       <span class="keyword">switch</span> Formats(k).type
+1731          <span class="keyword">case</span> <span class="string">'check'</span> <span class="comment">% off</span>
+1732             DefAns{k} = Formats(k).limits(1);
+1733          <span class="keyword">case</span> <span class="string">'edit'</span>
+1734             <span class="keyword">switch</span> Formats(k).format
+1735                <span class="keyword">case</span> {<span class="string">'text'</span>,<span class="string">'file'</span>,<span class="string">'dir'</span>,<span class="string">'date'</span>}
+1736                   DefAns{k} = <span class="string">''</span>; <span class="comment">% change to empty string</span>
+1737                <span class="keyword">case</span> {<span class="string">'float'</span>,<span class="string">'integer'</span>}
+1738                   liminf = isinf(Formats(k).limits);
+1739                   <span class="keyword">if</span> all(liminf) <span class="comment">% both limits inf</span>
+1740                      DefAns{k} = 0;
+1741                   <span class="keyword">elseif</span> any(liminf) <span class="comment">% 1 limit inf</span>
+1742                      DefAns{k} = Formats(k).limits(~liminf);
+1743                   <span class="keyword">else</span>
+1744                      DefAns{k} = round(mean(Formats(k).limits));
+1745                   <span class="keyword">end</span>
+1746             <span class="keyword">end</span>
+1747          <span class="keyword">case</span> <span class="string">'list'</span> <span class="comment">% first item</span>
+1748             DefAns{k} = 1;
+1749          <span class="keyword">case</span> <span class="string">'range'</span> <span class="comment">% middle value</span>
+1750             DefAns{k} = mean(Formats(k).limits);
+1751       <span class="keyword">end</span>
+1752    <span class="keyword">else</span> <span class="comment">% check given values</span>
+1753       msel = strcmp(Formats(k).style,<span class="string">'listbox'</span>) &amp;&amp; diff(Formats(k).limits)&gt;1;
+1754       <span class="keyword">switch</span> Formats(k).format
+1755          <span class="keyword">case</span> <span class="string">'text'</span>
+1756             <span class="keyword">if</span> ~(isempty(DefAns{k}) || ischar(DefAns{k})), <span class="keyword">return</span>; <span class="keyword">end</span>
+1757          <span class="keyword">case</span> <span class="string">'date'</span>
+1758             <span class="keyword">try</span>
+1759                num = datenum(DefAns{k});
+1760             <span class="keyword">catch</span> <span class="comment">%#ok</span>
+1761                err{2} = <span class="string">'Invalid default date.'</span>;
+1762                <span class="keyword">return</span>;
+1763             <span class="keyword">end</span>
+1764             DefAns{k} = datestr(num, Formats(k).limits);
+1765          <span class="keyword">case</span> <span class="string">'float'</span>
+1766             <span class="keyword">if</span> ~isfloat(DefAns{k}) || numel(DefAns{k})~=1, <span class="keyword">return</span>; <span class="keyword">end</span>
+1767          <span class="keyword">case</span> <span class="string">'integer'</span> <span class="comment">% can be multi-select if type=list</span>
+1768             <span class="keyword">if</span> ~islogical(DefAns{k}) <span class="keyword">...</span>
+1769                   &amp;&amp; (~isnumeric(DefAns{k}) || any(DefAns{k}~=floor(DefAns{k})) || (~msel &amp;&amp; numel(DefAns{k})~=1))
+1770                <span class="keyword">return</span>;
+1771             <span class="keyword">end</span>
+1772          <span class="keyword">case</span> <span class="string">'file'</span>
+1773             dlim = diff(Formats(k).limits);
+1774             <span class="keyword">if</span> ~isempty(DefAns{k}) &amp;&amp; dlim&gt;=0 <span class="comment">% for uigetfile</span>
+1775                <span class="keyword">if</span> dlim&lt;=1 <span class="comment">% single-file</span>
+1776                   <span class="keyword">if</span> ~ischar(DefAns{k})
+1777                      err{2} = <span class="string">'Default file parameter must be stored in a character string.'</span>;
+1778                      <span class="keyword">return</span>;
+1779                   <span class="keyword">end</span>
+1780                   files = DefAns(k);
+1781                <span class="keyword">else</span> <span class="comment">%dlim&gt;1 % multiple-files</span>
+1782                   <span class="keyword">if</span> ischar(DefAns{k}) &amp;&amp; (size(DefAns{k}, 1) == 1)
+1783                      files = DefAns(k);
+1784                   <span class="keyword">elseif</span> iscellstr(DefAns{k})
+1785                      files = DefAns{k};
+1786                   <span class="keyword">else</span>
+1787                      err{2} = <span class="string">'Default file parameter(s) must be stored in a character string or cellstring.'</span>;
+1788                      <span class="keyword">return</span>;
+1789                   <span class="keyword">end</span>
+1790                <span class="keyword">end</span>
+1791                <span class="keyword">if</span> (length(files) &gt; 1)  <span class="comment">% More than one file argument</span>
+1792                   file_path = fileparts(files{1});
+1793                   <span class="keyword">if</span> isempty(file_path)
+1794                      err{2} = <span class="string">'Default file names must include the complete path.'</span>;
+1795                      <span class="keyword">return</span>;
+1796                   <span class="keyword">end</span>
+1797                   <span class="keyword">for</span> n = 1:length(files)
+1798                      <span class="keyword">if</span> ~isequal(file_path, fileparts(files{n}))
+1799                         err{2} = <span class="string">'Default files must be in the same directory.'</span>;
+1800                         <span class="keyword">return</span>;
+1801                      <span class="keyword">end</span>
+1802                      d = dir(files{n});
+1803                      <span class="keyword">if</span> ~isempty(files{n}) &amp;&amp; length(d)~=1
+1804                         err{2} = <span class="string">'Default file name does not resolve to a unique file.'</span>;
+1805                         <span class="keyword">return</span>;
+1806                      <span class="keyword">end</span>
+1807                   <span class="keyword">end</span>
+1808                <span class="keyword">end</span>
+1809                <span class="comment">% A single file argument will later be treated as a DefaultName if it doesn't resolve to a unique file</span>
+1810             <span class="keyword">end</span>
+1811          <span class="keyword">case</span> <span class="string">'dir'</span>
+1812             <span class="keyword">if</span> isempty(DefAns{k}) || ~isdir(DefAns{k})
+1813                err{2} = <span class="string">'Default directory does not exist.'</span>;
+1814                <span class="keyword">return</span>;
+1815             <span class="keyword">end</span>
+1816       <span class="keyword">end</span>
+1817       
+1818       <span class="keyword">switch</span> Formats(k).type
+1819          <span class="keyword">case</span> <span class="string">'check'</span> <span class="comment">% must be one of the values in limits</span>
+1820             <span class="keyword">if</span> all(DefAns{k} ~= Formats(k).limits), <span class="keyword">return</span>; <span class="keyword">end</span>
+1821          <span class="keyword">case</span> <span class="string">'edit'</span> <span class="comment">% if numeric, must be within the limits</span>
+1822             <span class="keyword">if</span> any(strcmp(Formats(k).format,{<span class="string">'float'</span>,<span class="string">'integer'</span>})) <span class="keyword">...</span>
+1823                   &amp;&amp; (DefAns{k}&lt;Formats(k).limits(1) || DefAns{k}&gt;Formats(k).limits(2))
+1824                <span class="keyword">return</span>;
+1825             <span class="keyword">end</span>
+1826             
+1827          <span class="keyword">case</span> <span class="string">'list'</span> <span class="comment">% has to be valid index to the list</span>
+1828             <span class="keyword">if</span> any(DefAns{k}&lt;1) || any(DefAns{k}&gt;numel(Formats(k).items)), <span class="keyword">return</span>; <span class="keyword">end</span>
+1829             
+1830          <span class="keyword">case</span> <span class="string">'range'</span> <span class="comment">% has to be within the limits</span>
+1831             <span class="keyword">if</span> DefAns{k}&lt;Formats(k).limits(1) || DefAns{k}&gt;Formats(k).limits(2)
+1832                <span class="keyword">return</span>;
+1833             <span class="keyword">end</span>
+1834       <span class="keyword">end</span>
+1835    <span class="keyword">end</span>
+1836 <span class="keyword">end</span>
+1837 
+1838 <span class="comment">% also initialize DefStr if FieldNames given</span>
+1839 <span class="keyword">if</span> isempty(DefStr) &amp;&amp; ~isempty(FieldNames)
+1840    idx = ~cellfun(<span class="string">'isempty'</span>,FieldNames);
+1841    StructArgs = [FieldNames(idx) DefAns(idx)]';
+1842    DefStr = struct(StructArgs{:});
+1843 <span class="keyword">end</span>
+1844 
+1845 err = {}; <span class="comment">% all good</span>
+1846 <span class="keyword">end</span>
+1847 
+1848 <a name="_sub15" href="#_subfunctions" class="code">function [Options,err] = checkoptions(UserOptions)</a>
+1849 
+1850 err = {<span class="string">'inputsdlg:InvalidInput'</span>,<span class="string">''</span>};
+1851 
+1852 Fields = {<span class="string">'Resize'</span>,        <span class="string">'off'</span>
+1853           <span class="string">'WindowStyle'</span>,   <span class="string">'normal'</span>
+1854           <span class="string">'Interpreter'</span>,   <span class="string">'tex'</span>
+1855           <span class="string">'CancelButton'</span>,  <span class="string">'on'</span>
+1856           <span class="string">'ApplyButton'</span>,   <span class="string">'off'</span>
+1857           <span class="string">'ButtonNames'</span>,   {{<span class="string">'OK'</span>,<span class="string">'Cancel'</span>,<span class="string">'Apply'</span>}}
+1858           <span class="string">'Sep'</span>,           10
+1859           <span class="string">'AlignControls'</span>, <span class="string">'off'</span>
+1860           <span class="string">'UnitsMargin'</span>,    5}.';
+1861 
+1862 Options = struct(Fields{:});
+1863 
+1864 <span class="keyword">if</span> isempty(UserOptions) <span class="comment">% no option specified, use default</span>
+1865    err = {};
+1866    <span class="keyword">return</span>;
+1867 <span class="keyword">elseif</span> numel(UserOptions)~=1
+1868    err{2} = <span class="string">'Options struct must be a scalar.'</span>;
+1869    <span class="keyword">return</span>;
+1870 <span class="keyword">end</span>
+1871 
+1872 <span class="comment">% check if User Resize Option is given as on/off string</span>
+1873 <span class="keyword">if</span> ischar(UserOptions) &amp;&amp; strcmpi(UserOptions,{<span class="string">'on'</span>,<span class="string">'off'</span>})
+1874    UserOptions.Resize = UserOptions;
+1875 <span class="keyword">elseif</span> ~isstruct(UserOptions)
+1876    err{2} = <span class="string">'Options must be ''on'', ''off'', or a struct.'</span>;
+1877    <span class="keyword">return</span>;
+1878 <span class="keyword">end</span>
+1879 
+1880 <span class="comment">% check UserOptions struct &amp; update Options fields</span>
+1881 <span class="keyword">for</span> fname_cstr = fieldnames(UserOptions)' <span class="comment">% for each user option field</span>
+1882    
+1883    fname = char(fname_cstr); <span class="comment">% use plain char string (not cellstr)</span>
+1884    <span class="keyword">if</span> ischar(UserOptions.(fname)), UserOptions.(fname)=cellstr(UserOptions.(fname)); <span class="keyword">end</span>
+1885    
+1886    <span class="comment">% if field not filled, use default value</span>
+1887    <span class="keyword">if</span> isempty(UserOptions.(fname)), <span class="keyword">continue</span>; <span class="keyword">end</span>
+1888    
+1889    <span class="keyword">switch</span> lower(fname)
+1890       <span class="keyword">case</span> <span class="string">'resize'</span>
+1891          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~any(strcmpi(UserOptions.(fname),{<span class="string">'on'</span>,<span class="string">'off'</span>}))
+1892             err{2} = <span class="string">'Resize option must be ''on'' or ''off''.'</span>;
+1893             <span class="keyword">return</span>;
+1894          <span class="keyword">end</span>
+1895          Options.Resize = char(UserOptions.(fname));
+1896       <span class="keyword">case</span> <span class="string">'windowstyle'</span>
+1897          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~any(strcmpi(UserOptions.(fname),{<span class="string">'normal'</span>,<span class="string">'modal'</span>,<span class="string">'docked'</span>}))
+1898             err{2} = <span class="string">'WindowStyle option must be ''normal'' or ''modal''.'</span>;
+1899             <span class="keyword">return</span>;
+1900          <span class="keyword">end</span>
+1901          Options.WindowStyle = char(UserOptions.(fname));
+1902       <span class="keyword">case</span> <span class="string">'interpreter'</span>
+1903          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~any(strcmpi(UserOptions.(fname),{<span class="string">'latex'</span>,<span class="string">'tex'</span>,<span class="string">'none'</span>}))
+1904             err{2} = <span class="string">'Interpreter option must be ''latex'', ''tex'', or ''none''.'</span>;
+1905             <span class="keyword">return</span>;
+1906          <span class="keyword">end</span>
+1907          Options.Interpreter = char(UserOptions.(fname));
+1908       <span class="keyword">case</span> <span class="string">'cancelbutton'</span>
+1909          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~any(strcmpi(UserOptions.(fname),{<span class="string">'on'</span>,<span class="string">'off'</span>}))
+1910             err{2} = <span class="string">'CancelButton option must be ''on'' or ''off''.'</span>;
+1911             <span class="keyword">return</span>;
+1912          <span class="keyword">end</span>
+1913          Options.CancelButton = char(UserOptions.(fname));
+1914       <span class="keyword">case</span> <span class="string">'applybutton'</span>
+1915          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~any(strcmpi(UserOptions.(fname),{<span class="string">'on'</span>,<span class="string">'off'</span>}))
+1916             err{2} = <span class="string">'ApplyButton option must be ''on'' or ''off''.'</span>;
+1917             <span class="keyword">return</span>;
+1918          <span class="keyword">end</span>
+1919          Options.ApplyButton = char(UserOptions.(fname));
+1920       <span class="keyword">case</span> <span class="string">'buttonnames'</span>
+1921          <span class="keyword">if</span> ~iscellstr(UserOptions.(fname))
+1922             err{2} = <span class="string">'ButtonNames option must be of cellstr or char type.'</span>;
+1923             <span class="keyword">return</span>;
+1924          <span class="keyword">end</span>
+1925          
+1926          <span class="comment">% if not all 3 button names are given, use default for unspecified</span>
+1927          N = numel(UserOptions.(fname));
+1928          <span class="keyword">if</span> (N&gt;3)
+1929             err{2} = <span class="string">'ButtonNames option takes up to 3 button names.'</span>;
+1930             <span class="keyword">return</span>;
+1931          <span class="keyword">end</span>
+1932          Options.ButtonNames(1:N) = UserOptions.(fname);
+1933       <span class="keyword">case</span> <span class="string">'sep'</span>
+1934          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~isnumeric(UserOptions.(fname)) || UserOptions.(fname)&lt;0
+1935             err{2} = <span class="string">'Sep option must be non-negative scalar value.'</span>;
+1936             <span class="keyword">return</span>;
+1937          <span class="keyword">end</span>
+1938          Options.Sep = UserOptions.(fname);
+1939       <span class="keyword">case</span> <span class="string">'aligncontrols'</span>
+1940          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~any(strcmpi(UserOptions.(fname),{<span class="string">'on'</span>,<span class="string">'off'</span>}))
+1941             err{2} = <span class="string">'AlignControls option must be ''on'' or ''off''.'</span>;
+1942             <span class="keyword">return</span>;
+1943          <span class="keyword">end</span>
+1944          Options.AlignControls = char(UserOptions.(fname));
+1945       <span class="keyword">case</span> <span class="string">'unitsmargin'</span>
+1946          <span class="keyword">if</span> numel(UserOptions.(fname))~=1 || ~isnumeric(UserOptions.(fname)) || UserOptions.(fname)&lt;0
+1947             err{2} = <span class="string">'UnitsMargin option must be non-negative scalar value.'</span>;
+1948             <span class="keyword">return</span>;
+1949          <span class="keyword">end</span>
+1950          Options.UnitsMargin = UserOptions.(fname);
+1951       <span class="keyword">otherwise</span>
+1952          warning(<span class="string">'inputsdlg:InvalidOption'</span>,<span class="string">'%s is not a valid option name.'</span>,fname);
+1953    <span class="keyword">end</span>
+1954 <span class="keyword">end</span>
+1955 
+1956 err = {}; <span class="comment">% all cleared</span>
+1957 <span class="keyword">end</span>
+1958 
+1959 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1960 <span class="comment">% DISTRIBUTE_SPANNED_CONTROLS :: Distribute the width/height of controls that</span>
+1961 <span class="comment">% span multiple columns/rows in a manner that minimizes the creation of</span>
+1962 <span class="comment">% excess blank space and distributes it evenly among columns/rows.</span>
+1963 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1964 <a name="_sub16" href="#_subfunctions" class="code">function [map_widths, map_heights] = distribute_spanned_controls(map, map_widths, map_heights, control_widths, control_heights, autoextend, margin)</a>
+1965 
+1966 num_controls = max(map(:));
+1967 
+1968 <span class="keyword">if</span> ~exist(<span class="string">'map_widths'</span>, <span class="string">'var'</span>) || isempty(map_widths) || ~exist(<span class="string">'control_widths'</span>, <span class="string">'var'</span>) || isempty(control_widths)
+1969    map_widths = zeros(size(map));
+1970    control_widths = zeros(num_controls, 1);
+1971 <span class="keyword">end</span>
+1972 <span class="keyword">if</span> ~exist(<span class="string">'map_heights'</span>, <span class="string">'var'</span>) || isempty(map_heights) || ~exist(<span class="string">'control_heights'</span>, <span class="string">'var'</span>) || isempty(control_heights)
+1973    map_heights = zeros(size(map));
+1974    control_heights = zeros(num_controls, 1);
+1975 <span class="keyword">end</span>
+1976 <span class="keyword">if</span> ~exist(<span class="string">'autoextend'</span>, <span class="string">'var'</span>) || isempty(autoextend)
+1977    autoextend = false(num_controls, 2);
+1978 <span class="keyword">end</span>
+1979 <span class="keyword">if</span> ~exist(<span class="string">'margin'</span>, <span class="string">'var'</span>) || isempty(margin)
+1980    margin = 10;
+1981 <span class="keyword">end</span>
+1982 
+1983 <span class="keyword">for</span> k = 1 : num_controls
+1984    min_column_widths = max(map_widths, [], 1);
+1985    min_row_heights = max(map_heights, [], 2);
+1986    
+1987    logical_control_indexes = (map == k);
+1988    linear_control_indexes = find(logical_control_indexes);
+1989    [i, j] = ind2sub(size(map), linear_control_indexes);
+1990    control_rows = unique(i);
+1991    control_columns = unique(j);
+1992    num_control_rows = numel(control_rows);
+1993    num_control_columns = numel(control_columns);
+1994    
+1995    <span class="keyword">if</span> (num_control_rows &gt; 1) &amp;&amp; ~autoextend(k,2)  <span class="comment">% The control spans multiple rows and is not auto-extendable</span>
+1996       <span class="comment">% Distribute as much of the control's height as possible in the existing row heights</span>
+1997       remaining_height = max(control_heights(k) - margin*(num_control_rows-1), 0);
+1998       <span class="keyword">for</span> m = 1 : num_control_rows
+1999          row_index = control_rows(m);
+2000          row_mask = false(size(map));
+2001          row_mask(row_index,:) = true;
+2002          used_height = min(remaining_height, min_row_heights(row_index));
+2003          map_heights(logical_control_indexes &amp; row_mask) = used_height;
+2004          remaining_height = remaining_height - used_height;
+2005       <span class="keyword">end</span>
+2006       
+2007       <span class="comment">% Add any remaining necessary height evenly to the control's rows</span>
+2008       map_heights(logical_control_indexes) = map_heights(logical_control_indexes) + remaining_height/num_control_rows;
+2009    <span class="keyword">end</span>
+2010    
+2011    <span class="keyword">if</span> (num_control_columns &gt; 1) &amp;&amp; ~autoextend(k,1)  <span class="comment">% The control spans multiple columns and is not auto-extendable</span>
+2012       <span class="comment">% Distribute as much of the control's width as possible in the existing column widths</span>
+2013       remaining_width = max(control_widths(k) - margin*(num_control_columns-1), 0);
+2014       <span class="keyword">for</span> m = 1 : num_control_columns
+2015          column_index = control_columns(m);
+2016          column_mask = false(size(map));
+2017          column_mask(:,column_index) = true;
+2018          used_width = min(remaining_width, min_column_widths(column_index));
+2019          map_widths(logical_control_indexes &amp; column_mask) = used_width;
+2020          remaining_width = remaining_width - used_width;
+2021       <span class="keyword">end</span>
+2022       
+2023       <span class="comment">% Add any remaining necessary width evenly to the control's columns</span>
+2024       map_widths(logical_control_indexes) = map_widths(logical_control_indexes) + remaining_width/num_control_columns;
+2025    <span class="keyword">end</span>
+2026 <span class="keyword">end</span>
+2027 
+2028 <span class="keyword">end</span>
+2029 
+2030 <span class="comment">% Copyright (c) 2009-2010, Takeshi Ikuma</span>
+2031 <span class="comment">% Copyright (c) 2010, Luke Reisner</span>
+2032 <span class="comment">% All rights reserved.</span>
+2033 <span class="comment">%</span>
+2034 <span class="comment">% Redistribution and use in source and binary forms, with or without</span>
+2035 <span class="comment">% modification, are permitted provided that the following conditions are</span>
+2036 <span class="comment">% met:</span>
+2037 <span class="comment">%</span>
+2038 <span class="comment">%   * Redistributions of source code must retain the above copyright</span>
+2039 <span class="comment">%     notice, this list of conditions and the following disclaimer.</span>
+2040 <span class="comment">%   * Redistributions in binary form must reproduce the above copyright</span>
+2041 <span class="comment">%     notice, this list of conditions and the following disclaimer in the</span>
+2042 <span class="comment">%     documentation and/or other materials provided with the distribution.</span>
+2043 <span class="comment">%   * Neither the names of its contributors may be used to endorse or</span>
+2044 <span class="comment">%     promote products derived from this software without specific prior</span>
+2045 <span class="comment">%     written permission.</span>
+2046 <span class="comment">%</span>
+2047 <span class="comment">% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS</span>
+2048 <span class="comment">% IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,</span>
+2049 <span class="comment">% THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR</span>
+2050 <span class="comment">% PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR</span>
+2051 <span class="comment">% CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,</span>
+2052 <span class="comment">% EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,</span>
+2053 <span class="comment">% PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR</span>
+2054 <span class="comment">% PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF</span>
+2055 <span class="comment">% LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING</span>
+2056 <span class="comment">% NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+2057 <span class="comment">% SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

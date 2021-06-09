@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateCylinderField</title>
+  <meta name="keywords" content="CreateCylinderField">
+  <meta name="description" content="Creats a cylindrical height field image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateCylinderField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creats a cylindrical height field image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function field=CreateCylinderField(fieldSize,cylinder_rad,cylinder_height,pix_per_deg,fine_coefficient) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creats a cylindrical height field image.
+ function CreateCylinderField(fieldSize,cylinder_radius_deg,..
+                              cylinder_height_deg,pix_per_deg,fine_coefficient)
+
+ Creates cylindrical field
+ 
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col] (deg)
+ cylinder_rad: radius of a cylider, [deg]
+ cylinder_height: ratio of cylinder height for 'cylinder_rad', [val]
+                  the generated cylinder's height is cylinder_rad*cylinder_height
+                  if the value is minus, the concave surface is generated.
+                  (default is convex surface)
+ pix_per_deg : pixels per degree, [pixels]
+ fine_coefficient : (optional) if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val]
+                    (default=1, as is, no tuning)
+
+ [output]
+ field       : cylinder image, double format, [row,col]
+ 
+ Created    : &quot;2010-06-14 12:20:56 ban&quot;
+ Last Update: &quot;2013-11-22 18:45:59 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function field=CreateCylinderField(fieldSize,cylinder_rad,cylinder_height,pix_per_deg,fine_coefficient)</a>
+0002 
+0003 <span class="comment">% Creats a cylindrical height field image.</span>
+0004 <span class="comment">% function CreateCylinderField(fieldSize,cylinder_radius_deg,..</span>
+0005 <span class="comment">%                              cylinder_height_deg,pix_per_deg,fine_coefficient)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Creates cylindrical field</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col] (deg)</span>
+0011 <span class="comment">% cylinder_rad: radius of a cylider, [deg]</span>
+0012 <span class="comment">% cylinder_height: ratio of cylinder height for 'cylinder_rad', [val]</span>
+0013 <span class="comment">%                  the generated cylinder's height is cylinder_rad*cylinder_height</span>
+0014 <span class="comment">%                  if the value is minus, the concave surface is generated.</span>
+0015 <span class="comment">%                  (default is convex surface)</span>
+0016 <span class="comment">% pix_per_deg : pixels per degree, [pixels]</span>
+0017 <span class="comment">% fine_coefficient : (optional) if larger, the generated oval become finer,</span>
+0018 <span class="comment">%                    but comsumes much CPU power. [val]</span>
+0019 <span class="comment">%                    (default=1, as is, no tuning)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% field       : cylinder image, double format, [row,col]</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Created    : &quot;2010-06-14 12:20:56 ban&quot;</span>
+0025 <span class="comment">% Last Update: &quot;2013-11-22 18:45:59 ban (ban.hiroshi@gmail.com)&quot;</span>
+0026 
+0027 <span class="comment">% check input variables</span>
+0028 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;2 || isempty(cylinder_rad), cylinder_rad=3; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;3 || isempty(cylinder_height), cylinder_height=1; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;4 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;5 || isempty(fine_coefficient), fine_coefficient=1; <span class="keyword">end</span>
+0033 
+0034 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0035 
+0036 <span class="comment">% convert to pixels and radians</span>
+0037 fieldSize=round(fieldSize.*pix_per_deg);
+0038 cylinder_rad=round(cylinder_rad.*pix_per_deg);
+0039 
+0040 <span class="comment">% create cylindrical field</span>
+0041 step=1/fine_coefficient;
+0042 [x,y]=meshgrid(0:step:fieldSize(2),0:step:fieldSize(1));
+0043 y=abs(y-fieldSize(1)/2);
+0044 <span class="keyword">if</span> mod(size(y,1),2), y=y(1:end-1,:); <span class="keyword">end</span>
+0045 <span class="keyword">if</span> mod(size(y,2),2), y=y(:,1:end-1); <span class="keyword">end</span>
+0046 
+0047 field=zeros(size(y));
+0048 field(y&lt;=cylinder_rad)=cylinder_height*sqrt(repmat(cylinder_rad,size(y(y&lt;=cylinder_rad))).^2-y(y&lt;=cylinder_rad).^2);
+0049 
+0050 <span class="comment">% adjust the size</span>
+0051 <span class="keyword">if</span> step~=1, field=imresize(field,step,<span class="string">'bilinear'</span>); <span class="keyword">end</span>
+0052 
+0053 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

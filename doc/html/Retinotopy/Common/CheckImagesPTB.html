@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CheckImagesPTB</title>
+  <meta name="keywords" content="CheckImagesPTB">
+  <meta name="description" content="Reads images in the target directory and presents them onto the PTB screen">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CheckImagesPTB
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Reads images in the target directory and presents them onto the PTB screen</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec,img_size) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Reads images in the target directory and presents them onto the PTB screen
+ function imgfiles=CheckImagesPTB(img_dir,:img_ext,:auto_msec,:img_size)
+ (: is optional)
+
+ This function reads all the images in the target directory and display
+ them successively by detecting button press or automatically.
+ The key manipulations are done by pressing
+ left  arrow : displaying the previous image
+ rigth arrow : displaying the next image
+ When auto_msec is set to non-zero value, the images will be presented
+ successively automatically with the auto_msec intervals.
+
+ [input]
+ img_dir   : target directory in which images are included.
+             a relative path format in which the directory where this
+             function is called is the origin. e.g. img_dir='../imgs';
+ img_ext   : (optional) file extension of the target image files.
+             e.g. img_ext='.jpg';, empty by default.
+ auto_msec : (optional) an interval in msec to present images automatically
+             if 0, the image change will be done by the key pressing.
+             0 by default.
+ img_size  : (optional) display image size, [row, col] (pixels)
+             when this values are empty, the image size will be automatically
+             adjusted. empty by default
+
+ [output]
+ imgfiles : a list of the images in the img_dir, a cell structure
+
+ [note]
+ a log file will be saved in the directory where this function is called.
+
+ [dependencies]
+ 1. Hiroshi's Common tools
+ 2. Psychtoolbox ver 3 or above
+
+
+ Created    : &quot;2015-07-18 16:14:34 ban&quot;
+ Last Update: &quot;2015-07-29 15:08:37 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="DisableJISkeyTrouble.html" class="code" title="function oldkey=DisableJISkeyTrouble">DisableJISkeyTrouble</a>	Disables keys which are always ON by default (used to avoid JIS key trouble).</li><li><a href="InitializePTBDisplays.html" class="code" title="function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains,custom_scrIDs)">InitializePTBDisplays</a>	Initializes PTB screen(s) for monocular/binocular presentations using PsychImaging() function.</li><li><a href="imreadmpo.html" class="code" title="function [imgs,imgsize,IFD,MPE,header]=imreadmpo(mpofile,save_jpg_flg)">imreadmpo</a>	Reads an MPO (multiple picture object) file.</li><li><a href="relativepath.html" class="code" title="function  rel_path = relativepath( tgt_path, act_path )">relativepath</a>	RELATIVEPATH  returns the relative path from an actual path to the target path.</li><li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec,img_size)</a>
+0002 
+0003 <span class="comment">% Reads images in the target directory and presents them onto the PTB screen</span>
+0004 <span class="comment">% function imgfiles=CheckImagesPTB(img_dir,:img_ext,:auto_msec,:img_size)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads all the images in the target directory and display</span>
+0008 <span class="comment">% them successively by detecting button press or automatically.</span>
+0009 <span class="comment">% The key manipulations are done by pressing</span>
+0010 <span class="comment">% left  arrow : displaying the previous image</span>
+0011 <span class="comment">% rigth arrow : displaying the next image</span>
+0012 <span class="comment">% When auto_msec is set to non-zero value, the images will be presented</span>
+0013 <span class="comment">% successively automatically with the auto_msec intervals.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% [input]</span>
+0016 <span class="comment">% img_dir   : target directory in which images are included.</span>
+0017 <span class="comment">%             a relative path format in which the directory where this</span>
+0018 <span class="comment">%             function is called is the origin. e.g. img_dir='../imgs';</span>
+0019 <span class="comment">% img_ext   : (optional) file extension of the target image files.</span>
+0020 <span class="comment">%             e.g. img_ext='.jpg';, empty by default.</span>
+0021 <span class="comment">% auto_msec : (optional) an interval in msec to present images automatically</span>
+0022 <span class="comment">%             if 0, the image change will be done by the key pressing.</span>
+0023 <span class="comment">%             0 by default.</span>
+0024 <span class="comment">% img_size  : (optional) display image size, [row, col] (pixels)</span>
+0025 <span class="comment">%             when this values are empty, the image size will be automatically</span>
+0026 <span class="comment">%             adjusted. empty by default</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% [output]</span>
+0029 <span class="comment">% imgfiles : a list of the images in the img_dir, a cell structure</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% [note]</span>
+0032 <span class="comment">% a log file will be saved in the directory where this function is called.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% [dependencies]</span>
+0035 <span class="comment">% 1. Hiroshi's Common tools</span>
+0036 <span class="comment">% 2. Psychtoolbox ver 3 or above</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Created    : &quot;2015-07-18 16:14:34 ban&quot;</span>
+0040 <span class="comment">% Last Update: &quot;2015-07-29 15:08:37 ban&quot;</span>
+0041 
+0042 <span class="comment">% check the input variables</span>
+0043 <span class="keyword">if</span> nargin&lt;1 || isempty(img_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0044 <span class="keyword">if</span> nargin&lt;2 || isempty(img_ext), img_ext=<span class="string">''</span>; <span class="keyword">end</span>
+0045 <span class="keyword">if</span> nargin&lt;3 || isempty(auto_msec), auto_msec=0; <span class="keyword">end</span>
+0046 <span class="keyword">if</span> nargin&lt;4 || isempty(img_size), img_size=[]; <span class="keyword">end</span>
+0047 
+0048 img_dir=fullfile(pwd,img_dir);
+0049 <span class="keyword">if</span> ~exist(img_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find img_dir. check input variable.'</span>); <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% log file</span>
+0052 diary(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),strcat(mfilename(),<span class="string">'_'</span>,datestr(date,<span class="string">'yymmdd'</span>),<span class="string">'.log'</span>)));
+0053 
+0054 <span class="comment">% PTB setup</span>
+0055 <a href="DisableJISkeyTrouble.html" class="code" title="function oldkey=DisableJISkeyTrouble">DisableJISkeyTrouble</a>();
+0056 KbName(<span class="string">'UnifyKeyNames'</span>);
+0057 
+0058 Screen(<span class="string">'Preference'</span>,<span class="string">'VisualDebuglevel'</span>, 3);
+0059 
+0060 <span class="keyword">if</span> strcmpi(img_ext,<span class="string">'MPO'</span>)
+0061   [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=<a href="InitializePTBDisplays.html" class="code" title="function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains,custom_scrIDs)">InitializePTBDisplays</a>(<span class="string">'shutter'</span>,[127,127,127],0); <span class="comment">%#ok</span>
+0062 <span class="keyword">else</span>
+0063   [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=<a href="InitializePTBDisplays.html" class="code" title="function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains,custom_scrIDs)">InitializePTBDisplays</a>(<span class="string">'mono'</span>,[127,127,127],0); <span class="comment">%#ok</span>
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="keyword">if</span> ~initDisplay_OK, error(<span class="string">'Display initialization error. Please check your exp_run parameter.'</span>); <span class="keyword">end</span>
+0067 HideCursor();
+0068 
+0069 priorityLevel=MaxPriority(winPtr,<span class="string">'WaitBlanking'</span>);
+0070 Priority(priorityLevel);
+0071 
+0072 InitializeMatlabOpenGL();
+0073 AssertOpenGL();
+0074 
+0075 Screen(<span class="string">'BlendFunction'</span>,winPtr,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+0076 
+0077 <span class="comment">% processing</span>
+0078 fprintf(<span class="string">'\n'</span>);
+0079 imgfiles=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(img_dir,[<span class="string">'*'</span>,img_ext]);
+0080 
+0081 ii=1; <span class="comment">% image ID</span>
+0082 end_flg=0;
+0083 <span class="keyword">while</span> 1
+0084 
+0085   <span class="comment">% generate image textures for left/right eyes and displaying</span>
+0086   imgfile=<a href="relativepath.html" class="code" title="function  rel_path = relativepath( tgt_path, act_path )">relativepath</a>(imgfiles{ii}); imgfile=imgfile(1:end-1); <span class="comment">% remove the final '/'</span>
+0087   [dummy,imgfname,imgext]=fileparts(imgfile); <span class="comment">%#ok</span>
+0088   fprintf(<span class="string">'Target image %05d: %s%s\n'</span>,ii,imgfname,imgext)
+0089 
+0090   <span class="keyword">if</span> strcmpi(img_ext,<span class="string">'mpo'</span>)
+0091     imgs=<a href="imreadmpo.html" class="code" title="function [imgs,imgsize,IFD,MPE,header]=imreadmpo(mpofile,save_jpg_flg)">imreadmpo</a>(imgfile,0);
+0092     img=zeros(1,2); <span class="keyword">for</span> pp=1:1:2, img(pp)=Screen(<span class="string">'MakeTexture'</span>,winPtr,imgs{pp}); <span class="keyword">end</span>
+0093 
+0094     <span class="comment">% display size adjustment</span>
+0095     <span class="keyword">if</span> isempty(img_size)
+0096       sz=size(imgs{pp});
+0097       sz=sz(1:2);
+0098       disp_size=sz;
+0099       <span class="keyword">if</span> size(imgs{pp},1)&gt;winRect(2) || size(imgs{pp},2)&gt;winRect(1) <span class="comment">% the image exceeds the screen size</span>
+0100         scale_not=1;
+0101         weight=0.95;
+0102         <span class="keyword">while</span> scale_not
+0103           disp_size=weight.*disp_size;
+0104           <span class="keyword">if</span> disp_size(2)&lt;=winRect(3) &amp;&amp; disp_size(1)&lt;=winRect(4), scale_not=0; <span class="keyword">end</span>
+0105         <span class="keyword">end</span>
+0106       <span class="keyword">end</span>
+0107     <span class="keyword">else</span>
+0108       disp_size=img_size;
+0109     <span class="keyword">end</span>
+0110 
+0111     <span class="keyword">for</span> nn=1:1:nScr
+0112       Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0113       Screen(<span class="string">'DrawTexture'</span>,winPtr,img(nn),[0,0,sz(2),sz(1)],CenterRect([0,0,disp_size(2),disp_size(1)],winRect));
+0114     <span class="keyword">end</span>
+0115   <span class="keyword">else</span>
+0116     imgs=imread(imgfile);
+0117     img=Screen(<span class="string">'MakeTexture'</span>,winPtr,imgs);
+0118 
+0119     <span class="comment">% display size adjustment</span>
+0120     <span class="keyword">if</span> isempty(img_size)
+0121       sz=size(imgs);
+0122       sz=sz(1:2);
+0123       disp_size=sz;
+0124       <span class="keyword">if</span> size(imgs,1)&gt;winRect(2) || size(imgs,2)&gt;winRect(1) <span class="comment">% the image exceeds the screen size</span>
+0125         scale_not=1;
+0126         weight=0.95;
+0127         <span class="keyword">while</span> scale_not
+0128           disp_size=weight.*disp_size;
+0129           <span class="keyword">if</span> disp_size(2)&lt;=winRect(3) &amp;&amp; disp_size(1)&lt;=winRect(4), scale_not=0; <span class="keyword">end</span>
+0130         <span class="keyword">end</span>
+0131       <span class="keyword">end</span>
+0132     <span class="keyword">else</span>
+0133       disp_size=img_size;
+0134     <span class="keyword">end</span>
+0135 
+0136     Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,0);
+0137     Screen(<span class="string">'DrawTexture'</span>,winPtr,img,[0,0,sz(2),sz(1)],CenterRect([0,0,disp_size(2),disp_size(1)],winRect));
+0138   <span class="keyword">end</span>
+0139 
+0140   Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0141   Screen(<span class="string">'Flip'</span>,winPtr);
+0142 
+0143   <span class="keyword">if</span> ~auto_msec
+0144 
+0145     <span class="comment">% check button and classify the images</span>
+0146     key_check=1;
+0147     <span class="keyword">while</span> key_check
+0148       [keyIsDown,keysecs,keyCode]=KbCheck(); <span class="comment">%#ok</span>
+0149       <span class="keyword">if</span> keyIsDown
+0150         <span class="keyword">if</span> (keyCode(KbName(<span class="string">'q'</span>))==1 || keyCode(KbName(<span class="string">'escape'</span>))==1)
+0151           Screen(<span class="string">'CloseAll'</span>);
+0152           end_flg=1;
+0153           <span class="keyword">break</span>;
+0154         <span class="keyword">elseif</span> keyCode(37)==1 <span class="comment">% left arrow --- back to the previous image</span>
+0155           ii=max(ii-1,1);
+0156           <span class="keyword">if</span> ii==1
+0157             fprintf(<span class="string">'the first image in the directory'</span>);
+0158           <span class="keyword">end</span>
+0159           key_check=0;
+0160         <span class="keyword">elseif</span> keyCode(39)==1 <span class="comment">% right arrow --- go to the next image</span>
+0161           ii=min(ii+1,length(imgfiles));
+0162           <span class="keyword">if</span> ii==length(imgfiles)
+0163             fprintf(<span class="string">'the final image in the directory'</span>);
+0164           <span class="keyword">end</span>
+0165           key_check=0;
+0166         <span class="keyword">end</span>
+0167       <span class="keyword">end</span>
+0168     <span class="keyword">end</span>
+0169 
+0170   <span class="keyword">else</span> <span class="comment">% if ~auto_msec</span>
+0171 
+0172     <span class="comment">% wait for auto_msec and proceed to the next</span>
+0173     ii=ii+1;
+0174     <span class="keyword">if</span> ii&gt;length(imgfiles)
+0175       Screen(<span class="string">'CloseAll'</span>);
+0176       end_flg=1; <span class="comment">%#ok</span>
+0177       <span class="keyword">break</span>
+0178     <span class="keyword">end</span>
+0179     WaitSecs(auto_msec/1000);
+0180 
+0181     [keyIsDown,keysecs,keyCode]=KbCheck(); <span class="comment">%#ok</span>
+0182     <span class="keyword">if</span> keyIsDown
+0183       <span class="keyword">if</span> (keyCode(KbName(<span class="string">'q'</span>))==1 || keyCode(KbName(<span class="string">'escape'</span>))==1)
+0184         Screen(<span class="string">'CloseAll'</span>);
+0185         end_flg=1; <span class="comment">%#ok</span>
+0186         <span class="keyword">break</span>
+0187       <span class="keyword">end</span>
+0188     <span class="keyword">end</span>
+0189 
+0190   <span class="keyword">end</span> <span class="comment">% if ~auto_msec</span>
+0191 
+0192   <span class="comment">% clean up</span>
+0193   clear imgs;
+0194   <span class="keyword">if</span> end_flg~=1
+0195     <span class="keyword">for</span> nn=1:1:nScr
+0196       Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0197       Screen(<span class="string">'FillRect'</span>,winPtr,[127,127,127]);
+0198     <span class="keyword">end</span>
+0199     Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0200     Screen(<span class="string">'Flip'</span>,winPtr);
+0201 
+0202     <span class="keyword">if</span> strcmpi(img_ext,<span class="string">'mpo'</span>)
+0203       <span class="keyword">for</span> pp=1:1:2, Screen(<span class="string">'Close'</span>,img(pp)); <span class="keyword">end</span>
+0204     <span class="keyword">else</span>
+0205       Screen(<span class="string">'Close'</span>,img);
+0206     <span class="keyword">end</span>
+0207     pause(0.1);
+0208   <span class="keyword">else</span>
+0209     <span class="keyword">break</span>;
+0210   <span class="keyword">end</span>
+0211 
+0212 
+0213 <span class="keyword">end</span> <span class="comment">% while 1</span>
+0214 
+0215 ShowCursor();
+0216 diary off;
+0217 
+0218 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

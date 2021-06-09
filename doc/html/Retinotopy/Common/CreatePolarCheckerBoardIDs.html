@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreatePolarCheckerBoardIDs</title>
+  <meta name="keywords" content="CreatePolarCheckerBoardIDs">
+  <meta name="description" content="Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreatePolarCheckerBoardIDs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [checkerboard,bincheckerboard,mask]=CreatePolarCheckerBoardIDs(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.
+ function [checkerboard,bincheckerboard,mask]=CreatePolarCheckerBoardIDs(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase)
+
+ This function generates checkerboards (polar angle-based subdivision) with an individual ID number on each patch.
+ Each of two checkers have the compensating values of its counterpart.
+ Multiple start angles are acceptable and will be processed at once, saving computational time.
+
+ [input]
+ rmin        : checkerboard's minimum radius in deg, [val], 0 by default.
+ rmax        : checkerboard's maximum radius in deg, [val], 6 by default.
+ width       : checker width in deg, [val], 48 by default.
+ startangle  : checker board start angle, from right horizontal meridian, clockwise
+               *** multiple start angles are acceptable ***
+               e.g. [0,12,24,36,...], 0 by default.
+ pix_per_deg : pixels per degree, [val], 40 by default.
+ nwedges     : number of wedges, [val], 4 by default.
+ nrings      : number of rings, [val], 8 by default.
+ phase       : (optional) checker's phase, 0 by default.
+
+ [output]
+ checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.
+                  each pixel shows each checker patch's ID or background(0)
+ binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,
+                  cell structure, {numel(startangle)}.
+ mask           : (optional) checkerboard regional mask, cell structure, logical
+
+
+ Created    : &quot;2011-04-12 11:12:37 ban&quot;
+ Last Update: &quot;2018-12-11 17:42:41 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [checkerboard,bincheckerboard,mask]=CreatePolarCheckerBoardIDs(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase)</a>
+0002 
+0003 <span class="comment">% Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.</span>
+0004 <span class="comment">% function [checkerboard,bincheckerboard,mask]=CreatePolarCheckerBoardIDs(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates checkerboards (polar angle-based subdivision) with an individual ID number on each patch.</span>
+0007 <span class="comment">% Each of two checkers have the compensating values of its counterpart.</span>
+0008 <span class="comment">% Multiple start angles are acceptable and will be processed at once, saving computational time.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% rmin        : checkerboard's minimum radius in deg, [val], 0 by default.</span>
+0012 <span class="comment">% rmax        : checkerboard's maximum radius in deg, [val], 6 by default.</span>
+0013 <span class="comment">% width       : checker width in deg, [val], 48 by default.</span>
+0014 <span class="comment">% startangle  : checker board start angle, from right horizontal meridian, clockwise</span>
+0015 <span class="comment">%               *** multiple start angles are acceptable ***</span>
+0016 <span class="comment">%               e.g. [0,12,24,36,...], 0 by default.</span>
+0017 <span class="comment">% pix_per_deg : pixels per degree, [val], 40 by default.</span>
+0018 <span class="comment">% nwedges     : number of wedges, [val], 4 by default.</span>
+0019 <span class="comment">% nrings      : number of rings, [val], 8 by default.</span>
+0020 <span class="comment">% phase       : (optional) checker's phase, 0 by default.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% [output]</span>
+0023 <span class="comment">% checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.</span>
+0024 <span class="comment">%                  each pixel shows each checker patch's ID or background(0)</span>
+0025 <span class="comment">% binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,</span>
+0026 <span class="comment">%                  cell structure, {numel(startangle)}.</span>
+0027 <span class="comment">% mask           : (optional) checkerboard regional mask, cell structure, logical</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Created    : &quot;2011-04-12 11:12:37 ban&quot;</span>
+0031 <span class="comment">% Last Update: &quot;2018-12-11 17:42:41 ban&quot;</span>
+0032 
+0033 <span class="comment">%% check the input variables</span>
+0034 <span class="keyword">if</span> nargin&lt;1 || isempty(rmin), rmin=0; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;2 || isempty(rmax), rmax=6; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;3 || isempty(width), width=48; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;4 || isempty(startangle), startangle=0; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;5 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;6 || isempty(nwedges), nwedges=4; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;7 || isempty(nrings), nrings=8; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;8 || isempty(phase), phase=0; <span class="keyword">end</span>
+0042 
+0043 <span class="comment">%% parameter adjusting</span>
+0044 
+0045 <span class="comment">% convert deg to pixels</span>
+0046 rmin=rmin*pix_per_deg;
+0047 rmax=rmax*pix_per_deg;
+0048 
+0049 <span class="comment">% convert deg to radians</span>
+0050 startangle=mod(startangle*pi/180,2*pi);
+0051 width=width*pi/180;
+0052 <span class="keyword">if</span> phase&gt;width/nwedges, phase=mod(phase,width/nwedges); <span class="keyword">end</span>
+0053 phase=phase*pi/180;
+0054 
+0055 <span class="comment">% add small lim in checkerboard image, this is to avoid unwanted juggy edges</span>
+0056 imsize_ratio=1.01;
+0057 
+0058 
+0059 <span class="comment">%% processing</span>
+0060 
+0061 <span class="comment">% base xy distance field</span>
+0062 [xx,yy]=meshgrid((0:1:imsize_ratio*2*rmax)-imsize_ratio*rmax,(0:1:imsize_ratio*2*rmax)-imsize_ratio*rmax);
+0063 <span class="comment">%if mod(size(xx,1),2), xx=xx(1:end-1,:); yy=yy(1:end-1,:); end</span>
+0064 <span class="comment">%if mod(size(xx,2),2), xx=xx(:,1:end-1); yy=yy(:,1:end-1); end</span>
+0065 
+0066 <span class="comment">% convert distance field to radians and degree fields</span>
+0067 thetafield=mod(atan2(yy,xx),2*pi);
+0068 
+0069 <span class="comment">% calculate binary class (-1/1) along eccentricity for checkerboard (anuulus)</span>
+0070 radii=linspace(rmin,rmax,nrings+1); radii(1)=[]; <span class="comment">% annulus width</span>
+0071 r=sqrt(xx.^2+yy.^2); <span class="comment">% radius</span>
+0072 cid=zeros(size(xx)); <span class="comment">% checker id, eccentricity</span>
+0073 <span class="keyword">for</span> i=length(radii):-1:1
+0074   cid(rmin&lt;r &amp; r&lt;=radii(i))=i;
+0075 <span class="keyword">end</span>
+0076 
+0077 <span class="comment">% calculate binary class (-1/1) along polar angle for checkerboard (wedge)</span>
+0078 <span class="comment">% and generate checkerboards</span>
+0079 checkerboard=cell(numel(startangle),1);
+0080 <span class="keyword">if</span> nargout&gt;=2, bincheckerboard=cell(numel(startangle),1); <span class="keyword">end</span>
+0081 <span class="keyword">if</span> nargout&gt;=3, mask=cell(numel(startangle),1); <span class="keyword">end</span>
+0082 
+0083 <span class="keyword">for</span> aa=1:1:numel(startangle)
+0084 
+0085   <span class="comment">% !!!NOTICE!!!</span>
+0086   <span class="comment">% We need to create each checkerboard following the procedures below</span>
+0087   <span class="comment">%  1. generate radian angle field</span>
+0088   <span class="comment">%  2. rotate it based on startangle &amp; phase</span>
+0089   <span class="comment">%  3. generate checkerboard IDs</span>
+0090   <span class="comment">% This consumes much CPU power and time, but it is definitely important.</span>
+0091   <span class="comment">%</span>
+0092   <span class="comment">% To use imrotate after creating one image may look more sophisticated, but we</span>
+0093   <span class="comment">% should not do that. This is because when we use imrotate (or fast_rotate)</span>
+0094   <span class="comment">% or Screen('DrawTexture',....,rotangle,...), the displayed image will result</span>
+0095   <span class="comment">% in low quality with juggy artefact along checker edges.</span>
+0096 
+0097   done_flag=0;
+0098 
+0099   <span class="comment">% just flip dimension and copy, if the currect checkerboard is one of</span>
+0100   <span class="comment">% 180 deg flipped version of previously generated checkerboards.</span>
+0101   <span class="comment">% this is to save calculation time</span>
+0102   <span class="keyword">if</span> aa&gt;=2
+0103     <span class="keyword">for</span> tt=1:1:aa-1
+0104       <span class="comment">%if startangle(aa)==mod(startangle(tt)+pi,2*pi)</span>
+0105       <span class="keyword">if</span> abs(startangle(aa)-mod(startangle(tt)+pi,2*pi))&lt;0.01 <span class="comment">% this is to avoid round off error</span>
+0106         <span class="comment">%fprintf('#%d checkerboard is generated by just copying/flipping from #%d checkerboard\n',aa,tt); % debug code</span>
+0107         checkerboard{aa}=flipdim(flipdim(checkerboard{tt},2),1);
+0108         <span class="keyword">if</span> nargout&gt;=2, bincheckerboard{aa}=flipdim(flipdim(bincheckerboard{tt},2),1); <span class="keyword">end</span>
+0109         <span class="keyword">if</span> nargout&gt;=3, mask{aa}=flipdim(flipdim(mask{tt},2),1); <span class="keyword">end</span>
+0110         done_flag=1;
+0111         <span class="keyword">break</span>;
+0112       <span class="keyword">end</span>
+0113     <span class="keyword">end</span>
+0114   <span class="keyword">end</span>
+0115 
+0116   <span class="keyword">if</span> ~done_flag
+0117 
+0118     <span class="comment">% calculate inner regions</span>
+0119     minlim=startangle(aa);
+0120     maxlim=mod(startangle(aa)+width,2*pi);
+0121     <span class="keyword">if</span> minlim==maxlim <span class="comment">% whole annulus</span>
+0122       inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) );
+0123     <span class="keyword">elseif</span> minlim&gt;maxlim
+0124       inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) &amp; ( (minlim&lt;=thetafield &amp; thetafield&lt;2*pi) | (0&lt;=thetafield &amp; thetafield&lt;=maxlim) ) );
+0125     <span class="keyword">else</span>
+0126       inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) &amp; ( (minlim&lt;=thetafield) &amp; (thetafield&lt;=maxlim) ) );
+0127     <span class="keyword">end</span>
+0128 
+0129     <span class="comment">% calculate wedge IDs</span>
+0130     th=thetafield(inidx)-startangle(aa)+phase;
+0131     th=mod(th,2*pi);
+0132     cidp=zeros(size(thetafield));
+0133     cidp(inidx)=ceil(th/width*nwedges); <span class="comment">% checker id, polar angle</span>
+0134 
+0135     <span class="comment">% correct wedge IDs</span>
+0136     <span class="keyword">if</span> phase~=0 <span class="comment">%mod(phase,width/nwedges)~=0</span>
+0137       cidp(inidx)=mod(cidp(inidx)-(2*pi/(width/nwedges)-1),2*pi/(width/nwedges))+1;
+0138       minval=unique(cidp); minval=minval(2); <span class="comment">% not 1 because the first value is 0 = background;</span>
+0139       cidp(cidp&gt;0)=cidp(cidp&gt;0)-minval+1;
+0140       true_nwedges=numel(unique(cidp))-1; <span class="comment">% -1 is to omit 0 = background;</span>
+0141     <span class="keyword">else</span>
+0142       true_nwedges=nwedges;
+0143     <span class="keyword">end</span>
+0144 
+0145     <span class="comment">% calcuate ring IDs</span>
+0146     cide=cid;
+0147 
+0148     <span class="comment">% generate checker's ID</span>
+0149     checkerboard{aa}=zeros(size(thetafield));
+0150     checkerboard{aa}(inidx)=cidp(inidx)+(cide(inidx)-1)*true_nwedges;
+0151 
+0152     <span class="comment">% exclude outliers</span>
+0153     <span class="comment">%checkerboard{aa}(r&lt;rmin | rmax&lt;r)=0;</span>
+0154     checkerboard{aa}(checkerboard{aa}&lt;0)=0;
+0155 
+0156     <span class="comment">% generate a binary (1/2=checker-patterns and 0=background) checkerboard</span>
+0157     <span class="keyword">if</span> nargout&gt;=2
+0158       rings=zeros(size(cide));
+0159       rings(inidx)=2*mod(cide(inidx),2)-1; <span class="comment">% -1/1 class;</span>
+0160 
+0161       wedges=zeros(size(cidp));
+0162       wedges(inidx)=2*mod(cidp(inidx),2)-1; <span class="comment">% -1/1 class</span>
+0163 
+0164       bincheckerboard{aa}=zeros(size(thetafield));
+0165       bincheckerboard{aa}(inidx)=wedges(inidx).*rings(inidx);
+0166       bincheckerboard{aa}(r&gt;rmax)=0;
+0167       bincheckerboard{aa}(bincheckerboard{aa}&lt;0)=2;
+0168     <span class="keyword">end</span>
+0169 
+0170     <span class="comment">% generate mask</span>
+0171     <span class="keyword">if</span> nargout&gt;=3, mask{aa}=logical(checkerboard{aa}); <span class="keyword">end</span>
+0172 
+0173   <span class="keyword">end</span> <span class="comment">% if ~done_flag</span>
+0174 
+0175 <span class="keyword">end</span> <span class="comment">% for aa=1:1:numel(startangle)</span>
+0176 
+0177 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

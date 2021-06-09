@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of GeneratePfiles</title>
+  <meta name="keywords" content="GeneratePfiles">
+  <meta name="description" content="Generates p-file version of MATLAB directory structure.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>GeneratePfiles
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates p-file version of MATLAB directory structure.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function GeneratePfiles(tgt_dir,rm_str) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates p-file version of MATLAB directory structure.
+ function GeneratePfiles(tgt_dir,rm_str)
+
+ This function copy the target MATLAB directory as (target_dir_name)_p,
+ reads *.m files in it, and convertes them to p-files
+
+ [input]
+ tgt_dir : target directory name specified in a relative path format.
+ rm_str  : file prefix to be excluded from the conversions,
+           cell structure, e.g. rm_str={'iFit'};
+           empty by default.
+
+ [output]
+ no output variable
+ the backup file is stored as ~/backups/(yymmdd)/(tgt_dir)_p
+
+
+ Created    : &quot;2012-05-14 11:03:24 ban&quot;
+ Last Update: &quot;2013-12-13 17:39:35 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function GeneratePfiles(tgt_dir,rm_str)</a>
+0002 
+0003 <span class="comment">% Generates p-file version of MATLAB directory structure.</span>
+0004 <span class="comment">% function GeneratePfiles(tgt_dir,rm_str)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function copy the target MATLAB directory as (target_dir_name)_p,</span>
+0007 <span class="comment">% reads *.m files in it, and convertes them to p-files</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% tgt_dir : target directory name specified in a relative path format.</span>
+0011 <span class="comment">% rm_str  : file prefix to be excluded from the conversions,</span>
+0012 <span class="comment">%           cell structure, e.g. rm_str={'iFit'};</span>
+0013 <span class="comment">%           empty by default.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% [output]</span>
+0016 <span class="comment">% no output variable</span>
+0017 <span class="comment">% the backup file is stored as ~/backups/(yymmdd)/(tgt_dir)_p</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Created    : &quot;2012-05-14 11:03:24 ban&quot;</span>
+0021 <span class="comment">% Last Update: &quot;2013-12-13 17:39:35 ban&quot;</span>
+0022 
+0023 <span class="comment">% check input variables</span>
+0024 <span class="keyword">if</span> nargin&lt;1 || isempty(tgt_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0025 <span class="keyword">if</span> nargin&lt;2 || isempty(rm_str), rm_str=[]; <span class="keyword">end</span>
+0026 
+0027 <span class="keyword">if</span> ~exist(fullfile(pwd,tgt_dir),<span class="string">'dir'</span>)
+0028   error(<span class="string">'target directory not found. check input variable.'</span>);
+0029 <span class="keyword">end</span>
+0030 
+0031 <span class="comment">% generate target directory/file to the backup directory</span>
+0032 pcode_dir=fullfile(pwd,[tgt_dir,<span class="string">'_p'</span>]);
+0033 <span class="keyword">if</span> ~exist(pcode_dir,<span class="string">'dir'</span>), mkdir(pcode_dir); <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% copy the target</span>
+0036 fprintf(<span class="string">'copying the target to the p-code directory...'</span>);
+0037 iswin=0; tstr=mexext();
+0038 <span class="keyword">if</span> strcmp(tstr(end-2:end),<span class="string">'w32'</span>) || strcmp(tstr(end-2:end),<span class="string">'w64'</span>), iswin=1; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> iswin
+0040   dos(sprintf(<span class="string">'xcopy /I /S /Q %s %s'</span>,strrep(fullfile(pwd,tgt_dir),<span class="string">' '</span>,<span class="string">'\ '</span>),strrep(pcode_dir,<span class="string">' '</span>,<span class="string">'\ '</span>)));
+0041 <span class="keyword">else</span>
+0042   eval(sprintf(<span class="string">'!cp -rf %s %s'</span>,fullfile(pwd,tgt_dir),pcode_dir));
+0043   <span class="comment">%copyfile(fullfile(pwd,tgt_dir),pcode_dir,'f');</span>
+0044 <span class="keyword">end</span>
+0045 disp(<span class="string">'done.'</span>);
+0046 
+0047 <span class="comment">% convert *.m to *.p</span>
+0048 mfs=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(pcode_dir,<span class="string">'*.m'</span>);
+0049 cdir=pwd;
+0050 <span class="keyword">for</span> ff=1:1:length(mfs)
+0051 
+0052   <span class="comment">% skip files that matches one of the strings in rm_str</span>
+0053   <span class="keyword">if</span> sum(strfind(mfs{ff},rm_str))~=0, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0054 
+0055   <span class="comment">% display message</span>
+0056   [mpath,mfname,mext]=fileparts(mfs{ff});
+0057   message=sprintf(<span class="string">'target: %s%s --&gt; %s.p'</span>,mfname,mext,mfname);
+0058   disp(message);
+0059 
+0060   <span class="comment">% get a line of function description and endline character(s)</span>
+0061   fid=fopen(mfs{ff},<span class="string">'r'</span>);
+0062   tmpline=fgets(fid);
+0063   <span class="keyword">if</span> strcmp(tmpline(end-1:end),[char(13),char(10)])
+0064     returnchar=[char(13),char(10)];
+0065   <span class="keyword">elseif</span> strcmp(tmpline(end),char(10))
+0066     returnchar=char(10);
+0067   <span class="keyword">else</span>
+0068     returnchar=char(13);
+0069   <span class="keyword">end</span>
+0070   <span class="keyword">if</span> ~isempty(strfind(tmpline,<span class="string">'function'</span>)) &amp;&amp; isempty(strfind(tmpline,<span class="string">'% function'</span>))
+0071     funcline=tmpline;
+0072   <span class="keyword">else</span>
+0073     <span class="keyword">while</span> 1
+0074       tmpline=fgets(fid);
+0075       <span class="keyword">if</span> ~isempty(strfind(tmpline,<span class="string">'function'</span>)) &amp;&amp; isempty(strfind(tmpline,<span class="string">'% function'</span>))
+0076         funcline=tmpline;
+0077         <span class="keyword">break</span>;
+0078       <span class="keyword">elseif</span> tmpline==-1 <span class="comment">% EOF</span>
+0079         funcline=<span class="string">''</span>;
+0080         <span class="keyword">break</span>;
+0081       <span class="keyword">end</span>
+0082     <span class="keyword">end</span>
+0083   <span class="keyword">end</span>
+0084   fclose(fid);
+0085 
+0086   <span class="comment">% generate *.p file</span>
+0087   cd(mpath);
+0088   hstr=strread(help(mfs{ff}),<span class="string">'%s'</span>,<span class="string">'delimiter'</span>,returnchar);
+0089   pcode(mfs{ff});
+0090   delete(mfs{ff});
+0091 
+0092   <span class="comment">% generate *.m file for help</span>
+0093   fid=fopen(mfs{ff},<span class="string">'w'</span>);
+0094   <span class="keyword">if</span> ~isempty(funcline)
+0095     fprintf(fid,[funcline,returnchar]);
+0096   <span class="keyword">else</span>
+0097     fprintf(fid,[mfname,returnchar]);
+0098   <span class="keyword">end</span>
+0099   <span class="keyword">for</span> ii=1:1:length(hstr)
+0100     <span class="keyword">if</span> size(returnchar,2)==2
+0101       fprintf(fid,<span class="string">'%s%c%c'</span>,[<span class="string">'% '</span>,hstr{ii}],returnchar(1),returnchar(2));
+0102     <span class="keyword">else</span>
+0103       fprintf(fid,<span class="string">'%s%c'</span>,[<span class="string">'% '</span>,hstr{ii}],returnchar);
+0104     <span class="keyword">end</span>
+0105   <span class="keyword">end</span>
+0106   fclose(fid);
+0107   cd(cdir);
+0108 
+0109 <span class="keyword">end</span>
+0110 
+0111 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

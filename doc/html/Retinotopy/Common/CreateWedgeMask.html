@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateWedgeMask</title>
+  <meta name="keywords" content="CreateWedgeMask">
+  <meta name="description" content="Creates a wedge-shaped mask field whose pixel holds 0/1 value to be used as a mask.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateWedgeMask
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a wedge-shaped mask field whose pixel holds 0/1 value to be used as a mask.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mask=CreateWedgeMask(sz,sz_min,sz_max,pix_per_deg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a wedge-shaped mask field whose pixel holds 0/1 value to be used as a mask.
+ function mask=CreateWedgeMask(sz,sz_min,sz_max,pix_per_deg)
+
+ This function creates a wedge-shaped (Baumkuchen!) mask with 0 &amp; 1 values.
+ Mask is located in the first quadrant of the generated image (upper right).
+ 
+ [input]
+ meanval     : baseline magnitude of gratings
+ sz          : the whole image size in degrees
+               to be masked with this script's output
+ sz_min      : the max size of the mask in degrees
+ sz_max      : the min size of the mask in degrees
+ pix_per_deg : pixels per degree.
+ 
+ [output]
+ mask        : mask image with 0 &amp; 1
+ 
+ maskval1=1  : a mask value which let the image through
+ maskval2=0  : a mask value which let the image delete
+ 
+ !!! NOTICE !!!
+ for speeding up image generation process,
+ I will not put codes for nargin checks.
+ Please be careful.
+ 
+ July 24 2009 Hiroshi Ban</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer.html" class="code" title="function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer_fixtask.html" class="code" title="function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mask=CreateWedgeMask(sz,sz_min,sz_max,pix_per_deg)</a>
+0002 
+0003 <span class="comment">% Creates a wedge-shaped mask field whose pixel holds 0/1 value to be used as a mask.</span>
+0004 <span class="comment">% function mask=CreateWedgeMask(sz,sz_min,sz_max,pix_per_deg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function creates a wedge-shaped (Baumkuchen!) mask with 0 &amp; 1 values.</span>
+0007 <span class="comment">% Mask is located in the first quadrant of the generated image (upper right).</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% meanval     : baseline magnitude of gratings</span>
+0011 <span class="comment">% sz          : the whole image size in degrees</span>
+0012 <span class="comment">%               to be masked with this script's output</span>
+0013 <span class="comment">% sz_min      : the max size of the mask in degrees</span>
+0014 <span class="comment">% sz_max      : the min size of the mask in degrees</span>
+0015 <span class="comment">% pix_per_deg : pixels per degree.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% [output]</span>
+0018 <span class="comment">% mask        : mask image with 0 &amp; 1</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% maskval1=1  : a mask value which let the image through</span>
+0021 <span class="comment">% maskval2=0  : a mask value which let the image delete</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% !!! NOTICE !!!</span>
+0024 <span class="comment">% for speeding up image generation process,</span>
+0025 <span class="comment">% I will not put codes for nargin checks.</span>
+0026 <span class="comment">% Please be careful.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% July 24 2009 Hiroshi Ban</span>
+0029 
+0030 <span class="comment">% convert to pixels and radians</span>
+0031 sz=round(sz.*pix_per_deg);
+0032 <span class="comment">%if mod(sz,2)==1, sz=sz+1; end % important for some stimulus conditions</span>
+0033 
+0034 sz_min=round(sz_min.*pix_per_deg);
+0035 sz_max=round(sz_max.*pix_per_deg);
+0036 
+0037 <span class="comment">% create wedges</span>
+0038 [x,y]=meshgrid(1:1:sz,sz:-1:1);
+0039 <span class="comment">%[x,y]=meshgrid(-sz/2:1:sz/2,-sz/2:1:sz/2); % important for some stimulus conditions</span>
+0040 r=sqrt(x.*x+y.*y);
+0041 
+0042 <span class="comment">% create wedge-shaped mask</span>
+0043 r(r&lt;sz_min | sz_max&lt;r)=0;
+0044 r(sz_min&lt;=r &amp; r&lt;=sz_max)=1;
+0045 
+0046 <span class="comment">% create images</span>
+0047 mask=r;
+0048 
+0049 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

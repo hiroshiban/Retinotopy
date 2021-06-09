@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of c_dual</title>
+  <meta name="keywords" content="c_dual">
+  <meta name="description" content="************************************************************">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- ../../menu.html Presentation --><!-- # subjects --><!-- menu.html HNW -->
+<h1>c_dual
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>************************************************************</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top"><pre class="comment"> ************************************************************
+ This is the stimulus parameter file for the dual (wedge + annulus) retinotopy stimulus
+ Programmed by Hiroshi Ban Jan 25 2019
+ ************************************************************</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top"><pre>0001 <span class="comment">% ************************************************************</span>
+0002 <span class="comment">% This is the stimulus parameter file for the dual (wedge + annulus) retinotopy stimulus</span>
+0003 <span class="comment">% Programmed by Hiroshi Ban Jan 25 2019</span>
+0004 <span class="comment">% ************************************************************</span>
+0005 
+0006 <span class="comment">%%% stimulus parameters</span>
+0007 sparam.pol_nwedges     = 4;     <span class="comment">% number of wedge subdivisions along polar angle</span>
+0008 sparam.pol_nrings      = 8;     <span class="comment">% number of ring subdivisions along eccentricity angle</span>
+0009 sparam.pol_width       = 48;    <span class="comment">% wedge width in deg along polar angle</span>
+0010 sparam.pol_phase       = 0;     <span class="comment">% phase shift in deg</span>
+0011 sparam.pol_rotangle    = 12;    <span class="comment">% rotation angle in deg</span>
+0012 sparam.pol_startangle  = -sparam.pol_width/2-90; <span class="comment">% presentation start angle in deg, from right-horizontal meridian, ccw</span>
+0013 
+0014 sparam.ecc_nwedges     = 4;     <span class="comment">% number of wedge subdivisions along polar angle</span>
+0015 sparam.ecc_nrings      = 2;     <span class="comment">% number of ring subdivisions along eccentricity angle</span>
+0016 sparam.ecc_width       = sparam.pol_width/2;
+0017 sparam.ecc_phase       = 0;     <span class="comment">% phase shift in deg</span>
+0018 sparam.ecc_rotangle    = sparam.pol_rotangle;
+0019 sparam.ecc_startangle  = -sparam.ecc_width/2-90; <span class="comment">% presentation start angle in deg, from right-horizontal meridian, ccw (actually this value is not used for the eccentricity stimuli (exp and cont))</span>
+0020 
+0021 sparam.maxRad      = 7.5  <span class="comment">% maximum radius of  annulus (degrees)</span>
+0022 sparam.minRad      = 0;   <span class="comment">% minumum</span>
+0023 
+0024 sparam.dimratio    = 0.4; <span class="comment">% luminance dim ratio for the checker-pattern change detection task</span>
+0025 
+0026 <span class="comment">% checkerboard colors, this variable is only for c* stimulus presentation scripts (e.g. cretinotopy)</span>
+0027 sparam.colors      = [ 128, 128, 128; <span class="comment">% number of colors for compensating flickering checkerboard</span>
+0028                        255,   0,   0; <span class="comment">% the first row is background</span>
+0029                          0, 255,   0; <span class="comment">% the second to end are patch colors</span>
+0030                        255, 255,   0;
+0031                          0,   0, 255;
+0032                        255,   0, 255;
+0033                          0, 255, 255;
+0034                        255, 255, 255;
+0035                          0,   0,   0;
+0036                        255, 128,   0;
+0037                        128,   0, 255;];
+0038 
+0039 <span class="comment">%%% RDS parameters, these are only for d* stimulus presentation scripts (e.g dretinotopy_fixtask)</span>
+0040 sparam.RDSdepth = [ -12, 12, 5]; <span class="comment">% binocular disparity in arcmins, [min, max, #steps(from min to max)]</span>
+0041 sparam.RDSDense=0.5; <span class="comment">% dot density in the RDS images to be generated (percentage)</span>
+0042 sparam.RDSradius=0.05; <span class="comment">% dot radius in deg</span>
+0043 sparam.RDScolors=[255,0,128]; <span class="comment">% dot colors in the RDS, [color1, color2, background (grayscale)]</span>
+0044 sparam.RDSbackground=0; <span class="comment">% 1 = with background, 0 = no background</span>
+0045 sparam.RDStaskmagnitude=2; <span class="comment">% ratio (x2, x3, etc against the sparam.RDSdepth([1,2])) of the depth maginitude in the change-detection task</span>
+0046 
+0047 <span class="comment">%%% duration in msec for each cycle &amp; repetitions</span>
+0048 <span class="comment">% ===========================================================================================================================================</span>
+0049 <span class="comment">% IMPORTANT NOTE: sparam.pol_cycle_duration x sparam.pol_numRepeats should be the same with sparam.ecc_cycle_duration x sparam.ecc_numRepeats</span>
+0050 <span class="comment">% ===========================================================================================================================================</span>
+0051 
+0052 sparam.pol_cycle_duration=60000; <span class="comment">% msec</span>
+0053 sparam.pol_rest_duration =0; <span class="comment">% msec, rest after each cycle, stimulation = cycle_duration-rest_duration</span>
+0054 sparam.pol_numRepeats=6;
+0055 
+0056 sparam.ecc_cycle_duration=40000; <span class="comment">% msec</span>
+0057 sparam.ecc_rest_duration =8000; <span class="comment">% msec, rest after each cycle, stimulation = cycle_duration-rest_duration</span>
+0058 sparam.ecc_numRepeats=9;
+0059 
+0060 <span class="comment">%%% object-image presentation parameters, only for i* object-image-based retinotopy stimuli (e.g. iretinotopy_fixtask)</span>
+0061 sparam.flip_duration=250; <span class="comment">% msec</span>
+0062 sparam.nimg=120; <span class="comment">% number of images to be presented at a frame</span>
+0063 sparam.imRatio=[0.2,0.5]; <span class="comment">% image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range</span>
+0064 sparam.imdepth=[-12,12]; <span class="comment">% disparities (arcmins) added to the images, effective only in a stereo mode (e.g. shutter, dual, parallel etc)</span>
+0065 
+0066 <span class="comment">%%% set number of frames to flip the screen</span>
+0067 <span class="comment">% Here, I set the number as large as I can to minimize vertical cynching error.</span>
+0068 <span class="comment">% the final 2 is for 2 times repetitions of flicker</span>
+0069 <span class="comment">% Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power</span>
+0070 <span class="comment">%sparam.waitframes = Screen('FrameRate',0)*(sparam.cycle_duration/1000) / (360/sparam.rotangle) / ( (size(sparam.colors,1)-1)*2 );</span>
+0071 sparam.waitframes = 60*(sparam.pol_cycle_duration/1000) / (360/sparam.pol_rotangle) / ( (size(sparam.colors,1)-1)*2 );
+0072 <span class="comment">%sparam.waitframes = 1;</span>
+0073 
+0074 <span class="comment">%%% fixation period in msec before/after presenting the target stimuli, integer</span>
+0075 <span class="comment">% must set a value more than 1 TR for initializing the frame counting.</span>
+0076 sparam.initial_fixation_time=[4000,4000];
+0077 
+0078 <span class="comment">%%% fixation size &amp; color</span>
+0079 sparam.fixtype=1; <span class="comment">% 1: circular, 2: rectangular, 3: concentric fixation point</span>
+0080 sparam.fixsize=4; <span class="comment">% radius in pixels</span>
+0081 sparam.fixcolor=[255,255,255];
+0082 
+0083 <span class="comment">%%% background color</span>
+0084 sparam.bgcolor=sparam.colors(1,:); <span class="comment">%[0,0,0];</span>
+0085 
+0086 <span class="comment">%%% RGB for background patches</span>
+0087 <span class="comment">% 1x3 matrices</span>
+0088 sparam.patch_color1=[255,255,255];
+0089 sparam.patch_color2=[0,0,0];
+0090 
+0091 <span class="comment">%%% for converting degree to pixels</span>
+0092 run(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'sizeparams'</span>));
+0093 <span class="comment">%sparam.pix_per_cm=57.1429;</span>
+0094 <span class="comment">%sparam.vdist=65;</span>
+0095 <span class="comment">%sparam.ipd=6.5;</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

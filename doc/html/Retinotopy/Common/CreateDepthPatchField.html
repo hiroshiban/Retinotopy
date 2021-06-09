@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateDepthPatchField</title>
+  <meta name="keywords" content="CreateDepthPatchField">
+  <meta name="description" content="Creates a plane of lattice depth patches">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateDepthPatchField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a plane of lattice depth patches</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,basedisp,jitterdisp,nimg,fine_coefficient,rgb_flg,bgcolor) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a plane of lattice depth patches
+ function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,:basedisp,:jitterdisp,:nimg,:fine_coefficient,:rgb_flg,:bgcolor)
+ (: is optional)
+
+ This function creates a lattice consisted of small patch palnes with randomly assigned disparities.
+ Each patch size of the lattice is defined as [x,y] = 0.8*[fieldSize(1)/nrows, fieldSize(2)/ncols]
+
+ [input]
+ fieldSize        : the size of the field in degrees, [row,col] (deg)
+                    from the fixational plane
+ npatches         : the number of patches in the lattice, [num_row, num_col]
+ ipd              : inter-pupil distance
+ vdist            : viewing distance (cm)
+ pix_per_cm       : pixels per cm, [pixels]
+ basedisp         : (optional) the base binocular disparity (image shift along z-axis)
+                    of the lattice, negative is near, 0 by default
+ jitterdisp       : (optional) disparity jitter to be added on each of patches, [min,max]
+                    [-3,+3] by default
+ nimg             : (optional) the number of images to be generated, 1 by default
+ fine_coefficient : (optional) if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val] (default=1, as is, no tuning)
+ rgb_flg          : (optional) whether presenting the patch with RGB color or not, [0|1]
+                    1 by default. when 0, grayscale image will be generated (faster)
+ bgcolor          : (optional) background RGB color, 128 or [128,128,128] by default.
+
+ [output]
+ imgs             : output images, a cell structure, {nimg,2}, 2 = left/right images
+
+
+ Created
+ Last Update: &quot;2017-12-29 14:03:41 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CalcDistFromDisparity.html" class="code" title="function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)">CalcDistFromDisparity</a>	Calculates the actual distance (cm) from binocular disparity (arcmin).</li><li><a href="InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>	Initializes MATLAB internal state of a random seed.</li><li><a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>	Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,basedisp,jitterdisp,nimg,fine_coefficient,rgb_flg,bgcolor)</a>
+0002 
+0003 <span class="comment">% Creates a plane of lattice depth patches</span>
+0004 <span class="comment">% function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,:basedisp,:jitterdisp,:nimg,:fine_coefficient,:rgb_flg,:bgcolor)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function creates a lattice consisted of small patch palnes with randomly assigned disparities.</span>
+0008 <span class="comment">% Each patch size of the lattice is defined as [x,y] = 0.8*[fieldSize(1)/nrows, fieldSize(2)/ncols]</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% fieldSize        : the size of the field in degrees, [row,col] (deg)</span>
+0012 <span class="comment">%                    from the fixational plane</span>
+0013 <span class="comment">% npatches         : the number of patches in the lattice, [num_row, num_col]</span>
+0014 <span class="comment">% ipd              : inter-pupil distance</span>
+0015 <span class="comment">% vdist            : viewing distance (cm)</span>
+0016 <span class="comment">% pix_per_cm       : pixels per cm, [pixels]</span>
+0017 <span class="comment">% basedisp         : (optional) the base binocular disparity (image shift along z-axis)</span>
+0018 <span class="comment">%                    of the lattice, negative is near, 0 by default</span>
+0019 <span class="comment">% jitterdisp       : (optional) disparity jitter to be added on each of patches, [min,max]</span>
+0020 <span class="comment">%                    [-3,+3] by default</span>
+0021 <span class="comment">% nimg             : (optional) the number of images to be generated, 1 by default</span>
+0022 <span class="comment">% fine_coefficient : (optional) if larger, the generated oval become finer,</span>
+0023 <span class="comment">%                    but comsumes much CPU power. [val] (default=1, as is, no tuning)</span>
+0024 <span class="comment">% rgb_flg          : (optional) whether presenting the patch with RGB color or not, [0|1]</span>
+0025 <span class="comment">%                    1 by default. when 0, grayscale image will be generated (faster)</span>
+0026 <span class="comment">% bgcolor          : (optional) background RGB color, 128 or [128,128,128] by default.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% [output]</span>
+0029 <span class="comment">% imgs             : output images, a cell structure, {nimg,2}, 2 = left/right images</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Created</span>
+0033 <span class="comment">% Last Update: &quot;2017-12-29 14:03:41 ban&quot;</span>
+0034 
+0035 <span class="comment">% check input variables</span>
+0036 <span class="keyword">if</span> nargin&lt;5, help(mfilename()); imgs=[]; <span class="keyword">return</span>; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;6 || isempty(basedisp), basedisp=0; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;7 || isempty(jitterdisp), jitterdisp=[-3,3]; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;8 || isempty(nimg), nimg=1; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;9 || isempty(fine_coefficient), fine_coefficient=1; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;10 || isempty(rgb_flg), rgb_flg=1; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;11 || isempty(bgcolor)
+0043   <span class="keyword">if</span> rgb_flg
+0044     bgcolor=[128,128,128];
+0045   <span class="keyword">else</span>
+0046     bgcolor=128;
+0047   <span class="keyword">end</span>
+0048 <span class="keyword">end</span>
+0049 
+0050 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0051 <span class="keyword">if</span> numel(npatches)==1, npatches=[npatches,npatches]; <span class="keyword">end</span>
+0052 <span class="keyword">if</span> rgb_flg &amp; numel(bgcolor)==1, bgcolor=repmat(bgcolor,[1,3]); <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% initialize random seed</span>
+0055 <a href="InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>();
+0056 
+0057 <span class="comment">% unit conversions</span>
+0058 cm_per_pix=1/pix_per_cm;
+0059 pix_per_deg=round( 1/( 180*atan(cm_per_pix/vdist)/pi ) );
+0060 
+0061 <span class="comment">% convert from degrees to pixels</span>
+0062 wdims=fieldSize.*pix_per_deg;
+0063 wdims(2)=wdims(2)*fine_coefficient;
+0064 
+0065 <span class="comment">% calculate centers (X,Y) of each patch</span>
+0066 p_edgeY=mod(wdims(1),npatches(1))+10; <span class="comment">% delete exceeded region, 10 is a margin</span>
+0067 p_intervalY=round((wdims(1)-p_edgeY)/npatches(1)); <span class="comment">% intervals between patches</span>
+0068 p_Y=repmat((p_intervalY/2+p_edgeY/2:p_intervalY:wdims(1)-p_edgeY/2)',[1,npatches(2)]);
+0069 
+0070 p_edgeX=mod(wdims(2),npatches(2))+10; <span class="comment">% delete exceeded region, 10 is a margin</span>
+0071 p_intervalX=round((wdims(2)-p_edgeX)/npatches(2)); <span class="comment">% intervals between patches</span>
+0072 p_X=repmat(p_intervalX/2+p_edgeX/2:p_intervalX:wdims(2)-p_edgeX/2,[npatches(1),1]);
+0073 
+0074 <span class="comment">% set the base disparity shifts</span>
+0075 basedist=<a href="CalcDistFromDisparity.html" class="code" title="function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)">CalcDistFromDisparity</a>(ipd,basedisp,vdist);
+0076 baseshift(1)=ceil(<a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>(-1*basedist,ipd,vdist,1,pix_per_cm,0));
+0077 baseshift(2)=ceil(<a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>(-1*basedist,ipd,vdist,2,pix_per_cm,0));
+0078 
+0079 <span class="comment">% set colors</span>
+0080 <span class="keyword">if</span> rgb_flg
+0081   colors=ceil(RandLim([nimg,npatches(1),npatches(2),3],64,255));
+0082 <span class="keyword">else</span>
+0083   colors=ceil(RandLim([nimg,npatches(1),npatches(2)],64,255));
+0084 <span class="keyword">end</span>
+0085 
+0086 <span class="comment">% generating images</span>
+0087 imgs=cell(nimg,2);
+0088 <span class="keyword">if</span> rgb_flg
+0089   baseimg=repmat(reshape(bgcolor,[1,1,3]),[wdims,1]);
+0090 <span class="keyword">else</span>
+0091   baseimg=bgcolor.*ones(wdims);
+0092 <span class="keyword">end</span>
+0093 
+0094 <span class="keyword">for</span> ii=1:1:nimg
+0095   imgs{ii,1}=baseimg;
+0096   imgs{ii,2}=baseimg;
+0097 
+0098   pdims_Y=ceil(RandLim(npatches,0.5*p_intervalY,0.9*p_intervalY));
+0099   pdims_X=ceil(RandLim(npatches,0.5*p_intervalX,0.9*p_intervalX));
+0100 
+0101   <span class="comment">% set jitters of the patch centers</span>
+0102   centershift_Y=RandLim(npatches,-wdims(1)/30,wdims(1)/30);
+0103   centershift_X=RandLim(npatches,-wdims(2)/30,wdims(2)/30);
+0104 
+0105   <span class="comment">% calculate X &amp; Y start point</span>
+0106   p_Ys=int32(p_Y-pdims_Y./2+centershift_Y); p_Ys(p_Ys&lt;=0)=1;
+0107   p_Xs=int32(p_X-pdims_X./2+centershift_X); p_Xs(p_Xs&lt;=0)=1;
+0108 
+0109   <span class="comment">% calculate X &amp; Y end point</span>
+0110   p_Ye=int32(p_Y+pdims_Y./2+centershift_Y); p_Ye(p_Ye&gt;wdims(1))=wdims(1);
+0111   p_Xe=int32(p_X+pdims_X./2+centershift_X); p_Xe(p_Xe&gt;wdims(2))=wdims(2);
+0112 
+0113   <span class="comment">% set jitter disparities to be added to patches</span>
+0114   jitters=RandLim([npatches(1),npatches(2)],jitterdisp(1),jitterdisp(2));
+0115   dist=<a href="CalcDistFromDisparity.html" class="code" title="function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)">CalcDistFromDisparity</a>(ipd,jitters,vdist);
+0116   xshifts(1,:,:)=ceil(<a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>(-1*dist,ipd,vdist,1,pix_per_cm,0));
+0117   xshifts(2,:,:)=ceil(<a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>(-1*dist,ipd,vdist,2,pix_per_cm,0));
+0118 
+0119   <span class="comment">% order the patches by the added disparity to prevent occlusion problem</span>
+0120   valx=squeeze(xshifts(1,:,:));
+0121   valx=valx(:);
+0122   [dummy,idx]=sort(valx,<span class="string">'descend'</span>); <span class="comment">%#ok</span>
+0123   [yy,xx]=ind2sub(size(p_Ys),idx);
+0124 
+0125   <span class="keyword">for</span> pp=1:1:numel(idx)
+0126     <span class="keyword">for</span> nn=1:1:2 <span class="comment">% left and right</span>
+0127       <span class="keyword">for</span> cc=1:1:size(colors,4) <span class="comment">% RGB</span>
+0128         imgs{ii,nn}(max(p_Ys(idx(pp))+1,1):min(p_Ye(idx(pp)),size(imgs{ii,nn},1)),<span class="keyword">...</span>
+0129                     max(p_Xs(idx(pp))+1+xshifts(nn,idx(pp))+baseshift(nn),1):<span class="keyword">...</span>
+0130                     min(p_Xe(idx(pp))+xshifts(nn,idx(pp))+baseshift(nn),<span class="keyword">...</span>
+0131                     size(imgs{ii,nn},2)),cc)=colors(ii,yy(pp),xx(pp),cc);
+0132       <span class="keyword">end</span>
+0133     <span class="keyword">end</span>
+0134   <span class="keyword">end</span>
+0135   imgs{ii,nn}=uint8(imgs{ii,nn});
+0136 <span class="keyword">end</span> <span class="comment">% for ii=1:1:nimg</span>
+0137 
+0138 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

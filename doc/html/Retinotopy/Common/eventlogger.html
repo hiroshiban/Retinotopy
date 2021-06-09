@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eventlogger</title>
+  <meta name="keywords" content="eventlogger">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>eventlogger
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="eventlogger.html" class="code" title="">eventlogger</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="eventlogger.html" class="code" title="">eventlogger</a>	</li><li><a href="../../Retinotopy/Presentation/cbar.html" class="code" title="function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cbar_fixtask.html" class="code" title="function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar_fixtask</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual.html" class="code" title="function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual_fixtask.html" class="code" title="function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/chrf.html" class="code" title="function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/chrf_fixtask.html" class="code" title="function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer.html" class="code" title="function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer_fixtask.html" class="code" title="function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/cmeridian.html" class="code" title="function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmeridian_fixtask.html" class="code" title="function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian_fixtask</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy.html" class="code" title="function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy_fixtask.html" class="code" title="function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar.html" class="code" title="function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar_fixtask.html" class="code" title="function dbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual.html" class="code" title="function ddual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual_fixtask.html" class="code" title="function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dhrf.html" class="code" title="function dhrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dhrf_fixtask.html" class="code" title="function dhrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer.html" class="code" title="function dlgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer_fixtask.html" class="code" title="function dlgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlocalizer.html" class="code" title="function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer_fixtask.html" class="code" title="function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dmeridian.html" class="code" title="function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmeridian_fixtask.html" class="code" title="function dmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian_fixtask</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal.html" class="code" title="function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal_fixtask.html" class="code" title="function dmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal_fixtask</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy.html" class="code" title="function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy_fixtask.html" class="code" title="function dretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy_fixtask</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ibar_fixtask.html" class="code" title="function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ibar_fixtask</a>	Object-image-defined bar stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/ilgnlocalizer_fixtask.html" class="code" title="function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilgnlocalizer_fixtask</a>	Object-image-defined wedge stimulus with fixation luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/imeridian_fixtask.html" class="code" title="function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imeridian_fixtask</a>	Object-image-defined dual wedge stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj=eventlogger(base_t,eventcounter)</a></li><li><a href="#_sub2" class="code">function obj=delete(obj)</a></li><li><a href="#_sub3" class="code">function [obj,reference_time]=set_reference_time(obj,reference_time)</a></li><li><a href="#_sub4" class="code">function [reference_time,obj]=get_reference_time(obj)</a></li><li><a href="#_sub5" class="code">function [obj,eventcounter]=set_eventcounter(num)</a></li><li><a href="#_sub6" class="code">function [eventcounter,obj]=get_eventcounter(obj)</a></li><li><a href="#_sub7" class="code">function obj=add_event(obj,name,parameter,specific_time,display_flg)</a></li><li><a href="#_sub8" class="code">function [event,obj]=get_event(obj)</a></li><li><a href="#_sub9" class="code">function [event,obj]=get_A_event(obj,names_parameters)</a></li><li><a href="#_sub10" class="code">function [numTasks,numHits,numErrors,numResponses,RT,obj]=calc_accuracy(obj,correct_event)</a></li><li><a href="#_sub11" class="code">function [numTasks,numHits,numErrors,numResponses,RT,obj]=calc_accuracies(obj,correct_events)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 classdef <a href="eventlogger.html" class="code" title="">eventlogger</a>
+0002 
+0003 <span class="comment">% a class to handle event log for your bahavior/fMRI/TMS experiments.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% [method]</span>
+0006 <span class="comment">% &gt;&gt; [event,reference_time]=event.set_reference_time(reference_time) : set reference time point for the event logs</span>
+0007 <span class="comment">% &gt;&gt; [reference_time,event]=event.get_reference_time()               : get reference time point for the event logs</span>
+0008 <span class="comment">% &gt;&gt; [event,eventcounter]=event.set_eventcounter(num)                : set the current event ID (num=1,2,3,...)</span>
+0009 <span class="comment">% &gt;&gt; [eventcounter,event]=event.get_eventcounter()                   : get the current event ID</span>
+0010 <span class="comment">% &gt;&gt; event=event.add_event(name,parameter,specific_time,display_flg) : add new event to the object</span>
+0011 <span class="comment">% &gt;&gt; [all_event_cell,event]=event.get_event()                        : get event log from the object</span>
+0012 <span class="comment">% &gt;&gt; [my_event_cell,event]=event.get_A_event(names_parameters)       : get event log(s) with name(s)/parameter(s) you want to extract</span>
+0013 <span class="comment">% &gt;&gt; [numTasks,numHits,numErrors,numResponses,RT,event]=event.calc_accuracy(correct_event)    : calculate task accuracy</span>
+0014 <span class="comment">% &gt;&gt; [numTasks,numHits,numErrors,numResponses,RT,event]=event.calc_accuracies(correct_events) : calculate multiple selection task accuracies</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% [about input/output variables]</span>
+0017 <span class="comment">% reference_time : reference time point to be used in logging the latter event time.</span>
+0018 <span class="comment">%                  e.g. reference_time=GetSecs();</span>
+0019 <span class="comment">% event          : record of the events, cell structure. each of cell has 3 elements below.</span>
+0020 <span class="comment">%                  {event_time(GetSecs()-reference_time),name_of_the_event,parameter_of_the_event}</span>
+0021 <span class="comment">% name           : name of the event you want to add</span>
+0022 <span class="comment">% parameter      : parameter of the event you want to add</span>
+0023 <span class="comment">% all_event_cell : cell structure that contains {event_time,name_of_the_event,parameter_of_the_event}</span>
+0024 <span class="comment">% my_event_cell  : cell structure that only contains names and parameters you specified</span>
+0025 <span class="comment">% names_parameters : cell structure of the event names and/or parameters. For example,</span>
+0026 <span class="comment">%                    when you use get_A_event with names_parameters={'stim 1','stim 2','Responses'},</span>
+0027 <span class="comment">%                    only the event structures with 'stim 1', 'stim2', or 'Responses' will be returned</span>
+0028 <span class="comment">%                    from the whole event data structure.</span>
+0029 <span class="comment">% correct_event  : string (or cell structure) to indicate the correct response(s) for the task event</span>
+0030 <span class="comment">%                  e.g. correct_event={'key1','key2'}; (both key1 and key2 are the correct answer.)</span>
+0031 <span class="comment">% correct_events : cell structure to indicate the combination of task IDs and the corresponding correct responses</span>
+0032 <span class="comment">%                  e.g. correct_event{1}={1,'key1'}; correct_event{2}={2,'key2'};</span>
+0033 <span class="comment">% numTasks       : the number of tasks in the event array</span>
+0034 <span class="comment">% numHits        : the number of hit responses in the event array</span>
+0035 <span class="comment">% numErrors      : the number of error responses in the event array</span>
+0036 <span class="comment">% numResponses   : the number of total participant's responses</span>
+0037 <span class="comment">% RT             : reaction times</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% Created    : &quot;2013-11-17 21:42:27 ban&quot;</span>
+0041 <span class="comment">% Last Update: &quot;2016-10-21 16:20:32 ban&quot;</span>
+0042 
+0043 properties (Hidden) <span class="comment">%(SetAccess = protected)</span>
+0044   eventcounter=1; <span class="comment">% a counter for event logging</span>
+0045   ref_time=0;     <span class="comment">% base time point to log the event time</span>
+0046   event=[];       <span class="comment">% cell array to store the event logs</span>
+0047 <span class="keyword">end</span>
+0048 
+0049 methods
+0050 
+0051   <span class="comment">% constructor</span>
+0052   <a name="_sub0" href="#_subfunctions" class="code">function obj=eventlogger(base_t,eventcounter)</a>
+0053     <span class="keyword">if</span> nargin&gt;=1 &amp;&amp; ~isempty(base_t), obj.ref_time=base_t; <span class="keyword">end</span>
+0054     <span class="keyword">if</span> nargin==2 &amp;&amp; ~isempty(eventcounter), obj.eventcounter=eventcounter; <span class="keyword">end</span>
+0055   <span class="keyword">end</span>
+0056 
+0057   <span class="comment">% destructor</span>
+0058   <a name="_sub1" href="#_subfunctions" class="code">function obj=delete(obj)</a>
+0059     <span class="comment">% do nothing</span>
+0060   <span class="keyword">end</span>
+0061 
+0062   <span class="comment">% set reference time point for the event log</span>
+0063   <a name="_sub2" href="#_subfunctions" class="code">function [obj,reference_time]=set_reference_time(obj,reference_time)</a>
+0064     obj.ref_time=reference_time;
+0065   <span class="keyword">end</span>
+0066 
+0067   <span class="comment">% get reference time point for the event log</span>
+0068   <a name="_sub3" href="#_subfunctions" class="code">function [reference_time,obj]=get_reference_time(obj)</a>
+0069     reference_time=obj.ref_time;
+0070   <span class="keyword">end</span>
+0071 
+0072   <span class="comment">% set the current event ID (1,2,3,...)</span>
+0073   <a name="_sub4" href="#_subfunctions" class="code">function [obj,eventcounter]=set_eventcounter(num)</a>
+0074     obj.eventcounter=num;
+0075     eventcounter=num;
+0076   <span class="keyword">end</span>
+0077 
+0078   <span class="comment">% get the current event ID (1,2,3,...)</span>
+0079   <a name="_sub5" href="#_subfunctions" class="code">function [eventcounter,obj]=get_eventcounter(obj)</a>
+0080     eventcounter=obj.eventcounter;
+0081   <span class="keyword">end</span>
+0082 
+0083   <span class="comment">% add new event to the eventlogger object</span>
+0084   <a name="_sub6" href="#_subfunctions" class="code">function obj=add_event(obj,name,parameter,specific_time,display_flg)</a>
+0085     <span class="keyword">if</span> nargin&lt;2 || isempty(name), name=<span class="string">''</span>; <span class="keyword">end</span>
+0086     <span class="keyword">if</span> nargin&lt;3 || isempty(parameter), parameter=[]; <span class="keyword">end</span>
+0087     <span class="keyword">if</span> nargin&lt;4 || isempty(specific_time)
+0088       obj.event{obj.eventcounter,1}=GetSecs()-obj.ref_time;
+0089     <span class="keyword">else</span>
+0090       obj.event{obj.eventcounter,1}=GetSecs()-specific_time;
+0091     <span class="keyword">end</span>
+0092     <span class="keyword">if</span> nargin&lt;5 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0093     obj.event{obj.eventcounter,2}=name;
+0094     obj.event{obj.eventcounter,3}=parameter;
+0095     <span class="keyword">if</span> display_flg
+0096       fprintf(<span class="string">'[% 4.4f] %15s   %s\n'</span>,<span class="keyword">...</span>
+0097               obj.event{obj.eventcounter,1},<span class="keyword">...</span>
+0098               obj.event{obj.eventcounter,2}(1:min(15,numel(obj.event{obj.eventcounter,2}))),<span class="keyword">...</span>
+0099               num2str(obj.event{obj.eventcounter,3}));
+0100     <span class="keyword">end</span>
+0101     obj.eventcounter=obj.eventcounter+1;
+0102   <span class="keyword">end</span>
+0103 
+0104   <span class="comment">% get event log from the eventlogger object</span>
+0105   <a name="_sub7" href="#_subfunctions" class="code">function [event,obj]=get_event(obj)</a>
+0106     event=obj.event;
+0107   <span class="keyword">end</span>
+0108 
+0109   <span class="comment">% get event log with a name you want to extract alone</span>
+0110   <a name="_sub8" href="#_subfunctions" class="code">function [event,obj]=get_A_event(obj,names_parameters)</a>
+0111     <span class="keyword">if</span> nargin&lt;2 || isempty(names_parameters)
+0112       event=obj.event;
+0113       <span class="keyword">return</span>
+0114     <span class="keyword">end</span>
+0115 
+0116     <span class="keyword">if</span> ~iscell(names_parameters), names_parameters={names_parameters}; <span class="keyword">end</span>
+0117     event=[];
+0118     counter=0;
+0119     <span class="keyword">for</span> ii=1:1:size(obj.event,1)
+0120       <span class="keyword">for</span> jj=1:1:length(names_parameters)
+0121         <span class="keyword">if</span> strfind(obj.event{ii,2},names_parameters{jj}) || strfind(obj.event{ii,3},names_parameters{jj})
+0122           counter=counter+1;
+0123           event{counter,1}=obj.event{jj,1}; <span class="comment">%#ok</span>
+0124           event{counter,2}=obj.event{jj,2}; <span class="comment">%#ok</span>
+0125           event{counter,3}=obj.event{jj,3}; <span class="comment">%#ok</span>
+0126         <span class="keyword">end</span>
+0127       <span class="keyword">end</span>
+0128     <span class="keyword">end</span>
+0129   <span class="keyword">end</span>
+0130 
+0131   <span class="comment">% calculate task accuracy</span>
+0132   <a name="_sub9" href="#_subfunctions" class="code">function [numTasks,numHits,numErrors,numResponses,RT,obj]=calc_accuracy(obj,correct_event)</a>
+0133     <span class="comment">% count the number of subject's responses</span>
+0134     numResponses=0;
+0135     <span class="keyword">for</span> ii=1:length(obj.event)-1
+0136       <span class="keyword">if</span> (strcmp(obj.event{ii,2}, <span class="string">'Response'</span>)), numResponses=numResponses + 1; <span class="keyword">end</span>
+0137     <span class="keyword">end</span>
+0138 
+0139     <span class="comment">% calculate Hit rate</span>
+0140     numTasks=0; numHits=0; numErrors=0; RT=[];
+0141     <span class="keyword">for</span> ii=1:length(obj.event)
+0142       <span class="comment">% check subject responses</span>
+0143       <span class="keyword">if</span> strfind(obj.event{ii,2},<span class="string">'Task'</span>)
+0144         numTasks=numTasks+1;
+0145         <span class="keyword">for</span> jj=ii+1:1:length(obj.event)
+0146           <span class="keyword">if</span> strfind(obj.event{jj,2},<span class="string">'Task'</span>) <span class="comment">% check observer responses: whether observer responded before the next task event occured</span>
+0147             RT(numTasks)=NaN; <span class="comment">%#ok</span>
+0148             numErrors=numErrors+1;
+0149             <span class="keyword">break</span>
+0150           <span class="keyword">elseif</span> ischar(obj.event{jj,3}) &amp;&amp; ismember(obj.event{jj,3},correct_event)
+0151             RT(numTasks)=obj.event{jj,1}-obj.event{ii,1}; <span class="comment">%#ok</span>
+0152             numHits=numHits+1;
+0153             <span class="keyword">break</span>
+0154           <span class="keyword">elseif</span> jj==length(obj.event) <span class="comment">% reach to the end of the event array.</span>
+0155             RT(numTasks)=NaN; <span class="comment">%#ok</span>
+0156             numErrors=numErrors+1;
+0157             <span class="keyword">break</span>
+0158           <span class="keyword">end</span>
+0159         <span class="keyword">end</span>
+0160       <span class="keyword">end</span>
+0161     <span class="keyword">end</span>
+0162 
+0163     disp(<span class="string">'******************************'</span>);
+0164     disp([<span class="string">'Total Tasks     : '</span>,num2str(numTasks)]);
+0165     disp([<span class="string">'Total Responses : '</span>,num2str(numResponses)]);
+0166     disp([<span class="string">'Hit Rate        : '</span>,num2str((numHits/numTasks)*100),<span class="string">'%'</span>]);
+0167     disp([<span class="string">'False alarms    : '</span>,num2str(numResponses-numHits)]);
+0168     <span class="comment">% not use nanmedian() as it never compute median value when the number of NaN exceeds the half of the elemnts of the array.</span>
+0169     disp([<span class="string">'Median RT (Hit) : '</span>,num2str(median(RT(~isnan(RT)))*1000),<span class="string">' ms'</span>]);
+0170     disp(<span class="string">'******************************'</span>);
+0171   <span class="keyword">end</span>
+0172 
+0173   <span class="comment">% calculate multiple selection task accuracies</span>
+0174   <a name="_sub10" href="#_subfunctions" class="code">function [numTasks,numHits,numErrors,numResponses,RT,obj]=calc_accuracies(obj,correct_events)</a>
+0175     <span class="comment">% count the number of subject's responses</span>
+0176     numResponses=0;
+0177     <span class="keyword">for</span> ii=1:length(obj.event)-1
+0178       <span class="keyword">if</span> (strcmp(obj.event{ii,2}, <span class="string">'Response'</span>)), numResponses=numResponses + 1; <span class="keyword">end</span>
+0179     <span class="keyword">end</span>
+0180 
+0181     eventIDs=zeros(1,length(correct_events));
+0182     <span class="keyword">for</span> ii=1:1:length(correct_events), eventIDs(ii)=correct_events{ii}{1}; <span class="keyword">end</span>
+0183 
+0184     <span class="comment">% calculate Hit rate</span>
+0185     numTasks=zeros(1,length(correct_events));
+0186     numHits=zeros(1,length(correct_events));
+0187     numErrors=zeros(1,length(correct_events));
+0188     RT=cell(1,length(correct_events));
+0189     <span class="keyword">for</span> ii=1:length(obj.event)-1
+0190       <span class="comment">% check subject responses</span>
+0191       <span class="keyword">if</span> strfind(obj.event{ii,2},<span class="string">'Task'</span>)
+0192         idx=find(eventIDs==obj.event{ii,3});
+0193         <span class="keyword">if</span> ~isempty(idx)
+0194           numTasks(idx)=numTasks(idx)+1;
+0195           <span class="keyword">for</span> jj=ii+1:1:length(obj.event)-1
+0196             <span class="keyword">if</span> strfind(obj.event{jj,2},<span class="string">'Task'</span>) <span class="comment">% check observer responses: whether observer responded before the next task event occured</span>
+0197               RT{idx}=[RT{idx},NaN];
+0198               numErrors(idx)=numErrors(idx)+1;
+0199               <span class="keyword">break</span>
+0200             <span class="keyword">elseif</span> strcmp(obj.event{jj,2},<span class="string">'Response'</span>)
+0201               <span class="keyword">if</span> strcmp(obj.event{jj,3},correct_events{idx}{2}) <span class="comment">% correct response</span>
+0202                 RT{idx}=[RT{idx},obj.event{jj,1}-obj.event{ii,1}];
+0203                 numHits(idx)=numHits(idx)+1;
+0204                 <span class="keyword">break</span>
+0205               <span class="keyword">else</span> <span class="comment">% incorrect response</span>
+0206                 RT{idx}=[RT{idx},NaN];
+0207                 numErrors(idx)=numErrors(idx)+1;
+0208                 <span class="keyword">break</span>
+0209               <span class="keyword">end</span>
+0210             <span class="keyword">end</span>
+0211           <span class="keyword">end</span>
+0212         <span class="keyword">end</span> <span class="comment">% if ~isempty(idx)</span>
+0213       <span class="keyword">end</span>
+0214     <span class="keyword">end</span>
+0215 
+0216     <span class="comment">% displaying the results</span>
+0217     disp(<span class="string">'******************************'</span>);
+0218     disp([<span class="string">'Total Tasks     : '</span>,num2str(sum(numTasks))]);
+0219     disp([<span class="string">'Total Responses : '</span>,num2str(sum(numResponses))]);
+0220     disp([<span class="string">'Hit Rate        : '</span>,num2str(sum(numHits)/sum(numTasks)*100),<span class="string">'%'</span>]);
+0221     <span class="comment">%disp(['False alarms    : ',num2str(numResponses-sum(numHits))]);</span>
+0222     RTs=cell2mat(RT);
+0223     <span class="comment">% not use nanmedian() as it never compute median value when the number of NaN exceeds the half of the elemnts of the array.</span>
+0224     disp([<span class="string">'Median RT (Hit) : '</span>,num2str(median(RTs(~isnan(RTs)))*1000),<span class="string">' ms'</span>]);
+0225     disp(<span class="string">'******************************'</span>);
+0226 
+0227     <span class="comment">% plotting the results</span>
+0228     figure; hold on;
+0229     h1=plot(numHits./numTasks.*100,<span class="string">'ro-'</span>,<span class="string">'LineWidth'</span>,2);  <span class="comment">% hits</span>
+0230     h2=plot(numErrors./numTasks.*100,<span class="string">'bo-'</span>,<span class="string">'LineWidth'</span>,1); <span class="comment">% false alarms</span>
+0231 
+0232     title(<span class="string">'Behavior detection accuracies'</span>);
+0233     legend([h1,h2],<span class="string">'Hit Rate'</span>,<span class="string">'FalseAlarm Rate'</span>);
+0234     set(gca,<span class="string">'XLim'</span>,[0,length(correct_events)+1]);
+0235     set(gca,<span class="string">'XTick'</span>,0:length(correct_events)+1);
+0236     set(gca,<span class="string">'XTickLabel'</span>,{<span class="string">''</span>,1:length(correct_events),<span class="string">''</span>});
+0237     set(gca,<span class="string">'YLim'</span>,[0,100]);
+0238     set(gca,<span class="string">'YTick'</span>,0:10:100);
+0239     set(gca,<span class="string">'YTickLabel'</span>,0:10:100);
+0240     xlabel(<span class="string">'task type'</span>);
+0241     ylabel(<span class="string">'Percentage (%)'</span>);
+0242   <span class="keyword">end</span>
+0243 
+0244 <span class="keyword">end</span> <span class="comment">% methods</span>
+0245 
+0246 <span class="keyword">end</span> <span class="comment">% classdef eventlogger</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

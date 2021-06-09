@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreatePlaneField</title>
+  <meta name="keywords" content="CreatePlaneField">
+  <meta name="description" content="Creates a plane height field.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreatePlaneField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a plane height field.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a plane height field.
+ function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient)
+
+ This function creates a simple plane height field.
+ 
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col] (deg)
+ plane_height: ratio of plane height for 'cylinder_rad', [val]
+               the generated cylinder's height is cylinder_rad*cylinder_height
+               if the value is minus, the concave surface is generated.
+               (default is convex surface)
+ pix_per_deg : pixels per degree, [pixels]
+ fine_coefficient : (optional) if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val]
+                    (default=1, as is, no tuning)
+
+ [output]
+ field       : cylinder image, double format, [row,col]
+ 
+ !!! NOTICE !!!
+ for speeding up image generation process,
+ I will not put codes for nargin checks.
+ Please be careful.
+
+ Created    : &quot;2010-06-14 12:20:56 ban&quot;
+ Last Update: &quot;2013-11-22 18:41:10 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreatePlaneField.html" class="code" title="function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient)">CreatePlaneField</a>	Creates a plane height field.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreatePlaneField.html" class="code" title="function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient)">CreatePlaneField</a>	Creates a plane height field.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient)</a>
+0002 
+0003 <span class="comment">% Creates a plane height field.</span>
+0004 <span class="comment">% function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function creates a simple plane height field.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col] (deg)</span>
+0010 <span class="comment">% plane_height: ratio of plane height for 'cylinder_rad', [val]</span>
+0011 <span class="comment">%               the generated cylinder's height is cylinder_rad*cylinder_height</span>
+0012 <span class="comment">%               if the value is minus, the concave surface is generated.</span>
+0013 <span class="comment">%               (default is convex surface)</span>
+0014 <span class="comment">% pix_per_deg : pixels per degree, [pixels]</span>
+0015 <span class="comment">% fine_coefficient : (optional) if larger, the generated oval become finer,</span>
+0016 <span class="comment">%                    but comsumes much CPU power. [val]</span>
+0017 <span class="comment">%                    (default=1, as is, no tuning)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% field       : cylinder image, double format, [row,col]</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% !!! NOTICE !!!</span>
+0023 <span class="comment">% for speeding up image generation process,</span>
+0024 <span class="comment">% I will not put codes for nargin checks.</span>
+0025 <span class="comment">% Please be careful.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Created    : &quot;2010-06-14 12:20:56 ban&quot;</span>
+0028 <span class="comment">% Last Update: &quot;2013-11-22 18:41:10 ban (ban.hiroshi@gmail.com)&quot;</span>
+0029 
+0030 <span class="comment">% check input variables</span>
+0031 <span class="keyword">if</span> nargin&lt;3, help <a href="CreatePlaneField.html" class="code" title="function field=CreatePlaneField(fieldSize,plane_height,pix_per_deg,fine_coefficient)">CreatePlaneField</a>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;4, fine_coefficient=1.0; <span class="keyword">end</span>
+0033 
+0034 <span class="comment">% convert to pixels and radians</span>
+0035 fieldSize=round(fieldSize.*pix_per_deg);
+0036 
+0037 <span class="comment">% create plane field</span>
+0038 step=1/fine_coefficient;
+0039 [x,y]=meshgrid(0:step:fieldSize(2),0:1:fieldSize(1)); <span class="comment">% oversampling along x-axis</span>
+0040 <span class="keyword">if</span> mod(size(y,1),2), y=y(1:end-1,:); <span class="keyword">end</span>
+0041 <span class="keyword">if</span> mod(size(y,2),2), y=y(:,1:end-1); <span class="keyword">end</span>
+0042 
+0043 field=plane_height*ones(size(y));
+0044 
+0045 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

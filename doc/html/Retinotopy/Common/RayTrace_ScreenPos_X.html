@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of RayTrace_ScreenPos_X</title>
+  <meta name="keywords" content="RayTrace_ScreenPos_X">
+  <meta name="description" content="Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>RayTrace_ScreenPos_X
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.
+ function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)
+ 
+ This function calculates the horizontal screen position (in pixels) of a point distance xpos_world
+ from the visual midline and zdist_fromScreen in infront (-ve) or behind (+ve) the screen
+ Equation 2 from Howard and Rogers volume 2, p.541
+ 
+ [INPUT]
+ zdist_fromScreen : distance from the screen (cm)
+ ipd              : distance between left and right eyes (cm)
+ viewdist         : viewing distance from eye to the screen (cm)
+ pix_per_cm       : pixels per 1 centimeter
+ eye              : '1/left' or '2/right', 'left' by default
+ xpos_world       : x position in the world coordinate, 0 by default
+ 
+ [OUTPUT]
+ x_pixels         : horizontal screen position (pixels)
+ 
+ June 29 2009 Hiroshi Ban</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>	Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreateDepthPatchField.html" class="code" title="function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,basedisp,jitterdisp,nimg,fine_coefficient,rgb_flg,bgcolor)">CreateDepthPatchField</a>	Creates a plane of lattice depth patches</li><li><a href="RDS.html" class="code" title="function [imgL,imgR]=RDS(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDS</a>	Generates left/right Random-Dot-Stereogram images.</li><li><a href="RDSbyOval.html" class="code" title="function [imgL,imgR]=RDSbyOval(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOval</a>	Generates left/right Random-Dot-Stereogram images using oval textures, not dots.</li><li><a href="RDSbyOvalFast.html" class="code" title="function [imgL,imgR]=RDSbyOvalFast(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOvalFast</a>	Generates left/right Random-Dot-Stereogram images.</li><li><a href="RDSfast.html" class="code" title="function [imgL,imgR]=RDSfast(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSfast</a>	Generates left/right Random-Dot-Stereogram images.</li><li><a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>	Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)</a>
+0002 
+0003 <span class="comment">% Calculates the horizontal screen position (in pixels) of a point distance from the visual midline and z-distance.</span>
+0004 <span class="comment">% function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function calculates the horizontal screen position (in pixels) of a point distance xpos_world</span>
+0007 <span class="comment">% from the visual midline and zdist_fromScreen in infront (-ve) or behind (+ve) the screen</span>
+0008 <span class="comment">% Equation 2 from Howard and Rogers volume 2, p.541</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [INPUT]</span>
+0011 <span class="comment">% zdist_fromScreen : distance from the screen (cm)</span>
+0012 <span class="comment">% ipd              : distance between left and right eyes (cm)</span>
+0013 <span class="comment">% viewdist         : viewing distance from eye to the screen (cm)</span>
+0014 <span class="comment">% pix_per_cm       : pixels per 1 centimeter</span>
+0015 <span class="comment">% eye              : '1/left' or '2/right', 'left' by default</span>
+0016 <span class="comment">% xpos_world       : x position in the world coordinate, 0 by default</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% [OUTPUT]</span>
+0019 <span class="comment">% x_pixels         : horizontal screen position (pixels)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% June 29 2009 Hiroshi Ban</span>
+0022 
+0023 <span class="keyword">if</span> nargin &lt; 3
+0024   help <a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>;
+0025   <span class="keyword">return</span>;
+0026 <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin &lt; 4
+0028   eye = 1;<span class="comment">%'left';</span>
+0029 <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin &lt; 5
+0031   pix_per_cm=50;
+0032 <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin &lt; 6
+0034   xpos_world=0;
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="keyword">if</span> eye==1 || strcmp(eye,<span class="string">'left'</span>)
+0038   multi = -1;
+0039 <span class="keyword">elseif</span> eye==2 || strcmp(eye,<span class="string">'right'</span>)
+0040   multi = 1;
+0041 <span class="keyword">else</span> 
+0042   help <a href="RayTrace_ScreenPos_X.html" class="code" title="function x_pixels = RayTrace_ScreenPos_X(zdist_fromScreen, ipd, viewdist, eye, pix_per_cm, xpos_world)">RayTrace_ScreenPos_X</a>;
+0043   <span class="keyword">return</span>;
+0044 <span class="keyword">end</span>
+0045 
+0046 x_pixels = pix_per_cm * ( xpos_world*viewdist + multi* zdist_fromScreen*(ipd/2) ) ./ (viewdist +  zdist_fromScreen);
+0047 
+0048 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

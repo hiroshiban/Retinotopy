@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateGratingField</title>
+  <meta name="keywords" content="CreateGratingField">
+  <meta name="description" content="Creates a grating image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateGratingField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a grating image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function field=CreateGratingField(fieldSize,spf,amp,meanval,orient_deg,phase,pix_per_deg,flip) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a grating image.
+ function field=CreateGratingField(fieldSize,spf,amp,meanval,orient_deg,pix_per_deg,flip)
+
+ Creates oriented gratings with values varying between -amp and amp
+
+ [input]
+ fieldSize   : the size of the graing in degrees, [deg]
+ spf         : the spatial frequency of the grating in cpd, [val]
+ amp         : amplitude of gratings, [val]
+ meanval     : baseline magnitude of gratings, [val]
+ orient_deg  : the orientation of the grating in degrees, [deg]
+               0 at the upper vertical meridian, ccw
+ phase       : phase of the grating, [deg]
+ pix_per_deg : pixels per degree, [val]
+ flip        : [1|-1], sin wave is flipped or not
+
+ [output]
+ field       : grating image, double format, [row,col]
+
+ Created: &quot;2010-04-03 16:26:51 ban&quot;
+ Last Update: &quot;2015-04-26 15:37:22 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function field=CreateGratingField(fieldSize,spf,amp,meanval,orient_deg,phase,pix_per_deg,flip)</a>
+0002 
+0003 <span class="comment">% Creates a grating image.</span>
+0004 <span class="comment">% function field=CreateGratingField(fieldSize,spf,amp,meanval,orient_deg,pix_per_deg,flip)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Creates oriented gratings with values varying between -amp and amp</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize   : the size of the graing in degrees, [deg]</span>
+0010 <span class="comment">% spf         : the spatial frequency of the grating in cpd, [val]</span>
+0011 <span class="comment">% amp         : amplitude of gratings, [val]</span>
+0012 <span class="comment">% meanval     : baseline magnitude of gratings, [val]</span>
+0013 <span class="comment">% orient_deg  : the orientation of the grating in degrees, [deg]</span>
+0014 <span class="comment">%               0 at the upper vertical meridian, ccw</span>
+0015 <span class="comment">% phase       : phase of the grating, [deg]</span>
+0016 <span class="comment">% pix_per_deg : pixels per degree, [val]</span>
+0017 <span class="comment">% flip        : [1|-1], sin wave is flipped or not</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% field       : grating image, double format, [row,col]</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Created: &quot;2010-04-03 16:26:51 ban&quot;</span>
+0023 <span class="comment">% Last Update: &quot;2015-04-26 15:37:22 ban&quot;</span>
+0024 
+0025 <span class="comment">% check input variables</span>
+0026 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin&lt;2 || isempty(spf), spf=3; <span class="keyword">end</span>
+0028 <span class="keyword">if</span> nargin&lt;3 || isempty(amp), amp=1; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;4 || isempty(meanval), meanval=0; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;5 || isempty(orient_deg), orient_deg=45; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;6 || isempty(phase), phase=0; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;7 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;8 || isempty(flip), flip=1; <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% convert to pixels and radians</span>
+0036 nw=fieldSize*spf;
+0037 fieldSize=round(fieldSize.*pix_per_deg);
+0038 orient_deg=orient_deg*pi/180;
+0039 
+0040 <span class="comment">% create grating</span>
+0041 step=pi*2./(fieldSize-1);
+0042 [x,y]=meshgrid(-pi:step:pi, -pi:step:pi); <span class="comment">%#ok</span>
+0043 x=x+phase/180*pi;
+0044 y=y+phase/180*pi;
+0045 
+0046 ramp=cos(orient_deg)*x-sin(orient_deg)*y;
+0047 
+0048 <span class="comment">% create images</span>
+0049 field=amp*sin(flip*ramp*nw)+meanval;
+0050 
+0051 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ieNotDefined</title>
+  <meta name="keywords" content="ieNotDefined">
+  <meta name="description" content="Determines if a variable is defined in the calling function's workspace.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>ieNotDefined
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Determines if a variable is defined in the calling function's workspace.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function notDefined = ieNotDefined( varString ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Determines if a variable is defined in the calling function's workspace.
+ function notDefined = ieNotDefined( varString )
+
+ Author: ImagEval
+ Purpose:
+    Determine if a variable is defined in the calling function's workspace.
+  A variable is defined if (a) it exists and (b) it is not empty.
+
+ notDefined: 1 (true) if the variable is not defined in the calling workspace
+             0 (false) if the variable is defined in the calling workspace
+
+  Defined means the variable exists and is not empty in the function that
+  called this function.
+
+  This routine should replace the many calls of the form
+    if ~exist('varname','var') | isempty(xxx), ...
+
+    with the call
+
+    if ieNotDefined('varname')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="notDefined.html" class="code" title="function ndef = notDefined( varString )">notDefined</a>	Test whether a variable (usually a function argument) is defined</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function notDefined = ieNotDefined( varString )</a>
+0002 
+0003 <span class="comment">% Determines if a variable is defined in the calling function's workspace.</span>
+0004 <span class="comment">% function notDefined = ieNotDefined( varString )</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Author: ImagEval</span>
+0007 <span class="comment">% Purpose:</span>
+0008 <span class="comment">%    Determine if a variable is defined in the calling function's workspace.</span>
+0009 <span class="comment">%  A variable is defined if (a) it exists and (b) it is not empty.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% notDefined: 1 (true) if the variable is not defined in the calling workspace</span>
+0012 <span class="comment">%             0 (false) if the variable is defined in the calling workspace</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  Defined means the variable exists and is not empty in the function that</span>
+0015 <span class="comment">%  called this function.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%  This routine should replace the many calls of the form</span>
+0018 <span class="comment">%    if ~exist('varname','var') | isempty(xxx), ...</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    with the call</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    if ieNotDefined('varname')</span>
+0023 <span class="comment">%</span>
+0024 
+0025 <span class="keyword">if</span> (~ischar(varString)), error(<span class="string">'Varible name must be a string'</span>); <span class="keyword">end</span>
+0026 
+0027 <a href="notDefined.html" class="code" title="function ndef = notDefined( varString )">notDefined</a> = 0;  <span class="comment">%#ok % Assume the variable is defined</span>
+0028 
+0029 str = sprintf(<span class="string">'''%s'''</span>,varString);
+0030 cmd1 = [<span class="string">'~exist('</span> str <span class="string">',''var'') == 1'</span>];
+0031 cmd2 = [<span class="string">'isempty('</span>,varString <span class="string">') == 1'</span>];
+0032 cmd = [cmd1, <span class="string">' | '</span>,cmd2]; <span class="comment">%#ok</span>
+0033 
+0034 <span class="comment">% If either of these conditions holds, then not defined is true.</span>
+0035 <a href="notDefined.html" class="code" title="function ndef = notDefined( varString )">notDefined</a> = evalin(<span class="string">'caller'</span>,cmd1);     <span class="comment">% Check that the variable exists in the caller space</span>
+0036 <span class="keyword">if</span> <a href="notDefined.html" class="code" title="function ndef = notDefined( varString )">notDefined</a>, <span class="keyword">return</span>;                  <span class="comment">% If it does not, return with a status of 0</span>
+0037 <span class="keyword">else</span>
+0038   <a href="notDefined.html" class="code" title="function ndef = notDefined( varString )">notDefined</a> = evalin(<span class="string">'caller'</span>,cmd2); <span class="comment">% Check if the variable is empty in the caller space</span>
+0039   <span class="keyword">if</span> <a href="notDefined.html" class="code" title="function ndef = notDefined( varString )">notDefined</a>
+0040     <span class="keyword">return</span>;
+0041   <span class="keyword">end</span>
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

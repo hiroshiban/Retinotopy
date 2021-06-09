@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of GenerateGridDotImage</title>
+  <meta name="keywords" content="GenerateGridDotImage">
+  <meta name="description" content="Generates a random-jittered grid-dot image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>GenerateGridDotImage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates a random-jittered grid-dot image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,point_idx]=GenerateGridDotImage(fieldSize,ranges,dense,jitterratio,mode,nimages,pix_per_deg,display_flg,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates a random-jittered grid-dot image.
+ function [img,point_idx]=GenerateGridDotImage(fieldSize,ranges,dense,jitterratio,mode,pix_per_deg,display_flg,save_flg)
+
+ This function generates a random-jittered grid-dot image in cartesian or polar coordinate space.
+
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col]
+ ranges      : range of the space in which random dots are scatterd.
+               [min(deg_row),max(deg_row);min(deg_col),max(deg_col)] in cartesian coord
+               [min(r_deg),max(r_deg);min(theta_deg),max(theta_deg)] in polar coord
+               !NOTE! the origin is the center of the image
+ dense       : percentage of the dot in the space, 2 by default.
+ jitterratio : a jitter ratio of each dot position in the grid array.
+               jitter is added as [x_jitter,y_jitter]=[x,y]+jitterratio*unifrnd(-1,1,[1,2]).
+               0.4 by default.
+ mode        : 0=cartesian coord, 1=polar coord. 0 by default.
+ nimages     : the number of images to be generated. 1 by default.
+ pix_per_deg : pixels per degree, [pixels]. 40 by default.
+ display_flg : if 1, the generated images are displayed. [1/0]. 1 by default.
+ save_flag   : if 1, the generated images are saved. [1/0]. 0 by default.
+
+ [output]
+ img         : generated random dot images, cell structure, img{nimages}
+ point_idx   : random points, cell structure, point_idx{nimages}=[x,y(,z)]
+
+
+ Created    : &quot;2013-08-29 11:48:39 ban&quot;
+ Last Update: &quot;2013-11-22 23:13:26 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="GenerateVoronoiMaskPatterns.html" class="code" title="function [vmask,vbmask,vx,vy,x,y]=GenerateVoronoiMaskPatterns(fieldSize,dense,jitterratio,mode,nimages,pix_per_deg,display_flg,save_flg)">GenerateVoronoiMaskPatterns</a>	Generates Voronoi texture mask patterns.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,point_idx]=GenerateGridDotImage(fieldSize,ranges,dense,jitterratio,mode,nimages,pix_per_deg,display_flg,save_flg)</a>
+0002 
+0003 <span class="comment">% Generates a random-jittered grid-dot image.</span>
+0004 <span class="comment">% function [img,point_idx]=GenerateGridDotImage(fieldSize,ranges,dense,jitterratio,mode,pix_per_deg,display_flg,save_flg)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates a random-jittered grid-dot image in cartesian or polar coordinate space.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col]</span>
+0010 <span class="comment">% ranges      : range of the space in which random dots are scatterd.</span>
+0011 <span class="comment">%               [min(deg_row),max(deg_row);min(deg_col),max(deg_col)] in cartesian coord</span>
+0012 <span class="comment">%               [min(r_deg),max(r_deg);min(theta_deg),max(theta_deg)] in polar coord</span>
+0013 <span class="comment">%               !NOTE! the origin is the center of the image</span>
+0014 <span class="comment">% dense       : percentage of the dot in the space, 2 by default.</span>
+0015 <span class="comment">% jitterratio : a jitter ratio of each dot position in the grid array.</span>
+0016 <span class="comment">%               jitter is added as [x_jitter,y_jitter]=[x,y]+jitterratio*unifrnd(-1,1,[1,2]).</span>
+0017 <span class="comment">%               0.4 by default.</span>
+0018 <span class="comment">% mode        : 0=cartesian coord, 1=polar coord. 0 by default.</span>
+0019 <span class="comment">% nimages     : the number of images to be generated. 1 by default.</span>
+0020 <span class="comment">% pix_per_deg : pixels per degree, [pixels]. 40 by default.</span>
+0021 <span class="comment">% display_flg : if 1, the generated images are displayed. [1/0]. 1 by default.</span>
+0022 <span class="comment">% save_flag   : if 1, the generated images are saved. [1/0]. 0 by default.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% [output]</span>
+0025 <span class="comment">% img         : generated random dot images, cell structure, img{nimages}</span>
+0026 <span class="comment">% point_idx   : random points, cell structure, point_idx{nimages}=[x,y(,z)]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Created    : &quot;2013-08-29 11:48:39 ban&quot;</span>
+0030 <span class="comment">% Last Update: &quot;2013-11-22 23:13:26 ban (ban.hiroshi@gmail.com)&quot;</span>
+0031 
+0032 <span class="comment">% check input variable</span>
+0033 <span class="keyword">if</span> nargin&lt;2, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;3 || isempty(dense), dense=5; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;4 || isempty(jitterratio), jitterratio=0.4; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;5 || isempty(mode), mode=0; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;6 || isempty(nimages), nimages=1; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;7 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;8 || isempty(display_flg), display_flg=1; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;9 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0041 
+0042 <span class="keyword">if</span> mode~=0 &amp;&amp; mode~=1
+0043   error(<span class="string">'mode should be 0 (cartesian) or 1 (polar). check input variable.'</span>);
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% adjust ranges</span>
+0047 <span class="keyword">if</span> mode==0
+0048   ranges=ranges.*pix_per_deg;
+0049 <span class="keyword">else</span>
+0050   ranges(1,:)=ranges(1,:).*pix_per_deg;
+0051   ranges(2,:)=ranges(2,:).*pi/180;
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% generate stimulus field</span>
+0055 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0056 fieldSize=round(fieldSize/2.*pix_per_deg);
+0057 step=1;
+0058 [x,y]=meshgrid(-fieldSize(2):step:fieldSize(2),-fieldSize(1):step:fieldSize(1));
+0059 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0060 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0061 
+0062 <span class="comment">% calculate centers (X,Y) of each patch</span>
+0063 ndots=numel(x)*dense/100;
+0064 nrows=ceil(sqrt(ndots));
+0065 <span class="comment">%ncols=ceil(ndots/nrows);</span>
+0066 ncols=nrows; <span class="comment">% to fix distance along x- and y-axis.</span>
+0067 
+0068 <span class="comment">% set x,y coordinate so that the center of the dot array comes to the center of the image</span>
+0069 p_interval=round(max(size(x))/max([nrows,ncols]));
+0070 p_edge=round(p_interval/2*jitterratio);
+0071 
+0072 p_X=[flipdim(round((size(x,2)-p_interval)/2)-p_interval:-p_interval:p_edge,2),round((size(x,2)-p_interval)/2):p_interval:size(x,2)-p_edge];
+0073 p_Y=[flipdim(round((size(x,1)-p_interval)/2)-p_interval:-p_interval:p_edge,2),round((size(x,1)-p_interval)/2):p_interval:size(x,1)-p_edge];
+0074 
+0075 <span class="comment">% initializing</span>
+0076 img=cell(nimages,1);
+0077 <span class="keyword">for</span> nn=1:1:nimages, img{nn}=zeros(size(x)); <span class="keyword">end</span>
+0078 point_idx=cell(nimages,1);
+0079 
+0080 <span class="comment">% processing</span>
+0081 <span class="keyword">for</span> nn=1:1:nimages
+0082   timg=zeros(size(x));
+0083 
+0084   <span class="comment">% jittering dot position (jitter range -50 to 50%)</span>
+0085   jittervals=unifrnd(-1,1,[numel(p_X),numel(p_Y)]);
+0086   p_Xj=zeros(numel(p_X),numel(p_Y));
+0087   p_Yj=zeros(numel(p_X),numel(p_Y));
+0088   <span class="keyword">for</span> ii=1:1:numel(p_X)
+0089     <span class="keyword">for</span> jj=1:1:numel(p_Y)
+0090       p_Xj(ii,jj)=p_X(ii)+jitterratio*p_interval*jittervals(ii,jj);
+0091       p_Yj(ii,jj)=p_Y(jj)+jitterratio*p_interval*jittervals(ii,jj);
+0092     <span class="keyword">end</span>
+0093   <span class="keyword">end</span>
+0094 
+0095   <span class="comment">% double to integer</span>
+0096   p_Xj=round(p_Xj); p_Xj(p_Xj==0)=1; p_Xj(p_Xj&gt;size(x,1))=size(x,1);
+0097   p_Yj=round(p_Yj); p_Yj(p_Yj==0)=1; p_Yj(p_Yj&gt;size(x,2))=size(x,2);
+0098 
+0099   <span class="comment">% generate initial grid dot image</span>
+0100   tmp_idx=sub2ind(size(x),p_Yj(:),p_Xj(:));
+0101 
+0102   <span class="comment">% spatial thresholding</span>
+0103   <span class="keyword">if</span> mode==0
+0104     <span class="comment">% in cartesian coordinate</span>
+0105     sv_idx=find( ranges(2,1)&lt;=x(tmp_idx) &amp; x(tmp_idx)&lt;=ranges(2,2) &amp; ranges(1,1)&lt;=y(tmp_idx) &amp; y(tmp_idx)&lt;=ranges(1,2) );
+0106   <span class="keyword">elseif</span> mode==1
+0107     <span class="comment">% in polar coordinate</span>
+0108     z=x(tmp_idx).^2+y(tmp_idx).^2;
+0109     phi=cart2pol(x(tmp_idx),y(tmp_idx));
+0110     phi(phi&lt;0)=phi(phi&lt;0)+2*pi;
+0111     sv_idx=find( ranges(1,1).^2&lt;=z &amp; z&lt;=ranges(1,2).^2 &amp; ranges(2,1)&lt;=phi &amp; phi&lt;=ranges(2,2) );
+0112   <span class="keyword">end</span>
+0113 
+0114   <span class="comment">% generate the final random dot image</span>
+0115   [y_idx,x_idx]=ind2sub(size(x),tmp_idx(sv_idx));
+0116   point_idx{nn}=[x_idx';y_idx'];
+0117   timg(tmp_idx(sv_idx))=1;
+0118   img{nn}=timg;
+0119 <span class="keyword">end</span> <span class="comment">% for nn=1:1:nimages</span>
+0120 
+0121 <span class="comment">% displaying the mixtured image</span>
+0122 <span class="keyword">if</span> display_flg
+0123   <span class="keyword">for</span> nn=1:1:nimages
+0124     figure; imshow(img{nn},[0,1]);
+0125     title(sprintf(<span class="string">'generated random grid dot image #%02d'</span>,nn));
+0126   <span class="keyword">end</span>
+0127 <span class="keyword">end</span>
+0128 
+0129 <span class="keyword">if</span> save_flg
+0130   save rdot.mat img point_idx;
+0131 <span class="keyword">end</span>
+0132 
+0133 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

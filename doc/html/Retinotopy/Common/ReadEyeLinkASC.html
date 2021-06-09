@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ReadEyeLinkASC</title>
+  <meta name="keywords" content="ReadEyeLinkASC">
+  <meta name="description" content="Reads an EyeLink log (*.asc) file and retuns data array as a matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>ReadEyeLinkASC
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Reads an EyeLink log (*.asc) file and retuns data array as a matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function data=ReadEyeLinkASC(ascfile,fill_val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Reads an EyeLink log (*.asc) file and retuns data array as a matrix.
+ function data=ReadEyeLinkASC(ascfile,:fill_val)
+ (: is optional)
+
+ [input]
+ ascfile  : a file name specified with a relative path format.
+            the origin of the path should be the directory where
+            this function is called.
+ fill_val : (optional) a value to fill the missing data points due to blinks, saccades etc.
+            NaN by default.
+
+ [output]
+ data     : a matrix (sampling_points x 4(mono-eye) or 7(bino-eye) positions) of the eye movement records.
+            here, 4 = time, X1, X2, X3
+                  7 = time, X1, X2, X3, Y1, Y2, Y3
+
+
+ Created    : &quot;2014-10-08 11:25:17 ban&quot;
+ Last Update: &quot;2014-10-08 20:02:26 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function data=ReadEyeLinkASC(ascfile,fill_val)</a>
+0002 
+0003 <span class="comment">% Reads an EyeLink log (*.asc) file and retuns data array as a matrix.</span>
+0004 <span class="comment">% function data=ReadEyeLinkASC(ascfile,:fill_val)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% [input]</span>
+0008 <span class="comment">% ascfile  : a file name specified with a relative path format.</span>
+0009 <span class="comment">%            the origin of the path should be the directory where</span>
+0010 <span class="comment">%            this function is called.</span>
+0011 <span class="comment">% fill_val : (optional) a value to fill the missing data points due to blinks, saccades etc.</span>
+0012 <span class="comment">%            NaN by default.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% [output]</span>
+0015 <span class="comment">% data     : a matrix (sampling_points x 4(mono-eye) or 7(bino-eye) positions) of the eye movement records.</span>
+0016 <span class="comment">%            here, 4 = time, X1, X2, X3</span>
+0017 <span class="comment">%                  7 = time, X1, X2, X3, Y1, Y2, Y3</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Created    : &quot;2014-10-08 11:25:17 ban&quot;</span>
+0021 <span class="comment">% Last Update: &quot;2014-10-08 20:02:26 ban&quot;</span>
+0022 
+0023 <span class="comment">% check input varialbes</span>
+0024 <span class="keyword">if</span> nargin&lt;1, help(mfilename()); <span class="keyword">if</span> nargout, data=[]; <span class="keyword">end</span>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0025 <span class="keyword">if</span> nargin&lt;2 || isempty(fill_val), fill_val=NaN; <span class="keyword">end</span>
+0026 
+0027 <span class="comment">% check the target file</span>
+0028 ascfile=fullfile(pwd,ascfile);
+0029 <span class="keyword">if</span> ~exist(ascfile,<span class="string">'file'</span>), error(<span class="string">'can not find ascfile: %s. check input variable.'</span>,ascfile); <span class="keyword">end</span>
+0030 
+0031 <span class="comment">% open the asc file</span>
+0032 fid=fopen(ascfile,<span class="string">'r'</span>);
+0033 <span class="keyword">if</span> fid==-1, error(<span class="string">'can not open ascfile: %s. close it first.'</span>,acsfile); <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% determine whether the target asc is a record of mono-eye or both-eyes.</span>
+0036 <span class="comment">% NOTE 1: the file content will be as below. so we can discriminate both records</span>
+0037 <span class="comment">%         by reading the first line temporally, getting the the *end-3* character,</span>
+0038 <span class="comment">%         and checking whether it is &quot;.&quot; or &quot;\t&quot;.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% for mono-eye  : time1 val1_1 val1_2 val1_3 ... (here the final &quot;...&quot; is a kind of flag)</span>
+0041 <span class="comment">%                 time2 val2_1 val2_2 val2_3 ...</span>
+0042 <span class="comment">%                 time3 val3_1 val3_2 val3_3 ...</span>
+0043 <span class="comment">%                 (continued)</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% for both-eyes : time1 val1_1 val1_2 val1_3 val1_4 val1_5 val1_6 ..... (here the final &quot;.....&quot; is a kind of flag)</span>
+0046 <span class="comment">%                 time2 val2_1 val2_2 val2_3 val2_4 val2_5 val2_6 .....</span>
+0047 <span class="comment">%                 time3 val3_1 val3_2 val3_3 val3_4 val3_5 val3_6 .....</span>
+0048 <span class="comment">%                 (continued)</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% NOTE 2: if data is not obtained at some specific point due to blinks etc,</span>
+0051 <span class="comment">%         the final &quot;...&quot; or &quot;.....&quot; will be like &quot;.C.&quot;, &quot;.R.&quot;, &quot;.C..R&quot;.</span>
+0052 <span class="comment">%         we can validate the data by checkinig these characters.</span>
+0053 
+0054 firstline=fgetl(fid);
+0055 start_time=str2double(firstline(1:7));
+0056 tgt_char=firstline(end-3);
+0057 <span class="keyword">if</span> strcmp(tgt_char,<span class="string">'.'</span>)
+0058   record_mode=<span class="string">'bino'</span>;
+0059 <span class="keyword">else</span> <span class="comment">% if strcmp(tgt_char,'\t')</span>
+0060   record_mode=<span class="string">'mono'</span>;
+0061 <span class="keyword">end</span>
+0062 clear firstline tgt_char;
+0063 
+0064 [dummy,ascfname,ascext]=fileparts(ascfile); <span class="comment">%#ok</span>
+0065 fprintf(<span class="string">'processing: %s%s (mode: %s)...'</span>,ascfname,ascext,record_mode);
+0066 
+0067 <span class="comment">% get the numbe of lines and initialize the output data matrix</span>
+0068 linecounter=1; <span class="comment">% as already the first line is read</span>
+0069 <span class="keyword">while</span> 1
+0070   tmp=fgetl(fid);
+0071   <span class="keyword">if</span> tmp==-1, <span class="keyword">break</span>; <span class="keyword">end</span>
+0072   linecounter=linecounter+1;
+0073 <span class="keyword">end</span>
+0074 <span class="keyword">if</span> strcmp(record_mode,<span class="string">'mono'</span>)
+0075   data=fill_val.*ones(linecounter,4);
+0076 <span class="keyword">else</span> <span class="comment">% if strcmp(record_mode,'bino')</span>
+0077   data=fill_val.*ones(linecounter,7);
+0078 <span class="keyword">end</span>
+0079 
+0080 <span class="comment">% rewind the file identifier</span>
+0081 frewind(fid);
+0082 
+0083 <span class="comment">% processing</span>
+0084 <span class="keyword">if</span> strcmp(record_mode,<span class="string">'mono'</span>)
+0085   linecounter=0;
+0086   <span class="keyword">while</span> 1
+0087     cur_line=fgetl(fid);
+0088     linecounter=linecounter+1;
+0089     <span class="keyword">if</span> cur_line==-1  <span class="comment">% EOF</span>
+0090       <span class="keyword">break</span>;
+0091     <span class="keyword">elseif</span> strcmp(cur_line(end-2:end),<span class="string">'...'</span>) <span class="comment">% data obtained correctly</span>
+0092       cur_data=textscan(cur_line,<span class="string">'%d%f%f%f%s'</span>,<span class="string">'delimiter'</span>,<span class="string">'\t'</span>);
+0093       data(linecounter,1)=cur_data{1}-start_time; <span class="comment">% time</span>
+0094       <span class="keyword">for</span> ii=2:1:4 <span class="comment">% X1, X2, X3</span>
+0095         data(linecounter,ii)=cur_data{ii};
+0096       <span class="keyword">end</span>
+0097     <span class="keyword">else</span> <span class="comment">% error. e.g. the final 3 characters are &quot;.C.&quot;, &quot;RC.&quot; etc.</span>
+0098       data(linecounter,1)=str2double(cur_line(1:7))-start_time; <span class="comment">% time</span>
+0099     <span class="keyword">end</span>
+0100   <span class="keyword">end</span>
+0101 <span class="keyword">else</span> <span class="comment">% if strcmp(record_mode,'bino')</span>
+0102   linecounter=0;
+0103   <span class="keyword">while</span> 1
+0104     cur_line=fgetl(fid);
+0105     linecounter=linecounter+1;
+0106     <span class="keyword">if</span> cur_line==-1  <span class="comment">% EOF</span>
+0107       <span class="keyword">break</span>;
+0108     <span class="keyword">elseif</span> strcmp(cur_line(end-4:end),<span class="string">'.....'</span>) <span class="comment">% data obtained correctly</span>
+0109       cur_data=textscan(cur_line,<span class="string">'%d%f%f%f%f%f%f%s'</span>,<span class="string">'delimiter'</span>,<span class="string">'\t'</span>);
+0110       data(linecounter,1)=cur_data{1}-start_time; <span class="comment">% time</span>
+0111       <span class="keyword">for</span> ii=2:1:7 <span class="comment">% X1, X2, X3, Y1, Y2, Y3</span>
+0112         data(linecounter,ii)=cur_data{ii};
+0113       <span class="keyword">end</span>
+0114     <span class="keyword">else</span> <span class="comment">% error. e.g. the final 5 characters are &quot;.C.C.&quot;, &quot;.R.C.&quot; etc.</span>
+0115       data(linecounter,1)=str2double(cur_line(1:7))-start_time; <span class="comment">% time</span>
+0116     <span class="keyword">end</span>
+0117   <span class="keyword">end</span>
+0118 <span class="keyword">end</span>
+0119 disp(<span class="string">'done.'</span>);
+0120 
+0121 fclose(fid);
+0122 
+0123 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

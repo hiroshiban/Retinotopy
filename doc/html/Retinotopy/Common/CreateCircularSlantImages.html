@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateCircularSlantImages</title>
+  <meta name="keywords" content="CreateCircularSlantImages">
+  <meta name="description" content="Creates an image(s) on whose 2D plane a ciruclar slant surface is projected.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateCircularSlantImages
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates an image(s) on whose 2D plane a ciruclar slant surface is projected.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [imgL,imgR]=CreateCircularSlantImages(fieldSize,theta_deg,orient_deg,aperture_deg,tgt_val,outer_val,pix_per_deg,fine_coefficient,ipd,vdist) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates an image(s) on whose 2D plane a ciruclar slant surface is projected.
+ function [imgL,imgR]=CreateCircularSlantImages(fieldSize,theta_deg,orient_deg,...
+                                                aperture_deg,tgt_val,outer_val,...
+                                                pix_per_deg,fine_coefficient,ipd,vdist)
+
+ Creates oriented slant with ciruclar aperture
+ This function is different from CreateApertureSlantField in that
+ the shape of the generated slant is adjusted as to look a perfect circle.
+ 
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col]
+ theta_deg   : an angle measured fromh the vertical, [deg]
+ orient_deg  : an angle (orientation) of slant,
+               from horizontal meridian, clockwise [deg]
+ aperture_deg: the size of circular aperture in degrees, [deg]
+ tgt_val     : target gray-scale value, [val]
+ outer_val   : value to fill the outer region of slant field, [val]
+ pix_per_deg : pixels per degree, [pixels]
+ fine_coefficient : (optional) if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val]
+                    (default=1, as is, no tuning)
+ ipd         : inter pupile distance, [cm]
+ vdist       : viewing distance, [cm]
+
+ 
+ [output]
+ field       : grating image, double format, [row,col]
+ 
+ Created    : &quot;2010-06-11 12:32:41 ban&quot;
+ Last Update: &quot;2013-11-22 18:34:27 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [imgL,imgR]=CreateCircularSlantImages(fieldSize,theta_deg,orient_deg,</a><span class="keyword">...</span>
+0002                                                aperture_deg,tgt_val,outer_val,<span class="keyword">...</span>
+0003                                                pix_per_deg,fine_coefficient,ipd,vdist)
+0004 
+0005 <span class="comment">% Creates an image(s) on whose 2D plane a ciruclar slant surface is projected.</span>
+0006 <span class="comment">% function [imgL,imgR]=CreateCircularSlantImages(fieldSize,theta_deg,orient_deg,...</span>
+0007 <span class="comment">%                                                aperture_deg,tgt_val,outer_val,...</span>
+0008 <span class="comment">%                                                pix_per_deg,fine_coefficient,ipd,vdist)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Creates oriented slant with ciruclar aperture</span>
+0011 <span class="comment">% This function is different from CreateApertureSlantField in that</span>
+0012 <span class="comment">% the shape of the generated slant is adjusted as to look a perfect circle.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% [input]</span>
+0015 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col]</span>
+0016 <span class="comment">% theta_deg   : an angle measured fromh the vertical, [deg]</span>
+0017 <span class="comment">% orient_deg  : an angle (orientation) of slant,</span>
+0018 <span class="comment">%               from horizontal meridian, clockwise [deg]</span>
+0019 <span class="comment">% aperture_deg: the size of circular aperture in degrees, [deg]</span>
+0020 <span class="comment">% tgt_val     : target gray-scale value, [val]</span>
+0021 <span class="comment">% outer_val   : value to fill the outer region of slant field, [val]</span>
+0022 <span class="comment">% pix_per_deg : pixels per degree, [pixels]</span>
+0023 <span class="comment">% fine_coefficient : (optional) if larger, the generated oval become finer,</span>
+0024 <span class="comment">%                    but comsumes much CPU power. [val]</span>
+0025 <span class="comment">%                    (default=1, as is, no tuning)</span>
+0026 <span class="comment">% ipd         : inter pupile distance, [cm]</span>
+0027 <span class="comment">% vdist       : viewing distance, [cm]</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% [output]</span>
+0031 <span class="comment">% field       : grating image, double format, [row,col]</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Created    : &quot;2010-06-11 12:32:41 ban&quot;</span>
+0034 <span class="comment">% Last Update: &quot;2013-11-22 18:34:27 ban (ban.hiroshi@gmail.com)&quot;</span>
+0035 
+0036 <span class="comment">% check input variables</span>
+0037 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;2 || isempty(theta_deg), theta_deg=45; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;3 || isempty(orient_deg), orient_deg=90; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;4 || isempty(aperture_deg), aperture_deg=6; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;5 || isempty(tgt_val), tgt_val=128; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;6 || isempty(outer_val), outer_val=0; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> nargin&lt;7 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0044 <span class="keyword">if</span> nargin&lt;8 || isempty(fine_coefficient), fine_coefficient=1.5; <span class="keyword">end</span>
+0045 <span class="keyword">if</span> nargin&lt;9 || isempty(ipd), ipd=6.4; <span class="keyword">end</span>
+0046 <span class="keyword">if</span> nargin&lt;10 || isempty(vdist), vdist=65; <span class="keyword">end</span>
+0047 
+0048 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0049 
+0050 <span class="comment">% convert to pixels</span>
+0051 fieldSize=round(fieldSize.*pix_per_deg*fine_coefficient);
+0052 aperture_pix=round(aperture_deg/2*fine_coefficient*pix_per_deg)^2; 
+0053 
+0054 <span class="comment">% generate base-distance matrix</span>
+0055 [x,y]=meshgrid(0:1:fieldSize(2),0:1:fieldSize(1));
+0056 x=x-fieldSize(2)/2; y=y-fieldSize(1)/2;
+0057 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0058 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0059 
+0060 <span class="comment">%% calculate transformation matrix</span>
+0061 <span class="comment">% *NOTE*</span>
+0062 <span class="comment">% these values are calculated by hand by solving the formula below</span>
+0063 <span class="comment">%</span>
+0064 <span class="comment">% [origin_x,origin_y,origin_z]*rot_y(theta)*rot_z(delta)*rot_y(phi(L/R))=[dest_x,dest_y,dest_z]</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">% here,</span>
+0067 <span class="comment">% [origin_x,origin_y,origin_z] : xyz coordinate of the origin</span>
+0068 <span class="comment">%                                the point is on the circumference of the</span>
+0069 <span class="comment">%                                circle layed along XY-plane</span>
+0070 <span class="comment">% theta                        : degree of slant</span>
+0071 <span class="comment">% delta                        : degree of tilt</span>
+0072 <span class="comment">% phi                          : degree of eye angle (left/right)</span>
+0073 <span class="comment">% rot_y(*)                     : affine transformation matrix, along y-axis rotation</span>
+0074 <span class="comment">%                                [cos(*) 0 sin(*); 0 1 0; -sin(*) 0 cos(*)]</span>
+0075 <span class="comment">% rot_z(*)                     : affine transformation matrix, along z-axis rotation</span>
+0076 <span class="comment">%                                [cos(*) -sin(*) 0; sin(*) cos(*) 0; 0 0 1]</span>
+0077 <span class="comment">% [dest_x,dest_y,dest_z]       : xyz coordinate of the destination point</span>
+0078 <span class="comment">%                                the point is on the circumference of the</span>
+0079 <span class="comment">%                                slanted circle</span>
+0080 
+0081 <span class="comment">% calculate radians</span>
+0082 theta=theta_deg*pi/180;
+0083 delta=orient_deg*pi/180;
+0084 phiL=atan(ipd/2/vdist);
+0085 phiR=-atan(ipd/2/vdist);
+0086 
+0087 <span class="comment">% for left eye image</span>
+0088 AL=cos(theta)*sin(phiL)+sin(theta)*cos(delta)*cos(phiL);
+0089 BL=sin(theta)*sin(delta);
+0090 CL=cos(theta)*cos(phiL)-sin(theta)*cos(delta)*sin(phiL);
+0091 
+0092 <span class="comment">% for right eye image</span>
+0093 AR=cos(theta)*sin(phiR)+sin(theta)*cos(delta)*cos(phiR);
+0094 BR=sin(theta)*sin(delta);
+0095 CR=cos(theta)*cos(phiR)-sin(theta)*cos(delta)*sin(phiR);
+0096 
+0097 <span class="comment">% calculate distance of the orientad circular field</span>
+0098 <span class="comment">% the locus is ellipse</span>
+0099 R2_L = ( (AL^2+CL^2)*(x.^2) + (2*AL*BL)*(x.*y) + (BL^2+CL^2).*(y.^2) )/(CL^2);
+0100 R2_R = ( (AR^2+CR^2)*(x.^2) + (2*AR*BR)*(x.*y) + (BR^2+CR^2).*(y.^2) )/(CR^2);
+0101 
+0102 <span class="comment">%% generate left/right images projected onto XY-plane</span>
+0103 imgL=outer_val*ones(size(x));
+0104 imgR=outer_val*ones(size(x));
+0105 
+0106 imgL(R2_L&lt;=aperture_pix)=tgt_val;
+0107 imgR(R2_R&lt;=aperture_pix)=tgt_val;
+0108 
+0109 <span class="comment">% adjust the size</span>
+0110 <span class="keyword">if</span> fine_coefficient~=1
+0111   imgL=imresize(imgL,1/fine_coefficient,<span class="string">'bicubic'</span>);
+0112   imgR=imresize(imgR,1/fine_coefficient,<span class="string">'bicubic'</span>);
+0113 <span class="keyword">end</span>
+0114 
+0115 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ecc_GenerateCheckerBoard1D</title>
+  <meta name="keywords" content="ecc_GenerateCheckerBoard1D">
+  <meta name="description" content="Generates checkerboard patterns (annulus-based subdivision) with an individual ID number on each patch.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Generation -->
+<h1>ecc_GenerateCheckerBoard1D
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates checkerboard patterns (annulus-based subdivision) with an individual ID number on each patch.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,width,startangle,pix_per_deg,nwedges,nrings,phase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates checkerboard patterns (annulus-based subdivision) with an individual ID number on each patch.
+ function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(:edges,:width,:startangle,:pix_per_deg,:nwedges,:nrings,:phase)
+ (: is optional)
+
+ This function generates 2 checkerboards (annulus-based subdivision) with an individual ID number on each patch.
+ Each of two checkers have the compensating values of its counterpart.
+ Multiple start angles are acceptable and will be processed at once, saving computational time.
+
+ [input]
+ edges       : checkerboard min/max radius and width along eccentricity in deg, [3(min,max,ringwidth) x n]
+               please see the codes below to check the default values.
+ width       : checker width along polar angle in deg, [val], 360 by default
+ startangle  : checker board start angle, from right horizontal meridian, clockwise, 0 by default.
+ pix_per_deg : pixels per degree, [val], 40 by default.
+ nwedges     : number of wedges, [val], 48 by default.
+ nrings      : number of rings, [val], 2 by default.
+ phase       : checker's phase, 0 by default.
+
+ [output]
+ checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.
+                  each pixel shows each checker patch's ID or background(0)
+ binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,
+                  cell structure, {numel(startangle)}.
+ mask           : (optional) checkerboard regional mask, cell structure, logical
+
+
+ Created    : &quot;2011-04-12 11:12:37 ban&quot;
+ Last Update: &quot;2018-12-19 14:19:41 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/cdual.html" class="code" title="function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual_fixtask.html" class="code" title="function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy.html" class="code" title="function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy_fixtask.html" class="code" title="function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual.html" class="code" title="function ddual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual_fixtask.html" class="code" title="function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy.html" class="code" title="function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy_fixtask.html" class="code" title="function dretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy_fixtask</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/gen_dual_windows.html" class="code" title="function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_dual_windows</a>	Generates retinotopy stimulus (polar wedge + eccentricity annulus) windows for pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/gen_retinotopy_windows.html" class="code" title="function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_retinotopy_windows</a>	Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(edges,width,startangle,pix_per_deg,nwedges,nrings,phase)</a>
+0002 
+0003 <span class="comment">% Generates checkerboard patterns (annulus-based subdivision) with an individual ID number on each patch.</span>
+0004 <span class="comment">% function [checkerboard,bincheckerboard,mask]=ecc_GenerateCheckerBoard1D(:edges,:width,:startangle,:pix_per_deg,:nwedges,:nrings,:phase)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function generates 2 checkerboards (annulus-based subdivision) with an individual ID number on each patch.</span>
+0008 <span class="comment">% Each of two checkers have the compensating values of its counterpart.</span>
+0009 <span class="comment">% Multiple start angles are acceptable and will be processed at once, saving computational time.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% [input]</span>
+0012 <span class="comment">% edges       : checkerboard min/max radius and width along eccentricity in deg, [3(min,max,ringwidth) x n]</span>
+0013 <span class="comment">%               please see the codes below to check the default values.</span>
+0014 <span class="comment">% width       : checker width along polar angle in deg, [val], 360 by default</span>
+0015 <span class="comment">% startangle  : checker board start angle, from right horizontal meridian, clockwise, 0 by default.</span>
+0016 <span class="comment">% pix_per_deg : pixels per degree, [val], 40 by default.</span>
+0017 <span class="comment">% nwedges     : number of wedges, [val], 48 by default.</span>
+0018 <span class="comment">% nrings      : number of rings, [val], 2 by default.</span>
+0019 <span class="comment">% phase       : checker's phase, 0 by default.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% checkerboard :   output grayscale checkerboard, cell structure, {numel(startangle)}.</span>
+0023 <span class="comment">%                  each pixel shows each checker patch's ID or background(0)</span>
+0024 <span class="comment">% binchckerboard : (optional) binary (1/2=checker-patterns, 0=background) checkerboard patterns,</span>
+0025 <span class="comment">%                  cell structure, {numel(startangle)}.</span>
+0026 <span class="comment">% mask           : (optional) checkerboard regional mask, cell structure, logical</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Created    : &quot;2011-04-12 11:12:37 ban&quot;</span>
+0030 <span class="comment">% Last Update: &quot;2018-12-19 14:19:41 ban&quot;</span>
+0031 
+0032 <span class="comment">%% check the input variables</span>
+0033 <span class="keyword">if</span> nargin&lt;1 || isempty(edges)
+0034   edges=[0.00, 0.50, 1.00; 0.00, 0.75, 1.00; 0.00, 1.00, 1.00; 0.25, 1.25, 1.00; 0.50, 1.50, 1.00;
+0035          0.75, 1,75, 1,00; 1.00, 2.00, 1.00; 1.25, 2.25, 1.00; 1.50, 2.50, 1.00; 1.75, 2.75, 1.00;
+0036          2.00, 3.00, 1.00; 2.25, 3.25, 1.00; 2.50, 3.50, 1.00; 2.75, 3.75, 1.00; 3.00, 4.00, 1.00;
+0037          3.25, 4.25, 1.00; 3.50, 4.50, 1.00; 3.75, 4.75, 1.00; 4.00, 5.00, 1.00; 4.25, 5.25, 1.00;
+0038          4.50, 5.50, 1.00; 4.75, 5.75, 1.00; 5.00, 6.00, 1.00; 5.25, 6.00, 1.00; 5.50, 6.00, 1.00];
+0039 <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;2 || isempty(width), width=360; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;3 || isempty(startangle), startangle=0; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;4 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> nargin&lt;5 || isempty(nwedges), nwedges=48; <span class="keyword">end</span>
+0044 <span class="keyword">if</span> nargin&lt;6 || isempty(nrings), nrings=2; <span class="keyword">end</span>
+0045 <span class="keyword">if</span> nargin&lt;7 || isempty(phase), phase=0; <span class="keyword">end</span>
+0046 
+0047 <span class="comment">%% parameter adjusting</span>
+0048 
+0049 <span class="comment">% convert deg to pixels</span>
+0050 edges=edges.*pix_per_deg;
+0051 
+0052 <span class="comment">% convert deg to radians</span>
+0053 startangle=mod(startangle*pi/180,2*pi);
+0054 width=width*pi/180;
+0055 <span class="comment">%if phase&gt;width/nwedges, phase=mod(phase,width/nwedges); end</span>
+0056 phase=phase*pi/180;
+0057 
+0058 <span class="comment">% add small lim in checkerboard image, this is to avoid unwanted juggy edges</span>
+0059 imsize_ratio=1.01;
+0060 
+0061 <span class="comment">%% generate base angle (radian) image</span>
+0062 
+0063 <span class="comment">% base xy distance image</span>
+0064 maxR=max(edges(:,2));
+0065 [xx,yy]=meshgrid((0:imsize_ratio*2*maxR)-imsize_ratio*maxR,(0:imsize_ratio*2*maxR)-imsize_ratio*maxR);
+0066 <span class="comment">%if mod(size(xx,1),2), xx=xx(1:end-1,:); yy=yy(1:end-1,:); end</span>
+0067 <span class="comment">%if mod(size(xx,2),2), xx=xx(:,1:end-1); yy=yy(:,1:end-1); end</span>
+0068 
+0069 <span class="comment">% calculate radius</span>
+0070 r=sqrt(xx.^2+yy.^2); <span class="comment">% radius</span>
+0071 
+0072 <span class="comment">% convert distance field to radians and degree fields</span>
+0073 thetafield=mod(atan2(yy,xx)-startangle+phase,2*pi);
+0074 
+0075 <span class="comment">%% processing</span>
+0076 
+0077 checkerboard=cell(size(edges,1),1);
+0078 <span class="keyword">if</span> nargout&gt;=2, bincheckerboard=cell(size(edges,1),1); <span class="keyword">end</span>
+0079 <span class="keyword">if</span> nargout&gt;=3, mask=cell(size(edges,1),1); <span class="keyword">end</span>
+0080 
+0081 <span class="keyword">for</span> rr=1:1:size(edges,1)
+0082 
+0083   rmin=edges(rr,1);
+0084   rmax=edges(rr,2);
+0085   ringwidth=edges(rr,3);
+0086 
+0087   <span class="comment">% calculate inner regions</span>
+0088   minlim=startangle;
+0089   maxlim=mod(startangle+width,2*pi);
+0090   <span class="keyword">if</span> minlim==maxlim <span class="comment">% whole annulus</span>
+0091     inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) );
+0092   <span class="keyword">elseif</span> minlim&gt;maxlim
+0093     inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) &amp; ( (minlim&lt;=thetafield &amp; thetafield&lt;2*pi) | (0&lt;=thetafield &amp; thetafield&lt;=maxlim) ) );
+0094   <span class="keyword">else</span>
+0095     inidx=find( (rmin&lt;=r &amp; r&lt;=rmax) &amp; ( (minlim&lt;=thetafield) &amp; (thetafield&lt;=maxlim) ) );
+0096   <span class="keyword">end</span>
+0097 
+0098   <span class="comment">% calculate binary class (-1/1) along polar angle for checkerboard (wedge)</span>
+0099   th=thetafield(inidx);
+0100   cidp=zeros(size(thetafield));
+0101   cidp(inidx)=ceil(th/width*nwedges); <span class="comment">% checker id, polar angle</span>
+0102 
+0103   <span class="comment">% correct wedge IDs</span>
+0104   <span class="comment">% if phase~=0</span>
+0105   <span class="comment">%   cidp(inidx)=mod(cidp(inidx)-(2*pi/(width/nwedges)-1),2*pi/(width/nwedges))+1;</span>
+0106   <span class="comment">%   minval=unique(cidp); minval=minval(2); % not 1 because the first value is 0 = background;</span>
+0107   <span class="comment">%   cidp(cidp&gt;0)=cidp(cidp&gt;0)-minval+1;</span>
+0108   <span class="comment">%   true_nwedges=numel(unique(cidp))-1; % -1 is to omit 0 = background;</span>
+0109   <span class="comment">% else</span>
+0110   <span class="comment">%   true_nwedges=nwedges;</span>
+0111   <span class="comment">% end</span>
+0112 
+0113   <span class="comment">% calculate binary class (-1/1) along eccentricity for checkerboard (annulus)</span>
+0114   radii=linspace(rmin,rmin+ringwidth,nrings+1); radii(1)=[]; <span class="comment">% annulus width</span>
+0115   cide=zeros(size(xx)); <span class="comment">% checker id, eccentricity</span>
+0116   <span class="keyword">for</span> i=length(radii):-1:1
+0117     cide(rmin&lt;r &amp; r&lt;=min(radii(i),rmax))=i;
+0118   <span class="keyword">end</span>
+0119 
+0120   <span class="comment">% generate checker's ID</span>
+0121   checkerboard{rr}=zeros(size(thetafield));
+0122   <span class="comment">%checkerboard{rr}(inidx)=cidp(inidx)+(cide(inidx)-1)*true_nwedges;</span>
+0123   checkerboard{rr}(inidx)=cidp(inidx)+(cide(inidx)-1)*nwedges;
+0124 
+0125   <span class="comment">% delete outliers</span>
+0126   checkerboard{rr}(checkerboard{rr}&lt;0)=0;
+0127 
+0128   <span class="comment">% generate a binary (1/2=checker-patterns and 0=background) checkerboard</span>
+0129   <span class="keyword">if</span> nargout&gt;=2
+0130     rings=zeros(size(cide));
+0131     rings(inidx)=2*mod(cide(inidx),2)-1; <span class="comment">% -1/1 class</span>
+0132 
+0133     wedges=zeros(size(cidp));
+0134     wedges(inidx)=2*mod(cidp(inidx),2)-1; <span class="comment">% -1/1 class</span>
+0135 
+0136     bincheckerboard{rr}=zeros(size(thetafield));
+0137     bincheckerboard{rr}(inidx)=wedges(inidx).*rings(inidx);
+0138     bincheckerboard{rr}(r&gt;rmax)=0;
+0139     bincheckerboard{rr}(bincheckerboard{rr}&lt;0)=2;
+0140   <span class="keyword">end</span>
+0141 
+0142   <span class="comment">% generate mask</span>
+0143   <span class="keyword">if</span> nargout&gt;=3, mask{rr}=logical(checkerboard{rr}); <span class="keyword">end</span>
+0144 
+0145 <span class="keyword">end</span> <span class="comment">% for rr=1:1:size(edges,1)</span>
+0146 
+0147 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

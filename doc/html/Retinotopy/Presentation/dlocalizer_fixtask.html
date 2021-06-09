@@ -1,0 +1,1428 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dlocalizer_fixtask</title>
+  <meta name="keywords" content="dlocalizer_fixtask">
+  <meta name="description" content="Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Presentation -->
+<h1>dlocalizer_fixtask
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.
+ function dlocalizer_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)
+ (: is optional)
+
+ - This function generates and presents Random-Dot-Stereogram(RDS)-defined checkerboard
+   stimulus for measuring/estimating cortical representations of a specific
+   subregion of the visual field. Specifically, the target checkerboard which
+   covers specific visual subfield and its compensating patterns are alternatively
+   presented. You can also use this script to measure a cannonical hemodynamic
+   response function shape subject-by-subject or to evaluate BOLD signal and
+   fMR-image quality.
+
+ - This script shoud be used with MATLAB Psychtoolbox version 3 or above.
+
+ - Luminance detection task: the central fixation point (default: white)
+   randomly turns to gray. An observer has to press the button if s/he
+   detects this luminance change. Response keys are defined in displayfile.
+
+ [note]
+ Behavioral task of (function_name)_fixtask is to detect changes of luminance
+ of the central fixation point, while the task in (function_name_alone) is to
+ detect changes of depth of one of the patches in the checkerboard stimuli.
+ Here, the central fixation task is more easy to sustain the stable fixation
+ on the center of the screen and may be suitable for naive/non-expert
+ participants with minimizing unwilling eye movements. However, some studies
+ have reported that attention to the target stimulus (lead by checker-patch depth
+ change detection task) is required to get reliable retinotopic representations
+ in higher-order visual areas.
+
+
+ Created    : &quot;2019-05-20 17:56:58 ban&quot;
+ Last Update: &quot;2021-06-07 17:20:17 ban&quot;
+
+
+
+ [input variables]
+ sujID         : ID of subject, string, such as 's01'
+                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.
+                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
+                 !!! if 'debug' (case insensitive) is included          !!!
+                 !!! in subjID string, this program runs as DEBUG mode; !!!
+                 !!! stimulus images are saved as *.png format at       !!!
+                 !!! ~/Retinotopy/Presentation/images                   !!!
+                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!
+
+ exp_mode      : experiment mode acceptable in this script is only &quot;localizer&quot;
+ acq           : acquisition number (design file number),
+                 an integer, such as 1, 2, 3, ...
+ displayfile   : (optional) display condition file,
+                 *.m file, such as 'RetDepth_display_fmri.m'
+                 the file should be located in ./subjects/(subj)/
+ stimulusfile  : (optional) stimulus condition file,
+                 *.m file, such as 'RetDepth_stimulus_exp1.m'
+                 the file should be located in ./subjects/(subj)/
+ gamma_table   : (optional) table(s) of gamma-corrected video input values (Color LookupTable).
+                 256(8-bits) x 3(RGB) x 1(or 2,3,... when using multiple displays) matrix
+                 or a *.mat file specified with a relative path format. e.g. '/gamma_table/gamma1.mat'
+                 The *.mat should include a variable named &quot;gamma_table&quot; consists of a 256x3xN matrix.
+                 if you use multiple (more than 1) displays and set a 256x3x1 gamma-table, the same
+                 table will be applied to all displays. if the number of displays and gamma tables
+                 are different (e.g. you have 3 displays and 256x3x!2! gamma-tables), the last
+                 gamma_table will be applied to the second and third displays.
+                 if empty, normalized gamma table (repmat(linspace(0.0,1.0,256),3,1)) will be applied.
+ overwrite_flg : (optional) whether overwriting pre-existing result file. if 1, the previous result
+                 file with the same acquisition number will be overwritten by the previous one.
+                 if 0, the existing file will be backed-up by adding a prefix '_old' at the tail
+                 of the file. 0 by default.
+ force_proceed_flag : (optional) whether proceeding stimulus presentatin without waiting for
+                 the experimenter response (e.g. presesing the ENTER key) or a trigger.
+                 if 1, the stimulus presentation will be automatically carried on.
+
+ !!! NOTICE !!!!
+ displayfile &amp; stimulusfile should be located at
+ ./subjects/(subjID)/
+ as ./subjects/(subjID)/*_display_fmri.m
+    ./subjects/(subjID)/*_stimuli.m
+
+
+ [output variables]
+ no output matlab variable.
+
+
+ [output files]
+ 1. result file
+    stored ./subjects/(subjID)/results/(date)
+    as ./subjects/(subjID)/results/(date)/(subjID)_dlocalizer_fixtask_results_run_(run_num).mat
+
+
+ [example]
+ &gt;&gt; dlocalizer_fixtask('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')
+
+ [About displayfile]
+ The contents of the displayfile are as below.
+ (The file includs 6 lines of headers and following display parameters)
+
+ (an example of the displayfile)
+
+ % ************************************************************
+ % This is the display configuration file for the retinotopy stimuli
+ % Programmed by Hiroshi Ban Nov 01 2013
+ % ************************************************************
+
+ % display mode, one of &quot;mono&quot;, &quot;dual&quot;, &quot;dualcross&quot;, &quot;dualparallel&quot;, &quot;cross&quot;, &quot;parallel&quot;, &quot;redgreen&quot;, &quot;greenred&quot;,
+ % &quot;redblue&quot;, &quot;bluered&quot;, &quot;shutter&quot;, &quot;topbottom&quot;, &quot;bottomtop&quot;, &quot;interleavedline&quot;, &quot;interleavedcolumn&quot;, &quot;propixxmono&quot;, &quot;propixxstereo&quot;
+ dparam.ExpMode='mono';
+
+ dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup
+
+ % a method to start stimulus presentation
+ % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
+ % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,
+ % or 4:custom key trigger (wait for a key input that you specify as tgt_key).
+ dparam.start_method=2;
+
+ % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;
+ dparam.custom_trigger='t';
+
+ % keyboard settings
+ dparam.Key1=51; % key 1 (left)
+ dparam.Key2=52; % key 2 (right)
+
+ % screen settings
+
+ %%% whether displaying the stimuli in full-screen mode or
+ %%% as is (the precise resolution), 'true' or 'false' (true)
+ dparam.fullscr=false;
+
+ %%% the resolution of the screen height
+ dparam.ScrHeight=1200;
+
+ %% the resolution of the screen width
+ dparam.ScrWidth=1920;
+
+ % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
+ % if non zero, the value is used as the screen frame rate.
+ dparam.force_frame_rate=60;
+
+ % whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
+ dparam.skip_sync_test=0;
+
+
+ [About stimulusfile]
+ The contents of the stimulusfile are as below.
+ (The file includs 6 lines of headers and following stimulus parameters)
+
+ (an example of the stimulusfile)
+
+ % ************************************************************
+ % This is the stimulus parameter file for the clocalizer retinotopy stimulus
+ % Programmed by Hiroshi Ban Dec 19 2018
+ % ************************************************************
+
+ %%% stimulus parameters
+ sparam.nwedges     = 30;     % number of wedge subdivisions along polar angle
+ sparam.nrings      = 8;     % number of ring subdivisions along eccentricity angle
+ sparam.width       = 360;    % wedge width in deg along polar angle
+ sparam.phase       = 0;    % phase shift in deg
+ sparam.startangle  = 0;     % presentation start angle in deg, from right-horizontal meridian, ccw
+
+ sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)
+ sparam.minRad      = 0;      % minimum
+ sparam.tgtRad      = [3.5,5,5];  % target eccentricity, [min,max]
+
+ %%% RDS parameters
+ sparam.RDSdepth = [ -12, 12, 5]; % binocular disparity in arcmins, [min, max, #steps(from min to max)]
+ sparam.RDSDense=0.5; % dot density in the RDS images to be generated (percentage)
+ sparam.RDSradius=0.05; % dot radius in deg
+ sparam.RDScolors=[255,0,128]; % dot colors in the RDS, [color1, color2, background (grayscale)]
+ sparam.RDSbackground=0; % 1 = with background, 0 = no background
+
+ %%% duration in msec for each cycle &amp; repetitions
+ % Here, the stimulus presentation protocol is defined as below.
+ % initial_fixation_time(1) ---&gt; block_duration-rest_duration (the target pattern) ---&gt; rest_duration (blank) ---&gt;
+ %   block_duration-rest_duration (the compensating pattern of the target) ---&gt; rest_duration (blank) ---&gt; block_duration-rest_duration (the target pattern) ---&gt;
+ %     rest_duration (blank) ---&gt; block_duration-rest_duration (the compensating pattern) ---&gt; ... (repeated numRepeats in total) ---&gt; initial_fixation_time(2)
+ % Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)
+
+ sparam.block_duration=16000; % msec, a presentation duration of the target or its compensating pattern
+ sparam.rest_duration =16000; % msec, rest after each block
+ sparam.numRepeats=6;
+
+ %%% set number of frames to flip the screen
+ % Here, I set the number as large as I can to minimize vertical cynching error.
+ % the final 2 is for 2 times repetitions of the flicker
+ % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power
+ %sparam.waitframes = Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+ sparam.waitframes = 60*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+
+ %%% fixation period in msec before/after presenting the target stimuli, integer
+ % must set a value more than 1 TR for initializing the frame counting.
+ sparam.initial_fixation_time=[4000,4000];
+
+ %%% fixation size &amp; color
+ sparam.fixtype=1; % 1: circular, 2: rectangular, 3: concentric fixation point
+ sparam.fixsize=12; % radius in pixels
+ sparam.fixcolor=[255,255,255];
+
+ %%% background color
+ sparam.bgcolor=[128,128,128];
+
+ %%% background-patch colors (RGB)
+ sparam.bgtype=1; % 1: a simple background with sparam.bgcolor (then, the parameters belows are not used), 2: a background with grid guides
+ sparam.patch_size=[30,30]; % background patch size, [height,width] in pixels
+ sparam.patch_num=[20,40];  % the number of background patches along vertical and horizontal axis
+ sparam.patch_color1=[255,255,255];
+ sparam.patch_color2=[0,0,0];
+
+ %%% for converting degree to pixels
+ run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));
+ %sparam.pix_per_cm=57.1429;
+ %sparam.vdist=65;
+ %sparam.ipd=6.5;
+
+
+ [HOWTO create stimulus files]
+ 1. All of the stimuli are created in this script in real-time
+    with MATLAB scripts &amp; functions.
+    see ../Generation &amp; ../Common directries.
+ 2. Stimulus parameters are defined in the display &amp; stimulus file.
+
+
+ [reference]
+ for stmulus generation, see ../Generation &amp; ../Common directories.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Common/BackUpObsoleteFiles.html" class="code" title="function [new_fname,backup_fname]=BackUpObsoleteFiles(tgt_dir,tgt_fname,backup_prefix)">BackUpObsoleteFiles</a>	Backups already-existing file(s) in the target directory by adding some file-prefix.</li><li><a href="../../Retinotopy/Common/CheckPTBversion.html" class="code" title="function [PTB_OK,vertxt] = CheckPTBversion(num_mainver_youwant)">CheckPTBversion</a>	Checks the version of the currently running Psychtoolbox.</li><li><a href="../../Retinotopy/Common/CreateBackgroundImage.html" class="code" title="function [Bimg,parameters] = CreateBackgroundImage(wdims,stdims,pdims,bgcolor,color1,color2,fixcolor,patchnum,fix_flag,save_flag,show_flag)">CreateBackgroundImage</a>	Creates background image that can be used as a background of your stimulus displays.</li><li><a href="../../Retinotopy/Common/CreateFixationImgCircular.html" class="code" title="function fix=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag)">CreateFixationImgCircular</a>	Creates a circular fixation image for a monocular display setting.</li><li><a href="../../Retinotopy/Common/CreateFixationImgConcentrateMono.html" class="code" title="function fix=CreateFixationImgConcentrateMono(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag)">CreateFixationImgConcentrateMono</a>	Creates a circular fixation image for a monocular display setting.</li><li><a href="../../Retinotopy/Common/CreateFixationImgMono.html" class="code" title="function fix=CreateFixationImgMono(fixsize,fixcolor,bgcolor,fixlinew,fixlineh,show_flag,save_flag)">CreateFixationImgMono</a>	Creates a cross-shaped fixation image for a monocular display setting.</li><li><a href="../../Retinotopy/Common/CreateWedgeMask.html" class="code" title="function mask=CreateWedgeMask(sz,sz_min,sz_max,pix_per_deg)">CreateWedgeMask</a>	Creates a wedge-shaped mask field whose pixel holds 0/1 value to be used as a mask.</li><li><a href="../../Retinotopy/Common/DisplayMessage2.html" class="code" title="function DisplayMessage2(message,bgcolor,winPtr,numScreens,drawing_font,drawing_size)">DisplayMessage2</a>	Displays message on the center of each of multiple PTB windows.</li><li><a href="../../Retinotopy/Common/GammaLoadPTB.html" class="code" title="function GammaLoadPTB(gamma_table)">GammaLoadPTB</a>	Loads and sets display gamma-table(s) using PTB Screen() function.</li><li><a href="../../Retinotopy/Common/GammaResetPTB.html" class="code" title="function GammaResetPTB(luminance_ratio)">GammaResetPTB</a>	Resets display gamma with PTB Screen() function.</li><li><a href="../../Retinotopy/Common/InitializePTBDisplays.html" class="code" title="function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains,custom_scrIDs)">InitializePTBDisplays</a>	Initializes PTB screen(s) for monocular/binocular presentations using PsychImaging() function.</li><li><a href="../../Retinotopy/Common/InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>	Initializes MATLAB internal state of a random seed.</li><li><a href="../../Retinotopy/Common/ValidateStructureFields.html" class="code" title="function structval=ValidateStructureFields(structval,varargin)">ValidateStructureFields</a>	Validates the input structure and set the default values to the missing field(s)</li><li><a href="../../Retinotopy/Common/eventlogger.html" class="code" title="">eventlogger</a>	</li><li><a href="../../Retinotopy/Common/isstructmember.html" class="code" title="function isFieldResult = isstructmember(inStruct, fieldName)">isstructmember</a>	Checks whether the target struct contains a filed you specified as a member.</li><li><a href="../../Retinotopy/Common/responselogger.html" class="code" title="">responselogger</a>	</li><li><a href="../../Retinotopy/Generation/CreateWedgeMask.html" class="code" title="function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtwidth,start_angle,pix_per_deg)">CreateWedgeMask</a>	Creates a wedge-shaped mask with 0 & 1 values.</li><li><a href="../../Retinotopy/Generation/GetDotPositionsRDS.html" class="code" title="function [XY,colors]=GetDotPositionsRDS(checkerboard,depths,dotdense,RDScolors,ipd,vdist,pix_per_cm)">GetDotPositionsRDS</a>	Returns XY positions and colors (grayscale, 0-255) of dots in a Random-Dot-Stereogram(RDS) image.</li><li><a href="../../Retinotopy/Generation/pol_GenerateCheckerBoard1D.html" class="code" title="function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase,dual_flg)">pol_GenerateCheckerBoard1D</a>	Generates checkerboard patterns (polar angle-based subdivision) with an individual ID number on each patch.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)</a>
+0002 
+0003 <span class="comment">% Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</span>
+0004 <span class="comment">% function dlocalizer_fixtask(subjID,exp_mode,acq,:displayfile,:stimulusfile,:gamma_table,:overwrite_flg,:force_proceed_flag)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% - This function generates and presents Random-Dot-Stereogram(RDS)-defined checkerboard</span>
+0008 <span class="comment">%   stimulus for measuring/estimating cortical representations of a specific</span>
+0009 <span class="comment">%   subregion of the visual field. Specifically, the target checkerboard which</span>
+0010 <span class="comment">%   covers specific visual subfield and its compensating patterns are alternatively</span>
+0011 <span class="comment">%   presented. You can also use this script to measure a cannonical hemodynamic</span>
+0012 <span class="comment">%   response function shape subject-by-subject or to evaluate BOLD signal and</span>
+0013 <span class="comment">%   fMR-image quality.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% - This script shoud be used with MATLAB Psychtoolbox version 3 or above.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% - Luminance detection task: the central fixation point (default: white)</span>
+0018 <span class="comment">%   randomly turns to gray. An observer has to press the button if s/he</span>
+0019 <span class="comment">%   detects this luminance change. Response keys are defined in displayfile.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [note]</span>
+0022 <span class="comment">% Behavioral task of (function_name)_fixtask is to detect changes of luminance</span>
+0023 <span class="comment">% of the central fixation point, while the task in (function_name_alone) is to</span>
+0024 <span class="comment">% detect changes of depth of one of the patches in the checkerboard stimuli.</span>
+0025 <span class="comment">% Here, the central fixation task is more easy to sustain the stable fixation</span>
+0026 <span class="comment">% on the center of the screen and may be suitable for naive/non-expert</span>
+0027 <span class="comment">% participants with minimizing unwilling eye movements. However, some studies</span>
+0028 <span class="comment">% have reported that attention to the target stimulus (lead by checker-patch depth</span>
+0029 <span class="comment">% change detection task) is required to get reliable retinotopic representations</span>
+0030 <span class="comment">% in higher-order visual areas.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Created    : &quot;2019-05-20 17:56:58 ban&quot;</span>
+0034 <span class="comment">% Last Update: &quot;2021-06-07 17:20:17 ban&quot;</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% [input variables]</span>
+0039 <span class="comment">% sujID         : ID of subject, string, such as 's01'</span>
+0040 <span class="comment">%                 you also need to create a directory ./subjects/(subj) and put displayfile and stimulusfile there.</span>
+0041 <span class="comment">%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!</span>
+0042 <span class="comment">%                 !!! if 'debug' (case insensitive) is included          !!!</span>
+0043 <span class="comment">%                 !!! in subjID string, this program runs as DEBUG mode; !!!</span>
+0044 <span class="comment">%                 !!! stimulus images are saved as *.png format at       !!!</span>
+0045 <span class="comment">%                 !!! ~/Retinotopy/Presentation/images                   !!!</span>
+0046 <span class="comment">%                 !!!!!!!!!!!!!!!!!! IMPORTANT NOTE !!!!!!!!!!!!!!!!!!!!!!!!</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">% exp_mode      : experiment mode acceptable in this script is only &quot;localizer&quot;</span>
+0049 <span class="comment">% acq           : acquisition number (design file number),</span>
+0050 <span class="comment">%                 an integer, such as 1, 2, 3, ...</span>
+0051 <span class="comment">% displayfile   : (optional) display condition file,</span>
+0052 <span class="comment">%                 *.m file, such as 'RetDepth_display_fmri.m'</span>
+0053 <span class="comment">%                 the file should be located in ./subjects/(subj)/</span>
+0054 <span class="comment">% stimulusfile  : (optional) stimulus condition file,</span>
+0055 <span class="comment">%                 *.m file, such as 'RetDepth_stimulus_exp1.m'</span>
+0056 <span class="comment">%                 the file should be located in ./subjects/(subj)/</span>
+0057 <span class="comment">% gamma_table   : (optional) table(s) of gamma-corrected video input values (Color LookupTable).</span>
+0058 <span class="comment">%                 256(8-bits) x 3(RGB) x 1(or 2,3,... when using multiple displays) matrix</span>
+0059 <span class="comment">%                 or a *.mat file specified with a relative path format. e.g. '/gamma_table/gamma1.mat'</span>
+0060 <span class="comment">%                 The *.mat should include a variable named &quot;gamma_table&quot; consists of a 256x3xN matrix.</span>
+0061 <span class="comment">%                 if you use multiple (more than 1) displays and set a 256x3x1 gamma-table, the same</span>
+0062 <span class="comment">%                 table will be applied to all displays. if the number of displays and gamma tables</span>
+0063 <span class="comment">%                 are different (e.g. you have 3 displays and 256x3x!2! gamma-tables), the last</span>
+0064 <span class="comment">%                 gamma_table will be applied to the second and third displays.</span>
+0065 <span class="comment">%                 if empty, normalized gamma table (repmat(linspace(0.0,1.0,256),3,1)) will be applied.</span>
+0066 <span class="comment">% overwrite_flg : (optional) whether overwriting pre-existing result file. if 1, the previous result</span>
+0067 <span class="comment">%                 file with the same acquisition number will be overwritten by the previous one.</span>
+0068 <span class="comment">%                 if 0, the existing file will be backed-up by adding a prefix '_old' at the tail</span>
+0069 <span class="comment">%                 of the file. 0 by default.</span>
+0070 <span class="comment">% force_proceed_flag : (optional) whether proceeding stimulus presentatin without waiting for</span>
+0071 <span class="comment">%                 the experimenter response (e.g. presesing the ENTER key) or a trigger.</span>
+0072 <span class="comment">%                 if 1, the stimulus presentation will be automatically carried on.</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">% !!! NOTICE !!!!</span>
+0075 <span class="comment">% displayfile &amp; stimulusfile should be located at</span>
+0076 <span class="comment">% ./subjects/(subjID)/</span>
+0077 <span class="comment">% as ./subjects/(subjID)/*_display_fmri.m</span>
+0078 <span class="comment">%    ./subjects/(subjID)/*_stimuli.m</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">%</span>
+0081 <span class="comment">% [output variables]</span>
+0082 <span class="comment">% no output matlab variable.</span>
+0083 <span class="comment">%</span>
+0084 <span class="comment">%</span>
+0085 <span class="comment">% [output files]</span>
+0086 <span class="comment">% 1. result file</span>
+0087 <span class="comment">%    stored ./subjects/(subjID)/results/(date)</span>
+0088 <span class="comment">%    as ./subjects/(subjID)/results/(date)/(subjID)_dlocalizer_fixtask_results_run_(run_num).mat</span>
+0089 <span class="comment">%</span>
+0090 <span class="comment">%</span>
+0091 <span class="comment">% [example]</span>
+0092 <span class="comment">% &gt;&gt; dlocalizer_fixtask('HB','localizer',1,'ret_display.m','ret_checker_stimulus_exp1.m')</span>
+0093 <span class="comment">%</span>
+0094 <span class="comment">% [About displayfile]</span>
+0095 <span class="comment">% The contents of the displayfile are as below.</span>
+0096 <span class="comment">% (The file includs 6 lines of headers and following display parameters)</span>
+0097 <span class="comment">%</span>
+0098 <span class="comment">% (an example of the displayfile)</span>
+0099 <span class="comment">%</span>
+0100 <span class="comment">% % ************************************************************</span>
+0101 <span class="comment">% % This is the display configuration file for the retinotopy stimuli</span>
+0102 <span class="comment">% % Programmed by Hiroshi Ban Nov 01 2013</span>
+0103 <span class="comment">% % ************************************************************</span>
+0104 <span class="comment">%</span>
+0105 <span class="comment">% % display mode, one of &quot;mono&quot;, &quot;dual&quot;, &quot;dualcross&quot;, &quot;dualparallel&quot;, &quot;cross&quot;, &quot;parallel&quot;, &quot;redgreen&quot;, &quot;greenred&quot;,</span>
+0106 <span class="comment">% % &quot;redblue&quot;, &quot;bluered&quot;, &quot;shutter&quot;, &quot;topbottom&quot;, &quot;bottomtop&quot;, &quot;interleavedline&quot;, &quot;interleavedcolumn&quot;, &quot;propixxmono&quot;, &quot;propixxstereo&quot;</span>
+0107 <span class="comment">% dparam.ExpMode='mono';</span>
+0108 <span class="comment">%</span>
+0109 <span class="comment">% dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup</span>
+0110 <span class="comment">%</span>
+0111 <span class="comment">% % a method to start stimulus presentation</span>
+0112 <span class="comment">% % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),</span>
+0113 <span class="comment">% % 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port,</span>
+0114 <span class="comment">% % or 4:custom key trigger (wait for a key input that you specify as tgt_key).</span>
+0115 <span class="comment">% dparam.start_method=2;</span>
+0116 <span class="comment">%</span>
+0117 <span class="comment">% % a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;</span>
+0118 <span class="comment">% dparam.custom_trigger='t';</span>
+0119 <span class="comment">%</span>
+0120 <span class="comment">% % keyboard settings</span>
+0121 <span class="comment">% dparam.Key1=51; % key 1 (left)</span>
+0122 <span class="comment">% dparam.Key2=52; % key 2 (right)</span>
+0123 <span class="comment">%</span>
+0124 <span class="comment">% % screen settings</span>
+0125 <span class="comment">%</span>
+0126 <span class="comment">% %%% whether displaying the stimuli in full-screen mode or</span>
+0127 <span class="comment">% %%% as is (the precise resolution), 'true' or 'false' (true)</span>
+0128 <span class="comment">% dparam.fullscr=false;</span>
+0129 <span class="comment">%</span>
+0130 <span class="comment">% %%% the resolution of the screen height</span>
+0131 <span class="comment">% dparam.ScrHeight=1200;</span>
+0132 <span class="comment">%</span>
+0133 <span class="comment">% %% the resolution of the screen width</span>
+0134 <span class="comment">% dparam.ScrWidth=1920;</span>
+0135 <span class="comment">%</span>
+0136 <span class="comment">% % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.</span>
+0137 <span class="comment">% % if non zero, the value is used as the screen frame rate.</span>
+0138 <span class="comment">% dparam.force_frame_rate=60;</span>
+0139 <span class="comment">%</span>
+0140 <span class="comment">% % whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped</span>
+0141 <span class="comment">% dparam.skip_sync_test=0;</span>
+0142 <span class="comment">%</span>
+0143 <span class="comment">%</span>
+0144 <span class="comment">% [About stimulusfile]</span>
+0145 <span class="comment">% The contents of the stimulusfile are as below.</span>
+0146 <span class="comment">% (The file includs 6 lines of headers and following stimulus parameters)</span>
+0147 <span class="comment">%</span>
+0148 <span class="comment">% (an example of the stimulusfile)</span>
+0149 <span class="comment">%</span>
+0150 <span class="comment">% % ************************************************************</span>
+0151 <span class="comment">% % This is the stimulus parameter file for the clocalizer retinotopy stimulus</span>
+0152 <span class="comment">% % Programmed by Hiroshi Ban Dec 19 2018</span>
+0153 <span class="comment">% % ************************************************************</span>
+0154 <span class="comment">%</span>
+0155 <span class="comment">% %%% stimulus parameters</span>
+0156 <span class="comment">% sparam.nwedges     = 30;     % number of wedge subdivisions along polar angle</span>
+0157 <span class="comment">% sparam.nrings      = 8;     % number of ring subdivisions along eccentricity angle</span>
+0158 <span class="comment">% sparam.width       = 360;    % wedge width in deg along polar angle</span>
+0159 <span class="comment">% sparam.phase       = 0;    % phase shift in deg</span>
+0160 <span class="comment">% sparam.startangle  = 0;     % presentation start angle in deg, from right-horizontal meridian, ccw</span>
+0161 <span class="comment">%</span>
+0162 <span class="comment">% sparam.maxRad      = 6.5;    % maximum radius of  annulus (degrees)</span>
+0163 <span class="comment">% sparam.minRad      = 0;      % minimum</span>
+0164 <span class="comment">% sparam.tgtRad      = [3.5,5,5];  % target eccentricity, [min,max]</span>
+0165 <span class="comment">%</span>
+0166 <span class="comment">% %%% RDS parameters</span>
+0167 <span class="comment">% sparam.RDSdepth = [ -12, 12, 5]; % binocular disparity in arcmins, [min, max, #steps(from min to max)]</span>
+0168 <span class="comment">% sparam.RDSDense=0.5; % dot density in the RDS images to be generated (percentage)</span>
+0169 <span class="comment">% sparam.RDSradius=0.05; % dot radius in deg</span>
+0170 <span class="comment">% sparam.RDScolors=[255,0,128]; % dot colors in the RDS, [color1, color2, background (grayscale)]</span>
+0171 <span class="comment">% sparam.RDSbackground=0; % 1 = with background, 0 = no background</span>
+0172 <span class="comment">%</span>
+0173 <span class="comment">% %%% duration in msec for each cycle &amp; repetitions</span>
+0174 <span class="comment">% % Here, the stimulus presentation protocol is defined as below.</span>
+0175 <span class="comment">% % initial_fixation_time(1) ---&gt; block_duration-rest_duration (the target pattern) ---&gt; rest_duration (blank) ---&gt;</span>
+0176 <span class="comment">% %   block_duration-rest_duration (the compensating pattern of the target) ---&gt; rest_duration (blank) ---&gt; block_duration-rest_duration (the target pattern) ---&gt;</span>
+0177 <span class="comment">% %     rest_duration (blank) ---&gt; block_duration-rest_duration (the compensating pattern) ---&gt; ... (repeated numRepeats in total) ---&gt; initial_fixation_time(2)</span>
+0178 <span class="comment">% % Therefore, one_stimulation_cycle = block_duration x 2 (note: in this period, stimulation = block_duration-rest_duration)</span>
+0179 <span class="comment">%</span>
+0180 <span class="comment">% sparam.block_duration=16000; % msec, a presentation duration of the target or its compensating pattern</span>
+0181 <span class="comment">% sparam.rest_duration =16000; % msec, rest after each block</span>
+0182 <span class="comment">% sparam.numRepeats=6;</span>
+0183 <span class="comment">%</span>
+0184 <span class="comment">% %%% set number of frames to flip the screen</span>
+0185 <span class="comment">% % Here, I set the number as large as I can to minimize vertical cynching error.</span>
+0186 <span class="comment">% % the final 2 is for 2 times repetitions of the flicker</span>
+0187 <span class="comment">% % Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power</span>
+0188 <span class="comment">% %sparam.waitframes = Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );</span>
+0189 <span class="comment">% sparam.waitframes = 60*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );</span>
+0190 <span class="comment">%</span>
+0191 <span class="comment">% %%% fixation period in msec before/after presenting the target stimuli, integer</span>
+0192 <span class="comment">% % must set a value more than 1 TR for initializing the frame counting.</span>
+0193 <span class="comment">% sparam.initial_fixation_time=[4000,4000];</span>
+0194 <span class="comment">%</span>
+0195 <span class="comment">% %%% fixation size &amp; color</span>
+0196 <span class="comment">% sparam.fixtype=1; % 1: circular, 2: rectangular, 3: concentric fixation point</span>
+0197 <span class="comment">% sparam.fixsize=12; % radius in pixels</span>
+0198 <span class="comment">% sparam.fixcolor=[255,255,255];</span>
+0199 <span class="comment">%</span>
+0200 <span class="comment">% %%% background color</span>
+0201 <span class="comment">% sparam.bgcolor=[128,128,128];</span>
+0202 <span class="comment">%</span>
+0203 <span class="comment">% %%% background-patch colors (RGB)</span>
+0204 <span class="comment">% sparam.bgtype=1; % 1: a simple background with sparam.bgcolor (then, the parameters belows are not used), 2: a background with grid guides</span>
+0205 <span class="comment">% sparam.patch_size=[30,30]; % background patch size, [height,width] in pixels</span>
+0206 <span class="comment">% sparam.patch_num=[20,40];  % the number of background patches along vertical and horizontal axis</span>
+0207 <span class="comment">% sparam.patch_color1=[255,255,255];</span>
+0208 <span class="comment">% sparam.patch_color2=[0,0,0];</span>
+0209 <span class="comment">%</span>
+0210 <span class="comment">% %%% for converting degree to pixels</span>
+0211 <span class="comment">% run(fullfile(fileparts(mfilename('fullpath')),'sizeparams'));</span>
+0212 <span class="comment">% %sparam.pix_per_cm=57.1429;</span>
+0213 <span class="comment">% %sparam.vdist=65;</span>
+0214 <span class="comment">% %sparam.ipd=6.5;</span>
+0215 <span class="comment">%</span>
+0216 <span class="comment">%</span>
+0217 <span class="comment">% [HOWTO create stimulus files]</span>
+0218 <span class="comment">% 1. All of the stimuli are created in this script in real-time</span>
+0219 <span class="comment">%    with MATLAB scripts &amp; functions.</span>
+0220 <span class="comment">%    see ../Generation &amp; ../Common directries.</span>
+0221 <span class="comment">% 2. Stimulus parameters are defined in the display &amp; stimulus file.</span>
+0222 <span class="comment">%</span>
+0223 <span class="comment">%</span>
+0224 <span class="comment">% [reference]</span>
+0225 <span class="comment">% for stmulus generation, see ../Generation &amp; ../Common directories.</span>
+0226 
+0227 
+0228 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0229 <span class="comment">%%%% Check the input variables</span>
+0230 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0231 
+0232 clear <span class="keyword">global</span>; clear mex;
+0233 <span class="keyword">if</span> nargin&lt;3, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0234 <span class="keyword">if</span> nargin&lt;4 || isempty(displayfile), displayfile=[]; <span class="keyword">end</span>
+0235 <span class="keyword">if</span> nargin&lt;5 || isempty(stimulusfile), stimulusfile=[]; <span class="keyword">end</span>
+0236 <span class="keyword">if</span> nargin&lt;6 || isempty(gamma_table), gamma_table=[]; <span class="keyword">end</span>
+0237 <span class="keyword">if</span> nargin&lt;7 || isempty(overwrite_flg), overwrite_flg=1; <span class="keyword">end</span>
+0238 <span class="keyword">if</span> nargin&lt;8 || isempty(force_proceed_flag), force_proceed_flag=0; <span class="keyword">end</span>
+0239 
+0240 <span class="comment">% check the aqcuisition number. up to 10 design files can be used</span>
+0241 <span class="keyword">if</span> acq&lt;1, error(<span class="string">'Acquistion number must be integer and greater than zero'</span>); <span class="keyword">end</span>
+0242 
+0243 <span class="comment">% check the experiment mode (stimulus type)</span>
+0244 <span class="keyword">if</span> ~strcmpi(exp_mode,<span class="string">'localizer'</span>), error(<span class="string">'exp_mode acceptable in this script is only &quot;localizer&quot;. check the input variable.'</span>); <span class="keyword">end</span>
+0245 
+0246 rootDir=fileparts(mfilename(<span class="string">'fullpath'</span>));
+0247 
+0248 <span class="comment">% check the subject directory</span>
+0249 <span class="keyword">if</span> ~exist(fullfile(rootDir,<span class="string">'subjects'</span>,subjID),<span class="string">'dir'</span>), error(<span class="string">'can not find subj directory. check the input variable.'</span>); <span class="keyword">end</span>
+0250 
+0251 <span class="comment">% check the display/stimulus files</span>
+0252 <span class="keyword">if</span> ~isempty(displayfile)
+0253   <span class="keyword">if</span> ~strcmpi(displayfile(end-1:end),<span class="string">'.m'</span>), displayfile=[displayfile,<span class="string">'.m'</span>]; <span class="keyword">end</span>
+0254   <span class="keyword">if</span> ~exist(fullfile(rootDir,<span class="string">'subjects'</span>,subjID,displayfile),<span class="string">'file'</span>), error(<span class="string">'displayfile not found. check the input variable.'</span>); <span class="keyword">end</span>
+0255 <span class="keyword">end</span>
+0256 
+0257 <span class="keyword">if</span> ~isempty(stimulusfile)
+0258   <span class="keyword">if</span> ~strcmpi(stimulusfile(end-1:end),<span class="string">'.m'</span>), stimulusfile=[stimulusfile,<span class="string">'.m'</span>]; <span class="keyword">end</span>
+0259   <span class="keyword">if</span> ~exist(fullfile(rootDir,<span class="string">'subjects'</span>,subjID,stimulusfile),<span class="string">'file'</span>), error(<span class="string">'stimulusfile not found. check the input variable.'</span>); <span class="keyword">end</span>
+0260 <span class="keyword">end</span>
+0261 
+0262 
+0263 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0264 <span class="comment">%%%% Add paths to the subfunctions</span>
+0265 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0266 
+0267 <span class="comment">% add paths to the subfunctions</span>
+0268 addpath(genpath(fullfile(rootDir,<span class="string">'..'</span>,<span class="string">'Common'</span>)));
+0269 addpath(fullfile(rootDir,<span class="string">'..'</span>,<span class="string">'Generation'</span>));
+0270 
+0271 
+0272 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0273 <span class="comment">%%%% For a log file</span>
+0274 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0275 
+0276 <span class="comment">% get date</span>
+0277 today=datestr(now,<span class="string">'yymmdd'</span>);
+0278 
+0279 <span class="comment">% result directry &amp; file</span>
+0280 resultDir=fullfile(rootDir,<span class="string">'subjects'</span>,num2str(subjID),<span class="string">'results'</span>,today);
+0281 <span class="keyword">if</span> ~exist(resultDir,<span class="string">'dir'</span>), mkdir(resultDir); <span class="keyword">end</span>
+0282 
+0283 <span class="comment">% record the output window</span>
+0284 logfname=fullfile(resultDir,[num2str(subjID),<span class="string">'_dlocalizer_fixtask_results_run_'</span>,num2str(acq,<span class="string">'%02d'</span>),<span class="string">'.log'</span>]);
+0285 diary(logfname);
+0286 warning off; <span class="comment">%#ok warning('off','MATLAB:dispatcher:InexactCaseMatch');</span>
+0287 
+0288 
+0289 <span class="comment">%%%%% try &amp; catch %%%%%</span>
+0290 <span class="keyword">try</span>
+0291 
+0292 
+0293 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0294 <span class="comment">%%%% Check the PTB version</span>
+0295 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0296 
+0297 PTB_OK=<a href="../../Retinotopy/Common/CheckPTBversion.html" class="code" title="function [PTB_OK,vertxt] = CheckPTBversion(num_mainver_youwant)">CheckPTBversion</a>(3); <span class="comment">% check wether the PTB version is 3</span>
+0298 <span class="keyword">if</span> ~PTB_OK, error(<span class="string">'Wrong version of Psychtoolbox is running. %s requires PTB ver.3'</span>,mfilename()); <span class="keyword">end</span>
+0299 
+0300 <span class="comment">% debug level, black screen during calibration</span>
+0301 Screen(<span class="string">'Preference'</span>, <span class="string">'VisualDebuglevel'</span>, 3);
+0302 
+0303 
+0304 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0305 <span class="comment">%%%% Setup random seed</span>
+0306 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0307 
+0308 <a href="../../Retinotopy/Common/InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>();
+0309 
+0310 
+0311 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0312 <span class="comment">%%%% Reset display Gamma-function</span>
+0313 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0314 
+0315 <span class="keyword">if</span> isempty(gamma_table)
+0316   gamma_table=repmat(linspace(0.0,1.0,256),3,1); <span class="comment">%#ok</span>
+0317   <a href="../../Retinotopy/Common/GammaResetPTB.html" class="code" title="function GammaResetPTB(luminance_ratio)">GammaResetPTB</a>(1.0);
+0318 <span class="keyword">else</span>
+0319   <a href="../../Retinotopy/Common/GammaLoadPTB.html" class="code" title="function GammaLoadPTB(gamma_table)">GammaLoadPTB</a>(gamma_table);
+0320 <span class="keyword">end</span>
+0321 
+0322 
+0323 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0324 <span class="comment">%%%% Validate dparam (displayfile) and sparam (stimulusfile) structures</span>
+0325 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0326 
+0327 <span class="comment">% organize dparam</span>
+0328 dparam=struct(); <span class="comment">% initialize</span>
+0329 <span class="keyword">if</span> ~isempty(displayfile), run(fullfile(rootDir,<span class="string">'subjects'</span>,subjID,displayfile)); <span class="keyword">end</span> <span class="comment">% load specific dparam parameters configured for each of the participants</span>
+0330 dparam=<a href="../../Retinotopy/Common/ValidateStructureFields.html" class="code" title="function structval=ValidateStructureFields(structval,varargin)">ValidateStructureFields</a>(dparam,<span class="keyword">...</span><span class="comment"> % validate fields and set the default values to missing field(s)</span>
+0331          <span class="string">'ExpMode'</span>,<span class="string">'mono'</span>,<span class="keyword">...</span>
+0332          <span class="string">'scrID'</span>,1,<span class="keyword">...</span>
+0333          <span class="string">'start_method'</span>,0,<span class="keyword">...</span>
+0334          <span class="string">'custom_trigger'</span>,<span class="string">'t'</span>,<span class="keyword">...</span>
+0335          <span class="string">'Key1'</span>,51,<span class="keyword">...</span>
+0336          <span class="string">'Key2'</span>,52,<span class="keyword">...</span>
+0337          <span class="string">'fullscr'</span>,false,<span class="keyword">...</span>
+0338          <span class="string">'ScrHeight'</span>,1200,<span class="keyword">...</span>
+0339          <span class="string">'ScrWidth'</span>,1920,<span class="keyword">...</span>
+0340          <span class="string">'force_frame_rate'</span>,60,<span class="keyword">...</span>
+0341          <span class="string">'skip_sync_test'</span>,0);
+0342 
+0343 <span class="comment">% organize sparam</span>
+0344 sparam=struct(); <span class="comment">% initialize</span>
+0345 sparam.mode=exp_mode;
+0346 <span class="keyword">if</span> ~isempty(stimulusfile), run(fullfile(rootDir,<span class="string">'subjects'</span>,subjID,stimulusfile)); <span class="keyword">end</span> <span class="comment">% load specific sparam parameters configured for each of the participants</span>
+0347 sparam=<a href="../../Retinotopy/Common/ValidateStructureFields.html" class="code" title="function structval=ValidateStructureFields(structval,varargin)">ValidateStructureFields</a>(sparam,<span class="keyword">...</span><span class="comment"> % validate fields and set the default values to missing field(s)</span>
+0348          <span class="string">'nwedges'</span>,24,<span class="keyword">...</span>
+0349          <span class="string">'nrings'</span>,8,<span class="keyword">...</span>
+0350          <span class="string">'width'</span>,360,<span class="keyword">...</span>
+0351          <span class="string">'phase'</span>,0,<span class="keyword">...</span>
+0352          <span class="string">'startangle'</span>,0,<span class="keyword">...</span>
+0353          <span class="string">'maxRad'</span>,8,<span class="keyword">...</span>
+0354          <span class="string">'minRad'</span>,0,<span class="keyword">...</span>
+0355          <span class="string">'tgtRad'</span>,[3.5,5.5],<span class="keyword">...</span>
+0356          <span class="string">'RDSdepth'</span>,[-12,12,5],<span class="keyword">...</span>
+0357          <span class="string">'RDSDense'</span>,0.5,<span class="keyword">...</span>
+0358          <span class="string">'RDSradius'</span>,0.05,<span class="keyword">...</span>
+0359          <span class="string">'RDScolors'</span>,[255,0,128],<span class="keyword">...</span>
+0360          <span class="string">'RDSbackground'</span>,0,<span class="keyword">...</span>
+0361          <span class="string">'block_duration'</span>,16000,<span class="keyword">...</span>
+0362          <span class="string">'rest_duration'</span>,16000,<span class="keyword">...</span>
+0363          <span class="string">'numRepeats'</span>,6,<span class="keyword">...</span>
+0364          <span class="string">'waitframes'</span>,4,<span class="keyword">...</span><span class="comment"> % Screen('FrameRate',0)*(2*sparam.block_duration/1000) / (2*(sparam.block_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 )</span>
+0365          <span class="string">'initial_fixation_time'</span>,[4000,4000],<span class="keyword">...</span>
+0366          <span class="string">'fixtype'</span>,1,<span class="keyword">...</span>
+0367          <span class="string">'fixsize'</span>,12,<span class="keyword">...</span>
+0368          <span class="string">'fixcolor'</span>,[255,255,255],<span class="keyword">...</span>
+0369          <span class="string">'bgcolor'</span>,[128,128,128],<span class="keyword">...</span><span class="comment"> % sparam.colors(1,:);</span>
+0370          <span class="string">'bgtype'</span>,1,<span class="keyword">...</span>
+0371          <span class="string">'patch_size'</span>,[30,30],<span class="keyword">...</span>
+0372          <span class="string">'patch_num'</span>,[20,40],<span class="keyword">...</span>
+0373          <span class="string">'patch_color1'</span>,[255,255,255],<span class="keyword">...</span>
+0374          <span class="string">'patch_color2'</span>,[0,0,0],<span class="keyword">...</span>
+0375          <span class="string">'pix_per_cm'</span>,57.1429,<span class="keyword">...</span>
+0376          <span class="string">'vdist'</span>,65);
+0377 
+0378 <span class="comment">% change unit from msec to sec.</span>
+0379 sparam.initial_fixation_time = sparam.initial_fixation_time./1000; <span class="comment">%#ok</span>
+0380 
+0381 <span class="comment">% change unit from msec to sec.</span>
+0382 sparam.block_duration = sparam.block_duration./1000;
+0383 sparam.rest_duration  = sparam.rest_duration./1000;
+0384 
+0385 <span class="comment">% set the other parameters</span>
+0386 dparam.RunScript = mfilename();
+0387 sparam.RunScript = mfilename();
+0388 
+0389 
+0390 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0391 <span class="comment">%%%% Displaying the presentation parameters you set</span>
+0392 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0393 
+0394 fprintf(<span class="string">'The Presentation Parameters are as below.\n\n'</span>);
+0395 fprintf(<span class="string">'************************************************\n'</span>);
+0396 fprintf(<span class="string">'****** Script, Subject, Acquistion Number ******\n'</span>);
+0397 fprintf(<span class="string">'Date &amp; Time            : %s\n'</span>,strcat([datestr(now,<span class="string">'yymmdd'</span>),<span class="string">' '</span>,datestr(now,<span class="string">'HH:mm:ss'</span>)]));
+0398 fprintf(<span class="string">'Running Script Name    : %s\n'</span>,mfilename());
+0399 fprintf(<span class="string">'Subject ID             : %s\n'</span>,subjID);
+0400 fprintf(<span class="string">'Acquisition Number     : %d\n'</span>,acq);
+0401 fprintf(<span class="string">'********* Run Type, Display Image Type *********\n'</span>);
+0402 fprintf(<span class="string">'Display Mode           : %s\n'</span>,dparam.ExpMode);
+0403 fprintf(<span class="string">'use Full Screen Mode   : %d\n'</span>,dparam.fullscr);
+0404 fprintf(<span class="string">'Start Method           : %d\n'</span>,dparam.start_method);
+0405 <span class="keyword">if</span> dparam.start_method==4
+0406   fprintf(<span class="string">'Custom Trigger         : %d\n'</span>,dparam.custom_trigger);
+0407 <span class="keyword">end</span>
+0408 fprintf(<span class="string">'*************** Screen Settings ****************\n'</span>);
+0409 fprintf(<span class="string">'Screen Height          : %d\n'</span>,dparam.ScrHeight);
+0410 fprintf(<span class="string">'Screen Width           : %d\n'</span>,dparam.ScrWidth);
+0411 fprintf(<span class="string">'*********** Stimulation Periods etc. ***********\n'</span>);
+0412 fprintf(<span class="string">'Fixation Time(sec)     : %d &amp; %d\n'</span>,sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
+0413 fprintf(<span class="string">'Cycle Duration(sec)    : %d\n'</span>,2*sparam.block_duration);
+0414 fprintf(<span class="string">'Block Duration(sec)    : %d x 2 (target/compensating)\n'</span>,sparam.block_duration-sparam.rest_duration);
+0415 fprintf(<span class="string">'Rest  Duration(sec)    : %d\n'</span>,sparam.rest_duration);
+0416 fprintf(<span class="string">'Repetitions(cycles)    : %d\n'</span>,sparam.numRepeats);
+0417 fprintf(<span class="string">'Frame Flip(per VerSync): %d\n'</span>,sparam.waitframes);
+0418 fprintf(<span class="string">'Total Time (sec)       : %d\n'</span>,sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration);
+0419 fprintf(<span class="string">'**************** Stimulus Type *****************\n'</span>);
+0420 fprintf(<span class="string">'Experiment Mode        : %s\n'</span>,sparam.mode);
+0421 fprintf(<span class="string">'************ Response key settings *************\n'</span>);
+0422 fprintf(<span class="string">'Reponse Key #1         : %d = %s\n'</span>,dparam.Key1,KbName(dparam.Key1));
+0423 fprintf(<span class="string">'Reponse Key #2         : %d = %s\n'</span>,dparam.Key2,KbName(dparam.Key2));
+0424 fprintf(<span class="string">'************************************************\n\n'</span>);
+0425 fprintf(<span class="string">'Please carefully check before proceeding.\n\n'</span>);
+0426 
+0427 
+0428 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0429 <span class="comment">%%%% Initialize response &amp; event logger objects</span>
+0430 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0431 
+0432 <span class="comment">% initialize MATLAB objects for event and response logs</span>
+0433 event=<a href="../../Retinotopy/Common/eventlogger.html" class="code" title="">eventlogger</a>();
+0434 resps=<a href="../../Retinotopy/Common/responselogger.html" class="code" title="">responselogger</a>([dparam.Key1,dparam.Key2]);
+0435 resps.initialize(event); <span class="comment">% initialize responselogger</span>
+0436 
+0437 
+0438 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0439 <span class="comment">%%%% Wait for user reponse to start</span>
+0440 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0441 
+0442 <span class="keyword">if</span> ~force_proceed_flag
+0443   [user_answer,resps]=resps.wait_to_proceed();
+0444   <span class="keyword">if</span> ~user_answer, diary off; <span class="keyword">return</span>; <span class="keyword">end</span>
+0445 <span class="keyword">end</span>
+0446 
+0447 
+0448 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0449 <span class="comment">%%%% Initialization of Left &amp; Right screens for binocular presenting/viewing mode</span>
+0450 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0451 
+0452 <span class="keyword">if</span> dparam.skip_sync_test, Screen(<span class="string">'Preference'</span>,<span class="string">'SkipSyncTests'</span>,1); <span class="keyword">end</span>
+0453 
+0454 [winPtr,winRect,nScr,dparam.fps,dparam.ifi,initDisplay_OK]=<a href="../../Retinotopy/Common/InitializePTBDisplays.html" class="code" title="function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp_mode,bgcolor,flipping,rgb_gains,custom_scrIDs)">InitializePTBDisplays</a>(dparam.ExpMode,sparam.bgcolor,0,[],dparam.scrID);
+0455 <span class="keyword">if</span> ~initDisplay_OK, error(<span class="string">'Display initialization error. Please check your exp_run parameter.'</span>); <span class="keyword">end</span>
+0456 HideCursor();
+0457 
+0458 <span class="keyword">if</span> <a href="../../Retinotopy/Common/isstructmember.html" class="code" title="function isFieldResult = isstructmember(inStruct, fieldName)">isstructmember</a>(dparam,<span class="string">'force_frame_rate'</span>)
+0459   <span class="keyword">if</span> dparam.force_frame_rate
+0460     dparam.fps=dparam.force_frame_rate;
+0461     dparam.ifi=1/dparam.fps;
+0462   <span class="keyword">end</span>
+0463 <span class="keyword">end</span>
+0464 
+0465 
+0466 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0467 <span class="comment">%%%% Setting the PTB runnning priority to MAX</span>
+0468 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0469 
+0470 <span class="comment">% set the priority of this script to MAX</span>
+0471 priorityLevel=MaxPriority(winPtr,<span class="string">'WaitBlanking'</span>);
+0472 Priority(priorityLevel);
+0473 
+0474 <span class="comment">% conserve VRAM memory: Workaround for flawed hardware and drivers</span>
+0475 <span class="comment">% 32 == kPsychDontShareContextRessources: Do not share ressources between</span>
+0476 <span class="comment">% different onscreen windows. Usually you want PTB to share all ressources</span>
+0477 <span class="comment">% like offscreen windows, textures and GLSL shaders among all open onscreen</span>
+0478 <span class="comment">% windows. If that causes trouble for some weird reason, you can prevent</span>
+0479 <span class="comment">% automatic sharing with this flag.</span>
+0480 <span class="comment">%Screen('Preference','ConserveVRAM',32);</span>
+0481 
+0482 
+0483 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0484 <span class="comment">%%%% Setting the PTB OpenGL functions</span>
+0485 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0486 
+0487 <span class="comment">% Enable OpenGL mode of Psychtoolbox: This is crucially needed for clut animation</span>
+0488 InitializeMatlabOpenGL();
+0489 
+0490 <span class="comment">% This script calls Psychtoolbox commands available only in OpenGL-based</span>
+0491 <span class="comment">% versions of the Psychtoolbox. (So far, the OS X Psychtoolbox is the</span>
+0492 <span class="comment">% only OpenGL-base Psychtoolbox.)  The Psychtoolbox command AssertPsychOpenGL will issue</span>
+0493 <span class="comment">% an error message if someone tries to execute this script on a computer without</span>
+0494 <span class="comment">% an OpenGL Psychtoolbox</span>
+0495 AssertOpenGL();
+0496 
+0497 <span class="comment">% set OpenGL blend functions</span>
+0498 Screen(<span class="string">'BlendFunction'</span>, winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+0499 
+0500 
+0501 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0502 <span class="comment">%%%% Displaying 'Initializing...'</span>
+0503 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0504 
+0505 <span class="comment">% displaying texts on the center of the screen</span>
+0506 <a href="../../Retinotopy/Common/DisplayMessage2.html" class="code" title="function DisplayMessage2(message,bgcolor,winPtr,numScreens,drawing_font,drawing_size)">DisplayMessage2</a>(<span class="string">'Initializing...'</span>,sparam.bgcolor,winPtr,nScr,<span class="string">'Arial'</span>,36);
+0507 
+0508 
+0509 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0510 <span class="comment">%%%% Initializing variables</span>
+0511 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0512 
+0513 <span class="comment">%% unit conversion</span>
+0514 
+0515 <span class="comment">% cm per pix</span>
+0516 sparam.cm_per_pix=1/sparam.pix_per_cm;
+0517 
+0518 <span class="comment">% pixles per degree</span>
+0519 sparam.pix_per_deg=round( 1/( 180*atan(sparam.cm_per_pix/sparam.vdist)/pi ) );
+0520 
+0521 <span class="comment">% deg to radian</span>
+0522 <span class="comment">% do not convert!</span>
+0523 <span class="comment">% sparam.width, sparam.phase, and sparam.startangle are used in deg formats</span>
+0524 
+0525 <span class="comment">% sec to number of frames</span>
+0526 nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframes);
+0527 nframe_stim=round((sparam.block_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
+0528 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
+0529 
+0530 <span class="comment">% !!!NOTICE!!!</span>
+0531 <span class="comment">% Two lines below are from cretinotopy.m</span>
+0532 <span class="comment">% nframe_rotation=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);</span>
+0533 <span class="comment">% nframe_flicker=round(nframe_rotation/sparam.RDSdepth(3)/4);</span>
+0534 <span class="comment">% nframe_flicker should be adjusted to match with these parameters.</span>
+0535 nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.RDSdepth(3)/4); <span class="comment">%60,0,30 are from CCW/CW parameters.</span>
+0536 
+0537 nframe_task=round(18/sparam.waitframes); <span class="comment">% just arbitral, you can change as you like</span>
+0538 
+0539 <span class="comment">%% initialize chackerboard parameters</span>
+0540 
+0541 <span class="comment">% adjust size ratio considering full-screen effect</span>
+0542 <span class="keyword">if</span> dparam.fullscr
+0543   <span class="comment">% here, use width information alone, assuming that the pixel is square</span>
+0544   ratio_wid=( winRect(3)-winRect(1) )/dparam.ScrWidth;
+0545   <span class="comment">%ratio_hei=( winRect(4)-winRect(2) )/dparam.ScrHeight;</span>
+0546 
+0547   <span class="comment">% min/max radius of annulus</span>
+0548   rmin=sparam.minRad*ratio_wid; <span class="comment">% !!! degree, not pixel or cm !!!</span>
+0549   rmax=sparam.maxRad*ratio_wid;
+0550   rtgt=sparam.tgtRad.*ratio_wid;
+0551 <span class="keyword">else</span>
+0552   rmin=sparam.minRad;
+0553   rmax=sparam.maxRad;
+0554   rtgt=sparam.tgtRad;
+0555 <span class="keyword">end</span>
+0556 
+0557 
+0558 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0559 <span class="comment">%%%% Generating checkerboard patterns</span>
+0560 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0561 
+0562 <span class="comment">% [note]</span>
+0563 <span class="comment">% After this processing, each checkerboard image has checker elements with values as shown below</span>
+0564 <span class="comment">% 0 = background</span>
+0565 <span class="comment">% 1 = checker ID 1</span>
+0566 <span class="comment">% 2 = checker ID 2</span>
+0567 <span class="comment">% 3 = checker ID 3</span>
+0568 <span class="comment">% .....</span>
+0569 <span class="comment">% sparam.npatches = checker ID</span>
+0570 <span class="comment">% Each patch ID will be associated with a CLUT color of the same ID</span>
+0571 [dummy,tmp_checkerboard]=<a href="../../Retinotopy/Generation/pol_GenerateCheckerBoard1D.html" class="code" title="function [checkerboard,bincheckerboard,mask]=pol_GenerateCheckerBoard1D(rmin,rmax,width,startangle,pix_per_deg,nwedges,nrings,phase,dual_flg)">pol_GenerateCheckerBoard1D</a>(rmin,rmax,sparam.width,sparam.startangle,sparam.pix_per_deg,<span class="keyword">...</span>
+0572                                         sparam.nwedges,sparam.nrings,sparam.phase);
+0573 clear dummy;
+0574 
+0575 <span class="comment">% generating two compensating masks</span>
+0576 tmpmask=<a href="../../Retinotopy/Common/CreateWedgeMask.html" class="code" title="function mask=CreateWedgeMask(sz,sz_min,sz_max,pix_per_deg)">CreateWedgeMask</a>(rmin,rmax,rtgt(1),rtgt(2),sparam.width,sparam.startangle,sparam.pix_per_deg);
+0577 tmpmask{1}(tmpmask{1}&gt;0)=255; tmpmask{2}(tmpmask{2}&gt;0)=255;
+0578 
+0579 checkerboard=cell(2,1);
+0580 checkertexture=cell(2,1);
+0581 <span class="keyword">for</span> pp=1:1:2
+0582   checkerboard{pp}=tmp_checkerboard{1};
+0583   checkerboard{pp}(tmpmask{pp}&lt;255)=0; <span class="comment">% set the background ID to the outer region</span>
+0584 <span class="keyword">end</span>
+0585 clear tmp_checkerboard tmpmask;
+0586 
+0587 <span class="comment">%% generate a circular mask</span>
+0588 <span class="keyword">if</span> ~sparam.RDSbackground
+0589   <span class="keyword">for</span> nn=1:1:2, checkerboard{nn}(~logical(checkerboard{nn}))=NaN; <span class="keyword">end</span>
+0590 <span class="keyword">end</span>
+0591 
+0592 <span class="comment">% generating the first RDS</span>
+0593 [XY,colors]=<a href="../../Retinotopy/Generation/GetDotPositionsRDS.html" class="code" title="function [XY,colors]=GetDotPositionsRDS(checkerboard,depths,dotdense,RDScolors,ipd,vdist,pix_per_cm)">GetDotPositionsRDS</a>(checkerboard{1},[0,sparam.RDSdepth(1),sparam.RDSdepth(2)],sparam.RDSDense,<span class="keyword">...</span>
+0594                                sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+0595 
+0596 
+0597 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0598 <span class="comment">%%%% Debug codes</span>
+0599 <span class="comment">%%%% saving the stimulus images as *.png format files and enter the debug (keyboard) mode</span>
+0600 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0601 
+0602 <span class="comment">% %%%%%% DEBUG codes start here</span>
+0603 <span class="keyword">if</span> strfind(upper(subjID),<span class="string">'DEBUG'</span>)
+0604 
+0605   Screen(<span class="string">'CloseAll'</span>);
+0606 
+0607   save_dir=fullfile(resultDir,<span class="string">'images_dlocalizer'</span>);
+0608   <span class="keyword">if</span> ~exist(save_dir,<span class="string">'dir'</span>), mkdir(save_dir); <span class="keyword">end</span>
+0609 
+0610   <span class="comment">% open a new window for drawing stimuli</span>
+0611   stimRect=[0,0,size(checkerboard{1},2),size(checkerboard{1},1)];
+0612   [winPtr,winRect]=Screen(<span class="string">'OpenWindow'</span>,dparam.scrID,sparam.bgcolor,CenterRect(stimRect,Screen(<span class="string">'Rect'</span>,dparam.scrID)));
+0613 
+0614   <span class="comment">% set OpenGL</span>
+0615   priorityLevel=MaxPriority(winPtr,<span class="string">'WaitBlanking'</span>);
+0616   Priority(priorityLevel);
+0617   AssertOpenGL();
+0618   Screen(<span class="string">'BlendFunction'</span>, winPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+0619 
+0620   <span class="comment">% processing</span>
+0621   <span class="keyword">for</span> cc=1:1:sparam.numRepeats
+0622     <span class="keyword">for</span> nn=1:1:2
+0623       <span class="keyword">for</span> rr=1:1:round(nframe_stim/(nframe_flicker*sparam.RDSdepth(3)))
+0624         <span class="keyword">for</span> mm=1:1:sparam.RDSdepth(3) <span class="comment">% depth steps</span>
+0625 
+0626           <span class="comment">% generate/get dot positions/colors</span>
+0627           <span class="keyword">if</span> sparam.RDSdepth(3)~=1
+0628             depth1=sparam.RDSdepth(1)+(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+0629             depth2=sparam.RDSdepth(2)-(mm-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+0630           <span class="keyword">else</span>
+0631             depth1=sparam.RDSdepth(1);
+0632             depth2=sparam.RDSdepth(2);
+0633           <span class="keyword">end</span>
+0634           [XY,colors]=<a href="../../Retinotopy/Generation/GetDotPositionsRDS.html" class="code" title="function [XY,colors]=GetDotPositionsRDS(checkerboard,depths,dotdense,RDScolors,ipd,vdist,pix_per_cm)">GetDotPositionsRDS</a>(checkerboard{nn},[0,depth1,depth2],sparam.RDSDense,<span class="keyword">...</span>
+0635                                          sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+0636 
+0637           <span class="keyword">for</span> pp=1:1:2 <span class="comment">% left and right images</span>
+0638             Screen(<span class="string">'FillRect'</span>,winPtr,sparam.bgcolor,stimRect); <span class="comment">% wipe the background just in case</span>
+0639             Screen(<span class="string">'DrawDots'</span>,winPtr,XY{pp},2*sparam.RDSradius*sparam.pix_per_deg,colors{pp},[0,0],3); <span class="comment">% RDS</span>
+0640 
+0641             <span class="comment">% flip the window</span>
+0642             Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0643             Screen(<span class="string">'Flip'</span>,winPtr,[],[],[],1);
+0644 
+0645             <span class="comment">% get the current frame and save it</span>
+0646             imwrite(Screen(<span class="string">'GetImage'</span>,winPtr,winRect),fullfile(save_dir,sprintf(<span class="string">'checkerboard_%s_cycle_%02d_pos_%02d_%02d_depth_%02d_%02d.png'</span>,sparam.mode,cc,nn,rr,mm,pp)),<span class="string">'png'</span>);
+0647           <span class="keyword">end</span>
+0648         <span class="keyword">end</span>
+0649       <span class="keyword">end</span>
+0650     <span class="keyword">end</span>
+0651   <span class="keyword">end</span>
+0652 
+0653   Screen(<span class="string">'CloseAll'</span>);
+0654   save(fullfile(save_dir,sprintf(<span class="string">'stimulus_%s.mat'</span>,sparam.mode)),<span class="string">'checkerboard'</span>,<span class="string">'sparam'</span>,<span class="string">'dparam'</span>);
+0655   keyboard;
+0656 
+0657 <span class="keyword">end</span> <span class="comment">% if strfind(upper(subjID),'DEBUG')</span>
+0658 <span class="comment">% %%%%%% DEBUG code ends here</span>
+0659 
+0660 
+0661 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0662 <span class="comment">%%%% Generating fixation detection task parameters</span>
+0663 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0664 
+0665 <span class="comment">%% set task variables</span>
+0666 <span class="comment">% flag to decide whether presenting fixation task</span>
+0667 totalframes=max([sum(nframe_fixation),1])+2*(nframe_stim+nframe_rest)*sparam.numRepeats;
+0668 num_tasks=ceil(totalframes/nframe_task);
+0669 task_flg=ones(1,num_tasks);
+0670 <span class="keyword">for</span> nn=2:1:num_tasks
+0671   <span class="keyword">if</span> task_flg(nn-1)==2
+0672     task_flg(nn)=1;
+0673   <span class="keyword">else</span>
+0674     <span class="keyword">if</span> mod(randi(4,1),4)==0 <span class="comment">% this is arbitral, but I put these lines just to reduce the number of tasks</span>
+0675       task_flg(nn)=round(rand(1,1))+1;
+0676     <span class="keyword">else</span>
+0677       task_flg(nn)=1;
+0678     <span class="keyword">end</span>
+0679   <span class="keyword">end</span>
+0680 <span class="keyword">end</span>
+0681 task_flg=repmat(task_flg,nframe_task,1);
+0682 task_flg=task_flg(:);
+0683 
+0684 
+0685 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0686 <span class="comment">%%%% Initializing checkerboard color management parameters</span>
+0687 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0688 
+0689 <span class="comment">% checkerboard depth id</span>
+0690 depth_id=1;
+0691 
+0692 
+0693 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0694 <span class="comment">%%%% Creating background images</span>
+0695 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0696 
+0697 <span class="keyword">if</span> sparam.bgtype==1 <span class="comment">% a simple background with sparam.bgcolor</span>
+0698   bgimg{1}=repmat(reshape(sparam.bgcolor,[1,1,3]),[dparam.ScrHeight,dparam.ScrWidth]);
+0699 
+0700 <span class="keyword">elseif</span> sparam.bgtype==2 <span class="comment">% a background with grid guides</span>
+0701 
+0702   <span class="comment">% calculate the central aperture size of the background image</span>
+0703   edgeY=mod(dparam.ScrHeight,sparam.patch_num(1)); <span class="comment">% delete the exceeded region</span>
+0704   p_height=round((dparam.ScrHeight-edgeY)/sparam.patch_num(1)); <span class="comment">% height in pix of patch_height + interval-Y</span>
+0705 
+0706   edgeX=mod(dparam.ScrWidth,sparam.patch_num(2)); <span class="comment">% delete exceeded region</span>
+0707   p_width=round((dparam.ScrWidth-edgeX)/sparam.patch_num(2)); <span class="comment">% width in pix of patch_width + interval-X</span>
+0708 
+0709   <span class="keyword">if</span> dparam.fullscr
+0710     aperture_size=[2*( p_height*ceil( size(checkerboard{1},1)/2*( (winRect(4)-winRect(2))/dparam.ScrHeight ) /p_height ) ),<span class="keyword">...</span>
+0711                    2*( p_width*ceil( size(checkerboard{1},2)/2*( (winRect(3)-winRect(1))/dparam.ScrWidth ) /p_width ) )];
+0712   <span class="keyword">else</span>
+0713     aperture_size=[2*( p_height*ceil(size(checkerboard{1},1)/2/p_height) ),<span class="keyword">...</span>
+0714                    2*( p_width*ceil(size(checkerboard{1},2)/2/p_width) )];
+0715   <span class="keyword">end</span>
+0716 
+0717   bgimg=<a href="../../Retinotopy/Common/CreateBackgroundImage.html" class="code" title="function [Bimg,parameters] = CreateBackgroundImage(wdims,stdims,pdims,bgcolor,color1,color2,fixcolor,patchnum,fix_flag,save_flag,show_flag)">CreateBackgroundImage</a>([dparam.ScrHeight,dparam.ScrWidth],aperture_size,sparam.patch_size,sparam.bgcolor,sparam.patch_color1,sparam.patch_color2,sparam.fixcolor,sparam.patch_num,0,0,0);
+0718 <span class="keyword">else</span>
+0719   error(<span class="string">'sparam.bgtype should be 1 or 2. check the input variable.'</span>);
+0720 <span class="keyword">end</span>
+0721 
+0722 background=Screen(<span class="string">'MakeTexture'</span>,winPtr,bgimg{1});
+0723 
+0724 
+0725 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0726 <span class="comment">%%%% Creating the central fixation, cross images</span>
+0727 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0728 
+0729 <span class="comment">% Create fixation cross images.</span>
+0730 <span class="comment">% Firstly larger fixations are generated, then they are antialiased. This is required to present a beautiful circle</span>
+0731 
+0732 <span class="keyword">if</span> sparam.fixtype==1 <span class="comment">% circular fixation</span>
+0733   fixW=<a href="../../Retinotopy/Common/CreateFixationImgCircular.html" class="code" title="function fix=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag)">CreateFixationImgCircular</a>(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*sparam.fixsize,0,0);
+0734   fixD=<a href="../../Retinotopy/Common/CreateFixationImgCircular.html" class="code" title="function fix=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag)">CreateFixationImgCircular</a>(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*sparam.fixsize,0,0);
+0735 <span class="keyword">elseif</span> sparam.fixtype==2 <span class="comment">% rectangular fixation</span>
+0736   fixW=<a href="../../Retinotopy/Common/CreateFixationImgMono.html" class="code" title="function fix=CreateFixationImgMono(fixsize,fixcolor,bgcolor,fixlinew,fixlineh,show_flag,save_flag)">CreateFixationImgMono</a>(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*2,4*ceil(0.4*sparam.fixsize),0,0);
+0737   fixD=<a href="../../Retinotopy/Common/CreateFixationImgMono.html" class="code" title="function fix=CreateFixationImgMono(fixsize,fixcolor,bgcolor,fixlinew,fixlineh,show_flag,save_flag)">CreateFixationImgMono</a>(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*2,4*ceil(0.4*sparam.fixsize),0,0);
+0738 <span class="keyword">elseif</span> sparam.fixtype==3 <span class="comment">% concentric fixation</span>
+0739   fixW=<a href="../../Retinotopy/Common/CreateFixationImgConcentrateMono.html" class="code" title="function fix=CreateFixationImgConcentrateMono(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag)">CreateFixationImgConcentrateMono</a>(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*[2,ceil(0.8*sparam.fixsize)],0,0,0);
+0740   fixD=<a href="../../Retinotopy/Common/CreateFixationImgConcentrateMono.html" class="code" title="function fix=CreateFixationImgConcentrateMono(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag)">CreateFixationImgConcentrateMono</a>(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*[2,ceil(0.8*sparam.fixsize)],0,0,0);
+0741 <span class="keyword">else</span>
+0742   error(<span class="string">'sparam.fixtype should be one of 1,2, and 3. check the input variable.'</span>);
+0743 <span class="keyword">end</span>
+0744 fixW=imresize(fixW,0.25);
+0745 fixD=imresize(fixD,0.25);
+0746 
+0747 fix=cell(2,1); <span class="comment">% 1 is for default fixation, 2 is for darker fixation (luminance detection task)</span>
+0748 fix{1}=Screen(<span class="string">'MakeTexture'</span>,winPtr,fixW);
+0749 fix{2}=Screen(<span class="string">'MakeTexture'</span>,winPtr,fixD);
+0750 
+0751 
+0752 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0753 <span class="comment">%%%% Prepare blue lines for stereo image flip sync with VPixx PROPixx</span>
+0754 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0755 
+0756 <span class="comment">% There seems to be a blueline generation bug on some OpenGL systems.</span>
+0757 <span class="comment">% SetStereoBlueLineSyncParameters(winPtr, winRect(4)) corrects the</span>
+0758 <span class="comment">% bug on some systems, but breaks on other systems.</span>
+0759 <span class="comment">% We'll just disable automatic blueline, and manually draw our own bluelines!</span>
+0760 
+0761 <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+0762   SetStereoBlueLineSyncParameters(winPtr, winRect(4)+10);
+0763   blueRectOn(1,:)=[0, winRect(4)-1, winRect(3)/4, winRect(4)];
+0764   blueRectOn(2,:)=[0, winRect(4)-1, winRect(3)*3/4, winRect(4)];
+0765   blueRectOff(1,:)=[winRect(3)/4, winRect(4)-1, winRect(3), winRect(4)];
+0766   blueRectOff(2,:)=[winRect(3)*3/4, winRect(4)-1, winRect(3), winRect(4)];
+0767 <span class="keyword">end</span>
+0768 
+0769 
+0770 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0771 <span class="comment">%%%% Image size adjusting to match the current display resolutions</span>
+0772 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0773 
+0774 <span class="keyword">if</span> dparam.fullscr
+0775   ratio_wid= ( winRect(3)-winRect(1) )/dparam.ScrWidth;
+0776   ratio_hei= ( winRect(4)-winRect(2) )/dparam.ScrHeight;
+0777   bgSize   = [size(bgimg{1},2)*ratio_wid, size(bgimg{1},1)*ratio_hei];
+0778   stimSize = [size(checkerboard{1},2)*ratio_wid, size(checkerboard{1},1)*ratio_hei];
+0779   fixSize  = [2*sparam.fixsize*ratio_wid, 2*sparam.fixsize*ratio_hei];
+0780 <span class="keyword">else</span>
+0781   bgSize   = [dparam.ScrWidth, dparam.ScrHeight];
+0782   stimSize = [size(checkerboard{1},2), size(checkerboard{1},1)];
+0783   fixSize  = [2*sparam.fixsize, 2*sparam.fixsize];
+0784 <span class="keyword">end</span>
+0785 
+0786 <span class="comment">% for some display modes in which one screen is splitted into two binocular displays</span>
+0787 <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'cross'</span>) || strcmpi(dparam.ExpMode,<span class="string">'parallel'</span>) || <span class="keyword">...</span>
+0788    strcmpi(dparam.ExpMode,<span class="string">'topbottom'</span>) || strcmpi(dparam.ExpMode,<span class="string">'bottomtop'</span>)
+0789   bgSize=bgSize./2;
+0790   stimSize=stimSize./2;
+0791   fixSize=fixSize./2;
+0792 <span class="keyword">end</span>
+0793 
+0794 bgRect  = [0, 0, bgSize]; <span class="comment">% used to display background images;</span>
+0795 stimRect= [0, 0, stimSize];
+0796 fixRect = [0, 0, fixSize]; <span class="comment">% used to display the central fixation point</span>
+0797 
+0798 <span class="comment">% compute Random-Dot-Stereogram image center</span>
+0799 <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'cross'</span>) || strcmpi(dparam.ExpMode,<span class="string">'parallel'</span>) || <span class="keyword">...</span>
+0800    strcmpi(dparam.ExpMode,<span class="string">'topbottom'</span>) || strcmpi(dparam.ExpMode,<span class="string">'bottomtop'</span>)
+0801   half_flg=1;
+0802 <span class="keyword">else</span>
+0803   half_flg=0;
+0804 <span class="keyword">end</span>
+0805 dotCenter=[diff(winRect([1,3])),diff(winRect([2,4]))]./2-[diff(stimRect([1,3])),diff(stimRect([2,4]))]./2;
+0806 
+0807 
+0808 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0809 <span class="comment">%%%% Initialize functions and variables for trial loop</span>
+0810 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0811 
+0812 <span class="comment">% initialize variables that we will use during the experiment (faster)</span>
+0813 cur_frames=0;
+0814 
+0815 
+0816 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0817 <span class="comment">%%%% Displaying 'Ready to Start'</span>
+0818 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0819 
+0820 <span class="comment">% displaying texts on the center of the screen</span>
+0821 <a href="../../Retinotopy/Common/DisplayMessage2.html" class="code" title="function DisplayMessage2(message,bgcolor,winPtr,numScreens,drawing_font,drawing_size)">DisplayMessage2</a>(<span class="string">'Ready to Start'</span>,sparam.bgcolor,winPtr,nScr,<span class="string">'Arial'</span>,36);
+0822 ttime=GetSecs(); <span class="keyword">while</span> (GetSecs()-ttime &lt; 0.5), <span class="keyword">end</span>  <span class="comment">% run up the clock.</span>
+0823 
+0824 
+0825 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0826 <span class="comment">%%%% Flip the display(s) to the background image(s)</span>
+0827 <span class="comment">%%%% and inform the ready of stimulus presentation</span>
+0828 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0829 
+0830 <span class="comment">% change the screen and wait for the trigger or pressing the start button</span>
+0831 <span class="keyword">for</span> nn=1:1:nScr
+0832   Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0833   Screen(<span class="string">'DrawTexture'</span>,winPtr,background,[],CenterRect(bgRect,winRect));
+0834   Screen(<span class="string">'DrawTexture'</span>,winPtr,fix{2},[],CenterRect(fixRect,winRect));
+0835 
+0836   <span class="comment">% blue line for stereo sync</span>
+0837   <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+0838     Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,255],blueRectOn(nn,:));
+0839     Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,0],blueRectOff(nn,:));
+0840   <span class="keyword">end</span>
+0841 <span class="keyword">end</span>
+0842 Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0843 Screen(<span class="string">'Flip'</span>, winPtr,[],[],[],1);
+0844 
+0845 <span class="comment">% prepare the next frame for the initial fixation period</span>
+0846 <span class="keyword">for</span> nn=1:1:nScr
+0847   Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0848   Screen(<span class="string">'DrawTexture'</span>,winPtr,background,[],CenterRect(bgRect,winRect));
+0849   Screen(<span class="string">'DrawTexture'</span>,winPtr,fix{1},[],CenterRect(fixRect,winRect)); <span class="comment">% fix{1} is valis as no task in the first period</span>
+0850 
+0851   <span class="comment">% blue line for stereo sync</span>
+0852   <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+0853     Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,255],blueRectOn(nn,:));
+0854     Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,0],blueRectOff(nn,:));
+0855   <span class="keyword">end</span>
+0856 <span class="keyword">end</span>
+0857 Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0858 
+0859 
+0860 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0861 <span class="comment">%%%% Wait for the first trigger pulse from fMRI scanner or start with button pressing</span>
+0862 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0863 
+0864 <span class="comment">% add time stamp (this also works to load add_event method in memory in advance of the actual displays)</span>
+0865 fprintf(<span class="string">'\nWaiting for the start...\n'</span>);
+0866 event=event.add_event(<span class="string">'Experiment Start'</span>,strcat([datestr(now,<span class="string">'yymmdd'</span>),<span class="string">' '</span>,datestr(now,<span class="string">'HH:mm:ss'</span>)]),NaN);
+0867 
+0868 <span class="comment">% waiting for stimulus presentation</span>
+0869 resps.wait_stimulus_presentation(dparam.start_method,dparam.custom_trigger);
+0870 <span class="comment">%PlaySound(1);</span>
+0871 fprintf(<span class="string">'\nExperiment running...\n'</span>);
+0872 
+0873 
+0874 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0875 <span class="comment">%%%% Initial Fixation Period</span>
+0876 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0877 
+0878 vbl=Screen(<span class="string">'Flip'</span>,winPtr,[],[],[],1); <span class="comment">% the first flip</span>
+0879 [event,the_experiment_start]=event.set_reference_time(vbl);
+0880 event=event.add_event(<span class="string">'Initial Fixation'</span>,[]);
+0881 fprintf(<span class="string">'\nfixation\n\n'</span>);
+0882 cur_frames=cur_frames+1;
+0883 
+0884 <span class="comment">% wait for the initial fixation</span>
+0885 <span class="keyword">for</span> ff=1:1:nframe_fixation(1)
+0886   <span class="keyword">for</span> nn=1:1:nScr
+0887     Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0888     Screen(<span class="string">'DrawTexture'</span>,winPtr,background,[],CenterRect(bgRect,winRect));
+0889     Screen(<span class="string">'DrawTexture'</span>,winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+0890 
+0891     <span class="comment">% blue line for stereo sync</span>
+0892     <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+0893       Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,255],blueRectOn(nn,:));
+0894       Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,0],blueRectOff(nn,:));
+0895     <span class="keyword">end</span>
+0896   <span class="keyword">end</span>
+0897   Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0898   <span class="keyword">while</span> GetSecs()&lt;vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); <span class="keyword">end</span>
+0899   Screen(<span class="string">'Flip'</span>,winPtr,[],[],[],1);
+0900 
+0901   <span class="comment">% update task</span>
+0902   cur_frames=cur_frames+1;
+0903   <span class="keyword">if</span> task_flg(cur_frames-1)==2 &amp;&amp; task_flg(cur_frames-2)==1, event=event.add_event(<span class="string">'Luminance Task'</span>,[]); <span class="keyword">end</span>
+0904 <span class="keyword">end</span>
+0905 
+0906 
+0907 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0908 <span class="comment">%%%% The Trial Loop</span>
+0909 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0910 
+0911 <span class="keyword">for</span> cc=1:1:sparam.numRepeats
+0912 
+0913   <span class="comment">%% stimulus presentation loop</span>
+0914   <span class="keyword">for</span> pp=1:1:2 <span class="comment">% 2 = the target and its compensating patterns</span>
+0915     <span class="keyword">for</span> ff=1:1:nframe_stim+nframe_rest
+0916 
+0917       <span class="comment">% preparaing the next stimulus</span>
+0918       <span class="keyword">if</span> ff&lt;=nframe_stim &amp;&amp; ~mod(ff,nframe_flicker)
+0919         <span class="keyword">if</span> sparam.RDSdepth(3)~=1
+0920           depth1=sparam.RDSdepth(1)+(depth_id-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+0921           depth2=sparam.RDSdepth(2)-(depth_id-1)*(sparam.RDSdepth(2)-sparam.RDSdepth(1))/(sparam.RDSdepth(3)-1);
+0922         <span class="keyword">else</span>
+0923           depth1=sparam.RDSdepth(1);
+0924           depth2=sparam.RDSdepth(2);
+0925         <span class="keyword">end</span>
+0926         [XY,colors]=<a href="../../Retinotopy/Generation/GetDotPositionsRDS.html" class="code" title="function [XY,colors]=GetDotPositionsRDS(checkerboard,depths,dotdense,RDScolors,ipd,vdist,pix_per_cm)">GetDotPositionsRDS</a>(checkerboard{pp},[0,depth1,depth2],sparam.RDSDense,<span class="keyword">...</span>
+0927                                          sparam.RDScolors(1:2),sparam.ipd,sparam.vdist,sparam.pix_per_cm);
+0928       <span class="keyword">end</span>
+0929 
+0930       <span class="comment">%% display the current frame</span>
+0931       <span class="keyword">for</span> nn=1:1:nScr
+0932         Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0933         Screen(<span class="string">'DrawTexture'</span>,winPtr,background,[],CenterRect(bgRect,winRect)); <span class="comment">% background</span>
+0934         <span class="keyword">if</span> ff&lt;=nframe_stim
+0935           <span class="keyword">if</span> half_flg
+0936             Screen(<span class="string">'DrawDots'</span>,winPtr,XY{nn}./2,sparam.RDSradius*sparam.pix_per_deg,colors{nn},dotCenter,3); <span class="comment">% RDS</span>
+0937           <span class="keyword">else</span>
+0938             Screen(<span class="string">'DrawDots'</span>,winPtr,XY{nn},2*sparam.RDSradius*sparam.pix_per_deg,colors{nn},dotCenter,3); <span class="comment">% RDS</span>
+0939           <span class="keyword">end</span>
+0940         <span class="keyword">end</span>
+0941         Screen(<span class="string">'DrawTexture'</span>,winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); <span class="comment">% the central fixation oval</span>
+0942 
+0943         <span class="comment">% blue line for stereo sync</span>
+0944         <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+0945           Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,255],blueRectOn(nn,:));
+0946           Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,0],blueRectOff(nn,:));
+0947         <span class="keyword">end</span>
+0948       <span class="keyword">end</span>
+0949 
+0950       <span class="comment">% flip the window</span>
+0951       Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+0952       <span class="keyword">while</span> GetSecs()&lt;vbl+sparam.initial_fixation_time(1)+(cc-1)*2*sparam.block_duration+(pp-1)*sparam.block_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); <span class="keyword">end</span>
+0953       Screen(<span class="string">'Flip'</span>,winPtr,[],[],[],1);
+0954 
+0955       <span class="keyword">if</span> pp==1 &amp;&amp; ff==1
+0956         event=event.add_event(sprintf(<span class="string">'Cycle: %d'</span>,cc),[]);
+0957         fprintf(sprintf(<span class="string">'Cycle: %03d...\n'</span>,cc));
+0958       <span class="keyword">end</span>
+0959 
+0960       <span class="comment">% update task</span>
+0961       cur_frames=cur_frames+1;
+0962       <span class="keyword">if</span> task_flg(cur_frames)==2 &amp;&amp; task_flg(cur_frames-1)==1, event=event.add_event(<span class="string">'Luminance Task'</span>,[]); <span class="keyword">end</span>
+0963 
+0964       <span class="comment">%% exit from the loop if the final frame is displayed</span>
+0965       <span class="keyword">if</span> pp==2 &amp;&amp; ff==nframe_stim+nframe_rest &amp;&amp; cc==sparam.numRepeats, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0966 
+0967       <span class="comment">%% update IDs</span>
+0968 
+0969       <span class="comment">% flickering checkerboard</span>
+0970       <span class="keyword">if</span> ff&lt;=nframe_stim
+0971         <span class="keyword">if</span> ~mod(ff,nframe_flicker) <span class="comment">% depth change</span>
+0972           depth_id=depth_id+1;
+0973           <span class="keyword">if</span> depth_id&gt;sparam.RDSdepth(3), depth_id=1; <span class="keyword">end</span>
+0974         <span class="keyword">end</span>
+0975       <span class="keyword">else</span>
+0976         depth_id=1;
+0977       <span class="keyword">end</span>
+0978     <span class="keyword">end</span> <span class="comment">% for ff=1:1:nframe_stim+nframe_rest</span>
+0979   <span class="keyword">end</span> <span class="comment">% for pp=1:1:2 % 2 = the target and its compensating patterns</span>
+0980 
+0981 <span class="keyword">end</span> <span class="comment">% for cc=1:1:sparam.numRepeats</span>
+0982 
+0983 
+0984 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0985 <span class="comment">%%%% Final Fixation</span>
+0986 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0987 
+0988 <span class="keyword">for</span> nn=1:1:nScr
+0989   Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+0990   Screen(<span class="string">'DrawTexture'</span>,winPtr,background,[],CenterRect(bgRect,winRect));
+0991   Screen(<span class="string">'DrawTexture'</span>,winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+0992 
+0993   <span class="comment">% blue line for stereo sync</span>
+0994   <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+0995     Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,255],blueRectOn(nn,:));
+0996     Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,0],blueRectOff(nn,:));
+0997   <span class="keyword">end</span>
+0998 <span class="keyword">end</span>
+0999 Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+1000 <span class="keyword">while</span> GetSecs()&lt;vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); <span class="keyword">end</span>
+1001 Screen(<span class="string">'Flip'</span>,winPtr,[],[],[],1);
+1002 <span class="comment">%cur_frames=cur_frames+1;</span>
+1003 event=event.add_event(<span class="string">'Final Fixation'</span>,[]);
+1004 fprintf(<span class="string">'\nfixation\n'</span>);
+1005 
+1006 <span class="comment">% wait for the initial fixation</span>
+1007 <span class="keyword">for</span> ff=1:1:nframe_fixation(2)
+1008   <span class="keyword">for</span> nn=1:1:nScr
+1009     Screen(<span class="string">'SelectStereoDrawBuffer'</span>,winPtr,nn-1);
+1010     Screen(<span class="string">'DrawTexture'</span>,winPtr,background,[],CenterRect(bgRect,winRect));
+1011     Screen(<span class="string">'DrawTexture'</span>,winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect));
+1012 
+1013     <span class="comment">% blue line for stereo sync</span>
+1014     <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+1015       Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,255],blueRectOn(nn,:));
+1016       Screen(<span class="string">'FillRect'</span>,winPtr,[0,0,0],blueRectOff(nn,:));
+1017     <span class="keyword">end</span>
+1018   <span class="keyword">end</span>
+1019   Screen(<span class="string">'DrawingFinished'</span>,winPtr);
+1020   <span class="keyword">while</span> GetSecs()&lt;vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); <span class="keyword">end</span>
+1021   Screen(<span class="string">'Flip'</span>,winPtr,[],[],[],1);
+1022 
+1023   <span class="comment">% update task</span>
+1024   cur_frames=cur_frames+1;
+1025   <span class="keyword">if</span> task_flg(cur_frames-1)==2 &amp;&amp; task_flg(cur_frames-2)==1, event=event.add_event(<span class="string">'Luminance Task'</span>,[]); <span class="keyword">end</span>
+1026 <span class="keyword">end</span>
+1027 
+1028 <span class="comment">% the final clock up</span>
+1029 <span class="keyword">while</span> GetSecs()-the_experiment_start&lt;sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration
+1030   [resps,event]=resps.check_responses(event);
+1031 <span class="keyword">end</span>
+1032 
+1033 
+1034 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1035 <span class="comment">%%%% Experiment &amp; scanner end here</span>
+1036 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1037 
+1038 experimentDuration=GetSecs()-the_experiment_start;
+1039 event=event.add_event(<span class="string">'End'</span>,[]);
+1040 fprintf(<span class="string">'\n'</span>);
+1041 fprintf(<span class="string">'Experiment Completed: %.2f/%.2f secs\n'</span>,experimentDuration,<span class="keyword">...</span>
+1042         sum(sparam.initial_fixation_time)+sparam.numRepeats*2*sparam.block_duration);
+1043 fprintf(<span class="string">'\n'</span>);
+1044 
+1045 
+1046 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1047 <span class="comment">%%%% Cleaning up the PTB screen</span>
+1048 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1049 
+1050 Screen(<span class="string">'CloseAll'</span>);
+1051 
+1052 <span class="comment">% closing datapixx</span>
+1053 <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxmono'</span>) || strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+1054   <span class="keyword">if</span> Datapixx(<span class="string">'IsViewpixx3D'</span>)
+1055     Datapixx(<span class="string">'DisableVideoLcd3D60Hz'</span>);
+1056     Datapixx(<span class="string">'RegWr'</span>);
+1057   <span class="keyword">end</span>
+1058   Datapixx(<span class="string">'Close'</span>);
+1059 <span class="keyword">end</span>
+1060 
+1061 ShowCursor();
+1062 Priority(0);
+1063 <a href="../../Retinotopy/Common/GammaResetPTB.html" class="code" title="function GammaResetPTB(luminance_ratio)">GammaResetPTB</a>(1.0);
+1064 
+1065 
+1066 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1067 <span class="comment">%%%% Write data into file for post analysis</span>
+1068 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1069 
+1070 <span class="comment">% saving the results</span>
+1071 fprintf(<span class="string">'saving data...'</span>);
+1072 
+1073 <span class="comment">% save data</span>
+1074 savefname=fullfile(resultDir,[num2str(subjID),<span class="string">'_dlocalizer_fixtask_results_run_'</span>,num2str(acq,<span class="string">'%02d'</span>),<span class="string">'.mat'</span>]);
+1075 
+1076 <span class="comment">% backup the old file(s)</span>
+1077 <span class="keyword">if</span> ~overwrite_flg
+1078   <a href="../../Retinotopy/Common/BackUpObsoleteFiles.html" class="code" title="function [new_fname,backup_fname]=BackUpObsoleteFiles(tgt_dir,tgt_fname,backup_prefix)">BackUpObsoleteFiles</a>(fullfile(<span class="string">'subjects'</span>,num2str(subjID),<span class="string">'results'</span>,today),<span class="keyword">...</span>
+1079                       [num2str(subjID),<span class="string">'_dlocalizer_fixtask_results_run_'</span>,num2str(acq,<span class="string">'%02d'</span>),<span class="string">'.mat'</span>],<span class="string">'_old'</span>);
+1080 <span class="keyword">end</span>
+1081 
+1082 eval(sprintf(<span class="string">'save %s subjID acq sparam dparam event gamma_table;'</span>,savefname));
+1083 fprintf(<span class="string">'done.\n'</span>);
+1084 
+1085 <span class="comment">% calculate &amp; display task performance</span>
+1086 fprintf(<span class="string">'calculating task accuracy...\n'</span>);
+1087 correct_event=cell(2,1); <span class="keyword">for</span> ii=1:1:2, correct_event{ii}=sprintf(<span class="string">'key%d'</span>,ii); <span class="keyword">end</span>
+1088 [task.numTasks,task.numHits,task.numErrors,task.numResponses,task.RT]=event.calc_accuracy(correct_event);
+1089 event=event.get_event(); <span class="comment">% convert an event logger object to a cell data structure</span>
+1090 eval(sprintf(<span class="string">'save -append %s event task;'</span>,savefname));
+1091 fprintf(<span class="string">'done.\n'</span>);
+1092 
+1093 
+1094 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1095 <span class="comment">%%%% Removing path to the subfunctions, and finalizing the script</span>
+1096 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1097 
+1098 rmpath(genpath(fullfile(rootDir,<span class="string">'..'</span>,<span class="string">'Common'</span>)));
+1099 rmpath(fullfile(rootDir,<span class="string">'..'</span>,<span class="string">'Generation'</span>));
+1100 clear all; clear mex; clear <span class="keyword">global</span>;
+1101 diary off;
+1102 
+1103 
+1104 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1105 <span class="comment">%%%% tell the experimenter that the measurements are completed</span>
+1106 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1107 
+1108 <span class="keyword">try</span>
+1109   <span class="keyword">for</span> ii=1:1:3, Snd(<span class="string">'Play'</span>,sin(2*pi*0.2*(0:900)),8000); <span class="keyword">end</span>
+1110 <span class="keyword">catch</span>
+1111   <span class="comment">% do nothing</span>
+1112 <span class="keyword">end</span>
+1113 
+1114 
+1115 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1116 <span class="comment">%%%% Catch the errors</span>
+1117 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1118 
+1119 <span class="keyword">catch</span> lasterror
+1120   <span class="comment">% this &quot;catch&quot; section executes in case of an error in the &quot;try&quot; section</span>
+1121   <span class="comment">% above.  Importantly, it closes the onscreen window if its open.</span>
+1122   Screen(<span class="string">'CloseAll'</span>);
+1123 
+1124   <span class="keyword">if</span> exist(<span class="string">'dparam'</span>,<span class="string">'var'</span>)
+1125     <span class="keyword">if</span> <a href="../../Retinotopy/Common/isstructmember.html" class="code" title="function isFieldResult = isstructmember(inStruct, fieldName)">isstructmember</a>(dparam,<span class="string">'ExpMode'</span>)
+1126       <span class="keyword">if</span> strcmpi(dparam.ExpMode,<span class="string">'propixxmono'</span>) || strcmpi(dparam.ExpMode,<span class="string">'propixxstereo'</span>)
+1127         <span class="keyword">if</span> Datapixx(<span class="string">'IsViewpixx3D'</span>)
+1128           Datapixx(<span class="string">'DisableVideoLcd3D60Hz'</span>);
+1129           Datapixx(<span class="string">'RegWr'</span>);
+1130         <span class="keyword">end</span>
+1131         Datapixx(<span class="string">'Close'</span>);
+1132       <span class="keyword">end</span>
+1133     <span class="keyword">end</span>
+1134   <span class="keyword">end</span>
+1135 
+1136   ShowCursor();
+1137   Priority(0);
+1138   <a href="../../Retinotopy/Common/GammaResetPTB.html" class="code" title="function GammaResetPTB(luminance_ratio)">GammaResetPTB</a>(1.0);
+1139   tmp=lasterror; <span class="comment">%#ok</span>
+1140   <span class="comment">%if exist('event','var'), event=event.get_event(); end %#ok % just for debugging</span>
+1141   diary off;
+1142   fprintf([<span class="string">'\nError detected and the program was terminated.\n'</span>,<span class="keyword">...</span>
+1143            <span class="string">'To check error(s), please type ''tmp''.\n'</span>,<span class="keyword">...</span>
+1144            <span class="string">'Please save the current variables now if you need.\n'</span>,<span class="keyword">...</span>
+1145            <span class="string">'Then, quit by ''dbquit''\n'</span>]);
+1146   keyboard;
+1147   rmpath(genpath(fullfile(rootDir,<span class="string">'..'</span>,<span class="string">'Common'</span>)));
+1148   rmpath(fullfile(rootDir,<span class="string">'..'</span>,<span class="string">'Generation'</span>));
+1149   clear all; clear mex; clear <span class="keyword">global</span>;
+1150   <span class="keyword">return</span>
+1151 <span class="keyword">end</span> <span class="comment">% try..catch</span>
+1152 
+1153 
+1154 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1155 <span class="comment">%%%%% That's it - we're done</span>
+1156 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1157 <span class="keyword">return</span>;
+1158 <span class="comment">% end % function dlocalizer_fixtask</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

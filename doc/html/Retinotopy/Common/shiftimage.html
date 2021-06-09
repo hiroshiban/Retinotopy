@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of shiftimage</title>
+  <meta name="keywords" content="shiftimage">
+  <meta name="description" content="Shifts the image IMG using the Fourier shift theorem.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>shiftimage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Shifts the image IMG using the Fourier shift theorem.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function[Image] = shiftimage(Image, deltax, deltay) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Shifts the image IMG using the Fourier shift theorem.
+ img_shifted = ShiftImage(img, frac_deltax, frac_deltay)
+
+ Shifts the image IMG using the Fourier shift theorem by the 
+ Field-of-view (FOV) fractions FRAC_DELTAX and FRAC_DELTAY. 
+ The fraction is relative to the size of the image such that 
+ a value of 1.0 shifts the image back to where it started. 
+ Shifts outside this range will wrap around to the 
+ corresponding shift within the range.
+
+ The shift is performed using Fourier sinc interpolation, i.e. 
+ the Fourier shift theorem, via simple phase adjustments in 
+ the frequency domain.  This may lead to Gibbs phenomena.
+
+ Dimensions need not be powers of 2 and will not necessarily 
+ be padded to a power of 2.  The Matlab FFT functions are 
+ capable of non-power of 2 transforms.
+
+  Example:
+      load mri;
+      img = double(squeeze(D(:,:,1,13)));
+      figure;
+      dx = [.1 .5 .8 1.2];
+      dy = [.2 .7 1.0 2.5];
+      for n=1:4,
+          subplot(2,2,n);
+          imagesc( ShiftImage(img,dx(n),dy(n)) );
+          axis image; colormap(gray);
+      end
+
+ 01/25/99  Implemented by Edward Brian Welch, edwardbrianwelch@yahoo.com
+
+ NOTE:
+ This function is partially vectorized (only single loops, 
+ no double loops) to gain some benefit in speed.  The tradeoff 
+ is that more memory is required to hold the large matrices.
+ It would be possible to completely vectorize certain parts 
+ of the mfile, but that would require large amounts of memory
+ and would also make the code less readable.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function[Image] = shiftimage(Image, deltax, deltay)</a>
+0002 
+0003 <span class="comment">% Shifts the image IMG using the Fourier shift theorem.</span>
+0004 <span class="comment">% img_shifted = ShiftImage(img, frac_deltax, frac_deltay)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Shifts the image IMG using the Fourier shift theorem by the</span>
+0007 <span class="comment">% Field-of-view (FOV) fractions FRAC_DELTAX and FRAC_DELTAY.</span>
+0008 <span class="comment">% The fraction is relative to the size of the image such that</span>
+0009 <span class="comment">% a value of 1.0 shifts the image back to where it started.</span>
+0010 <span class="comment">% Shifts outside this range will wrap around to the</span>
+0011 <span class="comment">% corresponding shift within the range.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% The shift is performed using Fourier sinc interpolation, i.e.</span>
+0014 <span class="comment">% the Fourier shift theorem, via simple phase adjustments in</span>
+0015 <span class="comment">% the frequency domain.  This may lead to Gibbs phenomena.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Dimensions need not be powers of 2 and will not necessarily</span>
+0018 <span class="comment">% be padded to a power of 2.  The Matlab FFT functions are</span>
+0019 <span class="comment">% capable of non-power of 2 transforms.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%  Example:</span>
+0022 <span class="comment">%      load mri;</span>
+0023 <span class="comment">%      img = double(squeeze(D(:,:,1,13)));</span>
+0024 <span class="comment">%      figure;</span>
+0025 <span class="comment">%      dx = [.1 .5 .8 1.2];</span>
+0026 <span class="comment">%      dy = [.2 .7 1.0 2.5];</span>
+0027 <span class="comment">%      for n=1:4,</span>
+0028 <span class="comment">%          subplot(2,2,n);</span>
+0029 <span class="comment">%          imagesc( ShiftImage(img,dx(n),dy(n)) );</span>
+0030 <span class="comment">%          axis image; colormap(gray);</span>
+0031 <span class="comment">%      end</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% 01/25/99  Implemented by Edward Brian Welch, edwardbrianwelch@yahoo.com</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% NOTE:</span>
+0036 <span class="comment">% This function is partially vectorized (only single loops,</span>
+0037 <span class="comment">% no double loops) to gain some benefit in speed.  The tradeoff</span>
+0038 <span class="comment">% is that more memory is required to hold the large matrices.</span>
+0039 <span class="comment">% It would be possible to completely vectorize certain parts</span>
+0040 <span class="comment">% of the mfile, but that would require large amounts of memory</span>
+0041 <span class="comment">% and would also make the code less readable.</span>
+0042 
+0043 [oxdim oydim] = size(Image);
+0044 
+0045 <span class="keyword">if</span> mod(oxdim,2)==1 &amp; mod(oydim,2)==1,   
+0046    tmp = zeros(oxdim+1,oydim+1);
+0047    tmp(1:oxdim,1:oydim) = Image;
+0048    Image = tmp;
+0049    xdim = oxdim+1;
+0050    ydim = oydim+1;
+0051 <span class="keyword">elseif</span> mod(oxdim,2)==1 &amp; mod(oydim,2)==0,
+0052    tmp = zeros(oxdim+1,oydim);
+0053    tmp(1:oxdim,1:oydim) = Image;
+0054    Image = tmp;
+0055    xdim = oxdim+1;
+0056    ydim = oydim;
+0057 <span class="keyword">elseif</span> mod(oxdim,2)==0 &amp; mod(oydim,2)==1,
+0058    tmp = zeros(oydim+1,oydim);
+0059    tmp(1:oxdim,1:oydim) = Image;
+0060    Image = tmp;
+0061    xdim = oxdim;
+0062    ydim = oydim+1;
+0063 <span class="keyword">else</span>
+0064    xdim = oxdim;
+0065    ydim = oydim;
+0066 <span class="keyword">end</span>
+0067 
+0068 <span class="comment">% Determine type of image to return</span>
+0069 <span class="keyword">if</span> isreal(Image),
+0070    real_flag = 1;
+0071 <span class="keyword">else</span>
+0072    real_flag = 0;
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="comment">% Put deltas into the range [-1,1]</span>
+0076 <span class="keyword">while</span> deltax&lt;0,
+0077    deltax = deltax + 2;
+0078 <span class="keyword">end</span>
+0079 
+0080 <span class="keyword">while</span> deltax&gt;2,
+0081    deltax = deltax - 2;
+0082 <span class="keyword">end</span>
+0083 
+0084 <span class="keyword">while</span> deltay&lt;0,
+0085    deltay = deltay + 2;
+0086 <span class="keyword">end</span>
+0087 
+0088 <span class="keyword">while</span> deltay&gt;2,
+0089    deltay = deltay - 2;
+0090 <span class="keyword">end</span>
+0091 
+0092 <span class="comment">% Calculate image's center coordinates</span>
+0093 xno = (xdim-1)/2;
+0094 yno = (ydim-1)/2;
+0095 
+0096 
+0097 <span class="comment">% Forward FFT image rows</span>
+0098 Image = fft(Image, xdim, 1);
+0099 
+0100 <span class="comment">% Prepare to use the Fourier Shift Theorem</span>
+0101 <span class="comment">% f(x-deltax) &lt;=&gt; exp(-j*2*pi*deltax*k/N)*F(k)</span>
+0102 
+0103 <span class="comment">% Initialize constant part of the exponent</span>
+0104 <span class="comment">% expression.</span>
+0105 cons1 = (-2.0*pi/(xdim)) * deltax * xdim;
+0106 
+0107 <span class="comment">% Calculate k values (Nyquist is at x=xno)</span>
+0108 k_array = zeros(xdim,1);
+0109 
+0110 <span class="keyword">for</span> x=1:xdim,    
+0111       <span class="keyword">if</span> (x-1)&lt;=xno,
+0112          k_array(x) = (x-1);
+0113       <span class="keyword">else</span>
+0114          k_array(x) = (x-1-xdim);
+0115       <span class="keyword">end</span>
+0116 <span class="keyword">end</span>
+0117 
+0118 <span class="keyword">for</span> y=1:ydim,
+0119    
+0120    <span class="comment">% Calculate the angles</span>
+0121    angle_array = cons1*k_array;
+0122    
+0123    <span class="comment">% Rotate the complex numbers by those angles</span>
+0124    sin_ang = sin(angle_array);
+0125    cos_ang = cos(angle_array);
+0126    newr = real(Image(:,y)).*cos_ang - imag(Image(:,y)).*sin_ang;
+0127    newi = real(Image(:,y)).*sin_ang + imag(Image(:,y)).*cos_ang;
+0128    Image(:,y) = newr + newi*i;
+0129    
+0130 <span class="keyword">end</span>
+0131 
+0132 <span class="comment">%---------------------------</span>
+0133 <span class="comment">% SECOND SHIFT</span>
+0134 <span class="comment">%---------------------------</span>
+0135 
+0136 Image = ifft(Image, xdim, 1);
+0137 Image =  fft(Image, ydim, 2);
+0138 
+0139 <span class="comment">% Initialize constant part of the exponent</span>
+0140 <span class="comment">% expression.</span>
+0141 cons1 = (-2.0*pi/(ydim)) * deltay * ydim;
+0142 
+0143 <span class="comment">% Calculate k values (Nyquist is at y=yno)</span>
+0144 k_array = zeros(ydim,1);
+0145 
+0146 <span class="keyword">for</span> y=1:ydim,    
+0147       <span class="keyword">if</span> (y-1)&lt;=yno,
+0148          k_array(y) = (y-1);
+0149       <span class="keyword">else</span>
+0150          k_array(y) = (y-1-ydim);
+0151       <span class="keyword">end</span>
+0152 <span class="keyword">end</span>
+0153 
+0154 <span class="keyword">for</span> x=1:xdim,
+0155    
+0156    <span class="comment">% Calculate the angles</span>
+0157    angle_array = cons1*k_array;
+0158    
+0159    <span class="comment">% Rotate the complex numbers by those angles</span>
+0160    sin_ang = sin(angle_array);
+0161    cos_ang = cos(angle_array);
+0162    newr = real(Image(x,:)).*cos_ang' - imag(Image(x,:)).*sin_ang';
+0163    newi = real(Image(x,:)).*sin_ang' + imag(Image(x,:)).*cos_ang';
+0164    Image(x,:) = newr + newi*i;
+0165    
+0166 <span class="keyword">end</span>
+0167 
+0168 
+0169 Image = ifft(Image, ydim, 2);
+0170 
+0171 <span class="comment">% Return a Real image if original Image was Real</span>
+0172 <span class="keyword">if</span> real_flag==1,
+0173    Image = real(Image);
+0174 <span class="keyword">end</span>
+0175 
+0176 <span class="comment">% Return an Image of the original size (in case it was odd)</span>
+0177 Image = Image(1:oxdim,1:oydim);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

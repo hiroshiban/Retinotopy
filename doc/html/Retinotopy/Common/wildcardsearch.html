@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wildcardsearch</title>
+  <meta name="keywords" content="wildcardsearch">
+  <meta name="description" content="WILDCARDSEARCH Searches the file system for files matching a wildcard">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>wildcardsearch
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>WILDCARDSEARCH Searches the file system for files matching a wildcard</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function result = wildcardsearch(rootdir, searchstr, casesensitive, strict) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> WILDCARDSEARCH Searches the file system for files matching a wildcard
+ pattern.
+    WILDCARDSEARCH(ROOTDIR, SEARCHSTRING) Searches the file system from
+    the starting directory ROOTDIR for files and folders matching the
+    pattern SEARCHSTRING. The function WILDCARDSEARCH is similar to the
+    search file option in Explorer. 
+
+    WILDCARDSEARCH(ROOTDIR, SEARCHSTRING, CASESENSITIVE) The extra boolean 
+    CASESENSITIVE allows for case senstive searching of files and folders. 
+
+    WILDCARDSEARCH(ROOTDIR, SEARCHSTRING, CASESENSITIVE, STRICT) The extra
+    boolean STRICT allows for only precise matches to be returned. The
+    default behaviour is loose. 
+
+    Example:
+     rootdir = 'C:\'
+     searchstr = '*.jpg;*.tif';
+     files = wildcardsearch(rootdir, searchstr);
+ 
+    This wil return all JPG and TIF files on the C:\ drive and maybe some
+    folders or files also matching this pattern e.g. 'somefile.jpg.old'
+
+    Example:
+     rootdir = 'C:\'
+     searchstr = 'MatLab';
+     files = wildcardsearch(rootdir, searchstr, true);
+ 
+    This wil return only return files or folders matching the pattern 
+    'MatLab'. This could also match a file named 'MatLabRC'.
+
+    Example:
+     rootdir = 'C:\'
+     searchstr = '*\matlab';
+     files = wildcardsearch(rootdir, searchstr, true, true);
+ 
+    This wil return only return files named exactly 'matlab'.
+
+    Example:
+     rootdir = 'C:\'
+     searchstr = '*\';
+     files = wildcardsearch(rootdir, searchstr, true, true);
+
+    To find only folders do a strict search and end your search string
+    with the file separator (\ on Windows, / on UNIX). The above example
+    will return a complete directory tree of the C-drive.
+
+    Have a look at the source code for more information. For more 
+    info on this function and how to use it, bug reports, feature
+    requests, etc. feel free to contact the author.
+
+    See also <a href="regexpdir.html" class="code" title="function dirlist = regexpdir(rootdir, expstr, recursive)">REGEXPDIR</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="regexpdir.html" class="code" title="function dirlist = regexpdir(rootdir, expstr, recursive)">regexpdir</a>	REGEXPDIR Gives a directory listing based on a regular expression</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="BackUpTarget.html" class="code" title="function BackupTarget(tgt,rm_str)">BackUpTarget</a>	function BackupTarget(tgt,rm_str)</li><li><a href="CheckImageDuplications.html" class="code" title="function [dupfiles,dup_idx]=CheckImageDuplications(img_dir,img_ext,one_by_one_flg)">CheckImageDuplications</a>	Reads images in the target directory and detect the duplications</li><li><a href="CheckImagesPTB.html" class="code" title="function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec,img_size)">CheckImagesPTB</a>	Reads images in the target directory and presents them onto the PTB screen</li><li><a href="GeneratePfiles.html" class="code" title="function GeneratePfiles(tgt_dir,rm_str)">GeneratePfiles</a>	Generates p-file version of MATLAB directory structure.</li><li><a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>	Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).</li><li><a href="compileMEXs.html" class="code" title="function compileMEXs()">compileMEXs</a>	Compiles all the mex files in this directory.</li><li><a href="imAddNoise.html" class="code" title="function [img,fnames]=imAddNoise(tgt_dir,noiseparams,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg)">imAddNoise</a>	Adds noises to the input images.</li><li><a href="imCheckSize.html" class="code" title="function sizes=imCheckSize(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix)">imCheckSize</a>	Returns the image XY resolutions and sizes of the input images.</li><li><a href="imCropResize.html" class="code" title="function [img,fnames]=imCropResize(tgt_dir,crop_region,resize_ratio,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)">imCropResize</a>	Crops and resizes the input images.</li><li><a href="imDisplayInfo.html" class="code" title="function [img,fnames]=imDisplayInfo(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix,save_flg)">imDisplayInfo</a>	Reads images in the target directory and displays their pixel intensities.</li><li><a href="imFFTrand.html" class="code" title="function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg,fullrand_flg)">imFFTrand</a>	Randomizes FFT amplitudes/phases of the input images.</li><li><a href="imFillRect.html" class="code" title="function [img,fnames]=imFillRect(tgt_dir,outputsize,fillcolor,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)">imFillRect</a>	Fills the extended rectangular background regions of the input images.</li><li><a href="imNormalize.html" class="code" title="function [img,fnames]=imNormalize(tgt_dir,normparams,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)">imNormalize</a>	Normalizes pixel intensities of the input images.</li><li><a href="imRGB2Gray.html" class="code" title="function [img,fnames]=imRGB2Gray(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)">imRGB2Gray</a>	Converts input RGB images to grayscale ones.</li><li><a href="imRGBrand.html" class="code" title="function [img,fnames]=imRGBrand(tgt_dir,intensity,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg)">imRGBrand</a>	Randomizes RGB values of the input images.</li><li><a href="imScramble.html" class="code" title="function [img,fnames]=imScramble(tgt_dir,sdims,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg)">imScramble</a>	Scrambles intact input images and generates their mosaic images.</li><li><a href="imShuffleRGB.html" class="code" title="function [img,fnames]=imShuffleRGB(tgt_dir,rgb_order,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)">imShuffleRGB</a>	Shuffles RGB image color orders (e.g. RGB ---> GRB).</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)</a>
+0002 
+0003 <span class="comment">% WILDCARDSEARCH Searches the file system for files matching a wildcard</span>
+0004 <span class="comment">% pattern.</span>
+0005 <span class="comment">%    WILDCARDSEARCH(ROOTDIR, SEARCHSTRING) Searches the file system from</span>
+0006 <span class="comment">%    the starting directory ROOTDIR for files and folders matching the</span>
+0007 <span class="comment">%    pattern SEARCHSTRING. The function WILDCARDSEARCH is similar to the</span>
+0008 <span class="comment">%    search file option in Explorer.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    WILDCARDSEARCH(ROOTDIR, SEARCHSTRING, CASESENSITIVE) The extra boolean</span>
+0011 <span class="comment">%    CASESENSITIVE allows for case senstive searching of files and folders.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    WILDCARDSEARCH(ROOTDIR, SEARCHSTRING, CASESENSITIVE, STRICT) The extra</span>
+0014 <span class="comment">%    boolean STRICT allows for only precise matches to be returned. The</span>
+0015 <span class="comment">%    default behaviour is loose.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    Example:</span>
+0018 <span class="comment">%     rootdir = 'C:\'</span>
+0019 <span class="comment">%     searchstr = '*.jpg;*.tif';</span>
+0020 <span class="comment">%     files = wildcardsearch(rootdir, searchstr);</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    This wil return all JPG and TIF files on the C:\ drive and maybe some</span>
+0023 <span class="comment">%    folders or files also matching this pattern e.g. 'somefile.jpg.old'</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%    Example:</span>
+0026 <span class="comment">%     rootdir = 'C:\'</span>
+0027 <span class="comment">%     searchstr = 'MatLab';</span>
+0028 <span class="comment">%     files = wildcardsearch(rootdir, searchstr, true);</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%    This wil return only return files or folders matching the pattern</span>
+0031 <span class="comment">%    'MatLab'. This could also match a file named 'MatLabRC'.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%    Example:</span>
+0034 <span class="comment">%     rootdir = 'C:\'</span>
+0035 <span class="comment">%     searchstr = '*\matlab';</span>
+0036 <span class="comment">%     files = wildcardsearch(rootdir, searchstr, true, true);</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%    This wil return only return files named exactly 'matlab'.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%    Example:</span>
+0041 <span class="comment">%     rootdir = 'C:\'</span>
+0042 <span class="comment">%     searchstr = '*\';</span>
+0043 <span class="comment">%     files = wildcardsearch(rootdir, searchstr, true, true);</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    To find only folders do a strict search and end your search string</span>
+0046 <span class="comment">%    with the file separator (\ on Windows, / on UNIX). The above example</span>
+0047 <span class="comment">%    will return a complete directory tree of the C-drive.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%    Have a look at the source code for more information. For more</span>
+0050 <span class="comment">%    info on this function and how to use it, bug reports, feature</span>
+0051 <span class="comment">%    requests, etc. feel free to contact the author.</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%    See also REGEXPDIR</span>
+0054 
+0055 <span class="comment">%==========================================================================</span>
+0056 <span class="comment">% B.C. Hamans (b.c.hamans@rad.umcn.nl)                                 2007</span>
+0057 <span class="comment">%==========================================================================</span>
+0058 
+0059 <span class="comment">% Check input</span>
+0060 error(nargchk(2, 4, nargin));
+0061 
+0062 <span class="comment">% Create the regular expression</span>
+0063 beginstr=<span class="string">'('</span>; endstr=<span class="string">')'</span>;
+0064 <span class="keyword">if</span> ~exist(<span class="string">'strict'</span>,<span class="string">'var'</span>); strict = false; <span class="keyword">end</span>
+0065 <span class="keyword">if</span> strict; beginstr=[<span class="string">'^'</span> beginstr]; endstr=[endstr <span class="string">'$'</span>]; <span class="keyword">end</span>
+0066 <span class="keyword">if</span> ~exist(<span class="string">'casesensitive'</span>,<span class="string">'var'</span>); casesensitive = false; <span class="keyword">end</span>
+0067 <span class="keyword">if</span> casesensitive; beginstr = [<span class="string">'(?-i)'</span> beginstr]; <span class="keyword">end</span>
+0068 regexpstr=[beginstr strrep(regexptranslate(<span class="string">'wildcard'</span>, searchstr), pathsep, [endstr <span class="string">'|'</span> beginstr]) endstr];
+0069 
+0070 <span class="comment">% Search</span>
+0071 result = <a href="regexpdir.html" class="code" title="function dirlist = regexpdir(rootdir, expstr, recursive)">regexpdir</a>(rootdir, regexpstr, true);
+0072 
+0073 <span class="comment">%==========================================================================</span>
+0074 <span class="comment">% Changelog:</span>
+0075 <span class="comment">% 03-09-2007 v1.00 (BCH)  Initial release</span>
+0076 <span class="comment">%==========================================================================</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

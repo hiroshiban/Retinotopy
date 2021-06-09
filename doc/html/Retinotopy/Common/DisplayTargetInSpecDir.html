@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DisplayTargetInSpecDir</title>
+  <meta name="keywords" content="DisplayTargetInSpecDir">
+  <meta name="description" content="Displays target files in a specific directory.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>DisplayTargetInSpecDir
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Displays target files in a specific directory.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function DisplayTargetInSpecDir(target_dir,fformat,prefix) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Displays target files in a specific directory.
+ function DisplayTargetInSpecDir(target_dir,fformat,prefix)
+ 
+ [about]
+ This function searches files you want and displays their names
+ in the specific directory
+
+ [example]
+ &gt;&gt; DisplayTargetInSpecDir('/HB/zk09_091/','*.prt','design_')
+
+ [input]
+ target_dir : Target directory that contains &quot;fformat&quot; files
+              e.g. '\CD\zk08_382'
+ fformat    : file format you want, you can use reg exp. e.g. '*.prt'
+ prefix      : (optional) string to determine the target from 
+              multiple files, e.g. 'CD'
+
+ [output]
+ no output variable
+
+ Last Update: &quot;2013-11-22 22:51:42 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>	Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function DisplayTargetInSpecDir(target_dir,fformat,prefix)</a>
+0002 
+0003 <span class="comment">% Displays target files in a specific directory.</span>
+0004 <span class="comment">% function DisplayTargetInSpecDir(target_dir,fformat,prefix)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% [about]</span>
+0007 <span class="comment">% This function searches files you want and displays their names</span>
+0008 <span class="comment">% in the specific directory</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [example]</span>
+0011 <span class="comment">% &gt;&gt; DisplayTargetInSpecDir('/HB/zk09_091/','*.prt','design_')</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% [input]</span>
+0014 <span class="comment">% target_dir : Target directory that contains &quot;fformat&quot; files</span>
+0015 <span class="comment">%              e.g. '\CD\zk08_382'</span>
+0016 <span class="comment">% fformat    : file format you want, you can use reg exp. e.g. '*.prt'</span>
+0017 <span class="comment">% prefix      : (optional) string to determine the target from</span>
+0018 <span class="comment">%              multiple files, e.g. 'CD'</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% [output]</span>
+0021 <span class="comment">% no output variable</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Last Update: &quot;2013-11-22 22:51:42 ban (ban.hiroshi@gmail.com)&quot;</span>
+0024 
+0025 <span class="comment">% get target fileames from target_dir</span>
+0026 tfiles=<a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>(fullfile(pwd,target_dir),ffromat,prefix);
+0027 
+0028 <span class="comment">% separate directory &amp; file names</span>
+0029 <span class="keyword">for</span> ii=1:1:length(tfiles)
+0030   [paths{ii},fnames{ii},ext{ii}]=fileparts(tfiles{ii}); <span class="comment">%#ok</span>
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="comment">% display target</span>
+0034 dirnum=1;
+0035 fprintf(<span class="string">'dir %03d: %s\n'</span>,dirnum,paths{1});
+0036 fprintf(<span class="string">'  %s%s\n'</span>,fnames{1},ext{1});
+0037 <span class="keyword">for</span> ii=2:1:length(fnames)
+0038   <span class="keyword">if</span> ~strcmp(paths{ii-1},paths{ii})
+0039     dirnum=dirnum+1;
+0040     fprintf(<span class="string">'dir %03d: %s\n'</span>,dirnum,paths{ii});
+0041   <span class="keyword">end</span>
+0042   fprintf(<span class="string">'  %s%s\n'</span>,fnames{ii},ext{ii});
+0043 <span class="keyword">end</span> <span class="comment">% for ii, ifile</span>
+0044 fprintf(<span class="string">'\n'</span>);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

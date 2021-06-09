@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CalcDistFromDisparity</title>
+  <meta name="keywords" content="CalcDistFromDisparity">
+  <meta name="description" content="Calculates the actual distance (cm) from binocular disparity (arcmin).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CalcDistFromDisparity
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates the actual distance (cm) from binocular disparity (arcmin).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function zdist = CalcDistFromDisparity(ipd,disparity,viewdist) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Calculates the actual distance (cm) from binocular disparity (arcmin).
+ function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)
+ 
+ [INPUT]
+ ipd       : distance between left and right eyes (cm)
+ disparity : disparity (arcmin)
+ viewdist  : viewing distance from eye to the screen (cm)
+
+ [OUTPUT]
+ zdist     : distance from the reference plane (cm)
+ 
+ June 29 2009 Hiroshi Ban</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreateDepthPatchField.html" class="code" title="function imgs=CreateDepthPatchField(fieldSize,npatches,ipd,vdist,pix_per_cm,basedisp,jitterdisp,nimg,fine_coefficient,rgb_flg,bgcolor)">CreateDepthPatchField</a>	Creates a plane of lattice depth patches</li><li><a href="../../Retinotopy/Generation/GetDotPositionsRDS.html" class="code" title="function [XY,colors]=GetDotPositionsRDS(checkerboard,depths,dotdense,RDScolors,ipd,vdist,pix_per_cm)">GetDotPositionsRDS</a>	Returns XY positions and colors (grayscale, 0-255) of dots in a Random-Dot-Stereogram(RDS) image.</li><li><a href="../../Retinotopy/Presentation/ibar_fixtask.html" class="code" title="function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ibar_fixtask</a>	Object-image-defined bar stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/ilgnlocalizer_fixtask.html" class="code" title="function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilgnlocalizer_fixtask</a>	Object-image-defined wedge stimulus with fixation luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/imeridian_fixtask.html" class="code" title="function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imeridian_fixtask</a>	Object-image-defined dual wedge stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)</a>
+0002 
+0003 <span class="comment">% Calculates the actual distance (cm) from binocular disparity (arcmin).</span>
+0004 <span class="comment">% function zdist = CalcDistFromDisparity(ipd,disparity,viewdist)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% [INPUT]</span>
+0007 <span class="comment">% ipd       : distance between left and right eyes (cm)</span>
+0008 <span class="comment">% disparity : disparity (arcmin)</span>
+0009 <span class="comment">% viewdist  : viewing distance from eye to the screen (cm)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% [OUTPUT]</span>
+0012 <span class="comment">% zdist     : distance from the reference plane (cm)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% June 29 2009 Hiroshi Ban</span>
+0015 
+0016 disp_rad = disparity ./ 60 .* 2.*pi ./ 360;
+0017 zdist = (viewdist.*viewdist.*disp_rad) ./ (ipd - viewdist.*disp_rad);
+0018 
+0019 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

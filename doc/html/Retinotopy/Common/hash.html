@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hash</title>
+  <meta name="keywords" content="hash">
+  <meta name="description" content="HASH - Convert an input variable into a message digest using any of">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>hash
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>HASH - Convert an input variable into a message digest using any of</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function h = hash(inp,meth) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> HASH - Convert an input variable into a message digest using any of
+        several common hash algorithms
+
+ USAGE: h = hash(inp,'meth')
+
+ inp  = input variable, of any of the following classes:
+        char, uint8, logical, double, single, int8, uint8,
+        int16, uint16, int32, uint32, int64, uint64
+ h    = hash digest output, in hexadecimal notation
+ meth = hash algorithm, which is one of the following:
+        MD2, MD5, SHA-1, SHA-256, SHA-384, or SHA-512 
+
+ NOTES: (1) If the input is a string or uint8 variable, it is hashed
+            as usual for a byte stream. Other classes are converted into
+            their byte-stream values. In other words, the hash of the
+            following will be identical:
+                     'abc'
+                     uint8('abc')
+                     char([97 98 99])
+            The hash of the follwing will be different from the above,
+            because class &quot;double&quot; uses eight byte elements:
+                     double('abc')
+                     [97 98 99]
+            You can avoid this issue by making sure that your inputs
+            are strings or uint8 arrays.
+        (2) The name of the hash algorithm may be specified in lowercase
+            and/or without the hyphen, if desired. For example,
+            h=hash('my text to hash','sha256');
+        (3) Carefully tested, but no warranty. Use at your own risk.
+        (4) Michael Kleder, Nov 2005
+
+ EXAMPLE:
+
+ algs={'MD2','MD5','SHA-1','SHA-256','SHA-384','SHA-512'};
+ for n=1:6
+     h=hash('my sample text',algs{n});
+     disp([algs{n} ' (' num2str(length(h)*4) ' bits):'])
+     disp(h)
+ end</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function h = hash(inp,meth)</a>
+0002 
+0003 <span class="comment">% HASH - Convert an input variable into a message digest using any of</span>
+0004 <span class="comment">%        several common hash algorithms</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% USAGE: h = hash(inp,'meth')</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% inp  = input variable, of any of the following classes:</span>
+0009 <span class="comment">%        char, uint8, logical, double, single, int8, uint8,</span>
+0010 <span class="comment">%        int16, uint16, int32, uint32, int64, uint64</span>
+0011 <span class="comment">% h    = hash digest output, in hexadecimal notation</span>
+0012 <span class="comment">% meth = hash algorithm, which is one of the following:</span>
+0013 <span class="comment">%        MD2, MD5, SHA-1, SHA-256, SHA-384, or SHA-512</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% NOTES: (1) If the input is a string or uint8 variable, it is hashed</span>
+0016 <span class="comment">%            as usual for a byte stream. Other classes are converted into</span>
+0017 <span class="comment">%            their byte-stream values. In other words, the hash of the</span>
+0018 <span class="comment">%            following will be identical:</span>
+0019 <span class="comment">%                     'abc'</span>
+0020 <span class="comment">%                     uint8('abc')</span>
+0021 <span class="comment">%                     char([97 98 99])</span>
+0022 <span class="comment">%            The hash of the follwing will be different from the above,</span>
+0023 <span class="comment">%            because class &quot;double&quot; uses eight byte elements:</span>
+0024 <span class="comment">%                     double('abc')</span>
+0025 <span class="comment">%                     [97 98 99]</span>
+0026 <span class="comment">%            You can avoid this issue by making sure that your inputs</span>
+0027 <span class="comment">%            are strings or uint8 arrays.</span>
+0028 <span class="comment">%        (2) The name of the hash algorithm may be specified in lowercase</span>
+0029 <span class="comment">%            and/or without the hyphen, if desired. For example,</span>
+0030 <span class="comment">%            h=hash('my text to hash','sha256');</span>
+0031 <span class="comment">%        (3) Carefully tested, but no warranty. Use at your own risk.</span>
+0032 <span class="comment">%        (4) Michael Kleder, Nov 2005</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% EXAMPLE:</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% algs={'MD2','MD5','SHA-1','SHA-256','SHA-384','SHA-512'};</span>
+0037 <span class="comment">% for n=1:6</span>
+0038 <span class="comment">%     h=hash('my sample text',algs{n});</span>
+0039 <span class="comment">%     disp([algs{n} ' (' num2str(length(h)*4) ' bits):'])</span>
+0040 <span class="comment">%     disp(h)</span>
+0041 <span class="comment">% end</span>
+0042 
+0043 inp=inp(:);
+0044 <span class="comment">% convert strings and logicals into uint8 format</span>
+0045 <span class="keyword">if</span> ischar(inp) || islogical(inp)
+0046     inp=uint8(inp);
+0047 <span class="keyword">else</span> <span class="comment">% convert everything else into uint8 format without loss of data</span>
+0048     inp=typecast(inp,<span class="string">'uint8'</span>);
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% verify hash method, with some syntactical forgiveness:</span>
+0052 meth=upper(meth);
+0053 <span class="keyword">switch</span> meth
+0054     <span class="keyword">case</span> <span class="string">'SHA1'</span>
+0055         meth=<span class="string">'SHA-1'</span>;
+0056     <span class="keyword">case</span> <span class="string">'SHA256'</span>
+0057         meth=<span class="string">'SHA-256'</span>;
+0058     <span class="keyword">case</span> <span class="string">'SHA384'</span>
+0059         meth=<span class="string">'SHA-384'</span>;
+0060     <span class="keyword">case</span> <span class="string">'SHA512'</span>
+0061         meth=<span class="string">'SHA-512'</span>;
+0062     <span class="keyword">otherwise</span>
+0063 <span class="keyword">end</span>
+0064 algs={<span class="string">'MD2'</span>,<span class="string">'MD5'</span>,<span class="string">'SHA-1'</span>,<span class="string">'SHA-256'</span>,<span class="string">'SHA-384'</span>,<span class="string">'SHA-512'</span>};
+0065 <span class="keyword">if</span> isempty(strmatch(meth,algs,<span class="string">'exact'</span>))
+0066     error([<span class="string">'Hash algorithm must be '</span> <span class="keyword">...</span>
+0067         <span class="string">'MD2, MD5, SHA-1, SHA-256, SHA-384, or SHA-512'</span>]);
+0068 <span class="keyword">end</span>
+0069 
+0070 <span class="comment">% create hash</span>
+0071 x=java.security.MessageDigest.getInstance(meth);
+0072 x.update(inp);
+0073 h=typecast(x.digest,<span class="string">'uint8'</span>);
+0074 h=dec2hex(h)';
+0075 <span class="keyword">if</span>(size(h,1))==1 <span class="comment">% remote possibility: all hash bytes &lt; 128, so pad:</span>
+0076     h=[repmat(<span class="string">'0'</span>,[1 size(h,2)]);h];
+0077 <span class="keyword">end</span>
+0078 h=lower(h(:)');
+0079 clear x
+0080 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

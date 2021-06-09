@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of MakeFineOval</title>
+  <meta name="keywords" content="MakeFineOval">
+  <meta name="description" content="Genrates a beautiful oval image with an antialiasing option.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>MakeFineOval
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Genrates a beautiful oval image with an antialiasing option.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function img=MakeFineOval(imsize,color,bgcolor,bg_expand_ratio,fine_coefficient,gauss_flag,show_flag,save_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Genrates a beautiful oval image with an antialiasing option.
+ function img=MakeFineOval(imsize,color,bgcolor,show_flag,save_flag)
+
+ Generates oval image with clear curve based on antialiasing.
+ This funcion consumes much CPU power than MakeOval function.
+ 
+ [input]
+ imsize   : size of the oval, [raw_pix,col_pix]
+ color    : color of the oval, [r,g,b]
+ bgcolor  : color of the background, [r,g,b]
+ bg_expand_ratio : expand ratio of backgound
+            if 1, the generated image is the same size with imsize
+            if more than 1, the edge of background is expanded
+            and generated image size will be imsize*bg_expand_ratio
+            defaul value is 1
+ fine_coefficient : if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val](default=5)
+ gauss_flag : if 1, the image will be passed with gauussian filter
+              default=1
+ show_flag: if 1, the generated images are displayed. [1/0]
+ save_flag: if 1, the generated images are saved. [1/0]
+
+ [output]
+ img      : oval image, [row x col x rgba]
+
+ Created    : &quot;2010-06-11 10:44:46 ban&quot;
+ Last Update: &quot;2013-11-22 23:32:51 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="ConvertRandomDots2RandomOvals.html" class="code" title="function ovalimg=ConvertRandomDots2RandomOvals(dotimg,ovalRadius,colors,pix_per_cm,display_flag,save_flag)">ConvertRandomDots2RandomOvals</a>	Converts each of random dots to a shaded oval texture.</li><li><a href="RDSbyOval.html" class="code" title="function [imgL,imgR]=RDSbyOval(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOval</a>	Generates left/right Random-Dot-Stereogram images using oval textures, not dots.</li><li><a href="RDSbyOvalFast.html" class="code" title="function [imgL,imgR]=RDSbyOvalFast(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOvalFast</a>	Generates left/right Random-Dot-Stereogram images.</li><li><a href="RDSbyOvalbyRayTracer.html" class="code" title="function [imgL,imgR]=RDSbyOvalbyRayTracer(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOvalbyRayTracer</a>	Generates left/right Random-Dot-Stereogram images using Ray-tracer procedure (thus, vertical disparities are included).</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img=MakeFineOval(imsize,color,bgcolor,bg_expand_ratio,fine_coefficient,gauss_flag,show_flag,save_flag)</a>
+0002 
+0003 <span class="comment">% Genrates a beautiful oval image with an antialiasing option.</span>
+0004 <span class="comment">% function img=MakeFineOval(imsize,color,bgcolor,show_flag,save_flag)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Generates oval image with clear curve based on antialiasing.</span>
+0007 <span class="comment">% This funcion consumes much CPU power than MakeOval function.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% imsize   : size of the oval, [raw_pix,col_pix]</span>
+0011 <span class="comment">% color    : color of the oval, [r,g,b]</span>
+0012 <span class="comment">% bgcolor  : color of the background, [r,g,b]</span>
+0013 <span class="comment">% bg_expand_ratio : expand ratio of backgound</span>
+0014 <span class="comment">%            if 1, the generated image is the same size with imsize</span>
+0015 <span class="comment">%            if more than 1, the edge of background is expanded</span>
+0016 <span class="comment">%            and generated image size will be imsize*bg_expand_ratio</span>
+0017 <span class="comment">%            defaul value is 1</span>
+0018 <span class="comment">% fine_coefficient : if larger, the generated oval become finer,</span>
+0019 <span class="comment">%                    but comsumes much CPU power. [val](default=5)</span>
+0020 <span class="comment">% gauss_flag : if 1, the image will be passed with gauussian filter</span>
+0021 <span class="comment">%              default=1</span>
+0022 <span class="comment">% show_flag: if 1, the generated images are displayed. [1/0]</span>
+0023 <span class="comment">% save_flag: if 1, the generated images are saved. [1/0]</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% [output]</span>
+0026 <span class="comment">% img      : oval image, [row x col x rgba]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Created    : &quot;2010-06-11 10:44:46 ban&quot;</span>
+0029 <span class="comment">% Last Update: &quot;2013-11-22 23:32:51 ban (ban.hiroshi@gmail.com)&quot;</span>
+0030 
+0031 <span class="comment">% check input variables</span>
+0032 <span class="keyword">if</span> nargin &lt; 1, imsize=[32,32]; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin &lt; 2, color=[255,255,255]; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin &lt; 3, bgcolor=[128,128,128]; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin &lt; 4, bg_expand_ratio=1; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin &lt; 5, fine_coefficient=5; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin &lt; 6, gauss_flag=1; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin &lt; 7, show_flag=1; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin &lt; 8, save_flag=0; <span class="keyword">end</span>
+0040 
+0041 <span class="keyword">if</span> numel(imsize)==1, imsize=[imsize,imsize]; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> numel(color)==1, color=[color,color,color]; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> numel(bgcolor)==1, bgcolor=[bgcolor,bgcolor,bgcolor]; <span class="keyword">end</span>
+0044 <span class="keyword">if</span> bg_expand_ratio&lt;1, bg_expand_ratio=1; <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% color values check</span>
+0047 <span class="keyword">if</span> max(color)&gt;255 || min(color)&lt;0
+0048     error(<span class="string">'color values error. color should be set 0-255'</span>);
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% adjust size</span>
+0052 imsize=round(imsize/2+1); <span class="comment">% to avoid 'shaggy' problem, see also line#77</span>
+0053 oimsize=round(imsize.*bg_expand_ratio);
+0054 
+0055 <span class="comment">% dissociate inner/outer region of the oval</span>
+0056 step=1/fine_coefficient;
+0057 [x,y]=meshgrid(-oimsize(2):step:oimsize(2),-oimsize(1):step:oimsize(1));
+0058 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0059 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0060 
+0061 idx=logical( 1&gt;=( x.^2/imsize(2).^2 + y.^2/imsize(1).^2 ) );
+0062 idxbg=logical( 1&lt;( x.^2/imsize(2).^2 + y.^2/imsize(1).^2 ) );
+0063 
+0064 <span class="comment">% generate oval image</span>
+0065 img=zeros(size(x,1),size(x,2),4);
+0066 
+0067 <span class="comment">% set oval &amp; background color</span>
+0068 tmp=zeros(size(x));
+0069 <span class="keyword">for</span> ii=1:1:3
+0070   tmp(idxbg)=bgcolor(ii);
+0071   tmp(idx)=color(ii);
+0072   img(:,:,ii)=tmp;
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="comment">% set alpha channel</span>
+0076 alphac=zeros(size(x));
+0077 <span class="comment">%alphac(idx)=255;</span>
+0078 alphac( 1&gt;=( x.^2/round(imsize(2)-1).^2 + y.^2/round(imsize(1)-1).^2 ) )=255; <span class="comment">% to avoid 'shaggy' problem</span>
+0079 img(:,:,4)=alphac;
+0080 
+0081 <span class="keyword">if</span> gauss_flag
+0082   <span class="comment">% gaussian filtering</span>
+0083   <span class="comment">% create gaussian kernel, using fspecial('gaussian',winwidth,sd);</span>
+0084   h = fspecial(<span class="string">'gaussian'</span>,max(imsize),3);
+0085   
+0086   <span class="comment">% apply gaussian filter</span>
+0087   <span class="comment">%img=imfilter(uint8(img),h,0); % for speeding up</span>
+0088   img=imfilter(uint8(img),h,<span class="string">'replicate'</span>); <span class="comment">% for speeding up</span>
+0089 <span class="keyword">else</span>
+0090   img=uint8(img);
+0091 <span class="keyword">end</span>
+0092 
+0093 <span class="comment">% resizing</span>
+0094 img=imresize(img,step,<span class="string">'bilinear'</span>); <span class="comment">% not bicubic</span>
+0095 
+0096 <span class="comment">%img=uint8(img);</span>
+0097 
+0098 <span class="comment">% show image</span>
+0099 <span class="keyword">if</span> show_flag
+0100   figure;
+0101   imid1=imshow(uint8(img(:,:,1:3)));
+0102   drawnow;
+0103   set(imid1,<span class="string">'AlphaData'</span>,double(img(:,:,4)./255));
+0104   <span class="comment">%axis off;</span>
+0105 <span class="keyword">end</span>
+0106 
+0107 <span class="comment">% save image data</span>
+0108 <span class="keyword">if</span> save_flag
+0109   save oval.mat img;
+0110 <span class="keyword">end</span>
+0111 
+0112 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

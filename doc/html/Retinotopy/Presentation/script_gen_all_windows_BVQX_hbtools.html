@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of script_gen_all_windows_BVQX_hbtools</title>
+  <meta name="keywords" content="script_gen_all_windows_BVQX_hbtools">
+  <meta name="description" content="a simple script to generate all the retinotopy stimulus windows for pRF analyses, which are compatible with the BVQX_hbtools's pRF analysis routines.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Presentation -->
+<h1>script_gen_all_windows_BVQX_hbtools
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>a simple script to generate all the retinotopy stimulus windows for pRF analyses, which are compatible with the BVQX_hbtools's pRF analysis routines.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function script_gen_all_windows_BVQX_hbtools(subj,pix_per_deg,TR) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> a simple script to generate all the retinotopy stimulus windows for pRF analyses, which are compatible with the BVQX_hbtools's pRF analysis routines.
+ function script_gen_all_windows_BVQX_hbtools(subj,:pix_per_deg,:TR)
+ (: is optional)
+
+ This is a simple script to generate all the retinotopy stimulus windows for pRF analyses.
+ The generated files can be directly applied to the BVQX_hbtools's pRF analysis pipeline.
+ For details of the stimulus window generation, please see help documents of gen_*_windows
+ functions.
+
+ [example]
+ &gt;&gt; script_gen_all_windows_BVQX_hbtools('2d',[10,20],[1,2]);
+
+ [input]
+ subj  : subject's name, e.g. 'HB'
+ pix_per_deg : (optional) pixels-per-deg value used in generating stimulus windows.
+         if not specified (empty), sparam.pix_per_deg is used to reconstruct stim_windows.
+         if specified, sparam.pix_per_deg is overwritten by this value, which may be
+         handy in some case with providing stim_windows with less memory space.
+         1/pix_per_deg = spatial resolution of the generated visual field,
+         e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
+         multiple values can be accepted. [10,20] by default.
+ TR    : (optional) TR used in fMRI scans, in sec. multiple values can be accepted.
+         [1,2] by default.
+
+ [output]
+ no output variable.
+ all the stimulus windows are stored in ~/Retinotopy/Presentation/subjects/(subj_name)/pRF/(date).
+
+
+ Created    : &quot;2019-02-28 17:46:17 ban&quot;
+ Last Update: &quot;2021-06-07 15:12:30 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="gen_bar_windows.html" class="code" title="function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_bar_windows</a>	Generates bar stimulus windows for pRF (population receptive field) analysis.</li><li><a href="gen_dual_windows.html" class="code" title="function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_dual_windows</a>	Generates retinotopy stimulus (polar wedge + eccentricity annulus) windows for pRF (population receptive field) analysis.</li><li><a href="gen_multifocal_windows.html" class="code" title="function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_multifocal_windows</a>	Generates multi-focal retinotopy stimulus windows for GLM modeling or pRF (population receptive field) analysis.</li><li><a href="gen_retinotopy_windows.html" class="code" title="function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_retinotopy_windows</a>	Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field) analysis.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function script_gen_all_windows_BVQX_hbtools(subj,pix_per_deg,TR)</a>
+0002 
+0003 <span class="comment">% a simple script to generate all the retinotopy stimulus windows for pRF analyses, which are compatible with the BVQX_hbtools's pRF analysis routines.</span>
+0004 <span class="comment">% function script_gen_all_windows_BVQX_hbtools(subj,:pix_per_deg,:TR)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This is a simple script to generate all the retinotopy stimulus windows for pRF analyses.</span>
+0008 <span class="comment">% The generated files can be directly applied to the BVQX_hbtools's pRF analysis pipeline.</span>
+0009 <span class="comment">% For details of the stimulus window generation, please see help documents of gen_*_windows</span>
+0010 <span class="comment">% functions.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [example]</span>
+0013 <span class="comment">% &gt;&gt; script_gen_all_windows_BVQX_hbtools('2d',[10,20],[1,2]);</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% [input]</span>
+0016 <span class="comment">% subj  : subject's name, e.g. 'HB'</span>
+0017 <span class="comment">% pix_per_deg : (optional) pixels-per-deg value used in generating stimulus windows.</span>
+0018 <span class="comment">%         if not specified (empty), sparam.pix_per_deg is used to reconstruct stim_windows.</span>
+0019 <span class="comment">%         if specified, sparam.pix_per_deg is overwritten by this value, which may be</span>
+0020 <span class="comment">%         handy in some case with providing stim_windows with less memory space.</span>
+0021 <span class="comment">%         1/pix_per_deg = spatial resolution of the generated visual field,</span>
+0022 <span class="comment">%         e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.</span>
+0023 <span class="comment">%         multiple values can be accepted. [10,20] by default.</span>
+0024 <span class="comment">% TR    : (optional) TR used in fMRI scans, in sec. multiple values can be accepted.</span>
+0025 <span class="comment">%         [1,2] by default.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% [output]</span>
+0028 <span class="comment">% no output variable.</span>
+0029 <span class="comment">% all the stimulus windows are stored in ~/Retinotopy/Presentation/subjects/(subj_name)/pRF/(date).</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Created    : &quot;2019-02-28 17:46:17 ban&quot;</span>
+0033 <span class="comment">% Last Update: &quot;2021-06-07 15:12:30 ban&quot;</span>
+0034 
+0035 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0036 <span class="comment">%% check the input variables</span>
+0037 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0038 
+0039 <span class="keyword">if</span> nargin&lt;1, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;2 || isempty(pix_per_deg), pix_per_deg=[10,20]; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;3 || isempty(TR), TR=[1,2]; <span class="keyword">end</span>
+0042 
+0043 
+0044 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0045 <span class="comment">%% check whether the subject directory already exists</span>
+0046 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0047 
+0048 <span class="comment">% [NOTE]</span>
+0049 <span class="comment">% if the subj directory is not found, the directory is created with coping</span>
+0050 <span class="comment">% all condition files from DEFAULT and then this function tries to run the</span>
+0051 <span class="comment">% stimulus presentation script using the DEFAULT parameters</span>
+0052 
+0053 subj_dir=fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'subjects'</span>,num2str(subj));
+0054 <span class="keyword">if</span> ~exist(subj_dir,<span class="string">'dir'</span>)
+0055 
+0056   fprintf(<span class="string">'The subject directory was not found.\n'</span>);
+0057   user_response=0;
+0058   <span class="keyword">while</span> ~user_response
+0059     user_entry = input(<span class="string">'Do you want to proceed using DEFAULT parameters? (y/n) : '</span>, <span class="string">'s'</span>);
+0060     <span class="keyword">if</span>(user_entry == <span class="string">'y'</span>)
+0061       fprintf(<span class="string">'Generating subj directory using DEFAULT parameters...'</span>);
+0062       user_response=1; <span class="comment">%#ok</span>
+0063       <span class="keyword">break</span>;
+0064     <span class="keyword">elseif</span> (user_entry == <span class="string">'n'</span>)
+0065       fprintf(<span class="string">'quiting the script...\n'</span>);
+0066       <span class="comment">%if nargout, OK=false; end</span>
+0067       <span class="keyword">return</span>;
+0068     <span class="keyword">else</span>
+0069       fprintf(<span class="string">'Please answer y or n!\n'</span>); <span class="keyword">continue</span>;
+0070     <span class="keyword">end</span>
+0071   <span class="keyword">end</span>
+0072 
+0073   <span class="comment">%mkdir(subj_dir);</span>
+0074   copyfile(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'subjects'</span>,<span class="string">'_DEFAULT_'</span>),subj_dir);
+0075 <span class="keyword">end</span>
+0076 
+0077 
+0078 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0079 <span class="comment">%% generate stimulus windows</span>
+0080 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0081 
+0082 <span class="comment">% generating stimulus windows</span>
+0083 resultDir=fullfile(subj_dir,<span class="string">'pRF'</span>,datestr(now,<span class="string">'yymmdd'</span>));
+0084 <span class="keyword">for</span> pp=1:1:numel(pix_per_deg)
+0085   <span class="keyword">for</span> tt=1:1:numel(TR)
+0086 
+0087     <span class="comment">% the standard rotating wedge and expanding/contracting annulus.</span>
+0088     stim_windows={<span class="string">'ccw'</span>,<span class="string">'cw'</span>,<span class="string">'exp'</span>,<span class="string">'cont'</span>};
+0089     stim_files={<span class="string">'c_pol'</span>,<span class="string">'c_pol'</span>,<span class="string">'c_ecc'</span>,<span class="string">'c_ecc'</span>};
+0090     <span class="keyword">for</span> ww=1:1:length(stim_windows)
+0091       <a href="gen_retinotopy_windows.html" class="code" title="function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_retinotopy_windows</a>(subj,stim_windows{ww},1,<span class="string">'retinotopy_display'</span>,stim_files{ww},pix_per_deg(pp),TR(tt));
+0092       <span class="comment">% convert stimulus window file name so as to be accepted by BVQX_hbtools</span>
+0093       movefile(fullfile(resultDir,[num2str(subj),sprintf(<span class="string">'_stimulus_window_%s_run_01.mat'</span>,stim_windows{ww})]),<span class="keyword">...</span>
+0094                fullfile(resultDir,sprintf(<span class="string">'stimulus_window_%s_ppd_%d_TR_%d.mat'</span>,stim_windows{ww},pix_per_deg(pp),TR(tt))));
+0095     <span class="keyword">end</span>
+0096 
+0097     <span class="comment">% bar stimulus</span>
+0098     <a href="gen_bar_windows.html" class="code" title="function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_bar_windows</a>(subj,<span class="string">'bar'</span>,1,<span class="string">'retinotopy_display'</span>,<span class="string">'c_bar'</span>,pix_per_deg(pp),TR(tt));
+0099     movefile(fullfile(resultDir,[num2str(subj),<span class="string">'_stimulus_window_bar_run_01.mat'</span>]),<span class="keyword">...</span>
+0100              fullfile(resultDir,sprintf(<span class="string">'stimulus_window_bar_ppd_%d_TR_%d.mat'</span>,pix_per_deg(pp),TR(tt))));
+0101 
+0102     <span class="comment">% multifocal: please check whether the m-sequence described in c_multifocal matches with your actual stimulus</span>
+0103     <a href="gen_multifocal_windows.html" class="code" title="function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_multifocal_windows</a>(subj,<span class="string">'multifocal'</span>,1,<span class="string">'retinotopy_display'</span>,<span class="string">'c_multifocal'</span>,pix_per_deg(pp),TR(tt));
+0104     movefile(fullfile(resultDir,[num2str(subj),<span class="string">'_stimulus_window_multifocal_run_01.mat'</span>]),<span class="keyword">...</span>
+0105              fullfile(resultDir,sprintf(<span class="string">'stimulus_window_multifocal_ppd_%d_TR_%d.mat'</span>,pix_per_deg(pp),TR(tt))));
+0106 
+0107     <span class="comment">% dual (rotating wedge + expanding/contracting annulus) stimulus windows</span>
+0108     stim_windows={<span class="string">'ccwexp'</span>,<span class="string">'ccwcont'</span>,<span class="string">'cwexp'</span>,<span class="string">'cwcont'</span>};
+0109     <span class="keyword">for</span> ww=1:1:length(stim_windows)
+0110       <a href="gen_dual_windows.html" class="code" title="function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_dual_windows</a>(subj,stim_windows{ww},1,<span class="string">'retinotopy_display'</span>,<span class="string">'c_dual'</span>,pix_per_deg(pp),TR(tt));
+0111       movefile(fullfile(resultDir,[num2str(subj),sprintf(<span class="string">'_stimulus_window_%s_run_01.mat'</span>,stim_windows{ww})]),<span class="keyword">...</span>
+0112                fullfile(resultDir,sprintf(<span class="string">'stimulus_window_%s_ppd_%d_TR_%d.mat'</span>,stim_windows{ww},pix_per_deg(pp),TR(tt))));
+0113     <span class="keyword">end</span>
+0114 
+0115   <span class="keyword">end</span> <span class="comment">% for tt=1:1:numel(TR)</span>
+0116 <span class="keyword">end</span> <span class="comment">% for pp=1:1:numel(pix_per_deg)</span>
+0117 
+0118 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of notDefined</title>
+  <meta name="keywords" content="notDefined">
+  <meta name="description" content="Test whether a variable (usually a function argument) is defined">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>notDefined
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Test whether a variable (usually a function argument) is defined</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function ndef = notDefined( varString ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Test whether a variable (usually a function argument) is defined
+
+    ndef = notDefined( varString )
+
+ This routine is used to determine if a variable is defined in the calling
+ function's workspace.  A variable is defined if (a) it exists and (b) it
+ is not empty. This routine is used throughout the ISET code to test
+ whether arguments have been passed to the routine or a default should be
+ assigned.
+
+ notDefined: 1 (true) if the variable is not defined in the calling workspace 
+             0 (false) if the variable is defined in the calling workspace
+
+  Defined means the variable exists and is not empty in the function that
+  called this function.  
+
+  This routine replaced many calls of the form
+    if ~exist('varname','var') | isempty(xxx), ... end
+
+    with 
+
+    if ieNotDefined('varname'), ... end
+
+ bw summer 05 -- imported into mrVista 2.0
+ ras 10/05    -- changed variable names to avoid a recursion error.
+ ras 01/06    -- imported back into mrVista 1.0; why should we keep
+ typing 'ieNotDefined' in front of every function?</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="ieNotDefined.html" class="code" title="function notDefined = ieNotDefined( varString )">ieNotDefined</a>	Determines if a variable is defined in the calling function's workspace.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ndef = notDefined( varString )</a>
+0002 
+0003 <span class="comment">% Test whether a variable (usually a function argument) is defined</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    ndef = notDefined( varString )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This routine is used to determine if a variable is defined in the calling</span>
+0008 <span class="comment">% function's workspace.  A variable is defined if (a) it exists and (b) it</span>
+0009 <span class="comment">% is not empty. This routine is used throughout the ISET code to test</span>
+0010 <span class="comment">% whether arguments have been passed to the routine or a default should be</span>
+0011 <span class="comment">% assigned.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% notDefined: 1 (true) if the variable is not defined in the calling workspace</span>
+0014 <span class="comment">%             0 (false) if the variable is defined in the calling workspace</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  Defined means the variable exists and is not empty in the function that</span>
+0017 <span class="comment">%  called this function.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  This routine replaced many calls of the form</span>
+0020 <span class="comment">%    if ~exist('varname','var') | isempty(xxx), ... end</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    with</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%    if ieNotDefined('varname'), ... end</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% bw summer 05 -- imported into mrVista 2.0</span>
+0027 <span class="comment">% ras 10/05    -- changed variable names to avoid a recursion error.</span>
+0028 <span class="comment">% ras 01/06    -- imported back into mrVista 1.0; why should we keep</span>
+0029 <span class="comment">% typing 'ieNotDefined' in front of every function?</span>
+0030 
+0031 <span class="keyword">if</span> (~ischar(varString)), error(<span class="string">'Varible name must be a string'</span>); <span class="keyword">end</span>
+0032 
+0033 <span class="comment">% ndef = 0;  % Assume the variable is defined</span>
+0034 
+0035 str = sprintf(<span class="string">'''%s'''</span>,varString);   
+0036 cmd1 = [<span class="string">'~exist('</span> str <span class="string">',''var'') == 1'</span>];
+0037 cmd2 = [<span class="string">'isempty('</span>,varString <span class="string">') == 1'</span>];
+0038 <span class="comment">% cmd = [cmd1, ' | ',cmd2];</span>
+0039 
+0040 <span class="comment">% If either of these conditions holds, then not defined is true.</span>
+0041 ndef = evalin(<span class="string">'caller'</span>,cmd1);     <span class="comment">% Check that the variable exists in the caller space</span>
+0042 <span class="keyword">if</span> ndef,  <span class="keyword">return</span>;                 <span class="comment">% If it does not, return with a status of 0</span>
+0043 <span class="keyword">else</span> 
+0044     ndef = evalin(<span class="string">'caller'</span>,cmd2); <span class="comment">% Check if the variable is empty in the caller space</span>
+0045     <span class="keyword">if</span> ndef , <span class="keyword">return</span>;
+0046     <span class="keyword">end</span>
+0047 <span class="keyword">end</span>
+0048 
+0049 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

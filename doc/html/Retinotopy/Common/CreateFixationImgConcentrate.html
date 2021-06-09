@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateFixationImgConcentrate</title>
+  <meta name="keywords" content="CreateFixationImgConcentrate">
+  <meta name="description" content="Creates circular fixation images for left and right-eyes in a binocular display setting.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateFixationImgConcentrate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates circular fixation images for left and right-eyes in a binocular display setting.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function fix=CreateFixationImgConcentrate(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates circular fixation images for left and right-eyes in a binocular display setting.
+ function fiximg=CreateFixationImgConcentrate(:fixsize,:fixcolor,:bgcolor,:circlesize,:gap,:show_flag,:save_flag)
+ (: is optional)
+
+ Create fixation-cross image that is reported to be able to get more stable and sustained
+ fixation with minimum eye movements.
+ reference: Thaler, L., Shutz, A.C., Goodale, M.A., Gegenfurtner, K.R. (2013).
+            What is the best fixation target? The effect of target shape on stability of fixational eye movements.
+            Vision Research, 76, 31-42.
+            https://www.sciencedirect.com/science/article/pii/S0042698912003380
+
+ [input]
+ fixsize    : radius of the whole rectangular image, [pixel]. 32 by default.
+ fixcolor   : color of the fixation cross, [r,g,b]. [255,255,255] by default.
+ bgcolor    : color of the background, [r,g,b]. [128,128,128] by default.
+ circlesize : radius of the actual fixation point, [inner_pixel,outer_pixel]. [6,24] by default.
+ gap        : gap between inner and the outer circle, [pixel]. 0 by default.
+ show_flag  : if 1, the generated images are displayed. [1|0]. 1 by default.
+ save_flag  : if 1, the generated images are saved. [1|0]. 0 by default.
+
+ [output]
+ fix        : fixation image, a cell structure, fix{left,right}
+
+ [reference]
+ 
+
+ Created    : &quot;2019-02-12 14:32:02 ban&quot;
+ Last Update: &quot;2019-02-19 20:14:32 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function fix=CreateFixationImgConcentrate(fixsize,fixcolor,bgcolor,circlesize,gap,show_flag,save_flag)</a>
+0002 
+0003 <span class="comment">% Creates circular fixation images for left and right-eyes in a binocular display setting.</span>
+0004 <span class="comment">% function fiximg=CreateFixationImgConcentrate(:fixsize,:fixcolor,:bgcolor,:circlesize,:gap,:show_flag,:save_flag)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Create fixation-cross image that is reported to be able to get more stable and sustained</span>
+0008 <span class="comment">% fixation with minimum eye movements.</span>
+0009 <span class="comment">% reference: Thaler, L., Shutz, A.C., Goodale, M.A., Gegenfurtner, K.R. (2013).</span>
+0010 <span class="comment">%            What is the best fixation target? The effect of target shape on stability of fixational eye movements.</span>
+0011 <span class="comment">%            Vision Research, 76, 31-42.</span>
+0012 <span class="comment">%            https://www.sciencedirect.com/science/article/pii/S0042698912003380</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% [input]</span>
+0015 <span class="comment">% fixsize    : radius of the whole rectangular image, [pixel]. 32 by default.</span>
+0016 <span class="comment">% fixcolor   : color of the fixation cross, [r,g,b]. [255,255,255] by default.</span>
+0017 <span class="comment">% bgcolor    : color of the background, [r,g,b]. [128,128,128] by default.</span>
+0018 <span class="comment">% circlesize : radius of the actual fixation point, [inner_pixel,outer_pixel]. [6,24] by default.</span>
+0019 <span class="comment">% gap        : gap between inner and the outer circle, [pixel]. 0 by default.</span>
+0020 <span class="comment">% show_flag  : if 1, the generated images are displayed. [1|0]. 1 by default.</span>
+0021 <span class="comment">% save_flag  : if 1, the generated images are saved. [1|0]. 0 by default.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [output]</span>
+0024 <span class="comment">% fix        : fixation image, a cell structure, fix{left,right}</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% [reference]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Created    : &quot;2019-02-12 14:32:02 ban&quot;</span>
+0030 <span class="comment">% Last Update: &quot;2019-02-19 20:14:32 ban&quot;</span>
+0031 
+0032 <span class="comment">% check the input variables</span>
+0033 <span class="keyword">if</span> nargin &lt; 1, fixsize=32; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin &lt; 2, fixcolor=[255,255,255]; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin &lt; 3, bgcolor=[128,128,128]; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin &lt; 4, circlesize=[6,24]; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin &lt; 5, gap=0; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin &lt; 6, show_flag=1; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin &lt; 7, save_flag=0; <span class="keyword">end</span>
+0040 
+0041 bgcolor=reshape(bgcolor,[1,3]);
+0042 
+0043 <span class="keyword">if</span> numel(circlesize)~=2
+0044   error(<span class="string">'curclesize should be [inner_pixel,outer_pixel]. check the input variable.'</span>);
+0045 <span class="keyword">end</span>
+0046 
+0047 <span class="comment">% generate xy coordinates</span>
+0048 [x,y]=meshgrid(1:2*fixsize,1:2*fixsize);
+0049 x=x-fixsize; y=y-fixsize;
+0050 r=sqrt(x.*x+y.*y);
+0051 
+0052 <span class="comment">% create the circular background</span>
+0053 alphac=r; alphac(r&gt;fixsize)=0; alphac(r&lt;=fixsize)=255;
+0054 fix=cell(2,1);
+0055 <span class="keyword">for</span> ii=1:1:2
+0056   fix{ii}=repmat(reshape([bgcolor,1],[1,1,1,4]),[2*fixsize,2*fixsize]);
+0057   fix{ii}(:,:,4)=alphac; <span class="comment">% alpha channel</span>
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="comment">% create the central fixation point</span>
+0061 <span class="keyword">for</span> ii=1:1:2
+0062   <span class="keyword">for</span> pp=1:1:3
+0063     tmp=fix{ii}(:,:,pp);
+0064     <span class="keyword">if</span> ii==1 <span class="comment">% left-eye</span>
+0065       tmp(r&lt;circlesize(2) &amp; ((x&lt;=0 &amp; y&gt;=0) | (x&gt;=0 &amp; y&lt;=0)))=fixcolor(pp);
+0066     <span class="keyword">elseif</span> ii==2 <span class="comment">% right-eye</span>
+0067       tmp(r&lt;circlesize(2) &amp; ((x&gt;=0 &amp; y&gt;=0) | (x&lt;=0 &amp; y&lt;=0)))=fixcolor(pp);
+0068     <span class="keyword">end</span>
+0069     tmp( (-circlesize(1)-gap&lt;=x &amp; x&lt;=circlesize(1)+gap) | (-circlesize(1)-gap&lt;=y &amp; y&lt;=circlesize(1)+gap) ) = bgcolor(pp);
+0070     tmp(r&lt;circlesize(1))=fixcolor(pp);
+0071     fix{ii}(:,:,pp)=tmp;
+0072     clear tmp;
+0073   <span class="keyword">end</span>
+0074 <span class="keyword">end</span>
+0075 
+0076 <span class="keyword">for</span> ii=1:1:2, fix{ii}=uint8(fix{ii}); <span class="keyword">end</span>
+0077 
+0078 <span class="keyword">if</span> show_flag
+0079   figure;
+0080   subplot(1,2,1)
+0081   imid1=imshow(fix{1}(:,:,1:3));
+0082   set(imid1,<span class="string">'AlphaData'</span>,double(fix{1}(:,:,4)./255));
+0083   hold on;
+0084   
+0085   subplot(1,2,2)
+0086   imid1=imshow(fix{2}(:,:,1:3));
+0087   set(imid1,<span class="string">'AlphaData'</span>,double(fix{2}(:,:,4)./255));
+0088   hold on;
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="keyword">if</span> save_flag
+0092   save FixationImg.mat fix;
+0093 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

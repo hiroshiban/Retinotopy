@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ConvertRandomDots2RandomOvals</title>
+  <meta name="keywords" content="ConvertRandomDots2RandomOvals">
+  <meta name="description" content="Converts each of random dots to a shaded oval texture.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>ConvertRandomDots2RandomOvals
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Converts each of random dots to a shaded oval texture.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function ovalimg=ConvertRandomDots2RandomOvals(dotimg,ovalRadius,colors,pix_per_cm,display_flag,save_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Converts each of random dots to a shaded oval texture.
+ function ovalimg=ConvertRandomDots2RandomOvals(dotimg,ovalRadius,colors,pix_per_cm,display_flag,save_flag)
+
+ this function replaces random dot image to random white/black OVAL image
+
+ !!!NOTICE!!!
+ This function does not take into account of paired-images relation (such as left/right images)
+ So, if you want to generate Random Dot Stereo grams, please use
+ 'RDSbyOval' or 'RDS2colors'/'ConvertRandomDots2RandomOvalsLR'
+
+ [input]
+ dotimg     : images of random dots (white(255) = dot to be replaced to oval), cell [row,col]
+ ovalRadius : radius of oval, [row(cm),col(cm)]
+ colors : colors of ovals and background, [oval1(0-255),oval2(0-255),background(0-255)]
+ pix_per_cm : pixels per cm, [val]
+ display_flag: if 1, the generated images will be displayed, [0/1]
+ save_flag   : if 1, the generated images will be saved as RDS_imgs.mat, [0/1]
+
+ [output]
+ ovalimg    : images of random ovals
+
+ 
+ Created    : &quot;2010-06-14 13:52:23 ban&quot;
+ Last Update: &quot;2013-11-22 18:38:26 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="MakeFineOval.html" class="code" title="function img=MakeFineOval(imsize,color,bgcolor,bg_expand_ratio,fine_coefficient,gauss_flag,show_flag,save_flag)">MakeFineOval</a>	Genrates a beautiful oval image with an antialiasing option.</li><li><a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>	Randomly sorts the input array.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [Y,index] = shuffle(X)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ovalimg=ConvertRandomDots2RandomOvals(dotimg,ovalRadius,colors,pix_per_cm,display_flag,save_flag)</a>
+0002 
+0003 <span class="comment">% Converts each of random dots to a shaded oval texture.</span>
+0004 <span class="comment">% function ovalimg=ConvertRandomDots2RandomOvals(dotimg,ovalRadius,colors,pix_per_cm,display_flag,save_flag)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% this function replaces random dot image to random white/black OVAL image</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% !!!NOTICE!!!</span>
+0009 <span class="comment">% This function does not take into account of paired-images relation (such as left/right images)</span>
+0010 <span class="comment">% So, if you want to generate Random Dot Stereo grams, please use</span>
+0011 <span class="comment">% 'RDSbyOval' or 'RDS2colors'/'ConvertRandomDots2RandomOvalsLR'</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% [input]</span>
+0014 <span class="comment">% dotimg     : images of random dots (white(255) = dot to be replaced to oval), cell [row,col]</span>
+0015 <span class="comment">% ovalRadius : radius of oval, [row(cm),col(cm)]</span>
+0016 <span class="comment">% colors : colors of ovals and background, [oval1(0-255),oval2(0-255),background(0-255)]</span>
+0017 <span class="comment">% pix_per_cm : pixels per cm, [val]</span>
+0018 <span class="comment">% display_flag: if 1, the generated images will be displayed, [0/1]</span>
+0019 <span class="comment">% save_flag   : if 1, the generated images will be saved as RDS_imgs.mat, [0/1]</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% ovalimg    : images of random ovals</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Created    : &quot;2010-06-14 13:52:23 ban&quot;</span>
+0026 <span class="comment">% Last Update: &quot;2013-11-22 18:38:26 ban (ban.hiroshi@gmail.com)&quot;</span>
+0027 
+0028 <span class="comment">% add path</span>
+0029 addpath(fullfile(pwd,<span class="string">'Common'</span>));
+0030 
+0031 <span class="comment">% check input variables</span>
+0032 <span class="keyword">if</span> nargin&lt;1 || isempty(dotimg), help ConvertDots2Ovals; <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;2 || isempty(ovalRadius), ovalRadius=0.05; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;3 || isempty(colors), colors=[0,255,128]; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;4 || isempty(pix_per_cm)
+0036   <span class="comment">% cm per pix</span>
+0037   <span class="comment">% 1 inch = 2.54 cm, my PC's display is 1920x1200, 15.4 inch.</span>
+0038   <span class="comment">% So, 15.4(inch)*2.54(cm) / sqrt(1920^2+1200^2) (pix) = XXX cm/pixel</span>
+0039   <span class="comment">% cm_per_pix=15.4*2.54/sqrt(1920^2+1200^2);</span>
+0040   pix_per_cm= 1 / (15.4*2.54/sqrt(1920^2+1200^2));
+0041 <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;4 || isempty(display_flag), display_flag=1; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> nargin&lt;5 || isempty(save_flag), save_flag=0; <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> numel(ovalRadius)==1, ovalRadius=[ovalRadius,ovalRadius]; <span class="keyword">end</span>
+0046 
+0047 <span class="comment">% generate base ovals</span>
+0048 dotSize=round(ovalRadius*pix_per_cm*2); <span class="comment">% radius(cm) --&gt; diameter(pix)</span>
+0049 basedot=double(<a href="MakeFineOval.html" class="code" title="function img=MakeFineOval(imsize,color,bgcolor,bg_expand_ratio,fine_coefficient,gauss_flag,show_flag,save_flag)">MakeFineOval</a>(dotSize,[colors(1:2) 0],colors(3),1.2,2,1,0,0));
+0050 wdot=basedot(:,:,1);     <span class="comment">% get only gray scale image (white)</span>
+0051 bdot=basedot(:,:,2);     <span class="comment">% get only gray scale image (black)</span>
+0052 dotalpha=basedot(:,:,4)./max(max(basedot(:,:,4))); <span class="comment">% get alpha channel value 0-1.0;</span>
+0053 
+0054 <span class="comment">% convert to cell object</span>
+0055 <span class="keyword">if</span> ~iscell(dotimg), dotimg={dotimg}; <span class="keyword">end</span>
+0056 
+0057 <span class="comment">% initialize</span>
+0058 ovalimg=cell(length(dotimg),1);
+0059 <span class="keyword">for</span> ii=1:1:length(dotimg), ovalimg{ii}=double(colors(3)*ones(size(dotimg{ii}))); <span class="keyword">end</span>
+0060 
+0061 <span class="comment">% generate oval dots images</span>
+0062 <span class="keyword">for</span> ii=1:1:length(dotimg)
+0063   
+0064   <span class="comment">% get xy-positions of dots from dotimg</span>
+0065   [row,col]=find(dotimg{ii}==255);
+0066   <span class="comment">% prevent overlapping problem</span>
+0067   [row,idx]=<a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>(row);
+0068   col=col(idx);
+0069   
+0070   <span class="comment">% replace dots to ovals</span>
+0071   <span class="keyword">for</span> rr=1:1:size(row,1)
+0072     
+0073     <span class="comment">% select white/black dot</span>
+0074     <span class="keyword">if</span> mod(randi(2),2)
+0075       dot=wdot;
+0076     <span class="keyword">else</span>
+0077       dot=bdot;
+0078     <span class="keyword">end</span>
+0079     
+0080     <span class="comment">% prevent edge removal problem</span>
+0081     idxr=max(1,row(rr)-round(size(dot,1)/2)+1):min(row(rr)+round(size(dot,1)/2),size(dotimg{ii},1));
+0082     idxc=max(1,col(rr)-round(size(dot,2)/2)+1):min(col(rr)+round(size(dot,2)/2),size(dotimg{ii},2));
+0083     
+0084     <span class="keyword">if</span> 1 &lt;= row(rr)-round(size(dot,1)/2)
+0085       didxr=1:min(size(dot,1),size(idxr,2));
+0086     <span class="keyword">else</span>
+0087       <span class="keyword">if</span> row(rr)+round(size(dot,1)/2) &lt;= size(dotimg{ii},1)
+0088         didxr=round(size(dot,1)/2)-row(rr)+1:size(dot,1);
+0089       <span class="keyword">else</span>
+0090         didxr=round(size(dot,1)/2)-row(rr)+1:size(idxr,1);
+0091       <span class="keyword">end</span>
+0092     <span class="keyword">end</span>
+0093     
+0094     <span class="keyword">if</span> 1&lt;=col(rr)-round(size(dot,2)/2)
+0095       didxc=1:min(size(dot,2),size(idxc,2));
+0096     <span class="keyword">else</span>
+0097       <span class="keyword">if</span> col(rr)+round(size(dot,2)/2) &lt;= size(dotimg{ii},2)
+0098         didxc=round(size(dot,2)/2)-col(rr)+1:size(dot,2);
+0099       <span class="keyword">else</span>
+0100         didxc=round(size(dot,2)/2)-col(rr)+1:size(idxr,2);
+0101       <span class="keyword">end</span>
+0102     <span class="keyword">end</span>
+0103     
+0104     <span class="comment">% put ovals considering alpha value</span>
+0105     ovalimg{ii}(idxr,idxc)=(1-dotalpha(didxr,didxc)).*ovalimg{ii}(idxr,idxc)+dotalpha(didxr,didxc).*dot(didxr,didxc);
+0106     
+0107   <span class="keyword">end</span> <span class="comment">% for rr=1:1:size(row,1)</span>
+0108   
+0109   ovalimg{ii}=uint8(ovalimg{ii});
+0110 
+0111 <span class="keyword">end</span> <span class="comment">% for ii=1:1:length(dotimg)</span>
+0112 
+0113 <span class="comment">% --- plot the results</span>
+0114 <span class="keyword">if</span> display_flag
+0115   figure; hold on;
+0116   <span class="keyword">for</span> n=1:1:length(dotimg)
+0117     imshow(ovalimg{n},[0,255]);
+0118     colormap(gray);
+0119     shg;
+0120   <span class="keyword">end</span>
+0121 <span class="keyword">end</span>
+0122 
+0123 <span class="comment">% --- save the results</span>
+0124 <span class="keyword">if</span> save_flag
+0125   save RDSoval_imgs.mat ovalimg;
+0126 <span class="keyword">end</span>
+0127 
+0128 <span class="comment">% rm path</span>
+0129 rmpath(fullfile(pwd,<span class="string">'Common'</span>));
+0130 
+0131 <span class="keyword">return</span>;
+0132 
+0133 <span class="comment">%% subfunction</span>
+0134 <a name="_sub1" href="#_subfunctions" class="code">function [Y,index] = shuffle(X)</a>
+0135 <span class="comment">% [Y,index] = shuffle(X)</span>
+0136 <span class="comment">%</span>
+0137 <span class="comment">% Randomly sorts X.</span>
+0138 <span class="comment">% If X is a vector, sorts all of X, so Y = X(index).</span>
+0139 <span class="comment">% If X is an m-by-n matrix, sorts each column of X, so</span>
+0140 <span class="comment">% for j=1:n, Y(:,j)=X(index(:,j),j).</span>
+0141 
+0142 [null,index] = sort(rand(size(X)));
+0143 [n,m] = size(X);
+0144 Y = zeros(size(X));
+0145 
+0146 <span class="keyword">if</span> (n == 1 || m == 1)
+0147   Y = X(index);
+0148 <span class="keyword">else</span>
+0149   <span class="keyword">for</span> j = 1:m
+0150     Y(:,j)  = X(index(:,j),j);
+0151   <span class="keyword">end</span>
+0152 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

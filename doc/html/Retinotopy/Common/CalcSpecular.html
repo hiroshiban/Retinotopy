@@ -1,0 +1,330 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CalcSpecular</title>
+  <meta name="keywords" content="CalcSpecular">
+  <meta name="description" content="Calculates a specular value at a point on the surface using Blinn's phong method.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CalcSpecular
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates a specular value at a point on the surface using Blinn's phong method.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function amount = CalcSpecular(nv,lv,vv,shininess,model_id) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Calculates a specular value at a point on the surface using Blinn's phong method.
+ function amount = CalcSpecular(nv,lv,vv,shininess,model_id)
+
+ Calculate a specular value at a point on the surface using Blinn's phong
+ shading method etc.
+
+ [input]
+ nv          : coordinates of a point on the surface, [X;Y;Height]
+ lv          : light source, 1x3 vector [x,y,z]
+ vv          : viewpoint vector, [x,y,z]([0,0,1] by default)
+ shininess   : shininess factor, [val](16.^0.25 by default)
+ model_id    : ID of phong shading model, one of 1-12 (5 by default)
+                1 = Simple Phong method
+                Lyon main methods, with several K values for this D vector and x value
+                2 = Lyon K=0 method
+                3 = Lyon K=1 method
+                4 = Kyon K=2 method
+                5 = Blinn method
+                6 = Lyon/Blinn halfway method, normalized hv2, K=2
+                7 = Lyon/Blinn halfway method, no norm of hv1, K=2
+                8 = Lyon/Blinn halfway method 2, projecting hv1, K=2
+                9 = Lyon/Blinn halfway method 2, projecting hv2, K=1
+               10 = Lyon/Blinn halfway method, normalized hv2, K=2
+               11 = Blinn method D2 (Torrance and Sparrow)
+               12 = Blinn method D3 (Trowbridge and Reitz)
+
+ [output]
+ amount      : specular values at the point on the surface
+
+ [related function]
+ CreateSpecularMap
+ Generate Blinn's Phong Shading map from heightfield input
+ 
+ [example]
+ heightfield=CreateCylinderField();
+ pix_per_cm=57;
+ heightfield=heightfield/pix_per_cm;
+  
+ model_id=5;
+ vv=[0 0 1].*10;
+ lvs=[0 1 1;0 -1 1];
+ shininess=6.^0.25;
+ diffuse=35;
+ ambient=0;
+ baseval=0;
+ display_flag=1;
+ save_flag=0;
+  
+ pmap=CreateSpecularMap(heightfield,model_id,vv,lvs,shininess,...
+              diffuse,ambient,'',display_flag,save_flag);
+  
+ figure;
+ subplot(1,3,1); hold on; surf(heightfield); shading interp; colormap gray;
+ subplot(1,3,2); hold on; surf(double(pmap)); shading interp; colormap gray;
+ subplot(1,3,3); hold on; imshow(uint8(pmap)); shading interp; colormap gray;
+
+ [reference]
+ Phong Shading Reformulation for Hardware Renderer Simplification
+ Apple Technical Report #43, 1993
+ Richard F. Lyon
+ http://www.dicklyon.com/tech/Graphics/Phong_TR-Lyon.pdf
+
+
+ Created    : &quot;2010-06-29 13:15:25 ban&quot; 
+ Last Update: &quot;2013-11-22 18:18:19 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CalcSpecular.html" class="code" title="function amount = CalcSpecular(nv,lv,vv,shininess,model_id)">CalcSpecular</a>	Calculates a specular value at a point on the surface using Blinn's phong method.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CalcSpecular.html" class="code" title="function amount = CalcSpecular(nv,lv,vv,shininess,model_id)">CalcSpecular</a>	Calculates a specular value at a point on the surface using Blinn's phong method.</li><li><a href="CreateSpecularMap.html" class="code" title="function pmap=CreateSpecularMap(heightfield,model_id,vv,lvs,shininess,diffuse,ambient,pix_per_cm,display_flag,save_flag)">CreateSpecularMap</a>	Generates a specular map from the input height field (using Blinn's Phong shading method).</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function amount = CalcSpecular(nv,lv,vv,shininess,model_id)</a>
+0002 
+0003 <span class="comment">% Calculates a specular value at a point on the surface using Blinn's phong method.</span>
+0004 <span class="comment">% function amount = CalcSpecular(nv,lv,vv,shininess,model_id)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Calculate a specular value at a point on the surface using Blinn's phong</span>
+0007 <span class="comment">% shading method etc.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% nv          : coordinates of a point on the surface, [X;Y;Height]</span>
+0011 <span class="comment">% lv          : light source, 1x3 vector [x,y,z]</span>
+0012 <span class="comment">% vv          : viewpoint vector, [x,y,z]([0,0,1] by default)</span>
+0013 <span class="comment">% shininess   : shininess factor, [val](16.^0.25 by default)</span>
+0014 <span class="comment">% model_id    : ID of phong shading model, one of 1-12 (5 by default)</span>
+0015 <span class="comment">%                1 = Simple Phong method</span>
+0016 <span class="comment">%                Lyon main methods, with several K values for this D vector and x value</span>
+0017 <span class="comment">%                2 = Lyon K=0 method</span>
+0018 <span class="comment">%                3 = Lyon K=1 method</span>
+0019 <span class="comment">%                4 = Kyon K=2 method</span>
+0020 <span class="comment">%                5 = Blinn method</span>
+0021 <span class="comment">%                6 = Lyon/Blinn halfway method, normalized hv2, K=2</span>
+0022 <span class="comment">%                7 = Lyon/Blinn halfway method, no norm of hv1, K=2</span>
+0023 <span class="comment">%                8 = Lyon/Blinn halfway method 2, projecting hv1, K=2</span>
+0024 <span class="comment">%                9 = Lyon/Blinn halfway method 2, projecting hv2, K=1</span>
+0025 <span class="comment">%               10 = Lyon/Blinn halfway method, normalized hv2, K=2</span>
+0026 <span class="comment">%               11 = Blinn method D2 (Torrance and Sparrow)</span>
+0027 <span class="comment">%               12 = Blinn method D3 (Trowbridge and Reitz)</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% [output]</span>
+0030 <span class="comment">% amount      : specular values at the point on the surface</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% [related function]</span>
+0033 <span class="comment">% CreateSpecularMap</span>
+0034 <span class="comment">% Generate Blinn's Phong Shading map from heightfield input</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% [example]</span>
+0037 <span class="comment">% heightfield=CreateCylinderField();</span>
+0038 <span class="comment">% pix_per_cm=57;</span>
+0039 <span class="comment">% heightfield=heightfield/pix_per_cm;</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% model_id=5;</span>
+0042 <span class="comment">% vv=[0 0 1].*10;</span>
+0043 <span class="comment">% lvs=[0 1 1;0 -1 1];</span>
+0044 <span class="comment">% shininess=6.^0.25;</span>
+0045 <span class="comment">% diffuse=35;</span>
+0046 <span class="comment">% ambient=0;</span>
+0047 <span class="comment">% baseval=0;</span>
+0048 <span class="comment">% display_flag=1;</span>
+0049 <span class="comment">% save_flag=0;</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">% pmap=CreateSpecularMap(heightfield,model_id,vv,lvs,shininess,...</span>
+0052 <span class="comment">%              diffuse,ambient,'',display_flag,save_flag);</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">% figure;</span>
+0055 <span class="comment">% subplot(1,3,1); hold on; surf(heightfield); shading interp; colormap gray;</span>
+0056 <span class="comment">% subplot(1,3,2); hold on; surf(double(pmap)); shading interp; colormap gray;</span>
+0057 <span class="comment">% subplot(1,3,3); hold on; imshow(uint8(pmap)); shading interp; colormap gray;</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% [reference]</span>
+0060 <span class="comment">% Phong Shading Reformulation for Hardware Renderer Simplification</span>
+0061 <span class="comment">% Apple Technical Report #43, 1993</span>
+0062 <span class="comment">% Richard F. Lyon</span>
+0063 <span class="comment">% http://www.dicklyon.com/tech/Graphics/Phong_TR-Lyon.pdf</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">% Created    : &quot;2010-06-29 13:15:25 ban&quot;</span>
+0067 <span class="comment">% Last Update: &quot;2013-11-22 18:18:19 ban (ban.hiroshi@gmail.com)&quot;</span>
+0068 
+0069 <span class="comment">% check input variables</span>
+0070 <span class="keyword">if</span> nargin&lt;1, help <a href="CalcSpecular.html" class="code" title="function amount = CalcSpecular(nv,lv,vv,shininess,model_id)">CalcSpecular</a>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0071 <span class="keyword">if</span> nargin&lt;2 || isempty(lv), lv=[1,-1,1]; <span class="keyword">end</span>
+0072 <span class="keyword">if</span> nargin&lt;3 || isempty(vv), vv=[0,0,1]; <span class="keyword">end</span>
+0073 <span class="keyword">if</span> nargin&lt;4 || isempty(shininess), shininess=16.^0.25; <span class="keyword">end</span>
+0074 <span class="keyword">if</span> nargin&lt;5 || isempty(model_id), model_id=5; <span class="keyword">end</span>
+0075 
+0076 <span class="keyword">if</span> norm(lv)~=1, lv=lv*1/sqrt(sum(lv.*lv)); <span class="keyword">end</span>
+0077 <span class="keyword">if</span> norm(vv)~=1, vv=vv*1/sqrt(sum(vv.*vv)); <span class="keyword">end</span>
+0078   
+0079 <span class="comment">% calculate specular value using phong-shading method</span>
+0080 
+0081 amount=zeros(size(nv,2),1);
+0082 
+0083 <span class="comment">% 1. Phong method</span>
+0084 <span class="keyword">if</span> model_id==1
+0085   rv = 2*nv.*repmat((vv*nv),3,1)-repmat(vv',1,size(nv,2)); <span class="comment">% reflected view vectors</span>
+0086   dot = rv'*lv';
+0087   idx=find(dot&gt;0);
+0088   amount(idx) = dot(idx).^shininess;
+0089 
+0090 <span class="comment">% Lyon main methods, several k values for this D vector and x value</span>
+0091 
+0092 <span class="comment">% 2. Lyon k=0</span>
+0093 <span class="keyword">elseif</span> model_id==2
+0094   rv = 2*nv.*repmat((vv*nv),3,1)-repmat(vv',1,size(nv,2));
+0095   dv = repmat(lv',1,size(rv,2)) - rv; <span class="comment">% difference vector;</span>
+0096   xs = (sum(dv.*dv,1)*shininess/2)';
+0097   idx=find(xs&lt;=1);
+0098   amount(idx) = 1-xs(idx);
+0099   
+0100 <span class="comment">% 3. Lyon k=1</span>
+0101 <span class="keyword">elseif</span> model_id==3
+0102   rv = 2*nv.*repmat((vv*nv),3,1)-repmat(vv',1,size(nv,2));
+0103   dv = repmat(lv',1,size(rv,2)) - rv; <span class="comment">% difference vector;</span>
+0104   xs = (sum(dv.*dv,1)*shininess/2)';
+0105   idx=find(xs&lt;=2);
+0106   amount(idx) = 1 - xs(idx)/2;
+0107   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=1 times</span>
+0108   
+0109 <span class="comment">% 4. Lyon k=2</span>
+0110 <span class="keyword">elseif</span> model_id==4
+0111   rv = 2*nv.*repmat((vv*nv),3,1)-repmat(vv',1,size(nv,2));
+0112   dv = repmat(lv',1,size(rv,2)) - rv; <span class="comment">% difference vector;</span>
+0113   xs = (sum(dv.*dv,1)*shininess/2)';
+0114   idx=find(xs&lt;=4);
+0115   amount(idx) = 1 - xs(idx)/4;
+0116   amount(idx) = amount(idx).*amount(idx);
+0117   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=2 times</span>
+0118     
+0119 <span class="comment">% use n4 (4*n) in all the h-vector methods</span>
+0120 <span class="comment">% 5. Blinn method</span>
+0121 <span class="keyword">elseif</span> model_id==5
+0122   hv = (lv+vv)/2;
+0123   hl = hv*hv'; <span class="comment">% hv length^2;</span>
+0124   hv2 = 1/sqrt(hl)*hv; <span class="comment">% normalized halfway vector;</span>
+0125   n4 = 4*shininess; <span class="comment">% &quot;shininess&quot; for halfway vector method</span>
+0126   dot = (hv2*nv)';
+0127   idx=find(dot&gt;0);
+0128   amount(idx) = dot(idx).^n4;
+0129   
+0130 <span class="comment">% 6. Lyon/Blinn halfway method, normalized hv2, k=2</span>
+0131 <span class="keyword">elseif</span> model_id==6
+0132   hv = (lv+vv)/2;
+0133   hl = hv*hv'; <span class="comment">% hv length^2;</span>
+0134   hv2 = 1/sqrt(hl)*hv; <span class="comment">% normalized halfway vector;</span>
+0135   n4 = 4*shininess; <span class="comment">% &quot;shininess&quot; for halfway vector method</span>
+0136   dv = repmat(hv2',1,size(nv,2)) - nv; <span class="comment">% difference vector</span>
+0137   xs = (sum(dv.*dv,1)*n4/2)';
+0138   idx=find(xs&lt;=4);
+0139   amount(idx) = 1 - xs(idx)/4;
+0140   amount(idx) = amount(idx).*amount(idx);
+0141   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=2 times</span>
+0142   
+0143 <span class="comment">% 7. Lyon halfway method, no norm of h, k=2</span>
+0144 <span class="keyword">elseif</span> model_id==7
+0145   hv = (lv+vv)/2;
+0146   n4 = 4*shininess; <span class="comment">% &quot;shininess&quot; for halfway vector method</span>
+0147   dv = repmat(hv',1,size(nv,2)) - nv.*repmat(hv*nv,3,1); <span class="comment">% difference vector to projection</span>
+0148   xs = sum(dv.*dv,1)*n4/2;
+0149   idx=find(xs&lt;=4);
+0150   amount(idx) = 1 - xs(idx)/4;
+0151   amount(idx) = amount(idx).*amount(idx);
+0152   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=2 times</span>
+0153     
+0154 <span class="comment">% 8. Lyon halfway method 2, projecting hv1, k=2</span>
+0155 <span class="keyword">elseif</span> model_id==8
+0156   hv = (lv+vv)/2;
+0157   hl = hv*hv'; <span class="comment">% hv length^2</span>
+0158   dl = 1-hl; <span class="comment">% length error z</span>
+0159   hv1 = (1+0.5*(dl+dl*dl))*hv; <span class="comment">% approx. normalized halfway vector</span>
+0160   n4 = 4*shininess; <span class="comment">% &quot;shininess&quot; for halfway vector method</span>
+0161   dv = repmat(hv1',1,size(nv,2)) - nv.*repmat(hv1*nv,3,1); <span class="comment">% difference vector</span>
+0162   xs = sum(dv.*dv,1)*n4/2;
+0163   idx=find(xs&lt;=4);
+0164   amount(idx) = 1 - xs(idx)/4;
+0165   amount(idx) = amount(idx).*amount(idx);
+0166   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=2 times</span>
+0167   
+0168 <span class="comment">% 9. Lyon halfway method 2, projecting hv1, k=1</span>
+0169 <span class="comment">% same xs from above</span>
+0170 <span class="keyword">elseif</span> model_id==9
+0171   rv = 2*nv.*repmat((vv*nv),3,1)-repmat(vv',1,size(nv,2));
+0172   dv = repmat(lv',1,size(rv,2)) - rv; <span class="comment">% difference vector;</span>
+0173   xs = (sum(dv.*dv,1)*shininess/2)';
+0174   idx=find(xs&lt;=2);
+0175   amount(idx) = 1 - xs(idx)/2;
+0176   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=1 times</span>
+0177   
+0178 <span class="comment">% 10. Lyon halfway method 3, hv1 no projection, k=2</span>
+0179 <span class="keyword">elseif</span> model_id==10
+0180   hv = (lv+vv)/2;
+0181   hl = hv*hv'; <span class="comment">% hv length^2</span>
+0182   dl = 1-hl; <span class="comment">% length error z</span>
+0183   hv1 = (1+0.5*(dl+dl*dl))*hv; <span class="comment">% approx. normalized halfway vector</span>
+0184   n4 = 4*shininess; <span class="comment">% &quot;shininess&quot; for halfway vector method</span>
+0185   dv = repmat(hv1',1,size(nv,2)) - nv; <span class="comment">% difference vector --</span>
+0186   xs = (sum(dv.*dv,1)*n4/2)';
+0187   idx=find(xs&lt;=4);
+0188   amount(idx) = 1 - xs(idx)/4;
+0189   amount(idx) = amount(idx).*amount(idx);
+0190   amount(idx) = amount(idx).*amount(idx); <span class="comment">% -- square k=2 times</span>
+0191   
+0192 <span class="comment">% 11. Blinn method D2 (Torrance and Sparrow)</span>
+0193 <span class="comment">% using some algebra and angular standard dev. of 1/sqrt(n4)</span>
+0194 <span class="keyword">elseif</span> model_id==11
+0195   hv = (lv+vv)/2;
+0196   hl = hv*hv'; <span class="comment">% hv length^2;</span>
+0197   hv2 = 1/sqrt(hl)*hv; <span class="comment">% normalized halfway vector;</span>
+0198   n4 = 4*shininess; <span class="comment">% &quot;shininess&quot; for halfway vector method</span>
+0199   dot = (hv2*nv)';
+0200   alpha = acos(dot);
+0201   amount = exp(-(n4/2)*alpha.*alpha);
+0202   
+0203 <span class="comment">% 12. Blinn method D3 (Trowbridge and Reitz)</span>
+0204 <span class="comment">% using some algebra and n in place of (1/c2^2 - 1)</span>
+0205 <span class="keyword">elseif</span> model_id==12
+0206   rv = 2*nv.*repmat((vv*nv),3,1)-repmat(vv',1,size(nv,2));
+0207   dot = rv'*lv';
+0208   idx=find(dot&gt;0);
+0209   amount(idx) = (1/(1+(1-dot(idx).*dot(idx))*shininess)).^2;
+0210   amount(dot&lt;=0) = (1/(1+shininess))^2; <span class="comment">% as low as it gets!</span>
+0211 
+0212 <span class="comment">% error</span>
+0213 <span class="keyword">else</span>
+0214   error(<span class="string">'model_id should be one of 1-12. Check input variables'</span>);
+0215 
+0216 <span class="keyword">end</span>
+0217 
+0218 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

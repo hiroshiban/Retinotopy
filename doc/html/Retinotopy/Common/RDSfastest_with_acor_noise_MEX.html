@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of RDSfastest_with_acor_noise_MEX</title>
+  <meta name="keywords" content="RDSfastest_with_acor_noise_MEX">
+  <meta name="description" content="Generates left/right Random-Dot-AntiCorrelated-Stereogram images with noise (MEX-based).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>RDSfastest_with_acor_noise_MEX
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates left/right Random-Dot-AntiCorrelated-Stereogram images with noise (MEX-based).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [imgL,imgR]=RDSfastest_with_acor_noise_MEX(posL,posR,wdot,bdot,dotalpha,dotDens,noise_psc,bgcolor) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates left/right Random-Dot-AntiCorrelated-Stereogram images with noise (MEX-based).
+ function [imgL,imgR]=RDSfastest_with_acor_noise(posL,posR,wdot,bdot,dotalpha,dotDens,noise_psc,bgcolor)
+
+ Generate left/right Random Dot Stereogram (RDS) Image (fastest version without any duplicated processing)
+ The generated image are the same size with heightfield image.
+
+ -- modified from RDSbyOval for speeding up and for matching the purpose of the
+    current experiment
+
+ [input]
+ posL        : position shifts for left RDS image [row,col]
+ posR        : position shifts for right RDS image [row,col]
+ wdot        : oval 1 to be used in RDS image [row,col]
+ bdot        : oval 2 to be used in RDS image [row,col]
+ dotalpha    : alpha value of oval 1&amp;2 [row,col] (same size with wdot &amp; bdot)
+ dotDens     : density (percentage) of ovals filling the generated RDS image [1-100]
+ noise_psc   : level (percentage) of anti-correlated dots [1-100]
+ bgcolor     : background color, grayscale, [0-255]
+
+ [output]
+ imgL        : generated image(s) for left eye, [row,col]
+ imgR        : generated image(s) for right eye, [row,col]
+
+ !!! NOTICE !!!
+ for speeding up image generation process,
+ I will not put codes for nargin checks.
+ Please be careful.
+
+ Created:     &quot;2010-10-27 13:28:28 ban&quot;
+ Last Update: &quot;2019-05-17 16:15:09 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>	Randomly sorts the input array.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [Y,index] = shuffle(X)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [imgL,imgR]=RDSfastest_with_acor_noise_MEX(posL,posR,wdot,bdot,dotalpha,dotDens,noise_psc,bgcolor)</a>
+0002 
+0003 <span class="comment">% Generates left/right Random-Dot-AntiCorrelated-Stereogram images with noise (MEX-based).</span>
+0004 <span class="comment">% function [imgL,imgR]=RDSfastest_with_acor_noise(posL,posR,wdot,bdot,dotalpha,dotDens,noise_psc,bgcolor)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Generate left/right Random Dot Stereogram (RDS) Image (fastest version without any duplicated processing)</span>
+0007 <span class="comment">% The generated image are the same size with heightfield image.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% -- modified from RDSbyOval for speeding up and for matching the purpose of the</span>
+0010 <span class="comment">%    current experiment</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [input]</span>
+0013 <span class="comment">% posL        : position shifts for left RDS image [row,col]</span>
+0014 <span class="comment">% posR        : position shifts for right RDS image [row,col]</span>
+0015 <span class="comment">% wdot        : oval 1 to be used in RDS image [row,col]</span>
+0016 <span class="comment">% bdot        : oval 2 to be used in RDS image [row,col]</span>
+0017 <span class="comment">% dotalpha    : alpha value of oval 1&amp;2 [row,col] (same size with wdot &amp; bdot)</span>
+0018 <span class="comment">% dotDens     : density (percentage) of ovals filling the generated RDS image [1-100]</span>
+0019 <span class="comment">% noise_psc   : level (percentage) of anti-correlated dots [1-100]</span>
+0020 <span class="comment">% bgcolor     : background color, grayscale, [0-255]</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% [output]</span>
+0023 <span class="comment">% imgL        : generated image(s) for left eye, [row,col]</span>
+0024 <span class="comment">% imgR        : generated image(s) for right eye, [row,col]</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% !!! NOTICE !!!</span>
+0027 <span class="comment">% for speeding up image generation process,</span>
+0028 <span class="comment">% I will not put codes for nargin checks.</span>
+0029 <span class="comment">% Please be careful.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Created:     &quot;2010-10-27 13:28:28 ban&quot;</span>
+0032 <span class="comment">% Last Update: &quot;2019-05-17 16:15:09 ban&quot;</span>
+0033 
+0034 <span class="comment">% create initial random dot image</span>
+0035 randXY=randi(round(100/dotDens),size(posL));
+0036 randXY(randXY~=round(100/dotDens))=0;
+0037 randXY(logical(randXY))=1;
+0038 idxs=find(randXY==1);
+0039 
+0040 <span class="comment">% create ID field</span>
+0041 <span class="comment">% prevent ovals' overlapping problem</span>
+0042 idxs=<a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>(idxs);
+0043 idXY=repmat(uint32(0),size(randXY));
+0044 idXY(idxs)=1:size(idxs);
+0045 
+0046 <span class="comment">% create left/right images</span>
+0047 tmpL=repmat(uint32(0),size(randXY));
+0048 tmpR=repmat(uint32(0),size(randXY));
+0049 tmpNL=repmat(uint32(0),size(randXY)); <span class="comment">% for noise, anticorrelated</span>
+0050 tmpNR=repmat(uint32(0),size(randXY)); <span class="comment">% for noise, anticorrelated</span>
+0051 
+0052 idx=find(logical(idXY));
+0053 [row,col]=ind2sub(size(idXY),idx);
+0054 
+0055 <span class="keyword">for</span> ii=1:1:size(row,1)
+0056   <span class="keyword">if</span> ~isnan(posL(row(ii),col(ii))) &amp;&amp; ~isnan(posR(row(ii),col(ii)))
+0057     <span class="comment">% here the 'hole' in the image is filled by shifting the dot position cyclically</span>
+0058     <span class="keyword">if</span> col(ii)+posL(row(ii),col(ii)) &lt; 1
+0059       tmpL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+0060       <span class="keyword">if</span> posL(row(ii),col(ii))~=0
+0061         tmpNL(row(ii),col(ii)+posL(row(ii),col(ii))+size(tmpL,2))=idXY(row(ii),col(ii));
+0062       <span class="keyword">end</span>
+0063     <span class="keyword">elseif</span> size(idXY,2) &lt; col(ii)+posL(row(ii),col(ii))
+0064       tmpL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+0065       <span class="keyword">if</span> posL(row(ii),col(ii))~=0
+0066         tmpNL(row(ii),col(ii)+posL(row(ii),col(ii))-size(tmpL,2))=idXY(row(ii),col(ii));
+0067       <span class="keyword">end</span>
+0068     <span class="keyword">else</span>
+0069       tmpL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+0070       <span class="keyword">if</span> posL(row(ii),col(ii))~=0
+0071         tmpNL(row(ii),col(ii)+posL(row(ii),col(ii)))=idXY(row(ii),col(ii));
+0072       <span class="keyword">end</span>
+0073     <span class="keyword">end</span>
+0074 
+0075     <span class="keyword">if</span> col(ii)+posR(row(ii),col(ii)) &lt; 1
+0076       tmpR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+0077       <span class="keyword">if</span> posR(row(ii),col(ii))~=0
+0078         tmpNR(row(ii),col(ii)+posR(row(ii),col(ii))+size(tmpR,2))=idXY(row(ii),col(ii));
+0079       <span class="keyword">end</span>
+0080     <span class="keyword">elseif</span> size(idXY,2) &lt; col(ii)+posR(row(ii),col(ii))
+0081       tmpR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+0082       <span class="keyword">if</span> posR(row(ii),col(ii))~=0
+0083         tmpNR(row(ii),col(ii)+posR(row(ii),col(ii))-size(tmpR,2))=idXY(row(ii),col(ii));
+0084       <span class="keyword">end</span>
+0085     <span class="keyword">else</span>
+0086       tmpR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+0087       <span class="keyword">if</span> posR(row(ii),col(ii))~=0
+0088         tmpNR(row(ii),col(ii)+posR(row(ii),col(ii)))=idXY(row(ii),col(ii));
+0089       <span class="keyword">end</span>
+0090     <span class="keyword">end</span>
+0091   <span class="keyword">end</span>
+0092 <span class="keyword">end</span>
+0093 imgLids=repmat(uint32(0),size(randXY));
+0094 imgRids=repmat(uint32(0),size(randXY));
+0095 [dummy,idxL,idxR]=intersect(tmpL(:),tmpR(:));
+0096 idxL=idxL(2:end); idxR=idxR(2:end); <span class="comment">% omit 0</span>
+0097 imgLids(idxL)=tmpL(idxL);
+0098 imgRids(idxR)=tmpR(idxR);
+0099 
+0100 <span class="comment">% generate anticorrelated map</span>
+0101 antiLids=repmat(uint32(0),size(randXY)); <span class="comment">% for noise, anticorrelated</span>
+0102 antiRids=repmat(uint32(0),size(randXY)); <span class="comment">% for noise, anticorrelated</span>
+0103 antiLids(idxL)=tmpNL(idxL);
+0104 antiRids(idxR)=tmpNR(idxR);
+0105 
+0106 <span class="comment">% select anticorrelated dots</span>
+0107 noise_idxL=find(antiLids~=0);
+0108 [noise_idxL,idx_for_R]=<a href="shuffle.html" class="code" title="function [Y,index] = shuffle(X)">shuffle</a>(noise_idxL);
+0109 noise_idxR=find(antiRids~=0);
+0110 noise_idxR=noise_idxR(idx_for_R); <span class="comment">%shuffle(noise_idxR);</span>
+0111 
+0112 noise_dot_num=round(numel(noise_idxL)*noise_psc/100); <span class="comment">% convert noise_psc to the number of dots;</span>
+0113 
+0114 noise_idxL=noise_idxL(1:noise_dot_num);
+0115 antiLids=repmat(uint32(0),size(randXY)); <span class="comment">% for noise, anticorrelated</span>
+0116 antiLids(noise_idxL)=1;
+0117 
+0118 noise_idxR=noise_idxR(1:noise_dot_num);
+0119 antiRids=repmat(uint32(0),size(randXY)); <span class="comment">% for noise, anticorrelated</span>
+0120 antiRids(noise_idxR)=1;
+0121 
+0122 <span class="comment">% replace dots to ovals</span>
+0123 imgL=uint8(ReplaceDots2Ovals_with_acor_noise(imgLids,antiLids,idxL,noise_dot_num,wdot,bdot,dotalpha,bgcolor,1)); <span class="comment">% MEX function</span>
+0124 imgR=uint8(ReplaceDots2Ovals_with_acor_noise(imgRids,antiRids,idxR,noise_dot_num,wdot,bdot,dotalpha,bgcolor,0)); <span class="comment">% MEX function</span>
+0125 
+0126 <span class="keyword">return</span>;
+0127 
+0128 <span class="comment">%% subfunction</span>
+0129 <a name="_sub1" href="#_subfunctions" class="code">function [Y,index] = shuffle(X)</a>
+0130 <span class="comment">% [Y,index] = shuffle(X)</span>
+0131 <span class="comment">%</span>
+0132 <span class="comment">% Randomly sorts X.</span>
+0133 <span class="comment">% If X is a vector, sorts all of X, so Y = X(index).</span>
+0134 <span class="comment">% If X is an m-by-n matrix, sorts each column of X, so</span>
+0135 <span class="comment">% for j=1:n, Y(:,j)=X(index(:,j),j).</span>
+0136 
+0137 [null,index] = sort(rand(size(X)));
+0138 [n,m] = size(X);
+0139 Y = zeros(size(X));
+0140 
+0141 <span class="keyword">if</span> (n == 1 || m == 1)
+0142   Y = X(index);
+0143 <span class="keyword">else</span>
+0144   <span class="keyword">for</span> j = 1:m
+0145     Y(:,j)  = X(index(:,j),j);
+0146   <span class="keyword">end</span>
+0147 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

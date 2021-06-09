@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of regexpdir</title>
+  <meta name="keywords" content="regexpdir">
+  <meta name="description" content="REGEXPDIR Gives a directory listing based on a regular expression">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>regexpdir
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>REGEXPDIR Gives a directory listing based on a regular expression</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function dirlist = regexpdir(rootdir, expstr, recursive) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> REGEXPDIR Gives a directory listing based on a regular expression
+    REGEXPDIR(ROOTDIR, REGEXP) gives a directory listing of the directory
+    ROOTDIR based on the pattern specified by the regular expression
+    REGEXP.
+
+    REGEXPDIR(ROOTDIR, REGEXP, RECURSIVE) By default REGEXPDIR traverses
+    all subdirectories recursively. This behaviour can be controlled by
+    supplying the optional boolean RECURSIVE. Setting this to 'false' will
+    limit the function to the directory specified in ROOTDIR.
+
+    Example:
+     rootdir = 'C:\';
+     expstr = '^.*\.exe$';
+     dirlist = regexpdir(rootdir, expstr);
+
+    The above example will return any EXE files on the C-drive.
+
+    By default REGEXPDIR searches case insensitive. To make it case
+    senstitive please specify it in the regular expression by adding
+    '(?-i)' to it. Ommitting to specify the beginning '^' and ending '$'
+    of the regular expression may result in unexpected behaviour.
+
+    Have a look at the source code for more information. For more
+    info on this function and how to use it, bug reports, feature
+    requests, etc. feel free to contact the author.
+
+    See also DIR, REGEXP, REGEXPTRANSLATE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="regexpdir.html" class="code" title="function dirlist = regexpdir(rootdir, expstr, recursive)">regexpdir</a>	REGEXPDIR Gives a directory listing based on a regular expression</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="regexpdir.html" class="code" title="function dirlist = regexpdir(rootdir, expstr, recursive)">regexpdir</a>	REGEXPDIR Gives a directory listing based on a regular expression</li><li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dirlist = regexpdir(rootdir, expstr, recursive)</a>
+0002 
+0003 <span class="comment">% REGEXPDIR Gives a directory listing based on a regular expression</span>
+0004 <span class="comment">%    REGEXPDIR(ROOTDIR, REGEXP) gives a directory listing of the directory</span>
+0005 <span class="comment">%    ROOTDIR based on the pattern specified by the regular expression</span>
+0006 <span class="comment">%    REGEXP.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%    REGEXPDIR(ROOTDIR, REGEXP, RECURSIVE) By default REGEXPDIR traverses</span>
+0009 <span class="comment">%    all subdirectories recursively. This behaviour can be controlled by</span>
+0010 <span class="comment">%    supplying the optional boolean RECURSIVE. Setting this to 'false' will</span>
+0011 <span class="comment">%    limit the function to the directory specified in ROOTDIR.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    Example:</span>
+0014 <span class="comment">%     rootdir = 'C:\';</span>
+0015 <span class="comment">%     expstr = '^.*\.exe$';</span>
+0016 <span class="comment">%     dirlist = regexpdir(rootdir, expstr);</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    The above example will return any EXE files on the C-drive.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    By default REGEXPDIR searches case insensitive. To make it case</span>
+0021 <span class="comment">%    senstitive please specify it in the regular expression by adding</span>
+0022 <span class="comment">%    '(?-i)' to it. Ommitting to specify the beginning '^' and ending '$'</span>
+0023 <span class="comment">%    of the regular expression may result in unexpected behaviour.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%    Have a look at the source code for more information. For more</span>
+0026 <span class="comment">%    info on this function and how to use it, bug reports, feature</span>
+0027 <span class="comment">%    requests, etc. feel free to contact the author.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%    See also DIR, REGEXP, REGEXPTRANSLATE</span>
+0030 
+0031 <span class="comment">%==========================================================================</span>
+0032 <span class="comment">% B.C. Hamans (b.c.hamans@rad.umcn.nl)                                 2007</span>
+0033 <span class="comment">%==========================================================================</span>
+0034 
+0035 <span class="comment">% Check input arguments</span>
+0036 error(nargchk(2, 3, nargin));
+0037 <span class="keyword">if</span> ~exist(<span class="string">'recursive'</span>,<span class="string">'var'</span>); recursive = true; <span class="keyword">end</span>
+0038 
+0039 <span class="comment">% Check if the root directory contains a trailing file seperator or supply</span>
+0040 rootdir = char(rootdir);
+0041 <span class="keyword">if</span> ~strcmp(rootdir(length(rootdir)), filesep); rootdir=[rootdir filesep]; <span class="keyword">end</span>
+0042 
+0043 <span class="comment">% Remember initial starting directory when traversing.</span>
+0044 <span class="keyword">persistent</span> basedir; <span class="keyword">if</span> isempty(basedir); basedir = rootdir; <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% Traverse the structure</span>
+0047 dirlist = cell({}); dirtree = dir(rootdir);
+0048 <span class="keyword">for</span> h = find([dirtree.isdir]);
+0049   <span class="keyword">if</span> ~any(strcmp({<span class="string">'.'</span>,<span class="string">'..'</span>}, dirtree(h).name));
+0050     <span class="keyword">if</span> regexpi(strrep(fullfile(rootdir, dirtree(h).name, filesep), basedir, <span class="string">''</span>), expstr);
+0051       dirlist = [dirlist; fullfile(rootdir, dirtree(h).name, filesep)]; <span class="comment">%#ok</span>
+0052     <span class="keyword">end</span>
+0053     <span class="keyword">if</span> recursive;
+0054       dirlist = [dirlist; <a href="regexpdir.html" class="code" title="function dirlist = regexpdir(rootdir, expstr, recursive)">regexpdir</a>(fullfile(rootdir, dirtree(h).name, filesep), expstr, recursive)]; <span class="comment">%#ok</span>
+0055     <span class="keyword">end</span>
+0056   <span class="keyword">end</span>
+0057 <span class="keyword">end</span>
+0058 <span class="keyword">for</span> i = find(~[dirtree.isdir]);
+0059   <span class="keyword">if</span> regexpi(strrep(fullfile(rootdir, dirtree(i).name), basedir, <span class="string">''</span>), expstr);
+0060     dirlist = [dirlist; fullfile(rootdir, dirtree(i).name)]; <span class="comment">%#ok</span>
+0061   <span class="keyword">end</span>
+0062 <span class="keyword">end</span>
+0063 
+0064 <span class="comment">%==========================================================================</span>
+0065 <span class="comment">% Changelog:</span>
+0066 <span class="comment">% 03-09-2007 v1.00 (BCH)  Initial release</span>
+0067 <span class="comment">% 20-09-2007 v1.01 (BCH)  Proper solution for persistent variable 'basedir'</span>
+0068 <span class="comment">%==========================================================================</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

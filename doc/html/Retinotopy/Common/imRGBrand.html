@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imRGBrand</title>
+  <meta name="keywords" content="imRGBrand">
+  <meta name="description" content="Randomizes RGB values of the input images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>imRGBrand
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Randomizes RGB values of the input images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,fnames]=imRGBrand(tgt_dir,intensity,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Randomizes RGB values of the input images.
+ function [img,fnames]=imRGBrand(tgt_dir,:intensity,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg,:randseed_flg)
+ (: is optional)
+
+ This function reads RGB images and randomize their RGB values by multiplying
+ intensity*rand() for each pixel values.
+
+ [input]
+ tgt_dir        : target directory that includes images you want to process.
+                  should set with a relative path format, e.g. tgt_dir='../images/image01';
+ intensity      : intensity of randomization, 3 by default.
+ img_ext        : image file extension(s), cell structure or string. '.jpg' by default
+ img_inc_prefix : image file prefix(s) that is to be included in processing,
+                  cell structure or string, '*' by default.
+ img_exc_prefix : image file prefix(s) that is to be excluded from processing,
+                  cell structure or string, empty by default.
+ display_flg    : whether displaying the converted image [0|1]. 0 by default.
+ save_flg       : whether saving the converted image [0|1]. 0 by default.
+ randseed_flg   : whether initializing random seed, [0|1]. 1 by default.
+
+ [output]
+ img            : converted RGB images, cell structure
+ fnames         : the corresponding file names that are converted.
+
+
+ Created    : &quot;2013-11-13 15:36:17 ban&quot;
+ Last Update: &quot;2013-11-22 23:22:34 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>	Initializes MATLAB internal state of a random seed.</li><li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,fnames]=imRGBrand(tgt_dir,intensity,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg)</a>
+0002 
+0003 <span class="comment">% Randomizes RGB values of the input images.</span>
+0004 <span class="comment">% function [img,fnames]=imRGBrand(tgt_dir,:intensity,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg,:randseed_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads RGB images and randomize their RGB values by multiplying</span>
+0008 <span class="comment">% intensity*rand() for each pixel values.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% tgt_dir        : target directory that includes images you want to process.</span>
+0012 <span class="comment">%                  should set with a relative path format, e.g. tgt_dir='../images/image01';</span>
+0013 <span class="comment">% intensity      : intensity of randomization, 3 by default.</span>
+0014 <span class="comment">% img_ext        : image file extension(s), cell structure or string. '.jpg' by default</span>
+0015 <span class="comment">% img_inc_prefix : image file prefix(s) that is to be included in processing,</span>
+0016 <span class="comment">%                  cell structure or string, '*' by default.</span>
+0017 <span class="comment">% img_exc_prefix : image file prefix(s) that is to be excluded from processing,</span>
+0018 <span class="comment">%                  cell structure or string, empty by default.</span>
+0019 <span class="comment">% display_flg    : whether displaying the converted image [0|1]. 0 by default.</span>
+0020 <span class="comment">% save_flg       : whether saving the converted image [0|1]. 0 by default.</span>
+0021 <span class="comment">% randseed_flg   : whether initializing random seed, [0|1]. 1 by default.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [output]</span>
+0024 <span class="comment">% img            : converted RGB images, cell structure</span>
+0025 <span class="comment">% fnames         : the corresponding file names that are converted.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Created    : &quot;2013-11-13 15:36:17 ban&quot;</span>
+0029 <span class="comment">% Last Update: &quot;2013-11-22 23:22:34 ban (ban.hiroshi@gmail.com)&quot;</span>
+0030 
+0031 <span class="comment">% check input variables</span>
+0032 <span class="keyword">if</span> nargin&lt;1 || isempty(tgt_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;2 || isempty(intensity), intensity=3; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;3 || isempty(img_ext), img_ext=<span class="string">'.jpg'</span>; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;4 || isempty(img_inc_prefix), img_inc_prefix=<span class="string">'*'</span>; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;5 || isempty(img_exc_prefix), img_exc_prefix=<span class="string">''</span>; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;6 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;7 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;8 || isempty(randseed_flg), randseed_flg=1; <span class="keyword">end</span>
+0040 
+0041 <span class="keyword">if</span> ~iscell(img_ext), img_ext={img_ext}; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> ~iscell(img_inc_prefix), img_inc_prefix={img_inc_prefix}; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> ~iscell(img_exc_prefix), img_exc_prefix={img_exc_prefix}; <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> save_flg, save_prefix=<span class="string">'_rgbrand'</span>; <span class="keyword">end</span>
+0046 
+0047 <span class="comment">% set prefix correctly</span>
+0048 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0049   <span class="keyword">if</span> ~strcmp(img_ext{ii}(1),<span class="string">'.'</span>), img_ext{ii}=[<span class="string">'.'</span>,img_ext{ii}]; <span class="keyword">end</span>
+0050 <span class="keyword">end</span>
+0051 
+0052 <span class="comment">% check target directory</span>
+0053 tgt_dir=fullfile(pwd,tgt_dir);
+0054 <span class="keyword">if</span> ~exist(tgt_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find taget directory. check input variable.'</span>); <span class="keyword">end</span>
+0055 
+0056 <span class="comment">% initialize random seed</span>
+0057 <span class="keyword">if</span> randseed_flg, <a href="InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>(); <span class="keyword">end</span>
+0058 
+0059 fprintf(<span class="string">'target: %s\n'</span>,tgt_dir);
+0060 
+0061 <span class="comment">% get image files</span>
+0062 fprintf(<span class="string">'converting images...'</span>);
+0063 img=<span class="string">''</span>; fnames=<span class="string">''</span>; img_counter=0;
+0064 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0065   <span class="keyword">for</span> jj=1:1:length(img_inc_prefix)
+0066     tmpfnames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(tgt_dir,[img_inc_prefix{jj},img_ext{ii}]);
+0067     <span class="keyword">for</span> kk=1:1:length(tmpfnames)
+0068 
+0069       <span class="comment">% check whether the target image is excluded from processing</span>
+0070       exc_flg=0;
+0071       <span class="keyword">for</span> mm=1:1:length(img_exc_prefix)
+0072         <span class="keyword">if</span> ~isempty(img_exc_prefix{mm}) &amp;&amp; strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; <span class="keyword">break</span>; <span class="keyword">end</span>
+0073       <span class="keyword">end</span>
+0074       <span class="keyword">if</span> exc_flg, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0075 
+0076       <span class="comment">% randomize RGB colors</span>
+0077       timg=imread(tmpfnames{kk});
+0078       <span class="keyword">if</span> numel(size(timg))==3 <span class="comment">% if the target is a RGB image</span>
+0079         img_counter=img_counter+1;
+0080         img{img_counter}=uint8(zeros(size(timg)));
+0081         <span class="keyword">for</span> pp=1:1:3, img{img_counter}(:,:,pp)=uint8(double(timg(:,:,pp))*intensity.*rand(size(timg(:,:,pp)))); <span class="keyword">end</span>
+0082         fnames{img_counter}=tmpfnames{kk};
+0083       <span class="keyword">else</span>
+0084         [dummy,fname,ext]=fileparts(tmpfnames{kk});
+0085         fprintf(<span class="string">'\nimage:%s%s is grayscale. skipping.\n'</span>,fname,ext);
+0086         clear dummy fname ext;
+0087       <span class="keyword">end</span>
+0088 
+0089     <span class="keyword">end</span>
+0090   <span class="keyword">end</span>
+0091 <span class="keyword">end</span>
+0092 disp(<span class="string">'done.'</span>);
+0093 
+0094 <span class="comment">% displaying</span>
+0095 <span class="keyword">if</span> display_flg
+0096   fprintf(<span class="string">'displaying the converted images...'</span>);
+0097   <span class="keyword">for</span> ii=1:1:length(img)
+0098     figure;
+0099     imshow(img{ii});
+0100   <span class="keyword">end</span>
+0101   disp(<span class="string">'done.'</span>);
+0102 <span class="keyword">end</span>
+0103 
+0104 <span class="comment">% saving the images</span>
+0105 <span class="keyword">if</span> save_flg
+0106   fprintf(<span class="string">'saving the converted images...'</span>)
+0107   <span class="keyword">for</span> ii=1:1:length(img)
+0108     [save_path,save_name,save_ext]=fileparts(fnames{ii});
+0109     imwrite(img{ii},fullfile(save_path,[save_name,save_prefix,save_ext]),strrep(save_ext,<span class="string">'.'</span>,<span class="string">''</span>));
+0110   <span class="keyword">end</span>
+0111   disp(<span class="string">'done.'</span>);
+0112 <span class="keyword">end</span>
+0113 
+0114 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

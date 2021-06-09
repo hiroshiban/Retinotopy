@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DecideStartMethod</title>
+  <meta name="keywords" content="DecideStartMethod">
+  <meta name="description" content="Waits until a participant presses a Y/N key (Y:OK, N:NO).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>DecideStartMethod
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Waits until a participant presses a Y/N key (Y:OK, N:NO).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [fMRItriggerStartON, StartWithButtonPressOn] = DecideStartMethod() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Waits until a participant presses a Y/N key (Y:OK, N:NO).
+ function [fMRItriggerStartON, StartWithButtonPressOn] = DecideStartMethod()
+
+ Wait for User input to decide how to start the stimulus Presentation
+ Answer [y/n] to decide the start method.
+ Currently, fMRI trigger will be input from Parallel port #17
+
+ [input]
+ no input variable
+
+ [output]
+ fMRItriggerStartON     : if 1, the current fMRI experiment will start
+                          after getting a trigger signal from MRI. [0/1]
+ StartWithButtonPressOn : if 1, the current fMRI experiment will start
+                          by pressing ENTER or SPACE key. [0/1]
+
+ Created : Feb 04 2010 Hiroshi Ban
+ Last Update: &quot;2013-11-22 22:56:22 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [fMRItriggerStartON, StartWithButtonPressOn] = DecideStartMethod()</a>
+0002 
+0003 <span class="comment">% Waits until a participant presses a Y/N key (Y:OK, N:NO).</span>
+0004 <span class="comment">% function [fMRItriggerStartON, StartWithButtonPressOn] = DecideStartMethod()</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Wait for User input to decide how to start the stimulus Presentation</span>
+0007 <span class="comment">% Answer [y/n] to decide the start method.</span>
+0008 <span class="comment">% Currently, fMRI trigger will be input from Parallel port #17</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% no input variable</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% [output]</span>
+0014 <span class="comment">% fMRItriggerStartON     : if 1, the current fMRI experiment will start</span>
+0015 <span class="comment">%                          after getting a trigger signal from MRI. [0/1]</span>
+0016 <span class="comment">% StartWithButtonPressOn : if 1, the current fMRI experiment will start</span>
+0017 <span class="comment">%                          by pressing ENTER or SPACE key. [0/1]</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Created : Feb 04 2010 Hiroshi Ban</span>
+0020 <span class="comment">% Last Update: &quot;2013-11-22 22:56:22 ban (ban.hiroshi@gmail.com)&quot;</span>
+0021 
+0022 <span class="comment">%Check to see if we will send parallel port trigger</span>
+0023 fMRItriggerStartON = 0; StartWithButtonPressOn = 0;
+0024 <span class="keyword">while</span> ~fMRItriggerStartON &amp;&amp; ~StartWithButtonPressOn
+0025   user_entry = input(<span class="string">'Does stimulus presentaiton start by fMRI trigger (at BUIC) ? (y/n) : '</span>, <span class="string">'s'</span>);
+0026   <span class="keyword">if</span>(user_entry == <span class="string">'y'</span>)
+0027     disp(<span class="string">'Waiting a trigger from fMRI scanner...'</span>);
+0028     fMRItriggerStartON = 1;
+0029     <span class="keyword">break</span>;
+0030   <span class="keyword">elseif</span> (user_entry == <span class="string">'n'</span>)
+0031     disp(<span class="string">'Start with SPACE or RETURN key...'</span>);
+0032     StartWithButtonPressOn = 1;
+0033     <span class="keyword">break</span>;
+0034   <span class="keyword">else</span> 
+0035     disp(<span class="string">'Please press y or n!'</span>); <span class="keyword">continue</span>;
+0036   <span class="keyword">end</span>
+0037 <span class="keyword">end</span>
+0038 pause(1.0); <span class="comment">% wait for 1 sec.</span>
+0039 
+0040 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

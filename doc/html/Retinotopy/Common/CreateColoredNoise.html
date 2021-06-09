@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateColoredNoise</title>
+  <meta name="keywords" content="CreateColoredNoise">
+  <meta name="description" content="Creates colored (i.e. pink, brown(ian), blue, and white) noise image(s).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateColoredNoise
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates colored (i.e. pink, brown(ian), blue, and white) noise image(s).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function img=CreateColoredNoise(idims,sdims,num,beta,norm_flg,save_flg,show_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates colored (i.e. pink, brown(ian), blue, and white) noise image(s).
+ function img = CreateColoredNoise(:idims,:num,:beta,:norm_flg,:save_flg,:show_flg)
+ (: is optional)
+
+ This function generates colored (1/(f^beta)) noise (such as pink, brown(ian), blue, and white) images.
+
+ [input]
+ idims    : (optional) image dimension(s) ([row,col] or [a scalar] in pixels) to be created, 256 by default.
+            !!important note!! To avoid any unwilling alias effect, this function tries to first generate
+            colored noise images with the square resolutions, [max(idims),max(idims)]. The generated images
+            are then cropped so as to provide the images with the desired resolution, idims. The cropping
+            may affect the frequency spectrum of the final images. Please be careful. To avoid any bias,
+            please set idims so that idims(1)==idims(2).
+ sdims    : (optional) patch size [row,col] or [a scalar], 1 by default. mod(idims,sdims) should be zero.
+ num      : (optional) the number of image files you want to create, 1 by default.
+ beta     : (optional) the exponent to apply to the amplitude spectrum (1/(f^beta)). 1 (=pink noise) by default.
+            you can set 2 for brownian, -1 for blue, -2 for purple, and 0 for white noises.
+ norm_flg : (optional) if 1, the generated noise images are normalized so that their pixels valus
+            are within 0-255. 1 by default.
+ save_fag : (optional) if 1, the created noise patterns will be saved as JPG files. 0 by default.
+ show_flg : (optional) if 1, the created noise patterns are showed in the figure windows. 1 by default.
+
+ [output]
+ img   : output images, [idims(1) x idims(2) x num]
+
+ [reference]
+ this function is inspired by generatepinknoise.m developed by K.Kay.
+ https://github.com/kendrickkay/knkutils
+
+
+ Created    : &quot;2019-01-28 14:40:28 ban&quot;
+ Last Update: &quot;2019-01-28 21:07:54 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/ibar_fixtask.html" class="code" title="function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ibar_fixtask</a>	Object-image-defined bar stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/ilgnlocalizer_fixtask.html" class="code" title="function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilgnlocalizer_fixtask</a>	Object-image-defined wedge stimulus with fixation luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/imeridian_fixtask.html" class="code" title="function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imeridian_fixtask</a>	Object-image-defined dual wedge stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function f=helper(res,num)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img=CreateColoredNoise(idims,sdims,num,beta,norm_flg,save_flg,show_flg)</a>
+0002 
+0003 <span class="comment">% Creates colored (i.e. pink, brown(ian), blue, and white) noise image(s).</span>
+0004 <span class="comment">% function img = CreateColoredNoise(:idims,:num,:beta,:norm_flg,:save_flg,:show_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function generates colored (1/(f^beta)) noise (such as pink, brown(ian), blue, and white) images.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% idims    : (optional) image dimension(s) ([row,col] or [a scalar] in pixels) to be created, 256 by default.</span>
+0011 <span class="comment">%            !!important note!! To avoid any unwilling alias effect, this function tries to first generate</span>
+0012 <span class="comment">%            colored noise images with the square resolutions, [max(idims),max(idims)]. The generated images</span>
+0013 <span class="comment">%            are then cropped so as to provide the images with the desired resolution, idims. The cropping</span>
+0014 <span class="comment">%            may affect the frequency spectrum of the final images. Please be careful. To avoid any bias,</span>
+0015 <span class="comment">%            please set idims so that idims(1)==idims(2).</span>
+0016 <span class="comment">% sdims    : (optional) patch size [row,col] or [a scalar], 1 by default. mod(idims,sdims) should be zero.</span>
+0017 <span class="comment">% num      : (optional) the number of image files you want to create, 1 by default.</span>
+0018 <span class="comment">% beta     : (optional) the exponent to apply to the amplitude spectrum (1/(f^beta)). 1 (=pink noise) by default.</span>
+0019 <span class="comment">%            you can set 2 for brownian, -1 for blue, -2 for purple, and 0 for white noises.</span>
+0020 <span class="comment">% norm_flg : (optional) if 1, the generated noise images are normalized so that their pixels valus</span>
+0021 <span class="comment">%            are within 0-255. 1 by default.</span>
+0022 <span class="comment">% save_fag : (optional) if 1, the created noise patterns will be saved as JPG files. 0 by default.</span>
+0023 <span class="comment">% show_flg : (optional) if 1, the created noise patterns are showed in the figure windows. 1 by default.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% [output]</span>
+0026 <span class="comment">% img   : output images, [idims(1) x idims(2) x num]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% [reference]</span>
+0029 <span class="comment">% this function is inspired by generatepinknoise.m developed by K.Kay.</span>
+0030 <span class="comment">% https://github.com/kendrickkay/knkutils</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Created    : &quot;2019-01-28 14:40:28 ban&quot;</span>
+0034 <span class="comment">% Last Update: &quot;2019-01-28 21:07:54 ban&quot;</span>
+0035 
+0036 <span class="comment">% check the input variables</span>
+0037 <span class="keyword">if</span> nargin&lt;1 || isempty(idims), idims=256; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;2 || isempty(sdims), sdims=1; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;3 || isempty(num), num=1; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;4 || isempty(beta), beta=1; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;5 || isempty(norm_flg), norm_flg=0; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;6 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> nargin&lt;7 || isempty(show_flg), show_flg=1; <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> numel(idims)==1, idims=[idims,idims]; <span class="keyword">end</span>
+0046 <span class="keyword">if</span> numel(sdims)==1, sdims=[sdims,sdims]; <span class="keyword">end</span>
+0047 
+0048 <span class="comment">% matrix dimension check</span>
+0049 <span class="keyword">if</span> mod(idims(1),sdims(1)) || mod(idims(2),sdims(2)) || <span class="keyword">...</span>
+0050    mod(idims(2),sdims(1)) || mod(idims(1),sdims(2))
+0051   error(<span class="string">'matrix dimension mismatch. idims is not dividable by sdims'</span>);
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% first, create the square image with the long boundary to simplify the DFT processing</span>
+0055 mdim=max(idims)./min(sdims);
+0056 
+0057 <span class="comment">% calculate 1/f amplitude matrix</span>
+0058 <span class="keyword">if</span> mod(mdim,2)==0
+0059   [xx,yy]=meshgrid(-mdim/2:mdim/2-1,-mdim/2:mdim/2-1);
+0060 <span class="keyword">else</span>
+0061   [xx,yy]=meshgrid(-(mdim-1)/2:(mdim-1)/2,-(mdim-1)/2:(mdim-1)/2);
+0062 <span class="keyword">end</span>
+0063 amp=1./ifftshift(sqrt(xx.^2+yy.^2)).^(beta/sqrt(4)); <span class="comment">% not fftshifted</span>
+0064 
+0065 <span class="comment">% set the DC component to zero</span>
+0066 amp(1,1)=0;
+0067 
+0068 <span class="comment">% generate corresponding N-dimensional random phase matrix of multipliers</span>
+0069 <span class="keyword">if</span> ~mod(mdim,2)
+0070   <span class="comment">% start by doing the two weird legs</span>
+0071   M=zeros(2,mdim-1,num);                             <span class="comment">% initialize in convenient form</span>
+0072   M(:,1:(mdim-2)/2,:)=rand(2,(mdim-2)/2,num)*(2*pi); <span class="comment">% fill in the first half with random phase in [0,2*pi]</span>
+0073   M=M-flipdim(M,2);                                  <span class="comment">% symmetrize (the mirror gets the negative phase)</span>
+0074   M(:,(mdim-2)/2+1,:)=(rand(2,1,num)&gt;.5)*pi;         <span class="comment">% fill in the center (either 0 or pi)</span>
+0075 
+0076   <span class="comment">% putting it all together</span>
+0077   M=[(rand(1,1,num)&gt;.5)*pi,     M(1,:,:);
+0078      permute(M(2,:,:),[2,1,3]), <a href="#_sub1" class="code" title="subfunction f=helper(res,num)">helper</a>(mdim-1,num)];
+0079 <span class="keyword">else</span>
+0080   M=<a href="#_sub1" class="code" title="subfunction f=helper(res,num)">helper</a>(mdim,num);
+0081 <span class="keyword">end</span>
+0082 
+0083 <span class="comment">% convert to imaginary numbers</span>
+0084 M=exp(j*M);
+0085 
+0086 <span class="comment">% unshift</span>
+0087 M=ifftshift(ifftshift(M,1),2);
+0088 
+0089 <span class="comment">% generate colored-noise image(s)</span>
+0090 img=real(ifft2(repmat(amp,[1,1,num]).*M));
+0091 
+0092 <span class="comment">% building the patch-image(s)</span>
+0093 <span class="keyword">if</span> sdims(1)~=1 || sdims(2)~=1
+0094   sz=size(img);
+0095   <span class="keyword">if</span> numel(sz)==2, sz(3)=1; <span class="keyword">end</span>
+0096   img=reshape(img,[1,prod(sz(1:2)),sz(3)]);
+0097   img=repmat(img,[sdims(1),1,1]);
+0098   img=reshape(img,[sdims(1)*mdim,1,mdim,num]);
+0099   img=repmat(img,[1,sdims(2),1,1]);
+0100   img=reshape(img,[sdims(1)*mdim,sdims(2)*mdim,sz(3)]);
+0101 <span class="keyword">end</span>
+0102 
+0103 <span class="comment">% image cropping</span>
+0104 <span class="keyword">if</span> idims(1)&lt;size(img,1)
+0105   img=img(1:idims(1),:,:);
+0106 <span class="keyword">end</span>
+0107 <span class="keyword">if</span> idims(2)&lt;size(img,2)
+0108   img=img(:,1:idims(2),:);
+0109 <span class="keyword">end</span>
+0110 
+0111 <span class="comment">% normalization</span>
+0112 <span class="keyword">if</span> norm_flg
+0113   <span class="keyword">for</span> ii=1:1:num
+0114     timg=img(:,:,ii);
+0115     timg=255.*(timg-min(timg(:)))./(max(timg(:))-min(timg(:)));
+0116     img(:,:,ii)=timg;
+0117   <span class="keyword">end</span>
+0118   img=uint8(img);
+0119 <span class="keyword">end</span>
+0120 
+0121 <span class="comment">% saving</span>
+0122 <span class="keyword">if</span> save_flg
+0123   <span class="keyword">for</span> ii=1:1:num
+0124     imwrite(img(:,:,ii),sprintf(<span class="string">'noise_%04d,jpg'</span>,ii),<span class="string">'jpg'</span>,<span class="string">'Quality'</span>,100);
+0125   <span class="keyword">end</span>
+0126 <span class="keyword">end</span>
+0127 
+0128 <span class="comment">% displaying the generated image</span>
+0129 <span class="keyword">if</span> show_flg
+0130   f1=figure();
+0131   <span class="keyword">for</span> ii=1:1:num
+0132     <span class="keyword">if</span> norm_flg
+0133       imshow(img(:,:,ii),[0,255]);
+0134     <span class="keyword">else</span>
+0135       tvals=img(:,:,ii);
+0136       imshow(img(:,:,ii),[min(tvals(:)),max(tvals(:))]);
+0137     <span class="keyword">end</span>
+0138     axis equal;
+0139     axis off;
+0140     hold off;
+0141     pause(0.05);
+0142   <span class="keyword">end</span>
+0143   close(f1);
+0144 <span class="keyword">end</span>
+0145 
+0146 <span class="keyword">return</span>
+0147 
+0148 <span class="comment">%% subfunction</span>
+0149 
+0150 <span class="comment">% note: this subfunction is from K.Kay's tool.</span>
+0151 <span class="comment">%       ref:  https://github.com/kendrickkay/knkutils</span>
+0152 
+0153 <a name="_sub1" href="#_subfunctions" class="code">function f=helper(res,num)</a>
+0154 
+0155 <span class="comment">% return a matrix of dimensions &lt;res&gt; x &lt;res&gt; x &lt;num&gt; with appropriate</span>
+0156 <span class="comment">% random phase values in [0,2*pi].  note that the center (DC component)</span>
+0157 <span class="comment">% has phase values that are either 0 or pi.  the returned matrix is</span>
+0158 <span class="comment">% as if fftshift has been called.</span>
+0159 
+0160 f=zeros(res*res,num);          <span class="comment">% initialize in convenient form</span>
+0161 nn=(res*res-1)/2;              <span class="comment">% how many in first half?</span>
+0162 f(1:nn,:)=rand(nn,num)*(2*pi); <span class="comment">% fill in the first half with random phase in [0,2*pi]</span>
+0163 f=reshape(f,[res,res,num]);    <span class="comment">% reshape</span>
+0164 f=f-flipdim(flipdim(f,1),2);   <span class="comment">% symmetrize (the mirror gets the negative phase)</span>
+0165 f((res+1)/2,(res+1)/2,:)=(rand(1,1,num)&gt;.5)*pi; <span class="comment">% fill in the center (either 0 or pi)</span>
+0166 
+0167 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

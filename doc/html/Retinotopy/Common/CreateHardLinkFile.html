@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateHardLinkFile</title>
+  <meta name="keywords" content="CreateHardLinkFile">
+  <meta name="description" content="Creates hard links in the target directory to the target files.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateHardLinkFile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates hard links in the target directory to the target files.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function CreateHardLinkFile(target_dir,infformat,output_dir) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates hard links in the target directory to the target files.
+ function CreateHardLinkFile(target_dir,infformat,output_dir)
+
+ Create HardLink of the specific files located
+ under the target directory
+
+ [example]
+ CreateHardLinkFile('\HB\zk09_091\05_zk09_091.MP\','*.vtc','\HB2\zk09_091\05_zk09_091.MP\')
+
+ [input]
+ target_dir : Target directory that contains infformat files
+              e.g. '\CD\zk08_382'
+              Target directory should be specified as such
+              the current directory where this function is
+              called is the origin.
+ infformat  : input file format
+ output_dir : directory in which the hard lined files are strored
+
+ [requirement]
+ 1. wildcardsearch.m
+ 2. shell command, ln
+
+ Created    : &quot;2010-06-07 14:45:07 ban&quot;
+ Last Update: &quot;2013-11-22 18:42:45 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>	Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function CreateHardLinkFile(target_dir,infformat,output_dir)</a>
+0002 
+0003 <span class="comment">% Creates hard links in the target directory to the target files.</span>
+0004 <span class="comment">% function CreateHardLinkFile(target_dir,infformat,output_dir)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Create HardLink of the specific files located</span>
+0007 <span class="comment">% under the target directory</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [example]</span>
+0010 <span class="comment">% CreateHardLinkFile('\HB\zk09_091\05_zk09_091.MP\','*.vtc','\HB2\zk09_091\05_zk09_091.MP\')</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [input]</span>
+0013 <span class="comment">% target_dir : Target directory that contains infformat files</span>
+0014 <span class="comment">%              e.g. '\CD\zk08_382'</span>
+0015 <span class="comment">%              Target directory should be specified as such</span>
+0016 <span class="comment">%              the current directory where this function is</span>
+0017 <span class="comment">%              called is the origin.</span>
+0018 <span class="comment">% infformat  : input file format</span>
+0019 <span class="comment">% output_dir : directory in which the hard lined files are strored</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [requirement]</span>
+0022 <span class="comment">% 1. wildcardsearch.m</span>
+0023 <span class="comment">% 2. shell command, ln</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Created    : &quot;2010-06-07 14:45:07 ban&quot;</span>
+0026 <span class="comment">% Last Update: &quot;2013-11-22 18:42:45 ban (ban.hiroshi@gmail.com)&quot;</span>
+0027 
+0028 <span class="comment">% check the input variables</span>
+0029 <span class="keyword">if</span> nargin &lt; 3, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0030 
+0031 srcdir=fullfile(pwd,target_dir);
+0032 tgtdir=fullfile(pwd,output_dir);
+0033 
+0034 <span class="comment">% get target files</span>
+0035 tfiles=<a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>(srcdir,infformat);
+0036 
+0037 <span class="comment">% create output directory</span>
+0038 <span class="keyword">if</span> ~exist(tgtdir,<span class="string">'dir'</span>), mkdir(tgtdir); <span class="keyword">end</span>
+0039 
+0040 fprintf(<span class="string">'target: %s\n'</span>,tgtdir);
+0041 <span class="comment">% create hardlink files, main loops</span>
+0042 <span class="keyword">for</span> ii=1:1:length(tfiles)
+0043 
+0044   <span class="comment">% get input file name</span>
+0045   tfile=tfiles{ii};
+0046   fprintf(<span class="string">'processing: %s\n'</span>,tfile);
+0047 
+0048   <span class="comment">% set output file format &amp; name</span>
+0049   [odir,ofname,oext]=fileparts(tfile);
+0050   <span class="keyword">if</span> strcmp(srcdir,tgtdir)
+0051     ofile=strcat(tgtdir,filesep(),ofname,<span class="string">'_hlink'</span>,oext);
+0052   <span class="keyword">else</span>
+0053     ofile=strcat(tgtdir,filesep(),ofname,oext);
+0054   <span class="keyword">end</span>
+0055   fprintf(<span class="string">'linking as: %s\n'</span>,ofile);
+0056 
+0057   <span class="comment">% create hard link copy</span>
+0058   <span class="comment">%eval(sprintf('!ln &quot;%s&quot; &quot;%s&quot;',tfile,ofile));</span>
+0059   <span class="comment">% Here, I use special 'ln' command to allow hardlink for directories under Windows 7 strict user permission</span>
+0060   eval(sprintf(<span class="string">'!%s/bin/ln &quot;%s&quot; &quot;%s&quot;'</span>,strrep(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'\'</span>,<span class="string">'/'</span>),tfile,ofile));
+0061 
+0062 <span class="keyword">end</span> <span class="comment">% for ii, ifile</span>
+0063 disp(<span class="string">'done.'</span>);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

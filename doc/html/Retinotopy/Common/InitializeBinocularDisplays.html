@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of InitializeBinocularDisplays</title>
+  <meta name="keywords" content="InitializeBinocularDisplays">
+  <meta name="description" content="Initializes PTB screen for monocular/binocular presentations (OLD PTB method).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>InitializeBinocularDisplays
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Initializes PTB screen for monocular/binocular presentations (OLD PTB method).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [leftEyeWindow,rightEyeWindow,leftEyeScreenRect,rightEyeScreenRect,initDisplay_OK] = InitializeBinocularDisplays(exp_run,bgcolor,ScrWidth,ScrHeight) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Initializes PTB screen for monocular/binocular presentations (OLD PTB method).
+ function [leftEyeWindow,rightEyeWindow,leftEyeScreenRect,rightEyeScreenRect,initDisplay_OK] =
+                                        InitializeBinocularDisplays(exp_run, bgcolor, ScrWidth, ScrHeight)
+
+ Initialize PTB Screen settings for monocular/binocular viewing display
+ Available for both haploscope and fMRI experimental environment.
+
+ [requirement/dependency]
+ Psychtoolbox ver.3 or above
+
+ [input]
+ exp_run   : experimental environment, string, 'fMRI','Haploscope','TMS',
+             'RedGreen','RedCyan','Nottingham','test_cross', 'test_parallel',
+             or 'Debug'
+ bgcolor   : background color, [r,g,b]
+ ScrWidth  : the width of the screen, [pixels]
+ ScrHeight : the height of the screen, [pixels]
+
+ [output]
+ leftEyeWindow      : left eye window of PTB screen, pid
+ rightEyeWindow     : right eye window of PTB screen, pid
+ leftEyeScreenRect  : the size of left screen's rectangle, [x_start y_start x_end y_end]
+ rightEyeScreenRect : the size of right screen's rectangle, [x_start y_start x_end y_end]
+ initDisplay_OK     : if 1, the initialization is done correctly [0/1]
+
+ [note]
+ PTB screens should be initialized
+ 1. depending on the number of displays you use (1, 2, or 3).
+ 2. depending on whether the experiment is conducted with Haploscope or in fMRI scanner.
+ for details, please type,
+ &gt;&gt; help Screen
+ on MATLAB command window.
+
+ Created : Feb 04 2010 Hiroshi Ban
+ Last Update: &quot;2013-11-22 23:18:05 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [leftEyeWindow,rightEyeWindow,leftEyeScreenRect,rightEyeScreenRect,initDisplay_OK] = InitializeBinocularDisplays(exp_run,bgcolor,ScrWidth,ScrHeight)</a>
+0002 
+0003 <span class="comment">% Initializes PTB screen for monocular/binocular presentations (OLD PTB method).</span>
+0004 <span class="comment">% function [leftEyeWindow,rightEyeWindow,leftEyeScreenRect,rightEyeScreenRect,initDisplay_OK] =</span>
+0005 <span class="comment">%                                        InitializeBinocularDisplays(exp_run, bgcolor, ScrWidth, ScrHeight)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Initialize PTB Screen settings for monocular/binocular viewing display</span>
+0008 <span class="comment">% Available for both haploscope and fMRI experimental environment.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [requirement/dependency]</span>
+0011 <span class="comment">% Psychtoolbox ver.3 or above</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% [input]</span>
+0014 <span class="comment">% exp_run   : experimental environment, string, 'fMRI','Haploscope','TMS',</span>
+0015 <span class="comment">%             'RedGreen','RedCyan','Nottingham','test_cross', 'test_parallel',</span>
+0016 <span class="comment">%             or 'Debug'</span>
+0017 <span class="comment">% bgcolor   : background color, [r,g,b]</span>
+0018 <span class="comment">% ScrWidth  : the width of the screen, [pixels]</span>
+0019 <span class="comment">% ScrHeight : the height of the screen, [pixels]</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% leftEyeWindow      : left eye window of PTB screen, pid</span>
+0023 <span class="comment">% rightEyeWindow     : right eye window of PTB screen, pid</span>
+0024 <span class="comment">% leftEyeScreenRect  : the size of left screen's rectangle, [x_start y_start x_end y_end]</span>
+0025 <span class="comment">% rightEyeScreenRect : the size of right screen's rectangle, [x_start y_start x_end y_end]</span>
+0026 <span class="comment">% initDisplay_OK     : if 1, the initialization is done correctly [0/1]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% [note]</span>
+0029 <span class="comment">% PTB screens should be initialized</span>
+0030 <span class="comment">% 1. depending on the number of displays you use (1, 2, or 3).</span>
+0031 <span class="comment">% 2. depending on whether the experiment is conducted with Haploscope or in fMRI scanner.</span>
+0032 <span class="comment">% for details, please type,</span>
+0033 <span class="comment">% &gt;&gt; help Screen</span>
+0034 <span class="comment">% on MATLAB command window.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Created : Feb 04 2010 Hiroshi Ban</span>
+0037 <span class="comment">% Last Update: &quot;2013-11-22 23:18:05 ban (ban.hiroshi@gmail.com)&quot;</span>
+0038 
+0039 <span class="comment">% initialize</span>
+0040 leftEyeWindow=[];
+0041 rightEyeWindow=[];
+0042 leftEyeScreenRect=[];
+0043 rightEyeScreenRect=[];
+0044 
+0045 <span class="comment">% for fMRI experiment</span>
+0046 <span class="keyword">if</span> strcmp(exp_run,<span class="string">'fMRI'</span>)
+0047   <span class="keyword">if</span>(size(Screen(<span class="string">'screens'</span>),2) &lt; 3)
+0048     disp(<span class="string">'Not enough displays. Using Scrren 0 alone.'</span>);
+0049     <span class="comment">% set the same screen number (0) to both (right &amp; left) displays.</span>
+0050     leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0051     rightEyeScreenRect  = leftEyeScreenRect;
+0052 
+0053     rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 bits = 256 graycale. open display window - 32bit white background</span>
+0054     leftEyeWindow=rightEyeWindow;
+0055   <span class="keyword">else</span> <span class="comment">% if there are 3 screens (console, right &amp; left displays)</span>
+0056      leftEyeScreenRect  = Screen(1, <span class="string">'rect'</span>);
+0057      rightEyeScreenRect  = Screen(2, <span class="string">'rect'</span>);
+0058      <span class="keyword">if</span> rightEyeScreenRect(1)~=0
+0059        rightEyeScreenRect = rightEyeScreenRect - [ScrWidth 0 ScrWidth 0]; <span class="comment">% for dual display, for old version of PTB3</span>
+0060      <span class="keyword">end</span>
+0061 
+0062      leftEyeWindow=Screen(1,<span class="string">'OpenWindow'</span>, bgcolor);<span class="comment">%,leftEyeScreenRect,32);   %open display window - 32bit white background</span>
+0063      rightEyeWindow=Screen(2,<span class="string">'OpenWindow'</span>, bgcolor);<span class="comment">%,rightEyeScreenRect,32);   %open display window - 32bit white background</span>
+0064   <span class="keyword">end</span>
+0065   initDisplay_OK = 1;
+0066 
+0067 <span class="comment">% for haploscope room experiment</span>
+0068 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'Haploscope'</span>)
+0069   <span class="keyword">if</span>(size(Screen(<span class="string">'screens'</span>),2) &lt; 2)
+0070     disp(<span class="string">'Not enough displays'</span>);
+0071     <span class="comment">% set the same screen number (0) to both (right &amp; left) displays.</span>
+0072     leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0073     rightEyeScreenRect  = leftEyeScreenRect;
+0074 
+0075     rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 is each color depth. open display window - 32bit white background</span>
+0076     leftEyeWindow=rightEyeWindow;
+0077   <span class="keyword">else</span> <span class="comment">% if there are 2 screens (console, and right-left-combined displays(haploscope room))</span>
+0078     leftEyeWindow=Screen(2,<span class="string">'OpenWindow'</span>, bgcolor);<span class="comment">%,rightEyeScreenRect,32); % 8 is each color depth. open display window - 32bit white background</span>
+0079     rightEyeWindow=leftEyeWindow;
+0080 
+0081     <span class="comment">% strange haplo issue</span>
+0082     rightEyeScreenRect = [0 0 ScrWidth ScrHeight];
+0083     leftEyeScreenRect = rightEyeScreenRect + [ScrWidth 0 ScrWidth 0];
+0084   <span class="keyword">end</span>
+0085   initDisplay_OK = 1;
+0086 
+0087 <span class="comment">% for TMS room experiment</span>
+0088 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'TMS'</span>)
+0089   <span class="keyword">if</span>(size(Screen(<span class="string">'screens'</span>),2) &lt; 2)
+0090     disp(<span class="string">'Not enough displays'</span>);
+0091     <span class="comment">% set the same screen number (0) to both (right &amp; left) displays.</span>
+0092     leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0093     rightEyeScreenRect  = leftEyeScreenRect;
+0094 
+0095     rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 is each color depth. open display window - 32bit white background</span>
+0096     leftEyeWindow=rightEyeWindow;
+0097   <span class="keyword">else</span> <span class="comment">% if there are 3 screens (console, right &amp; left displays)</span>
+0098      leftEyeScreenRect  = Screen(2, <span class="string">'rect'</span>);
+0099      rightEyeScreenRect  = Screen(1, <span class="string">'rect'</span>);
+0100      <span class="keyword">if</span> leftEyeScreenRect(1)~=0
+0101        leftEyeScreenRect = leftEyeScreenRect - [ScrWidth 0 ScrWidth 0]; <span class="comment">% for dual display, for old version of PTB3</span>
+0102      <span class="keyword">end</span>
+0103      <span class="keyword">if</span> rightEyeScreenRect(1)~=0
+0104        rightEyeScreenRect = rightEyeScreenRect - [ScrWidth 0 ScrWidth 0]; <span class="comment">% for dual display, for old version of PTB3</span>
+0105      <span class="keyword">end</span>
+0106 
+0107      leftEyeWindow=Screen(2,<span class="string">'OpenWindow'</span>, bgcolor);<span class="comment">%,leftEyeScreenRect,32);   %open display window - 32bit white background</span>
+0108      rightEyeWindow=Screen(1,<span class="string">'OpenWindow'</span>, bgcolor);<span class="comment">%,rightEyeScreenRect,32);   %open display window - 32bit white background</span>
+0109   <span class="keyword">end</span>
+0110   initDisplay_OK = 1;
+0111 
+0112 <span class="comment">% for Red/Green viewing</span>
+0113 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'RedGreen'</span>)
+0114   leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0115   rightEyeScreenRect  = leftEyeScreenRect;
+0116 
+0117   rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 bits = 256 graycale. open display window - 32bit white background</span>
+0118   leftEyeWindow=rightEyeWindow;
+0119   initDisplay_OK = 1;
+0120 
+0121 <span class="comment">% for Red/Cyan viewing</span>
+0122 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'RedCyan'</span>)
+0123   leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0124   rightEyeScreenRect  = leftEyeScreenRect;
+0125 
+0126   rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 bits = 256 graycale. open display window - 32bit white background</span>
+0127   leftEyeWindow=rightEyeWindow;
+0128   initDisplay_OK = 1;
+0129 
+0130 <span class="comment">% for Nottingham Red/Green viewing</span>
+0131 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'Nottingham'</span>)
+0132   <span class="keyword">if</span> size(Screen(<span class="string">'screens'</span>),2)&lt;2
+0133     disp(<span class="string">'Not enough displays'</span>);
+0134     leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0135     rightEyeScreenRect  = leftEyeScreenRect;
+0136 
+0137     rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 bits = 256 graycale. open display window - 32bit white background</span>
+0138     leftEyeWindow=rightEyeWindow;
+0139     initDisplay_OK = 1;
+0140   <span class="keyword">else</span>
+0141     leftEyeScreenRect  = Screen(1, <span class="string">'rect'</span>);
+0142     rightEyeScreenRect  = leftEyeScreenRect;
+0143 
+0144     rightEyeWindow=Screen(1,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 bits = 256 graycale. open display window - 32bit white background</span>
+0145     leftEyeWindow=rightEyeWindow;
+0146     initDisplay_OK = 1;
+0147   <span class="keyword">end</span>
+0148 
+0149 <span class="comment">% for testing stimulus display with parallel viewing</span>
+0150 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'test_parallel'</span>)
+0151   <span class="comment">% set the same screen number (0) to both (right &amp; left) displays.</span>
+0152   tmp=Screen(0,<span class="string">'rect'</span>);
+0153   leftEyeScreenRect  = [tmp(1) (tmp(4)-tmp(2))/4 tmp(3)/2 3*(tmp(4)-tmp(2))/4];
+0154   rightEyeScreenRect  = [tmp(3)/2 (tmp(4)-tmp(2))/4 tmp(3) 3*(tmp(4)-tmp(2))/4];
+0155 
+0156   leftEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%leftEyeScreenRect,8); % 8 is each color depth. open display window - 32bit white background</span>
+0157   rightEyeWindow=leftEyeWindow; <span class="comment">% set the same ID with left window</span>
+0158   initDisplay_OK = 1;
+0159 
+0160 <span class="comment">% for testing stimulus display with cross viewing</span>
+0161 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'test_cross'</span>)
+0162   <span class="comment">% set the same screen number (0) to both (right &amp; left) displays.</span>
+0163   tmp=Screen(0,<span class="string">'rect'</span>);
+0164   rightEyeScreenRect  = [tmp(1) (tmp(4)-tmp(2))/4 tmp(3)/2 3*(tmp(4)-tmp(2))/4];
+0165   leftEyeScreenRect  = [tmp(3)/2 (tmp(4)-tmp(2))/4 tmp(3) 3*(tmp(4)-tmp(2))/4];
+0166 
+0167   leftEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%leftEyeScreenRect,8); % 8 is each color depth. open display window - 32bit white background</span>
+0168   rightEyeWindow=leftEyeWindow; <span class="comment">% set the same ID with left window</span>
+0169   initDisplay_OK = 1;
+0170 
+0171 <span class="comment">% for Debug</span>
+0172 <span class="keyword">elseif</span> strcmp(exp_run,<span class="string">'Debug'</span>)
+0173   leftEyeScreenRect  = Screen(0, <span class="string">'rect'</span>);
+0174   rightEyeScreenRect  = leftEyeScreenRect;
+0175 
+0176   rightEyeWindow=Screen(0,<span class="string">'OpenWindow'</span>, bgcolor,[]);<span class="comment">%,rightEyeScreenRect,32); % 8 bits = 256 graycale. open display window - 32bit white background</span>
+0177   leftEyeWindow=rightEyeWindow;
+0178   initDisplay_OK = 1;
+0179 
+0180 <span class="keyword">else</span>
+0181   initDisplay_OK = 0;
+0182 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

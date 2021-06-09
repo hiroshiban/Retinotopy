@@ -1,0 +1,789 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of retinotopy</title>
+  <meta name="keywords" content="retinotopy">
+  <meta name="description" content="ALL-IN-ONE-Retinotopy: a simple wrapper to control all the retinotopy stimulus scripts included in this &quot;Retinotopy&quot; package.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Presentation -->
+<h1>retinotopy
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ALL-IN-ONE-Retinotopy: a simple wrapper to control all the retinotopy stimulus scripts included in this &quot;Retinotopy&quot; package.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> ALL-IN-ONE-Retinotopy: a simple wrapper to control all the retinotopy stimulus scripts included in this &quot;Retinotopy&quot; package.
+ function OK=retinotopy(subj,exp_mode,acq_num,:overwrite_pix_per_deg,:TR)
+ (: is optional)
+
+ This function is a simple wrapper to control phase-encoded/pRF retinotopy stimuli.
+ The fMRI responses evoked by the stimuli can be utilized to delineate borders of retinotopic visual areas etc.
+
+ Created    : &quot;2013-11-25 10:14:26 ban&quot;
+ Last Update: &quot;2021-06-09 14:49:21 ban&quot;
+
+ The wrapped functions are as below.
+     1. cretinotopy           : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for phase-encoded analysis
+     2. cretinotopy_fixtask   : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for phase-encoded analysis
+     3. cbar                  : color/luminance-defined checkerboard bar stimuli with a checker-pattern luminance change detection task, for pRF analysis
+     4. cbar_fixtask          : color/luminance-defined checkerboard bar stimuli with a fixation luminance change detection task, for pRF analysis
+     5. cdual                 : color/luminance-defined checkerboard stimuli (polar wedge + eccentricity annulus) with a checker-pattern luminance change detection task, for phase-encoded/pRF analysis
+     6. cdual_fixtask         : color/luminance-defined checkerboard stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
+     7. cmultifocal           : color/luminance-defined multifocal retinotopy checkerboard stimuli with a checker-pattern luminance change detection task, for GLM or pRF analysis
+     8. cmultifocal_fixtask   : color/luminance-defined multifocal retinotopy checkerboard stimuli with a fixation luminance change detection task, for GLM or pRF analysis
+     9. cmeridian             : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task
+    10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+    11. chrf                  : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for HRF shape estimation
+    12. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for HRF shape estimation
+    13. clgnlocalizer         : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for localizing LGN
+    14. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for localizing LGN
+    15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+    16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+    17. iretinotopy_fixtask   : object-image-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis
+    18. ibar_fixtask          : object-image-defined bar stimuli with a fixation luminance change detection task, for pRF analysis
+    19. idual_fixtask         : object-image-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
+    20. imultifocal_fixtask   : object-image-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis
+    21. imeridian_fixtask     : object-image-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+    22. ihrf_fixtask          : object-image-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation
+    23. ilgnlocalizer_fixtask : object-image-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN
+    24. ilocalizer_fixtask    : object-image-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+    25. dretinotopy           : disparity(depth, Random-Dot-Stereogram (RDS))-defined retinotopy stimuli with a checker-pattern depth change detection task, for phase-encoded analysis
+    26. dretinotopy_fixtask   : disparity(depth, Random-Dot-Stereogram (RDS))-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis
+    27. dbar                  : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar stimuli with a checker-pattern depth change detection task, for pRF analysis
+    28. dbar_fixtask          : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar stimuli with a fixation luminance change detection task, for pRF analysis
+    29. ddual                 : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual stimuli (polar wedge + eccentricity annulus) with a checker-pattern depth change detection task, for phase-encoded/pRF analysis
+    30. ddual_fixtask         : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis
+    31. dmultifocal           : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimuli with a checker-pattern depth change detection task, for GLM or pRF analysis
+    32. dmultifocal_fixtask   : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis
+    33. dmeridian             : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a checker-pattern depth change detection task
+    34. dmeridian_fixtask     : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task
+    35. dhrf                  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a checker-pattern depth change detection task, for HRF shape estimation
+    36. dhrf_fixtask          : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation
+    37. dlgnlocalizer         : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a checker-pattern depth change detection task, for localizing LGN
+    38. dlgnlocalizer_fixtask : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN
+    39. dlocalizer            : disparity(depth, Random-Dot-Stereogram (RDS))-defined stimuli with a checker-pattern depth change detection task, for identifying retinotopic iso-eccentricity subregions
+    40. dlocalizer_fixtask    : disparity(depth, Random-Dot-Stereogram (RDS))-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions
+    41. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis
+    42. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis
+    43. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis
+    44. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis
+
+ For more details, please see each function's help.
+
+ [example]
+ (after moving to ~/Retinotopy/presentation directory)
+ &gt;&gt; retinotopy('HB','ccw',1);
+ &gt;&gt; retinotopy('HB',{'ccw','exp','ccw','exp'},[1,1,2,2]);
+ &gt;&gt; retinotopy('HB',{'ccwwindows','cwwindows','expwindows','contwindows'},[1,1,1,1]);
+
+ [input]
+ subj    : subject's name, e.g. 'HB'
+           the directory named as subj_name (e.g. 'HB') should be located in ~/retinotopy/Presentation/subjects/
+           under which configurations files are included. By changing parameters in the configuration files,
+           stimulus type, size, colors, moving speed, presentation timing etc can be manipulated as you like.
+           For details, please see the files in ~/retinotopy/Presentation/subjects/_DEFAULT_.
+           If subject directory does not exist in the specific directory described above, the parameters in the
+           _DEFAULT_ directory would be automatically copied as subj_name and the default parameters are used for
+           stimulus presentation. you can modify the default parameters later once the files are copied and the
+           script is terminated.
+ exp_mode: experiment mode that you want to run, one of
+
+           *** task -- luminance change detection on the checkerboard
+           - ccw     : color/luminance-defined checkerboard wedge rotating counter-clockwisely
+           - cw      : color/luminance-defined checkerboard wedge rotating clockwisely
+           - exp     : color/luminance-defined checkerboard annulus expanding from fovea to periphery
+           - cont    : color/luminance-defined checkerboard annulus contracting from periphery to fovea
+           - bar     : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
+           - ccwexp  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - ccwcont : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwexp   : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwcont  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - multifocal : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus
+           - meridian : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian
+           - lgn     : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+           - hrf     : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+           - localizer : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                       to identify specific iso-eccentricity regions
+
+           *** task -- depth change detection on the checkerboard
+           - ccwd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating counter-clockwisely
+           - cwd     : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating clockwisely
+           - expd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus expanding from fovea to periphery
+           - contd   : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus contracting from periphery to fovea
+           - bard    : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar, a standard pRF (population receptive field) stimulus
+           - ccwexpd : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - ccwcontd  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwexpd  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwcontd : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - multifocald  : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimulus
+           - meridiand  : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedges presented along the horizontal or vertical visual meridian
+           - lgnd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+           - hrfd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+           - localizerd : disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                        to identify specific iso-eccentricity regions
+
+           *** task -- luminance change detection on the central fixation
+           - ccwf    : color/luminance-defined checkerboard wedge rotating counter-clockwisely
+           - cwf     : color/luminance-defined checkerboard wedge rotating clockwisely
+           - expf    : color/luminance-defined checkerboard annulus expanding from fovea to periphery
+           - contf   : color/luminance-defined checkerboard annulus contracting from periphery to fovea
+           - barf    : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus
+           - ccwexpf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - ccwcontf: color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwexpf  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwcontf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - multifocalf : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus
+           - meridianf : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian
+           - lgnf    : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+           - hrff    : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+           - localizerf : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                        to identify specific iso-eccentricity regions
+
+           - ccwi    : Object-image-defined wedge rotating counter-clockwisely
+           - cwi     : Object-image-defined wedge rotating clockwisely
+           - expi    : Object-image-defined annulus expanding from fovea to periphery
+           - conti   : Object-image-defined annulus contracting from periphery to fovea
+           - bari    : Object-image-defined bar, a standard pRF (population receptive field) stimulus
+           - ccwexpi : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - ccwconti: Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwexpi  : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwconti : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - multifocali : Object-image-defined multifocal retinotopy stimulus
+           - meridiani : Object-image-defined dual wedges presented along the horizontal or vertical visual meridian
+           - lgni    : Object-image-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+           - hrfi    : Object-image-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+           - localizeri: Object-image-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                       to identify specific iso-eccentricity regions
+
+           - ccwdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating counter-clockwisely
+           - cwdf    : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating clockwisely
+           - expdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus expanding from fovea to periphery
+           - contdf  : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus contracting from periphery to fovea
+           - bardf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar, a standard pRF (population receptive field) stimulus
+           - ccwexpdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - ccwcontdf : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwexpdf : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - cwcontdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus
+           - multifocaldf : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimulus
+           - meridiandf : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedges presented along the horizontal or vertical visual meridian
+           - lgndf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN
+           - hrfdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses
+           - localizerdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s
+                        to identify specific iso-eccentricity regions
+
+           *** these are stimulus windows to generate pRF (population receptive field) model
+           - ccwwindows     : stimulation windows of wedge rotating counter-clockwisely
+           - cwwindows      : stimulation windows of wedge rotating clockwisely
+           - expwindows     : stimulation windows of annulus expanding from fovea
+           - contwindows    : stimulation windows of annulus contracting from periphery
+           - barwindows     : stimulation windows of a standard pRF bar
+           - ccwexpwindows  : stimulation windows of a wedge+annulus checkerboard pattern
+           - ccwcontwindows : stimulation windows of a wedge+annulus checkerboard pattern
+           - cwexpwindows   : stimulation windows of a wedge+annulus checkerboard pattern
+           - cwcontwindows  : stimulation windows of a wedge+annulus checkerboard pattern
+           - multifocalwindows : stimulation windows of a standard multifocal retinotopy stimulus
+
+           a string or a cell string structure, e.g. 'ccw', or {'ccw','exp'}
+           length(exp_mode) should equal numel(acq_num)
+ acq_num : acquisition number, 1,2,3,...
+
+ === NOTE: the two input variables below are only effective when exp_mode is set to *windows (one of stimulus window generation functions) ===
+ overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg
+           if not specified, sparam.pix_per_deg is used to reconstruct
+           stim_windows.
+           This is useful to reconstruct stim_windows with less memory space
+           1/pix_per_deg = spatial resolution of the generated visual field,
+           e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.
+           empty (use sparam.pix_per_deg) by default
+ TR      : (optional) TR used in fMRI scans, in sec, 2 by default
+
+ [output]
+ OK      : (optional) flag, whether this script finished without any error [true/false]
+
+
+ [About the object image databases used in the Retinotopy package]
+ 
+ The object images stored in the object_image_database.mat and used in i* retinotopy stimuli are obtained and modified from the databases publicly available from
+ http://konklab.fas.harvard.edu/#
+ I sincerely express my gratitude to the developers and distributors, scientists in Dr Talia Konkle's research group, for their contributions in these databases.
+ 
+ * Original papers of the object image datasets
+ - Tripartite Organization of the Ventral Stream by Animacy and Object Size.
+   Konkle, T., &amp; Caramazza, A. (2013). Journal of Neuroscience, 33 (25), 10235-42.
+ 
+ - A real-world size organization of object responses in occipito-temporal cortex.
+   Konkle. T., &amp; Oliva, A. (2012). Neuron, 74(6), 1114-24.
+ 
+ - Visual long-term memory has a massive storage capacity for object details.
+   Brady, T. F., Konkle, T., Alvarez, G. A. &amp; Oliva, A. (2008). Proceedings of the National Academy of Sciences USA, 105(38), 14325-9.
+ 
+ - Conceptual distinctiveness supports detailed visual long-term memory.
+   Konkle, T., Brady, T. F., Alvarez, G. A., &amp; Oliva, A. (2010). Journal of Experimental Psychology: General, 139(3), 558-578.
+ 
+ - A Familiar Size Stroop Effect: Real-world size is an automatic property of object representation.
+   Konkle, T., &amp; Oliva, A. (2012). Journal of Experimental Psychology: Human Perception &amp; Performance, 38, 561-9.
+ 
+ [TODOs]
+ 
+ 1. *DONE* Update the procedure for getting response more precisely.
+ 2. *DONE* Generate dretinotopy (3D depth version of the retinotopy stimuli) in which checkerboards consist of Random-Dot-Stereograms
+ 3. removing code clones (I have not thought that the retinotopy package is getting so huge when we started to write the codes...) and
+    rewriting the scripts in an object-oriented manner.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function OK=retinotopy(subj,exp_mode,acq_num,overwrite_pix_per_deg,TR)</a>
+0002 
+0003 <span class="comment">% ALL-IN-ONE-Retinotopy: a simple wrapper to control all the retinotopy stimulus scripts included in this &quot;Retinotopy&quot; package.</span>
+0004 <span class="comment">% function OK=retinotopy(subj,exp_mode,acq_num,:overwrite_pix_per_deg,:TR)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function is a simple wrapper to control phase-encoded/pRF retinotopy stimuli.</span>
+0008 <span class="comment">% The fMRI responses evoked by the stimuli can be utilized to delineate borders of retinotopic visual areas etc.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Created    : &quot;2013-11-25 10:14:26 ban&quot;</span>
+0011 <span class="comment">% Last Update: &quot;2021-06-09 14:49:21 ban&quot;</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% The wrapped functions are as below.</span>
+0014 <span class="comment">%     1. cretinotopy           : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for phase-encoded analysis</span>
+0015 <span class="comment">%     2. cretinotopy_fixtask   : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for phase-encoded analysis</span>
+0016 <span class="comment">%     3. cbar                  : color/luminance-defined checkerboard bar stimuli with a checker-pattern luminance change detection task, for pRF analysis</span>
+0017 <span class="comment">%     4. cbar_fixtask          : color/luminance-defined checkerboard bar stimuli with a fixation luminance change detection task, for pRF analysis</span>
+0018 <span class="comment">%     5. cdual                 : color/luminance-defined checkerboard stimuli (polar wedge + eccentricity annulus) with a checker-pattern luminance change detection task, for phase-encoded/pRF analysis</span>
+0019 <span class="comment">%     6. cdual_fixtask         : color/luminance-defined checkerboard stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis</span>
+0020 <span class="comment">%     7. cmultifocal           : color/luminance-defined multifocal retinotopy checkerboard stimuli with a checker-pattern luminance change detection task, for GLM or pRF analysis</span>
+0021 <span class="comment">%     8. cmultifocal_fixtask   : color/luminance-defined multifocal retinotopy checkerboard stimuli with a fixation luminance change detection task, for GLM or pRF analysis</span>
+0022 <span class="comment">%     9. cmeridian             : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a checker-pattern luminance change detection task</span>
+0023 <span class="comment">%    10. cmeridian_fixtask     : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task</span>
+0024 <span class="comment">%    11. chrf                  : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for HRF shape estimation</span>
+0025 <span class="comment">%    12. chrf_fixtask          : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for HRF shape estimation</span>
+0026 <span class="comment">%    13. clgnlocalizer         : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for localizing LGN</span>
+0027 <span class="comment">%    14. clgnlocalizer_fixtask : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for localizing LGN</span>
+0028 <span class="comment">%    15. clocalizer            : color/luminance-defined checkerboard stimuli with a checker-pattern luminance change detection task, for identifying retinotopic iso-eccentricity subregions</span>
+0029 <span class="comment">%    16. clocalizer_fixtask    : color/luminance-defined checkerboard stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions</span>
+0030 <span class="comment">%    17. iretinotopy_fixtask   : object-image-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis</span>
+0031 <span class="comment">%    18. ibar_fixtask          : object-image-defined bar stimuli with a fixation luminance change detection task, for pRF analysis</span>
+0032 <span class="comment">%    19. idual_fixtask         : object-image-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis</span>
+0033 <span class="comment">%    20. imultifocal_fixtask   : object-image-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis</span>
+0034 <span class="comment">%    21. imeridian_fixtask     : object-image-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task</span>
+0035 <span class="comment">%    22. ihrf_fixtask          : object-image-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation</span>
+0036 <span class="comment">%    23. ilgnlocalizer_fixtask : object-image-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN</span>
+0037 <span class="comment">%    24. ilocalizer_fixtask    : object-image-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions</span>
+0038 <span class="comment">%    25. dretinotopy           : disparity(depth, Random-Dot-Stereogram (RDS))-defined retinotopy stimuli with a checker-pattern depth change detection task, for phase-encoded analysis</span>
+0039 <span class="comment">%    26. dretinotopy_fixtask   : disparity(depth, Random-Dot-Stereogram (RDS))-defined retinotopy stimuli with a fixation luminance change detection task, for phase-encoded analysis</span>
+0040 <span class="comment">%    27. dbar                  : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar stimuli with a checker-pattern depth change detection task, for pRF analysis</span>
+0041 <span class="comment">%    28. dbar_fixtask          : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar stimuli with a fixation luminance change detection task, for pRF analysis</span>
+0042 <span class="comment">%    29. ddual                 : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual stimuli (polar wedge + eccentricity annulus) with a checker-pattern depth change detection task, for phase-encoded/pRF analysis</span>
+0043 <span class="comment">%    30. ddual_fixtask         : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual stimuli (polar wedge + eccentricity annulus) with a fixation luminance change detection task, for phase-encoded/pRF analysis</span>
+0044 <span class="comment">%    31. dmultifocal           : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimuli with a checker-pattern depth change detection task, for GLM or pRF analysis</span>
+0045 <span class="comment">%    32. dmultifocal_fixtask   : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimuli with a fixation luminance change detection task, for GLM or pRF analysis</span>
+0046 <span class="comment">%    33. dmeridian             : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a checker-pattern depth change detection task</span>
+0047 <span class="comment">%    34. dmeridian_fixtask     : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedge stimuli presented along the horizontal or vertical visual meridian with a fixation luminance change change detection task</span>
+0048 <span class="comment">%    35. dhrf                  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a checker-pattern depth change detection task, for HRF shape estimation</span>
+0049 <span class="comment">%    36. dhrf_fixtask          : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a fixation luminance change detection task, for HRF shape estimation</span>
+0050 <span class="comment">%    37. dlgnlocalizer         : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a checker-pattern depth change detection task, for localizing LGN</span>
+0051 <span class="comment">%    38. dlgnlocalizer_fixtask : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge stimuli with a fixation luminance change detection task, for localizing LGN</span>
+0052 <span class="comment">%    39. dlocalizer            : disparity(depth, Random-Dot-Stereogram (RDS))-defined stimuli with a checker-pattern depth change detection task, for identifying retinotopic iso-eccentricity subregions</span>
+0053 <span class="comment">%    40. dlocalizer_fixtask    : disparity(depth, Random-Dot-Stereogram (RDS))-defined stimuli with a fixation luminance change detection task, for identifying retinotopic iso-eccentricity subregions</span>
+0054 <span class="comment">%    41. gen_retinotopy_windows: a function for generating checkerboard stimulus windows of ccw/cw/exp/cont, for phase-encoded/pRF analysis</span>
+0055 <span class="comment">%    42. gen_bar_windows       : a function for generating standard pRF bar stimulus windows, for pRF analysis</span>
+0056 <span class="comment">%    43. gen_dual_windows      : a function for generating checkerboard (wedge + annulus) stimulus windows, for phase-encoded/pRF analysis</span>
+0057 <span class="comment">%    44. gen_multifocal_windows: a function for generating multifocal retinoopy checkerboard stimulus windows, for pRF analysis</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% For more details, please see each function's help.</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">% [example]</span>
+0062 <span class="comment">% (after moving to ~/Retinotopy/presentation directory)</span>
+0063 <span class="comment">% &gt;&gt; retinotopy('HB','ccw',1);</span>
+0064 <span class="comment">% &gt;&gt; retinotopy('HB',{'ccw','exp','ccw','exp'},[1,1,2,2]);</span>
+0065 <span class="comment">% &gt;&gt; retinotopy('HB',{'ccwwindows','cwwindows','expwindows','contwindows'},[1,1,1,1]);</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">% [input]</span>
+0068 <span class="comment">% subj    : subject's name, e.g. 'HB'</span>
+0069 <span class="comment">%           the directory named as subj_name (e.g. 'HB') should be located in ~/retinotopy/Presentation/subjects/</span>
+0070 <span class="comment">%           under which configurations files are included. By changing parameters in the configuration files,</span>
+0071 <span class="comment">%           stimulus type, size, colors, moving speed, presentation timing etc can be manipulated as you like.</span>
+0072 <span class="comment">%           For details, please see the files in ~/retinotopy/Presentation/subjects/_DEFAULT_.</span>
+0073 <span class="comment">%           If subject directory does not exist in the specific directory described above, the parameters in the</span>
+0074 <span class="comment">%           _DEFAULT_ directory would be automatically copied as subj_name and the default parameters are used for</span>
+0075 <span class="comment">%           stimulus presentation. you can modify the default parameters later once the files are copied and the</span>
+0076 <span class="comment">%           script is terminated.</span>
+0077 <span class="comment">% exp_mode: experiment mode that you want to run, one of</span>
+0078 <span class="comment">%</span>
+0079 <span class="comment">%           *** task -- luminance change detection on the checkerboard</span>
+0080 <span class="comment">%           - ccw     : color/luminance-defined checkerboard wedge rotating counter-clockwisely</span>
+0081 <span class="comment">%           - cw      : color/luminance-defined checkerboard wedge rotating clockwisely</span>
+0082 <span class="comment">%           - exp     : color/luminance-defined checkerboard annulus expanding from fovea to periphery</span>
+0083 <span class="comment">%           - cont    : color/luminance-defined checkerboard annulus contracting from periphery to fovea</span>
+0084 <span class="comment">%           - bar     : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus</span>
+0085 <span class="comment">%           - ccwexp  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0086 <span class="comment">%           - ccwcont : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0087 <span class="comment">%           - cwexp   : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0088 <span class="comment">%           - cwcont  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0089 <span class="comment">%           - multifocal : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus</span>
+0090 <span class="comment">%           - meridian : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian</span>
+0091 <span class="comment">%           - lgn     : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN</span>
+0092 <span class="comment">%           - hrf     : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses</span>
+0093 <span class="comment">%           - localizer : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s</span>
+0094 <span class="comment">%                       to identify specific iso-eccentricity regions</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">%           *** task -- depth change detection on the checkerboard</span>
+0097 <span class="comment">%           - ccwd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating counter-clockwisely</span>
+0098 <span class="comment">%           - cwd     : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating clockwisely</span>
+0099 <span class="comment">%           - expd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus expanding from fovea to periphery</span>
+0100 <span class="comment">%           - contd   : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus contracting from periphery to fovea</span>
+0101 <span class="comment">%           - bard    : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar, a standard pRF (population receptive field) stimulus</span>
+0102 <span class="comment">%           - ccwexpd : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0103 <span class="comment">%           - ccwcontd  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0104 <span class="comment">%           - cwexpd  : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0105 <span class="comment">%           - cwcontd : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0106 <span class="comment">%           - multifocald  : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimulus</span>
+0107 <span class="comment">%           - meridiand  : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedges presented along the horizontal or vertical visual meridian</span>
+0108 <span class="comment">%           - lgnd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN</span>
+0109 <span class="comment">%           - hrfd    : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses</span>
+0110 <span class="comment">%           - localizerd : disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s</span>
+0111 <span class="comment">%                        to identify specific iso-eccentricity regions</span>
+0112 <span class="comment">%</span>
+0113 <span class="comment">%           *** task -- luminance change detection on the central fixation</span>
+0114 <span class="comment">%           - ccwf    : color/luminance-defined checkerboard wedge rotating counter-clockwisely</span>
+0115 <span class="comment">%           - cwf     : color/luminance-defined checkerboard wedge rotating clockwisely</span>
+0116 <span class="comment">%           - expf    : color/luminance-defined checkerboard annulus expanding from fovea to periphery</span>
+0117 <span class="comment">%           - contf   : color/luminance-defined checkerboard annulus contracting from periphery to fovea</span>
+0118 <span class="comment">%           - barf    : color/luminance-defined checkerboard bar, a standard pRF (population receptive field) stimulus</span>
+0119 <span class="comment">%           - ccwexpf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0120 <span class="comment">%           - ccwcontf: color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0121 <span class="comment">%           - cwexpf  : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0122 <span class="comment">%           - cwcontf : color/luminance-defined checkerboard wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0123 <span class="comment">%           - multifocalf : color/luminance-defined checkerboard, a standard multifocal retinotopy stimulus</span>
+0124 <span class="comment">%           - meridianf : color/luminance-defined dual wedge checkerboards presented along the horizontal or vertical visual meridian</span>
+0125 <span class="comment">%           - lgnf    : color/luminance-defined hemifield checkerboard patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN</span>
+0126 <span class="comment">%           - hrff    : color/luminance-defined checkerboard pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses</span>
+0127 <span class="comment">%           - localizerf : color/luminance-defined checkerboard patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s</span>
+0128 <span class="comment">%                        to identify specific iso-eccentricity regions</span>
+0129 <span class="comment">%</span>
+0130 <span class="comment">%           - ccwi    : Object-image-defined wedge rotating counter-clockwisely</span>
+0131 <span class="comment">%           - cwi     : Object-image-defined wedge rotating clockwisely</span>
+0132 <span class="comment">%           - expi    : Object-image-defined annulus expanding from fovea to periphery</span>
+0133 <span class="comment">%           - conti   : Object-image-defined annulus contracting from periphery to fovea</span>
+0134 <span class="comment">%           - bari    : Object-image-defined bar, a standard pRF (population receptive field) stimulus</span>
+0135 <span class="comment">%           - ccwexpi : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0136 <span class="comment">%           - ccwconti: Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0137 <span class="comment">%           - cwexpi  : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0138 <span class="comment">%           - cwconti : Object-image-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0139 <span class="comment">%           - multifocali : Object-image-defined multifocal retinotopy stimulus</span>
+0140 <span class="comment">%           - meridiani : Object-image-defined dual wedges presented along the horizontal or vertical visual meridian</span>
+0141 <span class="comment">%           - lgni    : Object-image-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN</span>
+0142 <span class="comment">%           - hrfi    : Object-image-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses</span>
+0143 <span class="comment">%           - localizeri: Object-image-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s</span>
+0144 <span class="comment">%                       to identify specific iso-eccentricity regions</span>
+0145 <span class="comment">%</span>
+0146 <span class="comment">%           - ccwdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating counter-clockwisely</span>
+0147 <span class="comment">%           - cwdf    : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge rotating clockwisely</span>
+0148 <span class="comment">%           - expdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus expanding from fovea to periphery</span>
+0149 <span class="comment">%           - contdf  : disparity(depth, Random-Dot-Stereogram (RDS))-defined annulus contracting from periphery to fovea</span>
+0150 <span class="comment">%           - bardf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined bar, a standard pRF (population receptive field) stimulus</span>
+0151 <span class="comment">%           - ccwexpdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0152 <span class="comment">%           - ccwcontdf : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0153 <span class="comment">%           - cwexpdf : disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0154 <span class="comment">%           - cwcontdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined wedge + annulus, a standard phase-encoded/pRF (population receptive field) stimulus</span>
+0155 <span class="comment">%           - multifocaldf : disparity(depth, Random-Dot-Stereogram (RDS))-defined multifocal retinotopy stimulus</span>
+0156 <span class="comment">%           - meridiandf : disparity(depth, Random-Dot-Stereogram (RDS))-defined dual wedges presented along the horizontal or vertical visual meridian</span>
+0157 <span class="comment">%           - lgndf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined hemifield wedge patterns, 16s rest + 6x(16s left + 16s right) + 16s rest = 240s, to localize LGN</span>
+0158 <span class="comment">%           - hrfdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, 16s rest + 6x(16s stimulation + 16s rest) + 16s rest = 240s, to evaluate HRF responses</span>
+0159 <span class="comment">%           - localizerdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, 16s rest + 6x(16s stimulation + 16s compensating pattern) + 16s rest = 240s</span>
+0160 <span class="comment">%                        to identify specific iso-eccentricity regions</span>
+0161 <span class="comment">%</span>
+0162 <span class="comment">%           *** these are stimulus windows to generate pRF (population receptive field) model</span>
+0163 <span class="comment">%           - ccwwindows     : stimulation windows of wedge rotating counter-clockwisely</span>
+0164 <span class="comment">%           - cwwindows      : stimulation windows of wedge rotating clockwisely</span>
+0165 <span class="comment">%           - expwindows     : stimulation windows of annulus expanding from fovea</span>
+0166 <span class="comment">%           - contwindows    : stimulation windows of annulus contracting from periphery</span>
+0167 <span class="comment">%           - barwindows     : stimulation windows of a standard pRF bar</span>
+0168 <span class="comment">%           - ccwexpwindows  : stimulation windows of a wedge+annulus checkerboard pattern</span>
+0169 <span class="comment">%           - ccwcontwindows : stimulation windows of a wedge+annulus checkerboard pattern</span>
+0170 <span class="comment">%           - cwexpwindows   : stimulation windows of a wedge+annulus checkerboard pattern</span>
+0171 <span class="comment">%           - cwcontwindows  : stimulation windows of a wedge+annulus checkerboard pattern</span>
+0172 <span class="comment">%           - multifocalwindows : stimulation windows of a standard multifocal retinotopy stimulus</span>
+0173 <span class="comment">%</span>
+0174 <span class="comment">%           a string or a cell string structure, e.g. 'ccw', or {'ccw','exp'}</span>
+0175 <span class="comment">%           length(exp_mode) should equal numel(acq_num)</span>
+0176 <span class="comment">% acq_num : acquisition number, 1,2,3,...</span>
+0177 <span class="comment">%</span>
+0178 <span class="comment">% === NOTE: the two input variables below are only effective when exp_mode is set to *windows (one of stimulus window generation functions) ===</span>
+0179 <span class="comment">% overwrite_pix_per_deg : (optional) pixels-per-deg value to overwrite the sparam.pix_per_deg</span>
+0180 <span class="comment">%           if not specified, sparam.pix_per_deg is used to reconstruct</span>
+0181 <span class="comment">%           stim_windows.</span>
+0182 <span class="comment">%           This is useful to reconstruct stim_windows with less memory space</span>
+0183 <span class="comment">%           1/pix_per_deg = spatial resolution of the generated visual field,</span>
+0184 <span class="comment">%           e.g. when pix_per_deg=20, then, 1 pixel = 0.05 deg.</span>
+0185 <span class="comment">%           empty (use sparam.pix_per_deg) by default</span>
+0186 <span class="comment">% TR      : (optional) TR used in fMRI scans, in sec, 2 by default</span>
+0187 <span class="comment">%</span>
+0188 <span class="comment">% [output]</span>
+0189 <span class="comment">% OK      : (optional) flag, whether this script finished without any error [true/false]</span>
+0190 <span class="comment">%</span>
+0191 <span class="comment">%</span>
+0192 <span class="comment">% [About the object image databases used in the Retinotopy package]</span>
+0193 <span class="comment">%</span>
+0194 <span class="comment">% The object images stored in the object_image_database.mat and used in i* retinotopy stimuli are obtained and modified from the databases publicly available from</span>
+0195 <span class="comment">% http://konklab.fas.harvard.edu/#</span>
+0196 <span class="comment">% I sincerely express my gratitude to the developers and distributors, scientists in Dr Talia Konkle's research group, for their contributions in these databases.</span>
+0197 <span class="comment">%</span>
+0198 <span class="comment">% * Original papers of the object image datasets</span>
+0199 <span class="comment">% - Tripartite Organization of the Ventral Stream by Animacy and Object Size.</span>
+0200 <span class="comment">%   Konkle, T., &amp; Caramazza, A. (2013). Journal of Neuroscience, 33 (25), 10235-42.</span>
+0201 <span class="comment">%</span>
+0202 <span class="comment">% - A real-world size organization of object responses in occipito-temporal cortex.</span>
+0203 <span class="comment">%   Konkle. T., &amp; Oliva, A. (2012). Neuron, 74(6), 1114-24.</span>
+0204 <span class="comment">%</span>
+0205 <span class="comment">% - Visual long-term memory has a massive storage capacity for object details.</span>
+0206 <span class="comment">%   Brady, T. F., Konkle, T., Alvarez, G. A. &amp; Oliva, A. (2008). Proceedings of the National Academy of Sciences USA, 105(38), 14325-9.</span>
+0207 <span class="comment">%</span>
+0208 <span class="comment">% - Conceptual distinctiveness supports detailed visual long-term memory.</span>
+0209 <span class="comment">%   Konkle, T., Brady, T. F., Alvarez, G. A., &amp; Oliva, A. (2010). Journal of Experimental Psychology: General, 139(3), 558-578.</span>
+0210 <span class="comment">%</span>
+0211 <span class="comment">% - A Familiar Size Stroop Effect: Real-world size is an automatic property of object representation.</span>
+0212 <span class="comment">%   Konkle, T., &amp; Oliva, A. (2012). Journal of Experimental Psychology: Human Perception &amp; Performance, 38, 561-9.</span>
+0213 <span class="comment">%</span>
+0214 <span class="comment">% [TODOs]</span>
+0215 <span class="comment">%</span>
+0216 <span class="comment">% 1. *DONE* Update the procedure for getting response more precisely.</span>
+0217 <span class="comment">% 2. *DONE* Generate dretinotopy (3D depth version of the retinotopy stimuli) in which checkerboards consist of Random-Dot-Stereograms</span>
+0218 <span class="comment">% 3. removing code clones (I have not thought that the retinotopy package is getting so huge when we started to write the codes...) and</span>
+0219 <span class="comment">%    rewriting the scripts in an object-oriented manner.</span>
+0220 
+0221 
+0222 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0223 <span class="comment">%% check the input variables</span>
+0224 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0225 
+0226 <span class="keyword">if</span> nargin&lt;3, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0227 <span class="keyword">if</span> nargin&lt;4 || isempty(overwrite_pix_per_deg), overwrite_pix_per_deg=[]; <span class="keyword">end</span>
+0228 <span class="keyword">if</span> nargin&lt;5 || isempty(TR), TR=2; <span class="keyword">end</span>
+0229 
+0230 <span class="keyword">if</span> size(exp_mode,1)==1 &amp;&amp; ~iscell(exp_mode), exp_mode={exp_mode}; <span class="keyword">end</span>
+0231 <span class="keyword">if</span> ~isempty(find(acq_num&lt;1,1)), error(<span class="string">'acq_num should be 1,2,3,... check input variable'</span>); <span class="keyword">end</span>
+0232 <span class="keyword">if</span> length(exp_mode)~=numel(acq_num), error(<span class="string">'the numbers of exp_mode and acq_num mismatch. check input variable'</span>); <span class="keyword">end</span>
+0233 
+0234 stimtypes={<span class="string">'ccw'</span>,<span class="string">'cw'</span>,<span class="string">'exp'</span>,<span class="string">'cont'</span>,<span class="string">'bar'</span>,<span class="string">'ccwexp'</span>,<span class="string">'cwexp'</span>,<span class="string">'ccwcont'</span>,<span class="string">'cwcont'</span>,<span class="keyword">...</span>
+0235            <span class="string">'ccwf'</span>,<span class="string">'cwf'</span>,<span class="string">'expf'</span>,<span class="string">'contf'</span>,<span class="string">'barf'</span>,<span class="string">'ccwexpf'</span>,<span class="string">'cwexpf'</span>,<span class="string">'ccwcontf'</span>,<span class="string">'cwcontf'</span>,<span class="keyword">...</span>
+0236            <span class="string">'ccwi'</span>,<span class="string">'cwi'</span>,<span class="string">'expi'</span>,<span class="string">'conti'</span>,<span class="string">'bari'</span>,<span class="string">'ccwexpi'</span>,<span class="string">'cwexpi'</span>,<span class="string">'ccwconti'</span>,<span class="string">'cwconti'</span>,<span class="keyword">...</span>
+0237            <span class="string">'ccwd'</span>,<span class="string">'cwd'</span>,<span class="string">'expd'</span>,<span class="string">'contd'</span>,<span class="string">'bard'</span>,<span class="string">'ccwexpd'</span>,<span class="string">'cwexpd'</span>,<span class="string">'ccwcontd'</span>,<span class="string">'cwcontd'</span>,<span class="keyword">...</span>
+0238            <span class="string">'ccwdf'</span>,<span class="string">'cwdf'</span>,<span class="string">'expdf'</span>,<span class="string">'contdf'</span>,<span class="string">'bardf'</span>,<span class="string">'ccwexpdf'</span>,<span class="string">'cwexpdf'</span>,<span class="string">'ccwcontdf'</span>,<span class="string">'cwcontdf'</span>,<span class="keyword">...</span>
+0239            <span class="string">'multifocal'</span>,<span class="string">'multifocalf'</span>,<span class="string">'multifocali'</span>,<span class="string">'multifocald'</span>,<span class="string">'multifocaldf'</span>,<span class="string">'meridian'</span>,<span class="keyword">...</span>
+0240            <span class="string">'meridianf'</span>,<span class="string">'meridiani'</span>,<span class="string">'meridiand'</span>,<span class="string">'meridiandf'</span>,<span class="string">'hrf'</span>,<span class="string">'hrff'</span>,<span class="string">'hrfi'</span>,<span class="string">'hrfd'</span>,<span class="string">'hrfdf'</span>,<span class="keyword">...</span>
+0241            <span class="string">'localizer'</span>,<span class="string">'localizerf'</span>,<span class="string">'localizeri'</span>,<span class="string">'localizerd'</span>,<span class="string">'localizerdf'</span>,<span class="string">'lgn'</span>,<span class="string">'lgnf'</span>,<span class="string">'lgni'</span>,<span class="keyword">...</span>
+0242            <span class="string">'lgnd'</span>,<span class="string">'lgndf'</span>};
+0243 
+0244 windtypes={<span class="string">'ccwwindows'</span>,<span class="string">'cwwindows'</span>,<span class="string">'expwindows'</span>,<span class="string">'contwindows'</span>,<span class="string">'barwindows'</span>,<span class="keyword">...</span>
+0245            <span class="string">'ccwexpwindows'</span>,<span class="string">'cwexpwindows'</span>,<span class="string">'ccwcontwindows'</span>,<span class="string">'cwcontwindows'</span>,<span class="string">'multifocalwindows'</span>};
+0246 
+0247 <span class="keyword">for</span> ii=1:1:length(exp_mode)
+0248   <span class="keyword">if</span> isempty(intersect(lower(exp_mode{ii}),stimtypes)) &amp;&amp; isempty(intersect(lower(exp_mode{ii}),windtypes))
+0249     <span class="comment">% generating warning message like,</span>
+0250     <span class="comment">%</span>
+0251     <span class="comment">% exp_mode should be one of 'ccw', 'cw', 'exp', 'cont', 'bar', 'ccwexp', 'cwexp', 'ccwcont',</span>
+0252     <span class="comment">%                           'cwcont', 'ccwf', 'cwf', 'expf', 'contf', 'barf', 'ccwexpf', 'cwexpf',</span>
+0253     <span class="comment">%                           'ccwcontf', 'cwcontf', 'ccwi', 'cwi', 'expi', 'conti', 'bari', 'ccwexpi',</span>
+0254     <span class="comment">%                           'cwexpi', 'ccwconti', 'cwconti', 'ccwd', 'cwd', 'expd', 'contd', 'bard',</span>
+0255     <span class="comment">%                           'ccwexpd', 'cwexpd', 'ccwcontd', 'cwcontd', 'ccwdf', 'cwdf', 'expdf', 'contdf',</span>
+0256     <span class="comment">%                           'bardf', 'ccwexpdf', 'cwexpdf', 'ccwcontdf', 'cwcontdf', 'multifocal', 'multifocalf', 'multifocali',</span>
+0257     <span class="comment">%                           'multifocald', 'multifocaldf', 'meridian', 'meridianf', 'meridiani', 'meridiand', 'meridiandf',</span>
+0258     <span class="comment">%                           'hrf', 'hrff', 'hrfi', 'hrfd', 'hrfdf', 'localizer', 'localizerf', 'localizeri',</span>
+0259     <span class="comment">%                           'localizerd', 'localizerdf', 'lgn', 'lgnf', 'lgni', 'lgnd', 'lgndf',</span>
+0260     <span class="comment">%                           'ccwwindows', 'cwwindows', 'expwindows', 'contwindows',</span>
+0261     <span class="comment">%                           'barwindows', 'ccwexpwindows', 'cwexpwindows', 'ccwcontwindows',</span>
+0262     <span class="comment">%                           'cwcontwindows', 'multifocalwindows'</span>
+0263     <span class="comment">% check the input variables</span>
+0264 
+0265     msg_str=<span class="string">'exp_mode should be one of '</span>; <span class="comment">% 26 characters</span>
+0266     slen=length(msg_str);
+0267     <span class="keyword">for</span> pp=1:1:length(stimtypes)
+0268       msg_str=[msg_str,<span class="string">''''</span>,stimtypes{pp},<span class="string">''', '</span>];
+0269       <span class="keyword">if</span> ~mod(pp,8), msg_str=[msg_str,<span class="string">'\n'</span>,repmat(<span class="string">' '</span>,[1,slen])]; <span class="keyword">end</span>
+0270     <span class="keyword">end</span>
+0271     msg_str=[msg_str,<span class="string">'\n'</span>];
+0272 
+0273     msg_str=[msg_str,repmat(<span class="string">' '</span>,[1,slen])];
+0274     <span class="keyword">for</span> pp=1:1:length(windtypes)
+0275       msg_str=[msg_str,<span class="string">''''</span>,windtypes{pp},<span class="string">''', '</span>];
+0276       <span class="keyword">if</span> ~mod(pp,4), msg_str=[msg_str,<span class="string">'\n'</span>,repmat(<span class="string">' '</span>,[1,slen])]; <span class="keyword">end</span>
+0277     <span class="keyword">end</span>
+0278     msg_str=msg_str(1:end-2); <span class="comment">% omit ', ' at the end of the string</span>
+0279     msg_str=[msg_str,<span class="string">'\ncheck the input variable\n'</span>];
+0280 
+0281     fprintf(msg_str)
+0282 
+0283     <span class="keyword">if</span> nargout, OK=false; <span class="keyword">end</span>
+0284     <span class="keyword">return</span>
+0285   <span class="keyword">end</span>
+0286 <span class="keyword">end</span>
+0287 
+0288 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0289 <span class="comment">%% set script names</span>
+0290 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0291 
+0292 disp_fname=<span class="string">'retinotopy_display'</span>;
+0293 
+0294 run_fname=cell(length(exp_mode),1);
+0295 stim_mode=cell(length(exp_mode),1);
+0296 stim_fname=cell(length(exp_mode),1);
+0297 <span class="keyword">for</span> ii=1:1:length(exp_mode)
+0298   <span class="keyword">if</span> strcmpi(exp_mode{ii},<span class="string">'ccw'</span>)
+0299     run_fname{ii}=<span class="string">'cretinotopy'</span>;            stim_mode{ii}=<span class="string">'ccw'</span>;        stim_fname{ii}=<span class="string">'c_pol'</span>;
+0300   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cw'</span>)
+0301     run_fname{ii}=<span class="string">'cretinotopy'</span>;            stim_mode{ii}=<span class="string">'cw'</span>;         stim_fname{ii}=<span class="string">'c_pol'</span>;
+0302   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'exp'</span>)
+0303     run_fname{ii}=<span class="string">'cretinotopy'</span>;            stim_mode{ii}=<span class="string">'exp'</span>;        stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0304   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cont'</span>)
+0305     run_fname{ii}=<span class="string">'cretinotopy'</span>;            stim_mode{ii}=<span class="string">'cont'</span>;       stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0306   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'bar'</span>)
+0307     run_fname{ii}=<span class="string">'cbar'</span>;                   stim_mode{ii}=<span class="string">'bar'</span>;        stim_fname{ii}=<span class="string">'c_bar'</span>;
+0308   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwexp'</span>)
+0309     run_fname{ii}=<span class="string">'cdual'</span>;                  stim_mode{ii}=<span class="string">'ccwexp'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0310   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwexp'</span>)
+0311     run_fname{ii}=<span class="string">'cdual'</span>;                  stim_mode{ii}=<span class="string">'cwexp'</span>;      stim_fname{ii}=<span class="string">'c_dual'</span>;
+0312   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwcont'</span>)
+0313     run_fname{ii}=<span class="string">'cdual'</span>;                  stim_mode{ii}=<span class="string">'ccwcont'</span>;    stim_fname{ii}=<span class="string">'c_dual'</span>;
+0314   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwcont'</span>)
+0315     run_fname{ii}=<span class="string">'cdual'</span>;                  stim_mode{ii}=<span class="string">'cwcont'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0316   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'multifocal'</span>)
+0317     run_fname{ii}=<span class="string">'cmultifocal'</span>;            stim_mode{ii}=<span class="string">'multifocal'</span>; stim_fname{ii}=<span class="string">'c_multifocal'</span>;
+0318   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'meridian'</span>)
+0319     run_fname{ii}=<span class="string">'cmeridian'</span>;              stim_mode{ii}=<span class="string">'meridian'</span>;   stim_fname{ii}=<span class="string">'c_meridian'</span>;
+0320   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'lgn'</span>)
+0321     run_fname{ii}=<span class="string">'clgnlocalizer'</span>;          stim_mode{ii}=<span class="string">'lgn'</span>;        stim_fname{ii}=<span class="string">'c_lgnlocalizer'</span>;
+0322   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'hrf'</span>)
+0323     run_fname{ii}=<span class="string">'chrf'</span>;                   stim_mode{ii}=<span class="string">'hrf'</span>;        stim_fname{ii}=<span class="string">'c_hrf'</span>;
+0324   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'localizer'</span>)
+0325     run_fname{ii}=<span class="string">'clocalizer'</span>;             stim_mode{ii}=<span class="string">'localizer'</span>;  stim_fname{ii}=<span class="string">'c_localizer'</span>;
+0326   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwd'</span>)
+0327     run_fname{ii}=<span class="string">'dretinotopy'</span>;            stim_mode{ii}=<span class="string">'ccw'</span>;        stim_fname{ii}=<span class="string">'c_pol'</span>;
+0328   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwd'</span>)
+0329     run_fname{ii}=<span class="string">'dretinotopy'</span>;            stim_mode{ii}=<span class="string">'cw'</span>;         stim_fname{ii}=<span class="string">'c_pol'</span>;
+0330   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'expd'</span>)
+0331     run_fname{ii}=<span class="string">'dretinotopy'</span>;            stim_mode{ii}=<span class="string">'exp'</span>;        stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0332   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'contd'</span>)
+0333     run_fname{ii}=<span class="string">'dretinotopy'</span>;            stim_mode{ii}=<span class="string">'cont'</span>;       stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0334   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'bard'</span>)
+0335     run_fname{ii}=<span class="string">'dbar'</span>;                   stim_mode{ii}=<span class="string">'bar'</span>;        stim_fname{ii}=<span class="string">'c_bar'</span>;
+0336   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwexpd'</span>)
+0337     run_fname{ii}=<span class="string">'ddual'</span>;                  stim_mode{ii}=<span class="string">'ccwexp'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0338   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwexpd'</span>)
+0339     run_fname{ii}=<span class="string">'ddual'</span>;                  stim_mode{ii}=<span class="string">'cwexp'</span>;      stim_fname{ii}=<span class="string">'c_dual'</span>;
+0340   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwcontd'</span>)
+0341     run_fname{ii}=<span class="string">'ddual'</span>;                  stim_mode{ii}=<span class="string">'ccwcont'</span>;    stim_fname{ii}=<span class="string">'c_dual'</span>;
+0342   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwcontd'</span>)
+0343     run_fname{ii}=<span class="string">'ddual'</span>;                  stim_mode{ii}=<span class="string">'cwcont'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0344   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'multifocald'</span>)
+0345     run_fname{ii}=<span class="string">'dmultifocal'</span>;            stim_mode{ii}=<span class="string">'multifocal'</span>; stim_fname{ii}=<span class="string">'c_multifocal'</span>;
+0346   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'meridiand'</span>)
+0347     run_fname{ii}=<span class="string">'dmeridian'</span>;              stim_mode{ii}=<span class="string">'meridian'</span>;   stim_fname{ii}=<span class="string">'c_meridian'</span>;
+0348   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'lgnd'</span>)
+0349     run_fname{ii}=<span class="string">'dlgnlocalizer'</span>;          stim_mode{ii}=<span class="string">'lgn'</span>;        stim_fname{ii}=<span class="string">'c_lgnlocalizer'</span>;
+0350   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'hrfd'</span>)
+0351     run_fname{ii}=<span class="string">'dhrf'</span>;                   stim_mode{ii}=<span class="string">'hrf'</span>;        stim_fname{ii}=<span class="string">'c_hrf'</span>;
+0352   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'localizerd'</span>)
+0353     run_fname{ii}=<span class="string">'dlocalizer'</span>;             stim_mode{ii}=<span class="string">'localizer'</span>;  stim_fname{ii}=<span class="string">'c_localizer'</span>;
+0354   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwf'</span>)
+0355     run_fname{ii}=<span class="string">'cretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'ccw'</span>;        stim_fname{ii}=<span class="string">'c_pol'</span>;
+0356   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwf'</span>)
+0357     run_fname{ii}=<span class="string">'cretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'cw'</span>;         stim_fname{ii}=<span class="string">'c_pol'</span>;
+0358   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'expf'</span>)
+0359     run_fname{ii}=<span class="string">'cretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'exp'</span>;        stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0360   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'contf'</span>)
+0361     run_fname{ii}=<span class="string">'cretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'cont'</span>;       stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0362   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'barf'</span>)
+0363     run_fname{ii}=<span class="string">'cbar_fixtask'</span>;           stim_mode{ii}=<span class="string">'bar'</span>;        stim_fname{ii}=<span class="string">'c_bar'</span>;
+0364   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwexpf'</span>)
+0365     run_fname{ii}=<span class="string">'cdual_fixtask'</span>;          stim_mode{ii}=<span class="string">'ccwexp'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0366   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwexpf'</span>)
+0367     run_fname{ii}=<span class="string">'cdual_fixtask'</span>;          stim_mode{ii}=<span class="string">'cwexp'</span>;      stim_fname{ii}=<span class="string">'c_dual'</span>;
+0368   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwcontf'</span>)
+0369     run_fname{ii}=<span class="string">'cdual_fixtask'</span>;          stim_mode{ii}=<span class="string">'ccwcont'</span>;    stim_fname{ii}=<span class="string">'c_dual'</span>;
+0370   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwcontf'</span>)
+0371     run_fname{ii}=<span class="string">'cdual_fixtask'</span>;          stim_mode{ii}=<span class="string">'cwcont'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0372   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'multifocalf'</span>)
+0373     run_fname{ii}=<span class="string">'cmultifocal_fixtask'</span>;    stim_mode{ii}=<span class="string">'multifocal'</span>; stim_fname{ii}=<span class="string">'c_multifocal'</span>;
+0374   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'meridianf'</span>)
+0375     run_fname{ii}=<span class="string">'cmeridian_fixtask'</span>;      stim_mode{ii}=<span class="string">'meridian'</span>;   stim_fname{ii}=<span class="string">'c_meridian'</span>;
+0376   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'lgnf'</span>)
+0377     run_fname{ii}=<span class="string">'clgnlocalizer_fixtask'</span>;  stim_mode{ii}=<span class="string">'lgn'</span>;        stim_fname{ii}=<span class="string">'c_lgnlocalizer'</span>;
+0378   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'hrff'</span>)
+0379     run_fname{ii}=<span class="string">'chrf_fixtask'</span>;           stim_mode{ii}=<span class="string">'hrf'</span>;        stim_fname{ii}=<span class="string">'c_hrf'</span>;
+0380   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'localizerf'</span>)
+0381     run_fname{ii}=<span class="string">'clocalizer_fixtask'</span>;     stim_mode{ii}=<span class="string">'localizer'</span>;  stim_fname{ii}=<span class="string">'c_localizer'</span>;
+0382   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwi'</span>)
+0383     run_fname{ii}=<span class="string">'iretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'ccw'</span>;        stim_fname{ii}=<span class="string">'c_pol'</span>;
+0384   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwi'</span>)
+0385     run_fname{ii}=<span class="string">'iretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'cw'</span>;         stim_fname{ii}=<span class="string">'c_pol'</span>;
+0386   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'expi'</span>)
+0387     run_fname{ii}=<span class="string">'iretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'exp'</span>;        stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0388   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'conti'</span>)
+0389     run_fname{ii}=<span class="string">'iretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'cont'</span>;       stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0390   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'bari'</span>)
+0391     run_fname{ii}=<span class="string">'ibar_fixtask'</span>;           stim_mode{ii}=<span class="string">'bar'</span>;        stim_fname{ii}=<span class="string">'c_bar'</span>;
+0392   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwexpi'</span>)
+0393     run_fname{ii}=<span class="string">'idual_fixtask'</span>;          stim_mode{ii}=<span class="string">'ccwexp'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0394   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwexpi'</span>)
+0395     run_fname{ii}=<span class="string">'idual_fixtask'</span>;          stim_mode{ii}=<span class="string">'cwexp'</span>;      stim_fname{ii}=<span class="string">'c_dual'</span>;
+0396   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwconti'</span>)
+0397     run_fname{ii}=<span class="string">'idual_fixtask'</span>;          stim_mode{ii}=<span class="string">'ccwcont'</span>;    stim_fname{ii}=<span class="string">'c_dual'</span>;
+0398   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwconti'</span>)
+0399     run_fname{ii}=<span class="string">'idual_fixtask'</span>;          stim_mode{ii}=<span class="string">'cwcont'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0400   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'multifocali'</span>)
+0401     run_fname{ii}=<span class="string">'imultifocal_fixtask'</span>;    stim_mode{ii}=<span class="string">'multifocal'</span>; stim_fname{ii}=<span class="string">'c_multifocal'</span>;
+0402   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'meridiani'</span>)
+0403     run_fname{ii}=<span class="string">'imeridian_fixtask'</span>;      stim_mode{ii}=<span class="string">'meridian'</span>;   stim_fname{ii}=<span class="string">'c_meridian'</span>;
+0404   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'lgni'</span>)
+0405     run_fname{ii}=<span class="string">'ilgnlocalizer_fixtask'</span>;  stim_mode{ii}=<span class="string">'lgn'</span>;        stim_fname{ii}=<span class="string">'c_lgnlocalizer'</span>;
+0406   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'hrfi'</span>)
+0407     run_fname{ii}=<span class="string">'ihrf_fixtask'</span>;           stim_mode{ii}=<span class="string">'hrf'</span>;        stim_fname{ii}=<span class="string">'c_hrf'</span>;
+0408   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'localizeri'</span>)
+0409     run_fname{ii}=<span class="string">'ilocalizer_fixtask'</span>;     stim_mode{ii}=<span class="string">'localizer'</span>;  stim_fname{ii}=<span class="string">'c_localizer'</span>;
+0410   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwdf'</span>)
+0411     run_fname{ii}=<span class="string">'dretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'ccw'</span>;        stim_fname{ii}=<span class="string">'c_pol'</span>;
+0412   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwdf'</span>)
+0413     run_fname{ii}=<span class="string">'dretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'cw'</span>;         stim_fname{ii}=<span class="string">'c_pol'</span>;
+0414   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'expdf'</span>)
+0415     run_fname{ii}=<span class="string">'dretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'exp'</span>;        stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0416   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'contdf'</span>)
+0417     run_fname{ii}=<span class="string">'dretinotopy_fixtask'</span>;    stim_mode{ii}=<span class="string">'cont'</span>;       stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0418   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'bardf'</span>)
+0419     run_fname{ii}=<span class="string">'dbar_fixtask'</span>;           stim_mode{ii}=<span class="string">'bar'</span>;        stim_fname{ii}=<span class="string">'c_bar'</span>;
+0420   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwexpdf'</span>)
+0421     run_fname{ii}=<span class="string">'ddual_fixtask'</span>;          stim_mode{ii}=<span class="string">'ccwexp'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0422   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwexpdf'</span>)
+0423     run_fname{ii}=<span class="string">'ddual_fixtask'</span>;          stim_mode{ii}=<span class="string">'cwexp'</span>;      stim_fname{ii}=<span class="string">'c_dual'</span>;
+0424   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwcontdf'</span>)
+0425     run_fname{ii}=<span class="string">'ddual_fixtask'</span>;          stim_mode{ii}=<span class="string">'ccwcont'</span>;    stim_fname{ii}=<span class="string">'c_dual'</span>;
+0426   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwcontdf'</span>)
+0427     run_fname{ii}=<span class="string">'ddual_fixtask'</span>;          stim_mode{ii}=<span class="string">'cwcont'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0428   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'multifocaldf'</span>)
+0429     run_fname{ii}=<span class="string">'dmultifocal_fixtask'</span>;    stim_mode{ii}=<span class="string">'multifocal'</span>; stim_fname{ii}=<span class="string">'c_multifocal'</span>;
+0430   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'meridiandf'</span>)
+0431     run_fname{ii}=<span class="string">'dmeridian_fixtask'</span>;      stim_mode{ii}=<span class="string">'meridian'</span>;   stim_fname{ii}=<span class="string">'c_meridian'</span>;
+0432   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'lgndf'</span>)
+0433     run_fname{ii}=<span class="string">'dlgnlocalizer_fixtask'</span>;  stim_mode{ii}=<span class="string">'lgn'</span>;        stim_fname{ii}=<span class="string">'c_lgnlocalizer'</span>;
+0434   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'hrfdf'</span>)
+0435     run_fname{ii}=<span class="string">'dhrf_fixtask'</span>;           stim_mode{ii}=<span class="string">'hrf'</span>;        stim_fname{ii}=<span class="string">'c_hrf'</span>;
+0436   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'localizerdf'</span>)
+0437     run_fname{ii}=<span class="string">'dlocalizer_fixtask'</span>;     stim_mode{ii}=<span class="string">'localizer'</span>;  stim_fname{ii}=<span class="string">'c_localizer'</span>;
+0438   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwwindows'</span>)
+0439     run_fname{ii}=<span class="string">'gen_retinotopy_windows'</span>; stim_mode{ii}=<span class="string">'ccw'</span>;        stim_fname{ii}=<span class="string">'c_pol'</span>;
+0440   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwwindows'</span>)
+0441     run_fname{ii}=<span class="string">'gen_retinotopy_windows'</span>; stim_mode{ii}=<span class="string">'cw'</span>;         stim_fname{ii}=<span class="string">'c_pol'</span>;
+0442   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'expwindows'</span>)
+0443     run_fname{ii}=<span class="string">'gen_retinotopy_windows'</span>; stim_mode{ii}=<span class="string">'exp'</span>;        stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0444   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'contwindows'</span>)
+0445     run_fname{ii}=<span class="string">'gen_retinotopy_windows'</span>; stim_mode{ii}=<span class="string">'cont'</span>;       stim_fname{ii}=<span class="string">'c_ecc'</span>;
+0446   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'barwindows'</span>)
+0447     run_fname{ii}=<span class="string">'gen_bar_windows'</span>;        stim_mode{ii}=<span class="string">'bar'</span>;        stim_fname{ii}=<span class="string">'c_bar'</span>;
+0448   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwexpwindows'</span>)
+0449     run_fname{ii}=<span class="string">'gen_dual_windows'</span>;       stim_mode{ii}=<span class="string">'ccwexp'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0450   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwexpwindows'</span>)
+0451     run_fname{ii}=<span class="string">'gen_dual_windows'</span>;       stim_mode{ii}=<span class="string">'cwexp'</span>;      stim_fname{ii}=<span class="string">'c_dual'</span>;
+0452   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'ccwcontwindows'</span>)
+0453     run_fname{ii}=<span class="string">'gen_dual_windows'</span>;       stim_mode{ii}=<span class="string">'ccwcont'</span>;    stim_fname{ii}=<span class="string">'c_dual'</span>;
+0454   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'cwcontwindows'</span>)
+0455     run_fname{ii}=<span class="string">'gen_dual_windows'</span>;       stim_mode{ii}=<span class="string">'cwcont'</span>;     stim_fname{ii}=<span class="string">'c_dual'</span>;
+0456   <span class="keyword">elseif</span> strcmpi(exp_mode{ii},<span class="string">'multifocalwindows'</span>)
+0457     run_fname{ii}=<span class="string">'gen_multifocal_windows'</span>; stim_mode{ii}=<span class="string">'multifocal'</span>; stim_fname{ii}=<span class="string">'c_multifocal'</span>;
+0458   <span class="keyword">end</span>
+0459 <span class="keyword">end</span>
+0460 
+0461 
+0462 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0463 <span class="comment">%% check whether the subject directory already exists</span>
+0464 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0465 
+0466 <span class="comment">% [NOTE]</span>
+0467 <span class="comment">% if the subj directory is not found, the directory is created with coping</span>
+0468 <span class="comment">% all condition files from DEFAULT and then this function tries to run the</span>
+0469 <span class="comment">% stimulus presentation script using the DEFAULT parameters</span>
+0470 
+0471 subj_dir=fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'subjects'</span>,subj);
+0472 <span class="keyword">if</span> ~exist(subj_dir,<span class="string">'dir'</span>)
+0473 
+0474   fprintf(<span class="string">'The subject directory was not found.\n'</span>);
+0475   user_response=0;
+0476   <span class="keyword">while</span> ~user_response
+0477     user_entry = input(<span class="string">'Do you want to proceed using DEFAULT parameters? (y/n) : '</span>, <span class="string">'s'</span>);
+0478     <span class="keyword">if</span>(user_entry == <span class="string">'y'</span>)
+0479       fprintf(<span class="string">'Generating subj directory using DEFAULT parameters...'</span>);
+0480       user_response=1; <span class="comment">%#ok</span>
+0481       <span class="keyword">break</span>;
+0482     <span class="keyword">elseif</span> (user_entry == <span class="string">'n'</span>)
+0483       fprintf(<span class="string">'quiting the script...\n'</span>);
+0484       <span class="keyword">if</span> nargout, OK=false; <span class="keyword">end</span>
+0485       <span class="keyword">return</span>;
+0486     <span class="keyword">else</span>
+0487       fprintf(<span class="string">'Please answer y or n!\n'</span>); <span class="keyword">continue</span>;
+0488     <span class="keyword">end</span>
+0489   <span class="keyword">end</span>
+0490 
+0491   <span class="comment">%mkdir(subj_dir);</span>
+0492   copyfile(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'subjects'</span>,<span class="string">'_DEFAULT_'</span>),subj_dir);
+0493 <span class="keyword">end</span>
+0494 
+0495 
+0496 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0497 <span class="comment">%% set a display gamma table. please change the line below to use your own measurements</span>
+0498 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0499 
+0500 <span class="comment">% loading gamma_table</span>
+0501 <span class="comment">%load(fullfile('..','gamma_table','ASUS_ROG_Swift_PG278Q','181003','cbs','gammatablePTB.mat'));</span>
+0502 <span class="comment">%load(fullfile('..','gamma_table','ASUS_VG278HE','181003','cbs','gammatablePTB.mat'));</span>
+0503 <span class="comment">%load(fullfile('..','gamma_table','MEG_B1','151225','cbs','gammatablePTB.mat'));</span>
+0504 gammatable=repmat(linspace(0.0,1.0,256),3,1)'; <span class="comment">%#ok % a simple linear gamma</span>
+0505 
+0506 
+0507 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0508 <span class="comment">%% present stimuli or generate stimulus windows</span>
+0509 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0510 
+0511 <span class="keyword">for</span> ii=1:1:length(exp_mode)
+0512   <span class="keyword">if</span> ~isempty(intersect(lower(exp_mode{ii}),windtypes)) <span class="comment">% generate stimulus windows</span>
+0513     main_exp_name=sprintf(<span class="string">'%s(''%s'',''%s'',%d,''%s'',''%s'',%d,%d);'</span>,<span class="keyword">...</span>
+0514         run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii},overwrite_pix_per_deg,TR);
+0515   <span class="keyword">else</span> <span class="comment">% stimulus presentation</span>
+0516     main_exp_name=sprintf(<span class="string">'%s(''%s'',''%s'',%d,''%s'',''%s'',gammatable);'</span>,<span class="keyword">...</span>
+0517         run_fname{ii},subj,stim_mode{ii},acq_num(ii),disp_fname,stim_fname{ii});
+0518   <span class="keyword">end</span>
+0519   main_exp_name=strrep(main_exp_name,<span class="string">',,'</span>,<span class="string">',[],'</span>); <span class="comment">% to avoid error when some variable is empty, we need to add this line.</span>
+0520   eval(main_exp_name);
+0521 <span class="keyword">end</span>
+0522 
+0523 <span class="keyword">if</span> nargout, OK=true; <span class="keyword">end</span>
+0524 
+0525 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

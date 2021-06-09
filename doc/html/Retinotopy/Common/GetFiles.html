@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of GetFiles</title>
+  <meta name="keywords" content="GetFiles">
+  <meta name="description" content="Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>GetFiles
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).
+ function filenames=GetFils(target_dir,extension,:prefix,:ignore_error_flg,:ignore_wildcard_flg)
+ (: is optional)
+
+ [example]
+ &gt;&gt; vtcfiles=GetFiles('c:/fmri_analysis/CastingShadow/HB/zk09_091','*.vtc') % to get all *.vtc files
+ &gt;&gt; voifiles=GetFiles(pwd,'*\Sub-Gyral.voi','',1,1); % with putting a file separator, '\', you can only get a file whose name is exactly 'Sub-Gyral.voi'.
+
+ [about]
+ This function returns a cell strucure of a series of file names searched and
+ found by the 'prefix' variable under the 'target_dir' directory. You can also
+ omit specific files which contains some prefix to be ignored. For details,
+ please see the descriptions of the 'prefix' variable below.
+
+ [input]
+ target_dir : Target directory that contains files you want to get
+              Target directory should be specified as a full- or relative-
+              path format. e.g. 'C:/home/ban/scripts/' or '../scripts'
+              If this variable is set in a full- (relative-) path format,
+              the output varialbe, filenames, is also returned in a
+              full- (relative-) path format.
+ extension  : Extension of files you want to get. e.g. extension='*.vtc'
+              If you want to get directory or no-extension file, please
+              set extension='';
+              You can also set the extension variable with some prefix like
+              extension='*_avg_LH.smp';
+ prefix     : (optional) a string or a cell string to specify the target from
+              multiple files, e.g. prefix='CD'; or prefix={'CD','HB'};
+              empty by default.
+
+              &lt;HOW TO SET PREFIX VARIABLE&gt;
+              prefix can be set flexibly as below.
+              1. a string             : setting an including prefix (string) alone
+                 e.g. extension='.vtc'; prefix='_TDTS6.0';
+                         --&gt; returns all *.vtc files whose names contain '_TDTS6.0'
+              2. a {1 x N} cell string: setting including prefix (string) arrays
+                 e.g. extension='.vtc'; prefix={'_TDTS6.0','_TSS5.0mm'};
+                         --&gt; returns all *.vtc files whose names contain
+                             '_TDTS6.0s' or '_TSS5.0mm'.
+              3. a {2 x N} cell string: setting including/excluding prefix (string) arrays
+                 e.g. extension='.vtc'; prefix={{'_TDTS6.0s','_TSS5.0mm'};{'THP'}};
+                         --&gt; returns all *.vtc files whose names contain '_TDTS6.0s'
+                             or '_TSS5.0mm' and do not contain 'THP'.
+                      extension='.vtc'; prefix={'';{'_TDTS6.0s'}};
+                         --&gt; returns all *.vtc files whose names do not contain '_TDTS6.0s'.
+                      extension='.vtc'; prefix={'_TSS5.0mm';''};
+                         --&gt; returns all *.vtc files whose names contain '_TSS5.0mm'.
+ ignore_error_flg : (optional) whether ignoring displaying error message when the 'filenames'
+              output is an empry cell. if 1, the checking procedure is ignored. 1 by default.
+ ignore_wildcard_flg : (optional) whether ignoring adding '*' at the head of 'extension' and
+              'prefix' string(s). if 1, the extension and prefix will be processed 'as they are'
+              without adding a wildcard regular expression, '*'. 0 by default.
+              More specifically, when this value is 0, 'extension' and 'prefix' are internally
+              converted as extension=['*',extension] and prefix=['*',prefix] (a matrix example,
+              cell input is also processed in the same way).
+
+ [output]
+ filenames  : a cell structure that contains a series of file names you want
+
+ [dependency]
+ wildcardsearch.m
+ enables reg-exp search of files
+
+
+ Created    : &quot;2010-06-09 11:32:50 ban&quot;
+ Last Update: &quot;2018-11-27 16:44:42 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AddPrefix2Filename.html" class="code" title="function [filenames,dirnames]=AddPrefix2Filename(target_dir,extension,prefix_tgt,prefix_head,prefix_tail)">AddPrefix2Filename</a>	Adds user-specified prefix to file names.</li><li><a href="CreateHardLinkFile.html" class="code" title="function CreateHardLinkFile(target_dir,infformat,output_dir)">CreateHardLinkFile</a>	Creates hard links in the target directory to the target files.</li><li><a href="DisplayTargetInSpecDir.html" class="code" title="function DisplayTargetInSpecDir(target_dir,fformat,prefix)">DisplayTargetInSpecDir</a>	Displays target files in a specific directory.</li><li><a href="RemovePrefixFromFilename.html" class="code" title="function filenames=RemovePrefixFromFilename(target_dir,extension,prefix_tgt,prefix_remove)">RemovePrefixFromFilename</a>	Removes a specific prefix from the target file names.</li><li><a href="ReplaceFilename.html" class="code" title="function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,prefix_to_be_replaced,prefix_replace,prefix_exclude)">ReplaceFilename</a>	Replaces a target word in the file name to the specified one.</li><li><a href="ReplaceFilenameSequentially.html" class="code" title="function [filenames,originalnames]=ReplaceFilenameSequentially(target_dir,sequence_fmt,extension,prefix_inc_tgt,prefix_exc_tgt)">ReplaceFilenameSequentially</a>	Replaces target files following a specified sequential file name format.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)</a>
+0002 
+0003 <span class="comment">% Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).</span>
+0004 <span class="comment">% function filenames=GetFils(target_dir,extension,:prefix,:ignore_error_flg,:ignore_wildcard_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% [example]</span>
+0008 <span class="comment">% &gt;&gt; vtcfiles=GetFiles('c:/fmri_analysis/CastingShadow/HB/zk09_091','*.vtc') % to get all *.vtc files</span>
+0009 <span class="comment">% &gt;&gt; voifiles=GetFiles(pwd,'*\Sub-Gyral.voi','',1,1); % with putting a file separator, '\', you can only get a file whose name is exactly 'Sub-Gyral.voi'.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% [about]</span>
+0012 <span class="comment">% This function returns a cell strucure of a series of file names searched and</span>
+0013 <span class="comment">% found by the 'prefix' variable under the 'target_dir' directory. You can also</span>
+0014 <span class="comment">% omit specific files which contains some prefix to be ignored. For details,</span>
+0015 <span class="comment">% please see the descriptions of the 'prefix' variable below.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% [input]</span>
+0018 <span class="comment">% target_dir : Target directory that contains files you want to get</span>
+0019 <span class="comment">%              Target directory should be specified as a full- or relative-</span>
+0020 <span class="comment">%              path format. e.g. 'C:/home/ban/scripts/' or '../scripts'</span>
+0021 <span class="comment">%              If this variable is set in a full- (relative-) path format,</span>
+0022 <span class="comment">%              the output varialbe, filenames, is also returned in a</span>
+0023 <span class="comment">%              full- (relative-) path format.</span>
+0024 <span class="comment">% extension  : Extension of files you want to get. e.g. extension='*.vtc'</span>
+0025 <span class="comment">%              If you want to get directory or no-extension file, please</span>
+0026 <span class="comment">%              set extension='';</span>
+0027 <span class="comment">%              You can also set the extension variable with some prefix like</span>
+0028 <span class="comment">%              extension='*_avg_LH.smp';</span>
+0029 <span class="comment">% prefix     : (optional) a string or a cell string to specify the target from</span>
+0030 <span class="comment">%              multiple files, e.g. prefix='CD'; or prefix={'CD','HB'};</span>
+0031 <span class="comment">%              empty by default.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%              &lt;HOW TO SET PREFIX VARIABLE&gt;</span>
+0034 <span class="comment">%              prefix can be set flexibly as below.</span>
+0035 <span class="comment">%              1. a string             : setting an including prefix (string) alone</span>
+0036 <span class="comment">%                 e.g. extension='.vtc'; prefix='_TDTS6.0';</span>
+0037 <span class="comment">%                         --&gt; returns all *.vtc files whose names contain '_TDTS6.0'</span>
+0038 <span class="comment">%              2. a {1 x N} cell string: setting including prefix (string) arrays</span>
+0039 <span class="comment">%                 e.g. extension='.vtc'; prefix={'_TDTS6.0','_TSS5.0mm'};</span>
+0040 <span class="comment">%                         --&gt; returns all *.vtc files whose names contain</span>
+0041 <span class="comment">%                             '_TDTS6.0s' or '_TSS5.0mm'.</span>
+0042 <span class="comment">%              3. a {2 x N} cell string: setting including/excluding prefix (string) arrays</span>
+0043 <span class="comment">%                 e.g. extension='.vtc'; prefix={{'_TDTS6.0s','_TSS5.0mm'};{'THP'}};</span>
+0044 <span class="comment">%                         --&gt; returns all *.vtc files whose names contain '_TDTS6.0s'</span>
+0045 <span class="comment">%                             or '_TSS5.0mm' and do not contain 'THP'.</span>
+0046 <span class="comment">%                      extension='.vtc'; prefix={'';{'_TDTS6.0s'}};</span>
+0047 <span class="comment">%                         --&gt; returns all *.vtc files whose names do not contain '_TDTS6.0s'.</span>
+0048 <span class="comment">%                      extension='.vtc'; prefix={'_TSS5.0mm';''};</span>
+0049 <span class="comment">%                         --&gt; returns all *.vtc files whose names contain '_TSS5.0mm'.</span>
+0050 <span class="comment">% ignore_error_flg : (optional) whether ignoring displaying error message when the 'filenames'</span>
+0051 <span class="comment">%              output is an empry cell. if 1, the checking procedure is ignored. 1 by default.</span>
+0052 <span class="comment">% ignore_wildcard_flg : (optional) whether ignoring adding '*' at the head of 'extension' and</span>
+0053 <span class="comment">%              'prefix' string(s). if 1, the extension and prefix will be processed 'as they are'</span>
+0054 <span class="comment">%              without adding a wildcard regular expression, '*'. 0 by default.</span>
+0055 <span class="comment">%              More specifically, when this value is 0, 'extension' and 'prefix' are internally</span>
+0056 <span class="comment">%              converted as extension=['*',extension] and prefix=['*',prefix] (a matrix example,</span>
+0057 <span class="comment">%              cell input is also processed in the same way).</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% [output]</span>
+0060 <span class="comment">% filenames  : a cell structure that contains a series of file names you want</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% [dependency]</span>
+0063 <span class="comment">% wildcardsearch.m</span>
+0064 <span class="comment">% enables reg-exp search of files</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">% Created    : &quot;2010-06-09 11:32:50 ban&quot;</span>
+0068 <span class="comment">% Last Update: &quot;2018-11-27 16:44:42 ban&quot;</span>
+0069 
+0070 <span class="comment">% check the input variables</span>
+0071 <span class="keyword">if</span> nargin&lt;2, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0072 <span class="keyword">if</span> nargin&lt;3 || isempty(prefix), prefix=<span class="string">''</span>; <span class="keyword">end</span>
+0073 <span class="keyword">if</span> nargin&lt;4 || isempty(ignore_error_flg), ignore_error_flg=1; <span class="keyword">end</span>
+0074 <span class="keyword">if</span> nargin&lt;5 || isempty(ignore_wildcard_flg), ignore_wildcard_flg=0; <span class="keyword">end</span>
+0075 
+0076 <span class="comment">% check whether the target directory exists</span>
+0077 <span class="keyword">if</span> ~exist(target_dir,<span class="string">'dir'</span>)
+0078   error(<span class="string">'can not find target directory: %s'</span>,target_dir);
+0079 <span class="keyword">end</span>
+0080 
+0081 <span class="comment">% organize the extension variable</span>
+0082 <span class="keyword">if</span> ~isempty(extension)
+0083   <span class="keyword">if</span> ~strcmp(extension,<span class="string">'*'</span>)
+0084     <span class="keyword">if</span> ~strcmp(extension(1),<span class="string">'*'</span>) &amp;&amp; ~ignore_wildcard_flg, extension=[<span class="string">'*'</span>,extension]; <span class="keyword">end</span>
+0085     <span class="comment">%if ~strcmp(extension(2),'.') &amp;&amp; ~ignore_wildcard_flg, extension=['*.',extension(2:end)]; end</span>
+0086   <span class="keyword">end</span>
+0087 <span class="keyword">end</span>
+0088 
+0089 <span class="comment">% organize search and non-search strings</span>
+0090 <span class="keyword">if</span> ~iscell(prefix)
+0091   <span class="comment">% organize search string array that is to be searched in wildcardsearch,</span>
+0092   <span class="comment">% by adding '*' and &quot;extension&quot; at the head and tail of each string</span>
+0093   <span class="keyword">if</span> ~isempty(prefix) &amp;&amp; ~strcmp(prefix(1),<span class="string">'*'</span>) &amp;&amp; ~ignore_wildcard_flg, prefix=[<span class="string">'*'</span>,prefix]; <span class="keyword">end</span>
+0094   searchstr=[prefix,extension];
+0095   <span class="comment">%searchstr=strrep(searchstr,'**','*');</span>
+0096 
+0097   <span class="comment">% organize non-search string array that is to be omitted from searching in wildcardsearch</span>
+0098   nonsearchstr=[];
+0099 <span class="keyword">else</span>
+0100   <span class="keyword">if</span> size(prefix,1)==1
+0101     <span class="comment">% organize search string array that is to be searched in wildcardsearch,</span>
+0102     <span class="comment">% by adding '*' and &quot;extension&quot; at the head and tail of each string</span>
+0103     <span class="keyword">if</span> ~isempty(prefix{1}) &amp;&amp; ~strcmp(prefix{1}(1),<span class="string">'*'</span>) &amp;&amp; ~ignore_wildcard_flg, prefix{1}=[<span class="string">'*'</span>,prefix{1}]; <span class="keyword">end</span>
+0104     searchstr=[prefix{1},extension];
+0105     <span class="keyword">for</span> ii=2:1:length(prefix)
+0106       <span class="keyword">if</span> ~isempty(prefix{ii}) &amp;&amp; ~strcmp(prefix{ii}(1),<span class="string">'*'</span>) &amp;&amp; ~ignore_wildcard_flg, prefix{ii}=[<span class="string">'*'</span>,prefix{ii}]; <span class="keyword">end</span>
+0107       searchstr=[searchstr,<span class="string">';'</span>,[prefix{ii},extension]]; <span class="comment">%#ok</span>
+0108     <span class="keyword">end</span>
+0109     <span class="comment">%searchstr=strrep(searchstr,'**','*');</span>
+0110 
+0111     <span class="comment">% organize non-search string array that is to be omitted from searching in wildcardsearch</span>
+0112     nonsearchstr=[];
+0113   <span class="keyword">elseif</span> size(prefix,1)==2
+0114     <span class="comment">% separate including and excluding file prefix</span>
+0115     incl_prefix=prefix{1}; <span class="keyword">if</span> ~iscell(incl_prefix), incl_prefix={incl_prefix}; <span class="keyword">end</span>
+0116 
+0117     <span class="comment">% organize search string array that is to be searched in wildcardsearch,</span>
+0118     <span class="comment">% by adding '*' and &quot;extension&quot; at the head and tail of each string</span>
+0119     <span class="keyword">if</span> ~isempty(incl_prefix{1}) &amp;&amp; ~strcmp(incl_prefix{1}(1),<span class="string">'*'</span>) &amp;&amp; ~ignore_wildcard_flg, incl_prefix{1}=[<span class="string">'*'</span>,incl_prefix{1}]; <span class="keyword">end</span>
+0120     searchstr=[incl_prefix{1},extension];
+0121     <span class="keyword">for</span> ii=2:1:length(incl_prefix)
+0122       <span class="keyword">if</span> ~isempty(incl_prefix{ii}) &amp;&amp; ~strcmp(incl_prefix{ii}(1),<span class="string">'*'</span>) &amp;&amp; ~ignore_wildcard_flg, incl_prefix{ii}=[<span class="string">'*'</span>,incl_prefix{ii}]; <span class="keyword">end</span>
+0123       searchstr=[searchstr,<span class="string">';'</span>,[incl_prefix{ii},extension]]; <span class="comment">%#ok</span>
+0124     <span class="keyword">end</span>
+0125     <span class="comment">%searchstr=strrep(searchstr,'**','*');</span>
+0126 
+0127     <span class="comment">% organize non-search string array that is to be omitted from searching in wildcardsearch</span>
+0128     nonsearchstr=prefix{2}; <span class="keyword">if</span> ~iscell(nonsearchstr), nonsearchstr={nonsearchstr}; <span class="keyword">end</span>;
+0129     <span class="comment">%for ii=1:1:length(nonsearchstr), nonsearchstr=strrep(nonsearchstr,'**','*'); end</span>
+0130   <span class="keyword">else</span>
+0131     error(<span class="string">'prefix should be a string, cell{N}, or cell{2,N}. check the input variable.'</span>);
+0132   <span class="keyword">end</span>
+0133 <span class="keyword">end</span>
+0134 
+0135 <span class="comment">% get file names</span>
+0136 <span class="comment">%if strcmp(relativepath(target_dir),'.\') || strcmp(relativepath(target_dir),'.'), target_dir='.'; end</span>
+0137 <span class="comment">%filenames=wildcardsearch(target_dir,[prefix,extension]);</span>
+0138 <span class="keyword">if</span> ~ignore_wildcard_flg
+0139   filenames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(target_dir,searchstr);
+0140 <span class="keyword">else</span>
+0141   filenames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(target_dir,searchstr,false,true);
+0142 <span class="keyword">end</span>
+0143 
+0144 <span class="comment">% omit the files that contain a string defined in nonsearchstr</span>
+0145 <span class="keyword">if</span> ~isempty(nonsearchstr)
+0146   fileidx=true(length(filenames),1);
+0147   <span class="keyword">for</span> ii=1:1:length(filenames)
+0148     <span class="keyword">for</span> jj=1:1:length(nonsearchstr)
+0149       <span class="keyword">if</span> ~isempty(strfind(filenames{ii},nonsearchstr{jj}))
+0150         fileidx(ii)=false;
+0151         <span class="keyword">continue</span>
+0152       <span class="keyword">end</span>
+0153     <span class="keyword">end</span>
+0154   <span class="keyword">end</span>
+0155   filenames=filenames(fileidx);
+0156 <span class="keyword">end</span>
+0157 
+0158 <span class="comment">% check errors</span>
+0159 <span class="keyword">if</span> ~ignore_error_flg
+0160   <span class="keyword">if</span> isempty(filenames)
+0161     <span class="keyword">if</span> ~iscell(prefix)
+0162       error(<span class="string">'can not find any ''%s%s'' file in %s'</span>,prefix,extension,target_dir);
+0163     <span class="keyword">else</span>
+0164       error(<span class="string">'can not find any target file in %s'</span>,target_dir);
+0165     <span class="keyword">end</span>
+0166   <span class="keyword">end</span>
+0167 <span class="keyword">end</span>
+0168 
+0169 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

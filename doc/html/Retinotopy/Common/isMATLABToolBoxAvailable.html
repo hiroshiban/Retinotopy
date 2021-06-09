@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of isMATLABToolBoxAvailable</title>
+  <meta name="keywords" content="isMATLABToolBoxAvailable">
+  <meta name="description" content="Checks whether the specific MATLAB toolbox is installed in the current MATLAB.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>isMATLABToolBoxAvailable
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Checks whether the specific MATLAB toolbox is installed in the current MATLAB.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function installed_status=isMATLABToolBoxAvailable(toolbox_name,force_check_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Checks whether the specific MATLAB toolbox is installed in the current MATLAB.
+ function installed_status=isMATLABToolBoxAvailable(toolbox_name,:force_check_flg)
+ (: is optional)
+
+ This function checks whether the target toolbox is installed in the current MATLAB,
+ utilizing the outputs of the 'ver' function.
+
+ [example]
+ if ~isMATLABToolBoxAvailable('Parallel Computing Toolbox')
+   for nn=1:1:size(btidx,2)
+     integration_index_bt(:,nn)=nanmean(integration_index(:,btidx(:,nn)),2);
+     transfer_index_bt(:,nn)=nanmedian(transfer_index(:,btidx(:,nn)),2);
+   end
+ else
+   parfor nn=1:size(btidx,2), integration_index_bt(:,nn)=nanmean(integration_index(:,btidx(:,nn)),2); end
+   parfor nn=1:size(btidx,2), transfer_index_bt(:,nn)=nanmedian(transfer_index(:,btidx(:,nn)),2); end
+ end
+
+ [input]
+ toolbox_name     : toolbox name to be checked.
+                    e.g. toolbox_name='Statistics Toolbox'; % case insensitive
+ force_check_flg  : (optional) if 1, forcing to check the target toolbox is installed,
+                    ignoring the standard toolbox. Required to check the availability
+                    of the third party toolbox.
+                    0 by default.
+
+ [output]
+ installed_status : if 1, the target toolbox is installed otherwise it is not.
+
+
+ Created    : &quot;2017-01-21 16:35:31 ban&quot;
+ Last Update: &quot;2017-02-10 17:49:11 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function installed_status=isMATLABToolBoxAvailable(toolbox_name,force_check_flg)</a>
+0002 
+0003 <span class="comment">% Checks whether the specific MATLAB toolbox is installed in the current MATLAB.</span>
+0004 <span class="comment">% function installed_status=isMATLABToolBoxAvailable(toolbox_name,:force_check_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function checks whether the target toolbox is installed in the current MATLAB,</span>
+0008 <span class="comment">% utilizing the outputs of the 'ver' function.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [example]</span>
+0011 <span class="comment">% if ~isMATLABToolBoxAvailable('Parallel Computing Toolbox')</span>
+0012 <span class="comment">%   for nn=1:1:size(btidx,2)</span>
+0013 <span class="comment">%     integration_index_bt(:,nn)=nanmean(integration_index(:,btidx(:,nn)),2);</span>
+0014 <span class="comment">%     transfer_index_bt(:,nn)=nanmedian(transfer_index(:,btidx(:,nn)),2);</span>
+0015 <span class="comment">%   end</span>
+0016 <span class="comment">% else</span>
+0017 <span class="comment">%   parfor nn=1:size(btidx,2), integration_index_bt(:,nn)=nanmean(integration_index(:,btidx(:,nn)),2); end</span>
+0018 <span class="comment">%   parfor nn=1:size(btidx,2), transfer_index_bt(:,nn)=nanmedian(transfer_index(:,btidx(:,nn)),2); end</span>
+0019 <span class="comment">% end</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [input]</span>
+0022 <span class="comment">% toolbox_name     : toolbox name to be checked.</span>
+0023 <span class="comment">%                    e.g. toolbox_name='Statistics Toolbox'; % case insensitive</span>
+0024 <span class="comment">% force_check_flg  : (optional) if 1, forcing to check the target toolbox is installed,</span>
+0025 <span class="comment">%                    ignoring the standard toolbox. Required to check the availability</span>
+0026 <span class="comment">%                    of the third party toolbox.</span>
+0027 <span class="comment">%                    0 by default.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% [output]</span>
+0030 <span class="comment">% installed_status : if 1, the target toolbox is installed otherwise it is not.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Created    : &quot;2017-01-21 16:35:31 ban&quot;</span>
+0034 <span class="comment">% Last Update: &quot;2017-02-10 17:49:11 ban&quot;</span>
+0035 
+0036 <span class="comment">% check the input variable</span>
+0037 <span class="keyword">if</span> nargin&lt;1 || isempty(toolbox_name), help(mfilename()); installed_status=0; <span class="keyword">return</span>; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;2 || isempty(force_check_flg), force_check_flg=0; <span class="keyword">end</span>
+0039 
+0040 <span class="comment">% check whether the toolbox_name is one of the official toolboxes.</span>
+0041 <span class="keyword">if</span> ~force_check_flg
+0042   featureStr = {<span class="string">'Aerospace Blockset'</span>; <span class="keyword">...</span>
+0043                 <span class="string">'Aerospace Toolbox'</span>; <span class="keyword">...</span>
+0044                 <span class="string">'Bioinformatics Toolbox'</span>; <span class="keyword">...</span>
+0045                 <span class="string">'Communication Blocks'</span>; <span class="keyword">...</span>
+0046                 <span class="string">'Communication Toolbox'</span>; <span class="keyword">...</span>
+0047                 <span class="string">'Compiler'</span>; <span class="keyword">...</span>
+0048                 <span class="string">'Control Toolbox'</span>; <span class="keyword">...</span>
+0049                 <span class="string">'Curve Fitting Toolbox'</span>; <span class="keyword">...</span>
+0050                 <span class="string">'Data Acq Toolbox'</span>; <span class="keyword">...</span>
+0051                 <span class="string">'Database Toolbox'</span>; <span class="keyword">...</span>
+0052                 <span class="string">'Datafeed Toolbox'</span>; <span class="keyword">...</span>
+0053                 <span class="string">'Dial and Gauge Blocks'</span>; <span class="keyword">...</span>
+0054                 <span class="string">'Distrib Computing Toolbox'</span>; <span class="keyword">...</span>
+0055                 <span class="string">'Econometrics Toolbox'</span>; <span class="keyword">...</span>
+0056                 <span class="string">'EDA Simulator Link DS'</span>; <span class="keyword">...</span>
+0057                 <span class="string">'Embedded Target c166'</span>; <span class="keyword">...</span>
+0058                 <span class="string">'Embedded Target c2000'</span>; <span class="keyword">...</span>
+0059                 <span class="string">'Embedded Target c6000'</span>; <span class="keyword">...</span>
+0060                 <span class="string">'Embedded Target MPC555'</span>; <span class="keyword">...</span>
+0061                 <span class="string">'Excel Link'</span>; <span class="keyword">...</span>
+0062                 <span class="string">'Filter Design HDL Coder'</span>; <span class="keyword">...</span>
+0063                 <span class="string">'Filter Design Toolbox'</span>; <span class="keyword">...</span>
+0064                 <span class="string">'Fin Derivatives Toolbox'</span>; <span class="keyword">...</span>
+0065                 <span class="string">'Financial Toolbox'</span>; <span class="keyword">...</span>
+0066                 <span class="string">'Fixed Income Toolbox'</span>; <span class="keyword">...</span>
+0067                 <span class="string">'Fixed Point Toolbox'</span>; <span class="keyword">...</span>
+0068                 <span class="string">'Fixed-Point Blocks'</span>; <span class="keyword">...</span>
+0069                 <span class="string">'Fuzzy Toolbox'</span>; <span class="keyword">...</span>
+0070                 <span class="string">'GADS Toolbox'</span>; <span class="keyword">...</span>
+0071                 <span class="string">'IDE Link MU'</span>; <span class="keyword">...</span>
+0072                 <span class="string">'Identification Toolbox'</span>; <span class="keyword">...</span>
+0073                 <span class="string">'Image Acquisition Toolbox'</span>; <span class="keyword">...</span>
+0074                 <span class="string">'Image Toolbox'</span>; <span class="keyword">...</span>
+0075                 <span class="string">'Image Processing Toolbox'</span>; <span class="keyword">...</span>
+0076                 <span class="string">'Instr Control Toolbox'</span>; <span class="keyword">...</span>
+0077                 <span class="string">'Link for Incisive'</span>; <span class="keyword">...</span>
+0078                 <span class="string">'Link for ModelSim'</span>; <span class="keyword">...</span>
+0079                 <span class="string">'Link for Tasking'</span>; <span class="keyword">...</span>
+0080                 <span class="string">'Link for VisualDSP'</span>; <span class="keyword">...</span>
+0081                 <span class="string">'MAP Toolbox'</span>; <span class="keyword">...</span>
+0082                 <span class="string">'MATLAB'</span>; <span class="keyword">...</span>
+0083                 <span class="string">'MATLAB Builder for dot Net'</span>; <span class="keyword">...</span>
+0084                 <span class="string">'MATLAB Builder for Java'</span>; <span class="keyword">...</span>
+0085                 <span class="string">'MATLAB Distrib Comp Engine'</span>; <span class="keyword">...</span>
+0086                 <span class="string">'MATLAB Excel Builder'</span>; <span class="keyword">...</span>
+0087                 <span class="string">'MATLAB Link for CCS'</span>; <span class="keyword">...</span>
+0088                 <span class="string">'MATLAB Report Gen'</span>; <span class="keyword">...</span>
+0089                 <span class="string">'MBC Toolbox'</span>; <span class="keyword">...</span>
+0090                 <span class="string">'MPC Toolbox'</span>; <span class="keyword">...</span>
+0091                 <span class="string">'NCD Toolbox'</span>; <span class="keyword">...</span>
+0092                 <span class="string">'Neural Network Toolbox'</span>; <span class="keyword">...</span>
+0093                 <span class="string">'OPC Toolbox'</span>; <span class="keyword">...</span>
+0094                 <span class="string">'Optimization Toolbox'</span>; <span class="keyword">...</span>
+0095                 <span class="string">'Parallel Computing Toolbox'</span>; <span class="keyword">...</span>
+0096                 <span class="string">'PDE Toolbox'</span>; <span class="keyword">...</span>
+0097                 <span class="string">'Power System Blocks'</span>; <span class="keyword">...</span>
+0098                 <span class="string">'Real-Time Win Target'</span>; <span class="keyword">...</span>
+0099                 <span class="string">'Real-Time Workshop'</span>; <span class="keyword">...</span>
+0100                 <span class="string">'RF Blockset'</span>; <span class="keyword">...</span>
+0101                 <span class="string">'RF Toolbox'</span>; <span class="keyword">...</span>
+0102                 <span class="string">'Robust Toolbox'</span>; <span class="keyword">...</span>
+0103                 <span class="string">'RTW Embedded Coder'</span>; <span class="keyword">...</span>
+0104                 <span class="string">'Signal Blocks'</span>; <span class="keyword">...</span>
+0105                 <span class="string">'Signal Toolbox'</span>; <span class="keyword">...</span>
+0106                 <span class="string">'SimBiology'</span>; <span class="keyword">...</span>
+0107                 <span class="string">'SimDriveline'</span>; <span class="keyword">...</span>
+0108                 <span class="string">'SimElectronics'</span>; <span class="keyword">...</span>
+0109                 <span class="string">'SimEvents'</span>; <span class="keyword">...</span>
+0110                 <span class="string">'SimHydraulics'</span>; <span class="keyword">...</span>
+0111                 <span class="string">'SimMechanics'</span>; <span class="keyword">...</span>
+0112                 <span class="string">'Simscape'</span>; <span class="keyword">...</span>
+0113                 <span class="string">'SIMULINK'</span>; <span class="keyword">...</span>
+0114                 <span class="string">'Simulink Control Design'</span>; <span class="keyword">...</span>
+0115                 <span class="string">'Simulink Design Verifier'</span>; <span class="keyword">...</span>
+0116                 <span class="string">'Simulink HDL Coder'</span>; <span class="keyword">...</span>
+0117                 <span class="string">'Simulink Param Estimation'</span>; <span class="keyword">...</span>
+0118                 <span class="string">'SIMULINK Report Gen'</span>; <span class="keyword">...</span>
+0119                 <span class="string">'SL Verification Validation'</span>; <span class="keyword">...</span>
+0120                 <span class="string">'Spline Toolbox'</span>; <span class="keyword">...</span>
+0121                 <span class="string">'Stateflow'</span>; <span class="keyword">...</span>
+0122                 <span class="string">'Stateflow Coder'</span>; <span class="keyword">...</span>
+0123                 <span class="string">'Statistics Toolbox'</span>; <span class="keyword">...</span>
+0124                 <span class="string">'Symbolic Toolbox'</span>; <span class="keyword">...</span>
+0125                 <span class="string">'SystemTest'</span>; <span class="keyword">...</span>
+0126                 <span class="string">'Video and Image Blockset'</span>; <span class="keyword">...</span>
+0127                 <span class="string">'Virtual Reality Toolbox'</span>; <span class="keyword">...</span>
+0128                 <span class="string">'Wavelet Toolbox'</span>; <span class="keyword">...</span>
+0129                 <span class="string">'XPC Embedded Option'</span>; <span class="keyword">...</span>
+0130                 <span class="string">'XPC Target'</span>};
+0131 
+0132   name_checker=0;
+0133   <span class="keyword">for</span> ii=1:1:length(featureStr)
+0134     <span class="keyword">if</span> strcmpi(toolbox_name,featureStr{ii})
+0135       name_checker=1;
+0136       <span class="keyword">break</span>;
+0137     <span class="keyword">end</span>
+0138   <span class="keyword">end</span>
+0139   <span class="keyword">if</span> ~name_checker, error(<span class="string">'toolbox_name to be checked seems to be wrong or not included in the official toolboxes. check the input variable.'</span>); <span class="keyword">end</span>
+0140 <span class="keyword">end</span> <span class="comment">% if force_check_flg</span>
+0141 
+0142 <span class="comment">% processing</span>
+0143 installed_status=0;
+0144 v=ver;
+0145 <span class="keyword">for</span> ii=1:1:numel(v)
+0146   <span class="keyword">if</span> strcmpi(toolbox_name,v(ii).Name)
+0147     installed_status=1;
+0148     <span class="keyword">break</span>;
+0149   <span class="keyword">end</span>
+0150 <span class="keyword">end</span>
+0151 
+0152 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

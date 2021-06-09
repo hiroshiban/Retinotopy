@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateApertureSlantField</title>
+  <meta name="keywords" content="CreateApertureSlantField">
+  <meta name="description" content="Creates a slant field that is cut by a circular aperture.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateApertureSlantField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a slant field that is cut by a circular aperture.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function field=CreateApertureSlantField(fieldSize,theta_deg,orient_deg,aperture_deg,outer_val,pix_per_deg,fine_coefficient) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a slant field that is cut by a circular aperture.
+ function field=CreateApertureSlantField(fieldSize,theta_deg,orient_deg,aperture_deg,outer_val,pix_per_deg,fine_coefficient)
+
+ Creates oriented slant with ciruclar aperture
+ 
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col]
+ theta_deg   : an angle measured fromh the vertical, [deg]
+ orient_deg  : an angle (orientation) of slant,
+               from horizontal meridian, clockwise [deg]
+ aperture_deg: the size of circular aperture in degrees, [deg]
+ outer_val   : value to fill the outer region of slant field, [val]
+ pix_per_deg : pixels per degree, [pixels]
+ fine_coefficient : (optional) if larger, the generated oval become finer,
+                    but comsumes much CPU power. [val]
+                    (default=1, as is, no tuning)
+
+ 
+ [output]
+ field       : grating image, double format, [row,col]
+ 
+ Created    : &quot;2010-06-11 12:32:41 ban&quot;
+ Last Update: &quot;2013-11-22 18:37:03 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function field=CreateApertureSlantField(fieldSize,theta_deg,orient_deg,aperture_deg,outer_val,pix_per_deg,fine_coefficient)</a>
+0002 
+0003 <span class="comment">% Creates a slant field that is cut by a circular aperture.</span>
+0004 <span class="comment">% function field=CreateApertureSlantField(fieldSize,theta_deg,orient_deg,aperture_deg,outer_val,pix_per_deg,fine_coefficient)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Creates oriented slant with ciruclar aperture</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col]</span>
+0010 <span class="comment">% theta_deg   : an angle measured fromh the vertical, [deg]</span>
+0011 <span class="comment">% orient_deg  : an angle (orientation) of slant,</span>
+0012 <span class="comment">%               from horizontal meridian, clockwise [deg]</span>
+0013 <span class="comment">% aperture_deg: the size of circular aperture in degrees, [deg]</span>
+0014 <span class="comment">% outer_val   : value to fill the outer region of slant field, [val]</span>
+0015 <span class="comment">% pix_per_deg : pixels per degree, [pixels]</span>
+0016 <span class="comment">% fine_coefficient : (optional) if larger, the generated oval become finer,</span>
+0017 <span class="comment">%                    but comsumes much CPU power. [val]</span>
+0018 <span class="comment">%                    (default=1, as is, no tuning)</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% field       : grating image, double format, [row,col]</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Created    : &quot;2010-06-11 12:32:41 ban&quot;</span>
+0025 <span class="comment">% Last Update: &quot;2013-11-22 18:37:03 ban (ban.hiroshi@gmail.com)&quot;</span>
+0026 
+0027 <span class="comment">% check input variables</span>
+0028 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;2 || isempty(theta_deg), theta_deg=45; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;3 || isempty(orient_deg), orient_deg=0; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;4 || isempty(aperture_deg), aperture_deg=6; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;5 || isempty(outer_val), outer_val=0; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;6 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;7 || isempty(fine_coefficient), fine_coefficient=1; <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0037 
+0038 <span class="comment">% convert to pixels and radians</span>
+0039 fieldSize=round(fieldSize.*pix_per_deg);
+0040 theta_deg=theta_deg*pi/180;
+0041 orient_deg=orient_deg*pi/180;
+0042 aperture_pix=round(aperture_deg/2*pix_per_deg)^2;
+0043 
+0044 <span class="comment">% create slant field</span>
+0045 step=1/fine_coefficient;
+0046 [x,y]=meshgrid(0:step:fieldSize(2),0:step:fieldSize(1));
+0047 x=x-fieldSize(2)/2; y=y-fieldSize(1)/2;
+0048 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); y=y(1:end-1,:); <span class="keyword">end</span>
+0049 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); y=y(:,1:end-1); <span class="keyword">end</span>
+0050 z = x*cos(orient_deg) - y*sin(orient_deg);
+0051 
+0052 field=z*tan(theta_deg);
+0053 
+0054 r=x.*x+y.*y;
+0055 field(r&gt;=aperture_pix)=outer_val;
+0056 
+0057 <span class="comment">% adjust the size</span>
+0058 <span class="keyword">if</span> step~=1, field=imresize(field,step,<span class="string">'bilinear'</span>); <span class="keyword">end</span>
+0059 
+0060 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

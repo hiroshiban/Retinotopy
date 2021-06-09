@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imDisplayInfo</title>
+  <meta name="keywords" content="imDisplayInfo">
+  <meta name="description" content="Reads images in the target directory and displays their pixel intensities.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>imDisplayInfo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Reads images in the target directory and displays their pixel intensities.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,fnames]=imDisplayInfo(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Reads images in the target directory and displays their pixel intensities.
+ function [img,fnames]=imDisplayInfo(tgt_dir,:img_ext,:img_inc_prefix,:img_exc_prefix,:save_flg)
+ (: is optional)
+
+ This function reads images and display their pixel intensity histgrams and FFT power.
+
+ [input]
+ tgt_dir        : target directory that includes images you want to process.
+                  should set with a relative path format, e.g. tgt_dir='../images/image01';
+ img_ext        : image file extension(s), cell structure or string. '.jpg' by default
+ img_inc_prefix : image file prefix(s) that is to be included in processing,
+                  cell structure or string, '*' by default.
+ img_exc_prefix : image file prefix(s) that is to be excluded from processing,
+                  cell structure or string, empty by default.
+ save_flg       : whether saving the converted image [0|1]. 0 by default.
+
+ [output]
+ img            : FFT (when input images are grayscale) or the original images, cell structure
+ fnames         : the corresponding file names that are converted.
+
+
+ Created    : &quot;2013-11-14 16:56:48 ban&quot;
+ Last Update: &quot;2013-11-22 23:15:54 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,fnames]=imDisplayInfo(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix,save_flg)</a>
+0002 
+0003 <span class="comment">% Reads images in the target directory and displays their pixel intensities.</span>
+0004 <span class="comment">% function [img,fnames]=imDisplayInfo(tgt_dir,:img_ext,:img_inc_prefix,:img_exc_prefix,:save_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads images and display their pixel intensity histgrams and FFT power.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% tgt_dir        : target directory that includes images you want to process.</span>
+0011 <span class="comment">%                  should set with a relative path format, e.g. tgt_dir='../images/image01';</span>
+0012 <span class="comment">% img_ext        : image file extension(s), cell structure or string. '.jpg' by default</span>
+0013 <span class="comment">% img_inc_prefix : image file prefix(s) that is to be included in processing,</span>
+0014 <span class="comment">%                  cell structure or string, '*' by default.</span>
+0015 <span class="comment">% img_exc_prefix : image file prefix(s) that is to be excluded from processing,</span>
+0016 <span class="comment">%                  cell structure or string, empty by default.</span>
+0017 <span class="comment">% save_flg       : whether saving the converted image [0|1]. 0 by default.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% img            : FFT (when input images are grayscale) or the original images, cell structure</span>
+0021 <span class="comment">% fnames         : the corresponding file names that are converted.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Created    : &quot;2013-11-14 16:56:48 ban&quot;</span>
+0025 <span class="comment">% Last Update: &quot;2013-11-22 23:15:54 ban (ban.hiroshi@gmail.com)&quot;</span>
+0026 
+0027 <span class="comment">% check input variables</span>
+0028 <span class="keyword">if</span> nargin&lt;1 || isempty(tgt_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;2 || isempty(img_ext), img_ext=<span class="string">'.jpg'</span>; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;3 || isempty(img_inc_prefix), img_inc_prefix=<span class="string">'*'</span>; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;4 || isempty(img_exc_prefix), img_exc_prefix=<span class="string">''</span>; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;5 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0033 
+0034 <span class="keyword">if</span> ~iscell(img_ext), img_ext={img_ext}; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> ~iscell(img_inc_prefix), img_inc_prefix={img_inc_prefix}; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> ~iscell(img_exc_prefix), img_exc_prefix={img_exc_prefix}; <span class="keyword">end</span>
+0037 
+0038 <span class="keyword">if</span> save_flg, save_prefix=<span class="string">'_fft'</span>; <span class="keyword">end</span>
+0039 
+0040 <span class="comment">% set prefix correctly</span>
+0041 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0042   <span class="keyword">if</span> ~strcmp(img_ext{ii}(1),<span class="string">'.'</span>), img_ext{ii}=[<span class="string">'.'</span>,img_ext{ii}]; <span class="keyword">end</span>
+0043 <span class="keyword">end</span>
+0044 
+0045 <span class="comment">% check target directory</span>
+0046 tgt_dir=fullfile(pwd,tgt_dir);
+0047 <span class="keyword">if</span> ~exist(tgt_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find taget directory. check input variable.'</span>); <span class="keyword">end</span>
+0048 
+0049 fprintf(<span class="string">'target: %s\n'</span>,tgt_dir);
+0050 
+0051 <span class="comment">% get image files</span>
+0052 fprintf(<span class="string">'displaying image information...\n'</span>);
+0053 scrsz = get(0,<span class="string">'ScreenSize'</span>);
+0054 hcolors={[1,0,0],[0,1,0],[0,0,1]};
+0055 img=<span class="string">''</span>; fnames=<span class="string">''</span>; img_counter=0;
+0056 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0057   <span class="keyword">for</span> jj=1:1:length(img_inc_prefix)
+0058     tmpfnames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(tgt_dir,[img_inc_prefix{jj},img_ext{ii}]);
+0059     <span class="keyword">for</span> kk=1:1:length(tmpfnames)
+0060 
+0061       <span class="comment">% check whether the target image is excluded from processing</span>
+0062       exc_flg=0;
+0063       <span class="keyword">for</span> mm=1:1:length(img_exc_prefix)
+0064         <span class="keyword">if</span> ~isempty(img_exc_prefix{mm}) &amp;&amp; strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; <span class="keyword">break</span>; <span class="keyword">end</span>
+0065       <span class="keyword">end</span>
+0066       <span class="keyword">if</span> exc_flg, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0067 
+0068       img_counter=img_counter+1;
+0069       img{img_counter}=imread(tmpfnames{kk});
+0070 
+0071       <span class="comment">% set figure</span>
+0072       [path,fname,ext]=fileparts(tmpfnames{kk});
+0073       fprintf(<span class="string">'processing: %s%s...'</span>,fname,ext);
+0074       f1=figure(<span class="string">'Name'</span>,sprintf(<span class="string">'%s%s: histgram and FFT power plots'</span>,fname,ext),<span class="keyword">...</span>
+0075                 <span class="string">'Position'</span>,[scrsz(3)/7,scrsz(4)/8,5*scrsz(3)/7,6*scrsz(4)/8],<span class="keyword">...</span>
+0076                 <span class="string">'Color'</span>,[0.9,0.9,0.9],<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>);
+0077 
+0078       <span class="comment">% get pixel intensity histgram</span>
+0079       sz=size(img{img_counter},3);
+0080       subplot(2,2,[1,3]); hold on;
+0081       <span class="keyword">if</span> sz==1
+0082         hist(double(img{img_counter}(:)),255);
+0083         h=findobj(gca,<span class="string">'Type'</span>,<span class="string">'Patch'</span>);
+0084         set(h,<span class="string">'FaceColor'</span>,[0.7,0.7,0.7],<span class="string">'EdgeColor'</span>,[0.7,0.7,0.7]);
+0085         legend(h,<span class="string">'grayscale'</span>);
+0086       <span class="keyword">else</span>
+0087         h=zeros(1,3);
+0088         <span class="keyword">for</span> pp=1:1:size(img{img_counter},3)
+0089           tgt=img{img_counter}(:,:,pp);
+0090           [ndata,bins]=hist(double(tgt(:)),255);
+0091           h(pp)=bar(bins,ndata,<span class="string">'hist'</span>);
+0092           set(h(pp),<span class="string">'FaceColor'</span>,hcolors{pp},<span class="string">'EdgeColor'</span>,hcolors{pp},<span class="string">'FaceAlpha'</span>,0.3,<span class="string">'EdgeAlpha'</span>,0.3);
+0093         <span class="keyword">end</span>
+0094         legend(h,{<span class="string">'red'</span>,<span class="string">'green'</span>,<span class="string">'blue'</span>});
+0095       <span class="keyword">end</span>
+0096       title(strrep(sprintf(<span class="string">'pixel intensity: %s%s'</span>,fname,ext),<span class="string">'_'</span>,<span class="string">'\_'</span>));
+0097       set(gca,<span class="string">'XLim'</span>,[0,255]);
+0098       set(gca,<span class="string">'XTick'</span>,[1,50,100,150,200,250]);
+0099       set(gca,<span class="string">'XTickLabel'</span>,[1,50,100,150,200,250]);
+0100       xlabel(<span class="string">'pixel intensity'</span>);
+0101       ylabel(<span class="string">'the number of pixels'</span>);
+0102 
+0103       <span class="comment">% plot the original image</span>
+0104       subplot(2,2,2); hold on;
+0105       imshow(img{img_counter},[0,255]); axis equal; axis off;
+0106       title(strrep(sprintf(<span class="string">'original image: %s%s'</span>,fname,ext),<span class="string">'_'</span>,<span class="string">'\_'</span>));
+0107 
+0108       <span class="comment">% get 2D image FFT</span>
+0109       <span class="keyword">if</span> numel(size(img{img_counter}))~=3 <span class="comment">% if the target is not a RGB image</span>
+0110         <span class="comment">% apply 2D FFT</span>
+0111               img{img_counter}=abs(fftshift(fft2(double(img{img_counter})))); <span class="comment">% fftshift sets DC component to the center, point symmetric</span>
+0112 
+0113         subplot(2,2,4); hold on;
+0114         <span class="comment">% NOTE. In image FFT, high peaks at the center (DC component) often hide details.</span>
+0115         <span class="comment">% Reduce these contrast with the log function.</span>
+0116         imshow(log(1+img{img_counter}),[]); axis equal;
+0117         title(strrep(sprintf(<span class="string">'FFT power: %s%s'</span>,fname,ext),<span class="string">'_'</span>,<span class="string">'\_'</span>));
+0118         colorbar();
+0119       <span class="keyword">end</span>
+0120 
+0121       <span class="keyword">if</span> save_flg
+0122         set(gcf,<span class="string">'PaperPositionMode'</span>,<span class="string">'auto'</span>);
+0123         print(f1,fullfile(path,[fname,save_prefix,<span class="string">'.png'</span>]),<span class="string">'-dpng'</span>,<span class="string">'-r0'</span>);
+0124       <span class="keyword">end</span>
+0125 
+0126       fnames{img_counter}=tmpfnames{kk};
+0127       pause(0.5);
+0128       close all;
+0129       disp(<span class="string">'done.'</span>);
+0130 
+0131     <span class="keyword">end</span>
+0132   <span class="keyword">end</span>
+0133 <span class="keyword">end</span>
+0134 disp(<span class="string">'completed.'</span>);
+0135 
+0136 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

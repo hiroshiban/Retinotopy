@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DrawTextureWithCLUT</title>
+  <meta name="keywords" content="DrawTextureWithCLUT">
+  <meta name="description" content="Draws a texture with Color LookupTable you specified (modified version of Screen('DrawTexture')).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>DrawTextureWithCLUT
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Draws a texture with Color LookupTable you specified (modified version of Screen('DrawTexture')).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function DrawTextureWithCLUT(win, src, newclut, srcRect, destRect, rotangle) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Draws a texture with Color LookupTable you specified (modified version of Screen('DrawTexture')).
+ !!! EXPERIMENTAL - BETA QUALITY !!!
+
+ function DrawTextureWithCLUT(win_pointer, src_texture, :newclut, :srcRect, :destRect, :rotangle)
+ (: is optional)
+
+ This function is a modified version of Psychtoolbox (PTB) Screen('DrawTexture') function
+ The texture with 0-255 IDs will be painted with a specified Color LookupTable (CLUT).
+ This function internally accesses OpenGL Shader API.
+
+ Before actual use, run
+ &gt;&gt; DrawTextureWithCLUT(win_pointer)
+ This will initialize MATLAB OpenGL Pixel Shader settings.
+ To clean up OpenGL Pixel Shader settings, run
+ &gt;&gt; DrawTextureWithCLUT()
+
+
+ Created    : &quot;2011-04-14 01:00:09 ban&quot;
+ Last Update: &quot;2013-11-22 18:53:54 ban (ban.hiroshi@gmail.com)&quot;
+
+ [input]
+ win_pointer  : PTB screen pointer
+ src_texture  : source texture pointer, acquired through Screen('MakeTexture') function
+                target texture should contain values 0-255
+ newclut      : CLUT you want to use to paint the target texture, [256 x 4(RGBA)] matrix
+                The relation between values in src_texture and newclut is as below
+                 src_texture value 0   ---&gt; newclut(1,:)
+                 src_texture value 1   ---&gt; newclut(2,:)
+                 src_texture value 2   ---&gt; newclut(3,:)
+                 ...
+                 src_texture value n-1 ---&gt; newclut(n,:)
+ srcRect      : rectangle that specifies a rectangular subpart of the texture
+                to be drawn (Defaults to full texture)
+ destRect     : rectangle that defines the rectangular subpart of the window where the
+                texture should be drawn. this default is to centered on the screen
+ rotangle     : specifies a rotation angle in degree for rotated drawing of the texture
+                (defaults to 0 deg. = upright)
+
+
+ [output]
+ no output
+ src_texture will be drawn to PTB screen (but the screen itself is not flipped)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/cbar.html" class="code" title="function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cbar_fixtask.html" class="code" title="function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar_fixtask</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual.html" class="code" title="function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual_fixtask.html" class="code" title="function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/chrf.html" class="code" title="function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/chrf_fixtask.html" class="code" title="function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer.html" class="code" title="function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer_fixtask.html" class="code" title="function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/cmeridian.html" class="code" title="function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmeridian_fixtask.html" class="code" title="function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian_fixtask</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy.html" class="code" title="function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy_fixtask.html" class="code" title="function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function DrawTextureWithCLUT(win, src, newclut, srcRect, destRect, rotangle)</a>
+0002 
+0003 <span class="comment">% Draws a texture with Color LookupTable you specified (modified version of Screen('DrawTexture')).</span>
+0004 <span class="comment">% !!! EXPERIMENTAL - BETA QUALITY !!!</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% function DrawTextureWithCLUT(win_pointer, src_texture, :newclut, :srcRect, :destRect, :rotangle)</span>
+0007 <span class="comment">% (: is optional)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% This function is a modified version of Psychtoolbox (PTB) Screen('DrawTexture') function</span>
+0010 <span class="comment">% The texture with 0-255 IDs will be painted with a specified Color LookupTable (CLUT).</span>
+0011 <span class="comment">% This function internally accesses OpenGL Shader API.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Before actual use, run</span>
+0014 <span class="comment">% &gt;&gt; DrawTextureWithCLUT(win_pointer)</span>
+0015 <span class="comment">% This will initialize MATLAB OpenGL Pixel Shader settings.</span>
+0016 <span class="comment">% To clean up OpenGL Pixel Shader settings, run</span>
+0017 <span class="comment">% &gt;&gt; DrawTextureWithCLUT()</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Created    : &quot;2011-04-14 01:00:09 ban&quot;</span>
+0021 <span class="comment">% Last Update: &quot;2013-11-22 18:53:54 ban (ban.hiroshi@gmail.com)&quot;</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [input]</span>
+0024 <span class="comment">% win_pointer  : PTB screen pointer</span>
+0025 <span class="comment">% src_texture  : source texture pointer, acquired through Screen('MakeTexture') function</span>
+0026 <span class="comment">%                target texture should contain values 0-255</span>
+0027 <span class="comment">% newclut      : CLUT you want to use to paint the target texture, [256 x 4(RGBA)] matrix</span>
+0028 <span class="comment">%                The relation between values in src_texture and newclut is as below</span>
+0029 <span class="comment">%                 src_texture value 0   ---&gt; newclut(1,:)</span>
+0030 <span class="comment">%                 src_texture value 1   ---&gt; newclut(2,:)</span>
+0031 <span class="comment">%                 src_texture value 2   ---&gt; newclut(3,:)</span>
+0032 <span class="comment">%                 ...</span>
+0033 <span class="comment">%                 src_texture value n-1 ---&gt; newclut(n,:)</span>
+0034 <span class="comment">% srcRect      : rectangle that specifies a rectangular subpart of the texture</span>
+0035 <span class="comment">%                to be drawn (Defaults to full texture)</span>
+0036 <span class="comment">% destRect     : rectangle that defines the rectangular subpart of the window where the</span>
+0037 <span class="comment">%                texture should be drawn. this default is to centered on the screen</span>
+0038 <span class="comment">% rotangle     : specifies a rotation angle in degree for rotated drawing of the texture</span>
+0039 <span class="comment">%                (defaults to 0 deg. = upright)</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% [output]</span>
+0043 <span class="comment">% no output</span>
+0044 <span class="comment">% src_texture will be drawn to PTB screen (but the screen itself is not flipped)</span>
+0045 
+0046 
+0047 <span class="comment">% [reference]</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">% moglClutBlit(win, src [, newclut]) -- Blit an image into window, apply CLUT.</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">% moglClutBlit copies a texture image 'src' (either made via</span>
+0052 <span class="comment">% src = Screen('MakeTexture', ...) or an offscreen window created via</span>
+0053 <span class="comment">% src = Screen('OpenOffscreenWindow', ...)) to an onscreen window 'win'.</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">% During the copy, it applies a color lookup table (clut) to the texture,</span>
+0056 <span class="comment">% transforming the color indices in the input texture into RGB color</span>
+0057 <span class="comment">% pixels according to the color lookup table.</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% The color lookup table contains 256 rows with 3 columns. The i'th row</span>
+0060 <span class="comment">% contains the Red, green and blue color values to be used when an input</span>
+0061 <span class="comment">% pixel with colorindex i-1 is used. Column 1 = Red component, column 2 =</span>
+0062 <span class="comment">% Green component, column 3 = blue component.</span>
+0063 <span class="comment">%</span>
+0064 <span class="comment">% The clut will be initialized to a gray-level ramp, i.e. index 1 =</span>
+0065 <span class="comment">% (0,0,0), index i+1 = (i, i, i), index 256 = (255, 255, 255).</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">% Arguments:</span>
+0068 <span class="comment">%</span>
+0069 <span class="comment">% 'src' texture handle or offscreen window handle of the image to copy.</span>
+0070 <span class="comment">% 'win' window handle of the target window.</span>
+0071 <span class="comment">% 'newclut' The new 256 rows by 3 columns clut. If you don't provide any</span>
+0072 <span class="comment">% clut, the clut from a previous call will be used. Initially it is a</span>
+0073 <span class="comment">% graylevel ramp.</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">% Usage:</span>
+0076 <span class="comment">% 1. Add the command &quot;InitializeMatlabOpenGL&quot; at the top of your script,</span>
+0077 <span class="comment">% before the first call to Screen('OpenWindow', ...). If you don't use any</span>
+0078 <span class="comment">% 3D graphics, InitializeMatlabOpenGL([], 0, 1); will be the fastest.</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">% 2. Create your color index image either as a texture, e.g., via</span>
+0081 <span class="comment">% src=Screen('MakeTexture', win, myimage), or create it as Offscreen window</span>
+0082 <span class="comment">% src=Screen('OpenOffscreenWindow', win) and draw your index colored</span>
+0083 <span class="comment">% stimulus into it.</span>
+0084 <span class="comment">%</span>
+0085 <span class="comment">% 3. Whenever you want to change the clut and draw the image with updated</span>
+0086 <span class="comment">% clut, call moglClutBlit(win, src, newclut); with newclut being the new</span>
+0087 <span class="comment">% color lookup table.</span>
+0088 <span class="comment">%</span>
+0089 <span class="comment">% 4. Call the Screen('Flip', ...) command to show the new image, drawn with</span>
+0090 <span class="comment">% the new clut.</span>
+0091 <span class="comment">%</span>
+0092 <span class="comment">% 5. At the end of your script and before you Screen('Close', win) or</span>
+0093 <span class="comment">% Screen('CloseAll'), call moglClutBlit() without parameters, so it can</span>
+0094 <span class="comment">% clean up after itself.</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">% See GLSLClutAnimDemo for an example.</span>
+0097 <span class="comment">%</span>
+0098 <span class="comment">% Note: This function requires you to use fairly recent graphics hardware</span>
+0099 <span class="comment">% with support for OpenGL Pixelshaders and the OpenGL shading language</span>
+0100 <span class="comment">% (GLSL). It won't work on old hardware. Use of cluts for 8 bit clut</span>
+0101 <span class="comment">% animation is deprecated. Today, most stimuli can be generated in much more</span>
+0102 <span class="comment">% flexible and elegant ways using PTB-3's new drawing features and OpenGL</span>
+0103 <span class="comment">% capabilities.</span>
+0104 
+0105 <span class="comment">% History:</span>
+0106 <span class="comment">% 6.11.2006 Written (MK).</span>
+0107 <span class="comment">% 2.03.2008 Performance improvements (MK).</span>
+0108 
+0109 <span class="comment">% Our handle to OpenGL:</span>
+0110 <span class="keyword">global</span> GL;
+0111 
+0112 <span class="keyword">persistent</span> initialized;
+0113 <span class="keyword">persistent</span> remapshader;
+0114 <span class="keyword">persistent</span> luttex;
+0115 <span class="keyword">persistent</span> clut;
+0116 
+0117 <span class="comment">% First time invocation?</span>
+0118 <span class="keyword">if</span> isempty(initialized) || nargin==1
+0119     <span class="comment">% Make sure GLSL and pixelshaders are supported on first call:</span>
+0120     AssertGLSL;
+0121     extensions = glGetString(GL.EXTENSIONS);
+0122     <span class="keyword">if</span> isempty(findstr(extensions, <span class="string">'GL_ARB_fragment_shader'</span>))
+0123         <span class="comment">% No fragment shaders: This is a no go!</span>
+0124         error(<span class="string">'DrawTextureWithCLUT: Sorry, this function does not work on your graphics hardware due to lack of sufficient support for fragment shaders.'</span>);
+0125     <span class="keyword">end</span>
+0126 
+0127     <span class="comment">% Load our fragment shader for clut blit operations:</span>
+0128     remapshader = LoadGLSLProgramFromFiles(<span class="string">'ClutBlitShader.frag.txt'</span>);
+0129     glUseProgram(remapshader);
+0130     <span class="comment">% Assign proper texture units for input image and clut:</span>
+0131     shader_image = glGetUniformLocation(remapshader, <span class="string">'Image'</span>);
+0132     shader_clut  = glGetUniformLocation(remapshader, <span class="string">'clut'</span>);
+0133 
+0134     glUniform1i(shader_image, 0);
+0135     glUniform1i(shader_clut, 1);
+0136     glUseProgram(0);
+0137 
+0138     <span class="comment">% Build a gray-ramp as texture:</span>
+0139     clut = uint8(zeros(1, 256*4));
+0140     <span class="keyword">for</span> i=0:255
+0141         clut(1 + i*4 + 0)= i;
+0142         clut(1 + i*4 + 1)= i;
+0143         clut(1 + i*4 + 2)= i;
+0144         clut(1 + i*4 + 3)= 1;
+0145     <span class="keyword">end</span>
+0146 
+0147     <span class="comment">% Select the 2nd texture unit (unit 1) for setup:</span>
+0148     glActiveTexture(GL.TEXTURE1);
+0149     luttex = glGenTextures(1);
+0150     glBindTexture(GL.TEXTURE_RECTANGLE_EXT, luttex);
+0151     glTexImage2D(GL.TEXTURE_RECTANGLE_EXT, 0, GL.RGBA, 256, 1, 0, GL.RGBA, GL.UNSIGNED_BYTE, clut);
+0152 
+0153     <span class="comment">% Make sure we use nearest neighbour sampling:</span>
+0154     glTexParameteri(GL.TEXTURE_RECTANGLE_EXT, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
+0155     glTexParameteri(GL.TEXTURE_RECTANGLE_EXT, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
+0156 
+0157     <span class="comment">% And that we clamp to edge:</span>
+0158     glTexParameteri(GL.TEXTURE_RECTANGLE_EXT, GL.TEXTURE_WRAP_S, GL.CLAMP);
+0159     glTexParameteri(GL.TEXTURE_RECTANGLE_EXT, GL.TEXTURE_WRAP_T, GL.CLAMP);
+0160 
+0161     <span class="comment">% Default CLUT setup done: Switch back to texture unit 0:</span>
+0162     glActiveTexture(GL.TEXTURE0);
+0163 
+0164     <span class="comment">% We are initialized:</span>
+0165     initialized = 1;
+0166 
+0167     <span class="comment">% just initializing</span>
+0168     <span class="keyword">if</span> nargin==1, <span class="keyword">return</span>; <span class="keyword">end</span>
+0169 
+0170 <span class="keyword">end</span> <span class="comment">% of initialization.</span>
+0171 
+0172 <span class="comment">% No arguments provided?</span>
+0173 <span class="keyword">if</span> nargin &lt; 1
+0174     <span class="comment">% This is a signal that we should shut-down and release all internal</span>
+0175     <span class="comment">% ressources:</span>
+0176     glActiveTexture(GL.TEXTURE1);
+0177     glBindTexture(GL.TEXTURE_RECTANGLE_EXT, 0);
+0178     glDisable(GL.TEXTURE_RECTANGLE_EXT);
+0179     glDeleteTextures(1, luttex);
+0180     luttex=-1;
+0181     glActiveTexture(GL.TEXTURE0);
+0182     glUseProgram(0);
+0183     <span class="comment">% Disabled for now: glDeleteProgram(remapshader);</span>
+0184     remapshader=-1;
+0185     clear initialized;
+0186     clear clut;
+0187     <span class="keyword">return</span>;
+0188 <span class="keyword">end</span>
+0189 
+0190 <span class="keyword">if</span> nargin &lt; 1 || isempty(win)
+0191     error(<span class="string">'DrawTextureWithCLUT: Handle to target onscreen window ''win'' missing!'</span>);
+0192 <span class="keyword">end</span>
+0193 
+0194 <span class="keyword">if</span> nargin &lt; 2 || isempty(src)
+0195   disp(<span class="string">'Initializing MATLAB OpenGL pixel shader settings...'</span>);
+0196   <span class="comment">%error('DrawTextureWithCLUT: Handle to input image ''src'' (either texture or offscreen window) missing!');</span>
+0197 <span class="keyword">end</span>
+0198 
+0199 <span class="comment">% Select the 2nd texture unit (unit 1) for setup:</span>
+0200 glActiveTexture(GL.TEXTURE1);
+0201 <span class="comment">% Bind our clut texture to it:</span>
+0202 glBindTexture(GL.TEXTURE_RECTANGLE_EXT, luttex);
+0203 
+0204 <span class="comment">% New clut provided?</span>
+0205 <span class="keyword">if</span> nargin &gt; 2 &amp;&amp; ~isempty(newclut)
+0206     <span class="comment">% Yes. Update our clut texture with it.</span>
+0207 
+0208     <span class="comment">% Size check:</span>
+0209     <span class="keyword">if</span> size(newclut,1)~=256 || size(newclut, 2)~=4
+0210         <span class="comment">% Invalid or missing clut:</span>
+0211         error(<span class="string">'newclut of wrong size (must be 256 rows by 4 columns) provided!'</span>);
+0212     <span class="keyword">end</span>
+0213 
+0214     <span class="comment">% Range check:</span>
+0215     <span class="keyword">if</span> ~isempty(find(newclut &lt; 0, 1)) || ~isempty(find(newclut &gt; 255, 1))
+0216         <span class="comment">% Clut values out of range:</span>
+0217         error(<span class="string">'At least one value in newclut is not in required range 0 to 255!'</span>);
+0218     <span class="keyword">end</span>
+0219 
+0220     <span class="comment">% Cast to integer and update our 'clut' array with new clut:</span>
+0221     clut(1:4:end-3)= uint8(newclut(:, 1) + 0.5);
+0222     clut(2:4:end-2)= uint8(newclut(:, 2) + 0.5);
+0223     clut(3:4:end-1)= uint8(newclut(:, 3) + 0.5);
+0224     clut(4:4:end-0)= newclut(:, 4);
+0225 
+0226     <span class="comment">% Upload new clut:</span>
+0227     glTexSubImage2D(GL.TEXTURE_RECTANGLE_EXT, 0, 0, 0, 256, 1, GL.RGBA, GL.UNSIGNED_BYTE, clut);
+0228 <span class="keyword">end</span>
+0229 
+0230 <span class="keyword">if</span> nargin &lt; 4 || isempty(srcRect)
+0231   srcRect=[];
+0232 <span class="keyword">end</span>
+0233 
+0234 <span class="keyword">if</span> nargin &lt; 5 || isempty(destRect)
+0235   destRect=[];
+0236 <span class="keyword">end</span>
+0237 
+0238 <span class="keyword">if</span> nargin &lt; 6 || isempty(rotangle)
+0239   rotangle=0;
+0240 <span class="keyword">end</span>
+0241 
+0242 <span class="comment">% Switch back to texunit 0 - the primary one:</span>
+0243 glActiveTexture(GL.TEXTURE0);
+0244 
+0245 <span class="comment">% Clut and shader are initialized. Activate shader:</span>
+0246 <span class="comment">%glUseProgram(remapshader);</span>
+0247 
+0248 <span class="comment">% Perform blit with nearest neighbour filter:</span>
+0249 <span class="comment">%Screen('DrawTexture', win, src, [], [], 0, 0);</span>
+0250 
+0251 <span class="comment">% New style: Needs Screen-MEX update to fix a bug in Screen before it can be used!</span>
+0252 Screen(<span class="string">'DrawTexture'</span>, win, src, srcRect, destRect, rotangle, 0, [], [], remapshader);
+0253 
+0254 <span class="comment">% Disable shader:</span>
+0255 <span class="comment">%glUseProgram(0);</span>
+0256 
+0257 <span class="comment">% We're done.</span>
+0258 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

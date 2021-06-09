@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ReplaceFilename</title>
+  <meta name="keywords" content="ReplaceFilename">
+  <meta name="description" content="Replaces a target word in the file name to the specified one.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>ReplaceFilename
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Replaces a target word in the file name to the specified one.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,prefix_to_be_replaced,prefix_replace,prefix_exclude) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Replaces a target word in the file name to the specified one.
+ function filenames=ReplaceFilename(target_dir,extension,:prefix_tgt,:prefix_to_be_replaced,:prefix_replace,:prefix_exclude)
+ (: is optional)
+
+ [example]
+ &gt;&gt; ReplaceFilename('/HB/zk09_091','*.vtc','','ZK','zk')
+
+ [about]
+ This function replaces a specified word in file name
+ like, hb_test_partial.vtc ---&gt; HB_test_partial.vtc
+ Directory name is also acceptable
+
+ !!! NOTICE !!!
+ If prefix_replace is not specified, only original file names
+ will be returned.
+
+ [input]
+ target_dir : Target directory that contains VTC files
+              e.g. '/HB/zk09_091'
+              Target directory should be specified as such
+              the current directory where this function is
+              called is the origin.
+ extension  : extension of files you want to get
+              e.g. '*.vtc'
+ prefix_tgt : (optional) file prefix to specify target, e.g. 'HB', empty by default
+ prefix_to_be_replaced: (optional) string to be replaced, e.g. 'ZK', empty by default (NO replacement)
+ prefix_replace: (optional) string to replace prefix_to_be_replaced, e.g. 'zk', empty by default (NO replacement)
+ prefix_exclude: (optional) string to specify files to be excluded from the processing
+                 e.g. 'test'. empty by default.
+
+ [output]
+ filenames  : cell structure of file names after replacing
+              prefix_to_be_replaced by prefix_replace
+ dirnames   : cell structure of directory names after replacing
+              prefix_to_be_replaced by prefix_replace
+
+ [note on how to set the 'prefix_*' variable]
+ prefix_* can be set flexibly as below.
+ 1. a string: setting an including prefix (string) alone
+    e.g. prefix_*='_TDTS6.0';
+         --&gt; processes files whose names contain '_TDTS6.0'
+ 2. a {1 x N} cell string: setting including prefix (string) arrays
+    e.g. prefix_*={'_TDTS6.0','_TSS5.0mm'};
+         --&gt; processes files whose names contain '_TDTS6.0s' or '_TSS5.0mm'.
+ 3. a {2 x N} cell string: setting including/excluding prefix (string) arrays
+    e.g. prefix_*={{'_TDTS6.0s','_TSS5.0mm'};{'THP'}};
+         --&gt; processes files whose names contain '_TDTS6.0s'
+             or '_TSS5.0mm' but do not contain 'THP'.
+         prefix_*={'';{'_TDTS6.0s'}};
+         --&gt; processes files whose names do not contain '_TDTS6.0s'.
+         prefix_*={'_TSS5.0mm';''};
+         --&gt; processes files whose names contain '_TSS5.0mm'.
+
+ [dependency]
+ 1. wildcardsearch.m
+ enable reg-exp search of files
+
+
+ Created    : &quot;2010-08-19 16:02:21 banh&quot;
+ Last Update: &quot;2019-03-08 10:35:07 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>	Searches and gets file names with a relative/full path format under the target directory (recursive and wildcard search are available).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [filenames,dirnames]=ReplaceFilename(target_dir,extension,prefix_tgt,prefix_to_be_replaced,prefix_replace,prefix_exclude)</a>
+0002 
+0003 <span class="comment">% Replaces a target word in the file name to the specified one.</span>
+0004 <span class="comment">% function filenames=ReplaceFilename(target_dir,extension,:prefix_tgt,:prefix_to_be_replaced,:prefix_replace,:prefix_exclude)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% [example]</span>
+0008 <span class="comment">% &gt;&gt; ReplaceFilename('/HB/zk09_091','*.vtc','','ZK','zk')</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [about]</span>
+0011 <span class="comment">% This function replaces a specified word in file name</span>
+0012 <span class="comment">% like, hb_test_partial.vtc ---&gt; HB_test_partial.vtc</span>
+0013 <span class="comment">% Directory name is also acceptable</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% !!! NOTICE !!!</span>
+0016 <span class="comment">% If prefix_replace is not specified, only original file names</span>
+0017 <span class="comment">% will be returned.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [input]</span>
+0020 <span class="comment">% target_dir : Target directory that contains VTC files</span>
+0021 <span class="comment">%              e.g. '/HB/zk09_091'</span>
+0022 <span class="comment">%              Target directory should be specified as such</span>
+0023 <span class="comment">%              the current directory where this function is</span>
+0024 <span class="comment">%              called is the origin.</span>
+0025 <span class="comment">% extension  : extension of files you want to get</span>
+0026 <span class="comment">%              e.g. '*.vtc'</span>
+0027 <span class="comment">% prefix_tgt : (optional) file prefix to specify target, e.g. 'HB', empty by default</span>
+0028 <span class="comment">% prefix_to_be_replaced: (optional) string to be replaced, e.g. 'ZK', empty by default (NO replacement)</span>
+0029 <span class="comment">% prefix_replace: (optional) string to replace prefix_to_be_replaced, e.g. 'zk', empty by default (NO replacement)</span>
+0030 <span class="comment">% prefix_exclude: (optional) string to specify files to be excluded from the processing</span>
+0031 <span class="comment">%                 e.g. 'test'. empty by default.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% [output]</span>
+0034 <span class="comment">% filenames  : cell structure of file names after replacing</span>
+0035 <span class="comment">%              prefix_to_be_replaced by prefix_replace</span>
+0036 <span class="comment">% dirnames   : cell structure of directory names after replacing</span>
+0037 <span class="comment">%              prefix_to_be_replaced by prefix_replace</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% [note on how to set the 'prefix_*' variable]</span>
+0040 <span class="comment">% prefix_* can be set flexibly as below.</span>
+0041 <span class="comment">% 1. a string: setting an including prefix (string) alone</span>
+0042 <span class="comment">%    e.g. prefix_*='_TDTS6.0';</span>
+0043 <span class="comment">%         --&gt; processes files whose names contain '_TDTS6.0'</span>
+0044 <span class="comment">% 2. a {1 x N} cell string: setting including prefix (string) arrays</span>
+0045 <span class="comment">%    e.g. prefix_*={'_TDTS6.0','_TSS5.0mm'};</span>
+0046 <span class="comment">%         --&gt; processes files whose names contain '_TDTS6.0s' or '_TSS5.0mm'.</span>
+0047 <span class="comment">% 3. a {2 x N} cell string: setting including/excluding prefix (string) arrays</span>
+0048 <span class="comment">%    e.g. prefix_*={{'_TDTS6.0s','_TSS5.0mm'};{'THP'}};</span>
+0049 <span class="comment">%         --&gt; processes files whose names contain '_TDTS6.0s'</span>
+0050 <span class="comment">%             or '_TSS5.0mm' but do not contain 'THP'.</span>
+0051 <span class="comment">%         prefix_*={'';{'_TDTS6.0s'}};</span>
+0052 <span class="comment">%         --&gt; processes files whose names do not contain '_TDTS6.0s'.</span>
+0053 <span class="comment">%         prefix_*={'_TSS5.0mm';''};</span>
+0054 <span class="comment">%         --&gt; processes files whose names contain '_TSS5.0mm'.</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">% [dependency]</span>
+0057 <span class="comment">% 1. wildcardsearch.m</span>
+0058 <span class="comment">% enable reg-exp search of files</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">% Created    : &quot;2010-08-19 16:02:21 banh&quot;</span>
+0062 <span class="comment">% Last Update: &quot;2019-03-08 10:35:07 ban&quot;</span>
+0063 
+0064 <span class="comment">% check the input variables</span>
+0065 <span class="keyword">if</span> nargin&lt;2, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0066 <span class="keyword">if</span> nargin&lt;3 || isempty(prefix_tgt), prefix_tgt=<span class="string">''</span>; <span class="keyword">end</span>
+0067 <span class="keyword">if</span> nargin&lt;4 || isempty(prefix_to_be_replaced), prefix_to_be_replaced=<span class="string">''</span>; <span class="keyword">end</span>
+0068 <span class="keyword">if</span> nargin&lt;5 || isempty(prefix_replace), prefix_replace=<span class="string">''</span>; <span class="keyword">end</span>
+0069 <span class="keyword">if</span> nargin&lt;6 || isempty(prefix_exclude), prefix_exclude=<span class="string">''</span>; <span class="keyword">end</span>
+0070 
+0071 <span class="keyword">if</span> isempty(prefix_to_be_replaced)
+0072   error(<span class="string">'prefix_to_be_replaced is empty. check input variable.'</span>);
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="comment">% extension check</span>
+0076 <span class="keyword">if</span> ~strcmp(extension,<span class="string">'*'</span>)
+0077   <span class="keyword">if</span> ~strcmp(extension(1),<span class="string">'*'</span>), extension=[<span class="string">'*'</span>,extension]; <span class="keyword">end</span>
+0078   <span class="comment">%if ~strcmp(extension(2),'.'), extension=['*.',extension(2:end)]; end</span>
+0079 <span class="keyword">end</span>
+0080 
+0081 <span class="comment">% get target files and directories</span>
+0082 tmpfiles=<a href="GetFiles.html" class="code" title="function filenames=GetFiles(target_dir,extension,prefix,ignore_error_flg,ignore_wildcard_flg)">GetFiles</a>(fullfile(pwd,target_dir),extension,prefix_tgt);
+0083 
+0084 <span class="comment">% exclude files whose names include prefix_exclude</span>
+0085 file_counter=0; tgtfiles=<span class="string">''</span>;
+0086 <span class="keyword">for</span> ii=1:1:length(tmpfiles)
+0087   [dirpath,fname]=fileparts(tmpfiles{ii});
+0088   <span class="keyword">if</span> ~isempty(prefix_exclude)
+0089     <span class="keyword">if</span> strfind(fname,prefix_exclude), <span class="keyword">continue</span>; <span class="keyword">end</span> <span class="comment">%#ok % the target is file</span>
+0090     <span class="keyword">if</span> isempty(fname) <span class="comment">% the target is directory</span>
+0091       [dummy,dirname]=fileparts(dirpath); <span class="comment">%#ok</span>
+0092       <span class="keyword">if</span> strfind(dirname,prefix_exclude), <span class="keyword">continue</span>; <span class="keyword">end</span> <span class="comment">%#ok</span>
+0093     <span class="keyword">end</span>
+0094   <span class="keyword">end</span>
+0095   file_counter=file_counter+1;
+0096   tgtfiles{file_counter}=tmpfiles{ii};
+0097 <span class="keyword">end</span>
+0098 tmpfiles=tgtfiles;
+0099 clear file_counter tgtfiles;
+0100 
+0101 <span class="comment">% display message</span>
+0102 fprintf(<span class="string">'Target : %s\n'</span>,fullfile(pwd,target_dir));
+0103 
+0104 <span class="comment">% initialize variables</span>
+0105 filenames=<span class="string">''</span>; dirnames=<span class="string">''</span>;
+0106 fileidx=0; diridx=0;
+0107 tgtfiles=<span class="string">''</span>; tgtdirs=<span class="string">''</span>;
+0108 tgtfilelength=NaN; tgtdirlength=NaN;
+0109 
+0110 <span class="comment">% separate the target to directory &amp; files</span>
+0111 <span class="keyword">for</span> ii=1:1:length(tmpfiles)
+0112   <span class="keyword">if</span> strcmp(tmpfiles{ii}(end),filesep())
+0113     diridx=diridx+1;
+0114     tgtdirs{diridx}=tmpfiles{ii};
+0115     tgtdirlength(diridx)=numel(find(tgtdirs{diridx}==filesep()));
+0116   <span class="keyword">else</span>
+0117     fileidx=fileidx+1;
+0118     tgtfiles{fileidx}=tmpfiles{ii};
+0119     tgtfilelength(fileidx)=numel(find(tgtfiles{fileidx}==filesep()));
+0120   <span class="keyword">end</span>
+0121 <span class="keyword">end</span>
+0122 
+0123 <span class="comment">% sort dir &amp; file structure by length of directory tree</span>
+0124 <span class="keyword">if</span> ~isnan(tgtdirlength)
+0125   [dummy,idx]=sort(tgtdirlength,<span class="string">'descend'</span>); <span class="comment">%#ok</span>
+0126   tmp=cell(length(tgtdirs),1);
+0127   <span class="keyword">for</span> ii=1:1:length(tgtdirs), tmp{ii}=tgtdirs{idx(ii)}; <span class="keyword">end</span>
+0128   tgtdirs=tmp; clear tmp;
+0129 <span class="keyword">end</span>
+0130 
+0131 <span class="keyword">if</span> ~isnan(tgtfilelength)
+0132   [dummy,idx]=sort(tgtfilelength,<span class="string">'descend'</span>); <span class="comment">%#ok</span>
+0133   tmp=cell(length(tgtfiles),1);
+0134   <span class="keyword">for</span> ii=1:1:length(tgtfiles), tmp{ii}=tgtfiles{idx(ii)}; <span class="keyword">end</span>
+0135   tgtfiles=tmp; clear tmp;
+0136 <span class="keyword">end</span>
+0137 
+0138 <span class="comment">% return the original file names, if prefix_replace is not specified</span>
+0139 <span class="keyword">if</span> strcmp(prefix_replace,<span class="string">''</span>)
+0140   filenames=tgtfiles;
+0141   dirnames=tgtdirs;
+0142   <span class="keyword">return</span>
+0143 <span class="keyword">end</span>
+0144 
+0145 <span class="comment">% replace file names</span>
+0146 <span class="keyword">if</span> ~isnan(tgtfilelength)
+0147   filenames=cell(length(tgtfiles),1);
+0148   <span class="keyword">for</span> ii=1:1:length(tgtfiles)
+0149 
+0150     [path,fname,ext]=fileparts(tgtfiles{ii});
+0151     filenames{ii}=[path,filesep(),strrep(fname,prefix_to_be_replaced,prefix_replace),ext];
+0152 
+0153     <span class="comment">% rename file</span>
+0154     <span class="keyword">if</span> ~strcmp(tgtfiles{ii},filenames{ii})
+0155 
+0156       fprintf(<span class="string">'processing : %s%s --&gt; %s%s\n'</span>,fname,ext,strrep(fname,prefix_to_be_replaced,prefix_replace),ext);
+0157 
+0158       <span class="comment">% matlab movefile function is quite slow in some situations</span>
+0159       <span class="comment">% since it copies the file first</span>
+0160       <span class="comment">%movefile(tgtfiles{ii},[tgtfiles{ii},'_tmp'],'f');</span>
+0161       <span class="comment">%movefile([tgtfiles{ii},'_tmp'],filenames{ii},'f');</span>
+0162 
+0163       <span class="comment">% so use the external dos-command</span>
+0164       [dummy,fname,ext]=fileparts(filenames{ii}); <span class="comment">%#ok</span>
+0165       eval(sprintf(<span class="string">'dos(''rename &quot;%s&quot; &quot;%s&quot;'');'</span>,tgtfiles{ii},[fname,ext]));
+0166     <span class="keyword">end</span>
+0167 
+0168   <span class="keyword">end</span>
+0169 <span class="keyword">end</span>
+0170 
+0171 <span class="comment">% replace dir names</span>
+0172 <span class="keyword">if</span> ~isnan(tgtdirlength)
+0173   dirnames=cell(length(tgtdirs),1);
+0174   <span class="keyword">for</span> ii=1:1:length(tgtdirs)
+0175 
+0176     idx=find(tgtdirs{ii}==filesep(),2,<span class="string">'last'</span>); idx=idx(1);
+0177     dname=strrep(tgtdirs{ii}(idx:end),filesep(),<span class="string">''</span>);
+0178     dirnames{ii}=[tgtdirs{ii}(1:idx),strrep(dname,prefix_to_be_replaced,prefix_replace)];
+0179 
+0180     <span class="comment">% rename directory</span>
+0181     <span class="keyword">if</span> ~strcmp(tgtdirs{ii},dirnames{ii})
+0182 
+0183       fprintf(<span class="string">'processing : %s --&gt; %s\n'</span>,dname,strrep(dname,prefix_to_be_replaced,prefix_replace));
+0184 
+0185       <span class="comment">% matlab movefile fucntion is quite slow in some situations</span>
+0186       <span class="comment">% since it copies the file first</span>
+0187       <span class="comment">%movefile(tgtdirs{ii},[tgtdirs{ii}(1:end-1),'_tmp'],'f');</span>
+0188       <span class="comment">%movefile([tgtdirs{ii}(1:end-1),'_tmp'],dirnames{ii},'f');</span>
+0189 
+0190       <span class="comment">% so use the external dos-command</span>
+0191       tpath=fileparts(dirnames{ii});
+0192       dname=strrep(dirnames{ii},[tpath,filesep()],<span class="string">''</span>);
+0193       eval(sprintf(<span class="string">'dos(''rename &quot;%s&quot; &quot;%s&quot;'');'</span>,tgtdirs{ii},dname));
+0194     <span class="keyword">end</span>
+0195 
+0196   <span class="keyword">end</span>
+0197 <span class="keyword">end</span>
+0198 
+0199 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

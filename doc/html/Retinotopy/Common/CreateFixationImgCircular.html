@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateFixationImgCircular</title>
+  <meta name="keywords" content="CreateFixationImgCircular">
+  <meta name="description" content="Creates a circular fixation image for a monocular display setting.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateFixationImgCircular
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a circular fixation image for a monocular display setting.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function fix=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a circular fixation image for a monocular display setting.
+ function fiximg=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag)
+
+ Create fixation-cross images for left/right eyes
+
+ [input]
+ fixsize    : radius of the fixation with background, [pixel]
+ fixcolor   : color of the fixation cross, [r,g,b]
+ bgcolor    : color of the background, [r,g,b]
+ circlesize : radius of the actual fixation point, [pixel]
+ show_flag  : if 1, the generated images are displayed. [1/0]
+ save_flag  : if 1, the generated images are saved. [1/0]
+
+ [output]
+ imgL     : fixation image for left eye
+ imgR     : fixation image for right eye
+
+ Created    : &quot;2012-08-05 23:47:20 ban&quot;
+ Last Update: &quot;2013-11-22 18:44:19 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/cbar.html" class="code" title="function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cbar_fixtask.html" class="code" title="function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar_fixtask</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual.html" class="code" title="function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual_fixtask.html" class="code" title="function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/chrf.html" class="code" title="function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/chrf_fixtask.html" class="code" title="function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer.html" class="code" title="function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer_fixtask.html" class="code" title="function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/cmeridian.html" class="code" title="function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmeridian_fixtask.html" class="code" title="function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian_fixtask</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy.html" class="code" title="function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy_fixtask.html" class="code" title="function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar.html" class="code" title="function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar_fixtask.html" class="code" title="function dbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual.html" class="code" title="function ddual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual_fixtask.html" class="code" title="function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dhrf.html" class="code" title="function dhrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dhrf_fixtask.html" class="code" title="function dhrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer.html" class="code" title="function dlgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer_fixtask.html" class="code" title="function dlgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlocalizer.html" class="code" title="function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer_fixtask.html" class="code" title="function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dmeridian.html" class="code" title="function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmeridian_fixtask.html" class="code" title="function dmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian_fixtask</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal.html" class="code" title="function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal_fixtask.html" class="code" title="function dmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal_fixtask</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy.html" class="code" title="function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy_fixtask.html" class="code" title="function dretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy_fixtask</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ibar_fixtask.html" class="code" title="function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ibar_fixtask</a>	Object-image-defined bar stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/ilgnlocalizer_fixtask.html" class="code" title="function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilgnlocalizer_fixtask</a>	Object-image-defined wedge stimulus with fixation luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/imeridian_fixtask.html" class="code" title="function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imeridian_fixtask</a>	Object-image-defined dual wedge stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function fix=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag)</a>
+0002 
+0003 <span class="comment">% Creates a circular fixation image for a monocular display setting.</span>
+0004 <span class="comment">% function fiximg=CreateFixationImgCircular(fixsize,fixcolor,bgcolor,circlesize,show_flag,save_flag)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Create fixation-cross images for left/right eyes</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% fixsize    : radius of the fixation with background, [pixel]</span>
+0010 <span class="comment">% fixcolor   : color of the fixation cross, [r,g,b]</span>
+0011 <span class="comment">% bgcolor    : color of the background, [r,g,b]</span>
+0012 <span class="comment">% circlesize : radius of the actual fixation point, [pixel]</span>
+0013 <span class="comment">% show_flag  : if 1, the generated images are displayed. [1/0]</span>
+0014 <span class="comment">% save_flag  : if 1, the generated images are saved. [1/0]</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% [output]</span>
+0017 <span class="comment">% imgL     : fixation image for left eye</span>
+0018 <span class="comment">% imgR     : fixation image for right eye</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Created    : &quot;2012-08-05 23:47:20 ban&quot;</span>
+0021 <span class="comment">% Last Update: &quot;2013-11-22 18:44:19 ban (ban.hiroshi@gmail.com)&quot;</span>
+0022 
+0023 <span class="comment">% check input variables</span>
+0024 <span class="keyword">if</span> nargin &lt; 1, fixsize=32; <span class="keyword">end</span>
+0025 <span class="keyword">if</span> nargin &lt; 2, fixcolor=[255,255,255]; <span class="keyword">end</span>
+0026 <span class="keyword">if</span> nargin &lt; 3, bgcolor=[128,128,128]; <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin &lt; 4, circlesize=24; <span class="keyword">end</span>
+0028 <span class="keyword">if</span> nargin &lt; 5, show_flag=1; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin &lt; 6, save_flag=0; <span class="keyword">end</span>
+0030 
+0031 <span class="comment">% generate xy coordinates</span>
+0032 [x,y]=meshgrid(1:2*fixsize,1:2*fixsize);
+0033 x=x-fixsize; y=y-fixsize;
+0034 r=sqrt(x.*x+y.*y);
+0035 
+0036 <span class="comment">% create the circular background</span>
+0037 alphac=r; alphac(r&gt;fixsize)=0; alphac(r&lt;=fixsize)=255;
+0038 bgcircle=zeros([2*fixsize,2*fixsize,4]);
+0039 <span class="keyword">for</span> ii=1:1:3, bgcircle(:,:,ii)=bgcolor(ii); <span class="keyword">end</span>
+0040 bgcircle(:,:,4)=alphac; <span class="comment">% alpha channel</span>
+0041 
+0042 <span class="comment">% create the central fixation point</span>
+0043 <span class="keyword">for</span> ii=1:1:3
+0044   tmp=bgcircle(:,:,ii);
+0045   tmp(r&lt;circlesize)=fixcolor(ii);
+0046   bgcircle(:,:,ii)=tmp;
+0047 <span class="keyword">end</span>
+0048 
+0049 fix=uint8(bgcircle);
+0050 
+0051 <span class="keyword">if</span> show_flag
+0052   figure;
+0053 
+0054   imid1=imshow(fix(:,:,1:3));
+0055   set(imid1,<span class="string">'AlphaData'</span>,double(fix(:,:,4)./255));
+0056   hold on;
+0057 
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="keyword">if</span> save_flag
+0061   save FixationImg.mat fix;
+0062 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

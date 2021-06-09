@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of AddSlide2PPT</title>
+  <meta name="keywords" content="AddSlide2PPT">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>AddSlide2PPT
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AddSlide2PPT.html" class="code" title="">AddSlide2PPT</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AddSlide2PPT.html" class="code" title="">AddSlide2PPT</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = AddSlide2PPT()</a></li><li><a href="#_sub2" class="code">function obj = addTitleSlide(obj, title_text, sub_title_text)</a></li><li><a href="#_sub3" class="code">function obj = addTextSlide(obj, title_text, main_text)</a></li><li><a href="#_sub4" class="code">function obj = addImageSlide(obj, title_text, image_file, nrows, ncols, margin)</a></li><li><a href="#_sub5" class="code">function obj = saveAs(obj, filename)</a></li><li><a href="#_sub6" class="code">function obj = close(obj, noQuit)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 classdef <a href="AddSlide2PPT.html" class="code" title="">AddSlide2PPT</a>
+0002 
+0003 <span class="comment">% Matlab class to generate PowerPoint 2007 slides</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% [example]</span>
+0006 <span class="comment">% &gt;&gt; imgs=wildcardsearch(fullfile(pwd,'imgs'),'*.png'); % get PNG images as cell structure</span>
+0007 <span class="comment">% &gt;&gt; ppt=AddSlide2PPT();</span>
+0008 <span class="comment">% &gt;&gt; ppt=ppt.addTitleSlide('add image test',getusername());</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% &gt;&gt; % add 1 images on a slide</span>
+0011 <span class="comment">% &gt;&gt; tgt1=imgs{1};</span>
+0012 <span class="comment">% &gt;&gt; ppt=ppt.addImageSlide('1 image',tgt1);</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% &gt;&gt; % add 2 images on a slide</span>
+0015 <span class="comment">% &gt;&gt; tgt2{1}=imgs{1};</span>
+0016 <span class="comment">% &gt;&gt; tgt2{2}=imgs{2};</span>
+0017 <span class="comment">% &gt;&gt; ppt=ppt.addImageSlide('2 images',tgt2);</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% &gt;&gt; % add 4 images</span>
+0020 <span class="comment">% &gt;&gt; tgt4{1}=imgs{1};</span>
+0021 <span class="comment">% &gt;&gt; tgt4{2}=imgs{2};</span>
+0022 <span class="comment">% &gt;&gt; tgt4{3}=imgs{4};</span>
+0023 <span class="comment">% &gt;&gt; tgt4{4}=imgs{5};</span>
+0024 <span class="comment">% &gt;&gt; ppt=ppt.addImageSlide('4 images',tgt4);</span>
+0025 <span class="comment">% &gt;&gt; ppt=ppt.saveAs(fullfile(pwd,'test_add_image.ppt'));</span>
+0026 <span class="comment">% &gt;&gt; clear all; close all;</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Modified by Hiroshi Ban for Mcalibrator2 and PlotVOItSeriesVTC</span>
+0029 <span class="comment">% Multiple images can be pasted in a slide</span>
+0030 <span class="comment">% Image sizes and positions are automatically adjusted.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Created    : &quot;2013-04-16 02:45:40 banh&quot;</span>
+0034 <span class="comment">% Last Update: &quot;2014-10-01 11:47:25 ban&quot;</span>
+0035 
+0036 <span class="comment">%layout types:</span>
+0037 <span class="comment">% 1 - title</span>
+0038 <span class="comment">% 2 - title and content</span>
+0039 <span class="comment">% 3 - section header</span>
+0040 <span class="comment">% 4 - Two Content</span>
+0041 <span class="comment">% 5 - Comparison</span>
+0042 <span class="comment">% 6 - Title only</span>
+0043 <span class="comment">% 7 - blank</span>
+0044 <span class="comment">% 8 - content with caption</span>
+0045 <span class="comment">% 9 - picture with caption</span>
+0046 <span class="comment">% 10 -title and vertical text</span>
+0047 <span class="comment">% 11 - vertical title and text</span>
+0048 
+0049 properties
+0050   app_handle
+0051   presentation
+0052   pt = 0.0352; <span class="comment">%point size in cm.</span>
+0053   newline = char(13); <span class="comment">%the new line character.</span>
+0054 <span class="keyword">end</span>
+0055 
+0056 methods
+0057     <a name="_sub0" href="#_subfunctions" class="code">function obj = AddSlide2PPT()</a>
+0058     <span class="comment">%creates a new presentation. You must have powerpoint</span>
+0059     <span class="comment">%2007 open first.</span>
+0060     <span class="keyword">try</span>
+0061       obj.app_handle = actxserver(<span class="string">'PowerPoint.Application'</span>); <span class="comment">%open powerpoint</span>
+0062     <span class="keyword">catch</span>
+0063       obj.app_handle=[];
+0064       <span class="keyword">return</span>;
+0065     <span class="keyword">end</span>
+0066     obj.presentation = obj.app_handle.Presentation.Add; <span class="comment">%create presentation</span>
+0067     <span class="keyword">end</span>
+0068 
+0069     <a name="_sub1" href="#_subfunctions" class="code">function obj = addTitleSlide(obj, title_text, sub_title_text)</a>
+0070     <span class="comment">%creates a title slide</span>
+0071     <span class="comment">%   ppt = ppt.addTitleSlide(title_text, sub_title_text)</span>
+0072     <span class="comment">%       title_text - the text to put in the title section.</span>
+0073     <span class="comment">%       sub_title_text - the text to put in the sub title</span>
+0074     <span class="comment">%       section.</span>
+0075     <span class="comment">%</span>
+0076     <span class="comment">% If you need to use a line break (start a new line) use the</span>
+0077     <span class="comment">% ppt.newline field of this object. (aka char(13)).</span>
+0078 
+0079     <span class="comment">%create slide</span>
+0080     layout = obj.presentation.SlideMaster.CustomLayouts.Item(1); <span class="comment">%title slide layout</span>
+0081     Slide = obj.presentation.Slides.AddSlide(obj.presentation.Slides.Count + 1,layout);
+0082 
+0083     <span class="comment">%do title</span>
+0084     <span class="keyword">if</span> exist(<span class="string">'title_text'</span>, <span class="string">'var'</span>) &amp;&amp; ~isempty(title_text)
+0085       Slide.Shapes.Item(1).TextFrame.TextRange.Text = title_text;
+0086     <span class="keyword">end</span>
+0087 
+0088     <span class="comment">%do sub-title</span>
+0089     <span class="keyword">if</span> exist(<span class="string">'sub_title_text'</span>, <span class="string">'var'</span>) &amp;&amp; ~isempty(sub_title_text)
+0090       Slide.Shapes.Item(2).TextFrame.TextRange.Text = sub_title_text;
+0091     <span class="keyword">end</span>
+0092     <span class="keyword">end</span>
+0093 
+0094     <a name="_sub2" href="#_subfunctions" class="code">function obj = addTextSlide(obj, title_text, main_text)</a>
+0095     <span class="comment">%creates a section title slide</span>
+0096     <span class="comment">%   ppt = ppt.addTitleSlide(title_text, main_text)</span>
+0097     <span class="comment">%       title_text - the text to put in the title section.</span>
+0098     <span class="comment">%       main_text - the text to put in the sub title</span>
+0099     <span class="comment">%       section.</span>
+0100     <span class="comment">%</span>
+0101     <span class="comment">% If you need to use a line break (start a new line) use the</span>
+0102     <span class="comment">% ppt.newline field of this object. (aka char(13)).</span>
+0103 
+0104     <span class="comment">%create slide</span>
+0105     layout = obj.presentation.SlideMaster.CustomLayouts.Item(2); <span class="comment">%section header</span>
+0106     Slide = obj.presentation.Slides.AddSlide(obj.presentation.Slides.Count + 1,layout);
+0107 
+0108     <span class="comment">%do title</span>
+0109     <span class="keyword">if</span> exist(<span class="string">'title_text'</span>, <span class="string">'var'</span>) &amp;&amp; ~isempty(title_text)
+0110       tb = Slide.Shapes.Item(1);
+0111       tb.TextFrame.TextRange.Text = title_text;
+0112       tb.TextFrame.TextRange.Font.Size=24;
+0113     <span class="keyword">end</span>
+0114 
+0115     <span class="comment">%do footer</span>
+0116     <span class="keyword">if</span> exist(<span class="string">'main_text'</span>, <span class="string">'var'</span>) &amp;&amp; ~isempty(main_text)
+0117       tb2 = Slide.Shapes.Item(2);
+0118       tb2.TextFrame.TextRange.Text = main_text;
+0119       tb2.TextFrame.TextRange.Font.Size=18;
+0120     <span class="keyword">end</span>
+0121     <span class="keyword">end</span>
+0122 
+0123     <a name="_sub3" href="#_subfunctions" class="code">function obj = addImageSlide(obj, title_text, image_file, nrows, ncols, margin)</a>
+0124     <span class="comment">%creates a slide consisting of only a title and an image</span>
+0125     <span class="comment">%   ppt = ppt.addImageOnlySlide(title_text, image_file)</span>
+0126     <span class="comment">%       title_text - the text to put in the title section.</span>
+0127     <span class="comment">%       image_file - the filename(s) and path(s) of the image(s) to use</span>
+0128     <span class="comment">%                    1 file name or cell structure of file names</span>
+0129 
+0130     <span class="comment">%create slide</span>
+0131     layout = obj.presentation.SlideMaster.CustomLayouts.Item(2); <span class="comment">%title and content</span>
+0132     Slide = obj.presentation.Slides.AddSlide(obj.presentation.Slides.Count + 1,layout);
+0133 
+0134     <span class="keyword">if</span> nargin&lt;7 || isempty(margin), margin=0; <span class="keyword">end</span>
+0135 
+0136     <span class="comment">%do title</span>
+0137     textH=0;
+0138     <span class="keyword">if</span> exist(<span class="string">'title_text'</span>, <span class="string">'var'</span>) &amp;&amp; ~isempty(title_text)
+0139       Slide.Shapes.Item(1).top=10;
+0140       Slide.Shapes.Item(1).height=30;
+0141       Slide.Shapes.Item(1).TextFrame.TextRange.Text = title_text;
+0142       Slide.Shapes.Item(1).TextFrame.TextRange.Font.Size=24;
+0143 
+0144       <span class="comment">% get text field size</span>
+0145       textH=Slide.Shapes.Item(1).top+Slide.Shapes.Item(1).height;
+0146     <span class="keyword">end</span>
+0147 
+0148     <span class="comment">%do image</span>
+0149     <span class="keyword">if</span> exist(<span class="string">'image_file'</span>, <span class="string">'var'</span>) &amp;&amp; ~isempty(image_file)
+0150 
+0151       <span class="keyword">if</span> ~iscell(image_file), image_file={image_file}; <span class="keyword">end</span>
+0152 
+0153       <span class="keyword">if</span> nargin&lt;5 || isempty(nrows), nrows=ceil(sqrt(length(image_file))); <span class="keyword">end</span>
+0154       <span class="keyword">if</span> nargin&lt;6 || isempty(ncols), ncols=ceil(length(image_file)/nrows); <span class="keyword">end</span>
+0155       <span class="keyword">if</span> nrows&gt;ncols, tmp=ncols; ncols=nrows; nrows=tmp; clear tmp; <span class="keyword">end</span>
+0156 
+0157       <span class="comment">% get whole slide canvas size</span>
+0158       H=obj.presentation.SlideMaster.Height;
+0159       H=H-textH;
+0160       W=obj.presentation.SlideMaster.Width;
+0161 
+0162       <span class="keyword">for</span> mm=1:1:length(image_file)
+0163 
+0164         <span class="comment">% set margins at top/bottom/left/right</span>
+0165         cH=H/nrows;
+0166         cW=W/ncols;
+0167 
+0168         <span class="comment">% get image size</span>
+0169         timg=imread(image_file{mm});
+0170         sz=size(timg);
+0171         iH=sz(1); iW=sz(2);
+0172 
+0173         <span class="comment">% calculate best image field</span>
+0174         resizeratio=linspace(1.0,0.0,100);
+0175         <span class="keyword">for</span> ii=1:1:numel(resizeratio)
+0176           tH=iH*resizeratio(ii);
+0177           tW=iW*resizeratio(ii);
+0178           <span class="keyword">if</span> tH&lt;cH &amp;&amp; tW&lt;cW, <span class="keyword">break</span>; <span class="keyword">end</span>
+0179         <span class="keyword">end</span>
+0180         iH=tH; iW=tW;
+0181 
+0182         <span class="comment">% get the final position of the image</span>
+0183         ccol=mod(mm,ncols); <span class="keyword">if</span> ~ccol, ccol=ncols; <span class="keyword">end</span>;
+0184         crow=floor((mm-ccol)/ncols)+1;
+0185 
+0186         left=(cW-2*margin-iW)/2+margin+(ccol-1)*cW;
+0187         top=(cH-2*margin-iH)/2+textH+margin+(crow-1)*cH;
+0188 
+0189         <span class="comment">% add picture</span>
+0190         opicture=Slide.Shapes.AddPicture(image_file{mm},<span class="string">'msoFalse'</span>,<span class="string">'msoTrue'</span>,left,top,iW,iH);
+0191 
+0192         <span class="comment">% NOTE: new PowerPoint doesn't allow us to directly use VBA or ActivX-object to insert</span>
+0193         <span class="comment">%       a picture at whatever size it'd come in at were we to do the same job manually.</span>
+0194         <span class="keyword">if</span> obj.app_handle.Version&gt;15 <span class="comment">% PowerPoint version 15.0 or above.</span>
+0195           opicture.Left=left;
+0196           opicture.Top=top;
+0197           opicture.Width=iW;
+0198           opicture.Height=iH;
+0199         <span class="keyword">end</span>
+0200 
+0201       <span class="keyword">end</span> <span class="comment">% for mm=1:1:length(image_file)</span>
+0202 
+0203     <span class="keyword">end</span>
+0204     <span class="keyword">end</span>
+0205 
+0206     <a name="_sub4" href="#_subfunctions" class="code">function obj = saveAs(obj, filename)</a>
+0207     <span class="comment">%saves the presentation to the specified file</span>
+0208     obj.presentation.SaveAs(filename);
+0209     <span class="keyword">end</span>
+0210 
+0211     <a name="_sub5" href="#_subfunctions" class="code">function obj = close(obj, noQuit)</a>
+0212     <span class="comment">%closes the presentation.</span>
+0213     <span class="comment">%   close(noQuit)</span>
+0214     <span class="comment">%       noQuit - if false function will attempt</span>
+0215     <span class="comment">%       to close powerpoint if no presentations remain open.</span>
+0216 
+0217     <span class="keyword">if</span> ~exist(<span class="string">'noQuit'</span>, <span class="string">'var'</span>) || (exist(<span class="string">'noQuit'</span>, <span class="string">'var'</span>) &amp;&amp; isempty(noQuit))
+0218       noQuit = true;
+0219     <span class="keyword">end</span>
+0220 
+0221     obj.presentation.Close;
+0222     <span class="keyword">if</span> ~noQuit &amp;&amp; obj.app_handle.Presentations.Count &lt;= 0
+0223       obj.app_handle.Quit;
+0224     <span class="keyword">end</span>
+0225     obj.app_handle.delete;
+0226     <span class="keyword">end</span>
+0227 <span class="keyword">end</span>
+0228 
+0229 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

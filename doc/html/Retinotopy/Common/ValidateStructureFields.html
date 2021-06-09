@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ValidateStructureFields</title>
+  <meta name="keywords" content="ValidateStructureFields">
+  <meta name="description" content="Validates the input structure and set the default values to the missing field(s)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>ValidateStructureFields
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Validates the input structure and set the default values to the missing field(s)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function structval=ValidateStructureFields(structval,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Validates the input structure and set the default values to the missing field(s)
+ function structval=ValidateStructureFields(structval,varargin)
+
+ [about]
+ This function validates the input structure, structval, and set the default values
+ to the missing field(s).
+ For instance, if you run the codes below,
+ &gt;&gt; dparam=struct(); % initialize
+ &gt;&gt; if ~isempty(displayfile) % displayfile contains specific fields (dparam.*), and they are loaded onto memory
+ &gt;&gt;   run(fullfile(rootDir,'subjects',subjID,displayfile));
+ &gt;&gt; end
+ &gt;&gt; dparam=ValidateStructureFields(dparam,... % validate fields and set the default values to missing field(s)
+ &gt;&gt;          'ExpMode','shutter',...
+ &gt;&gt;          'start_method',1,...
+ &gt;&gt;          'custom_trigger',KbName(84),...
+ &gt;&gt;          'Key1',37,...
+ &gt;&gt;          'Key2',39,...
+ &gt;&gt;          'givefeedback',1,...
+ &gt;&gt;          'fullscr',false,...
+ &gt;&gt;          'ScrHeight',1200,...
+ &gt;&gt;          'ScrWidth',1920);
+
+ The procedures below are evaluated.
+ 1.'dparam' structure is initialized as empty at the begnning.
+ 2. the specific fileds and values are set at the socond-fourth lines.
+ 3. the 'dparam' structure is validated and set the default values to the missing field(s) with this function.
+ If some fields are already configured by user, this function never overwrites them.
+
+ [input]
+ structval : a structure to be validated. structval=struct(); by default.
+
+ From the second input variables, please set as
+ 'fieldname1',default_value(s),'fieldname2',default_value(s),'fieldname3',default_value(s),...
+ Therefore, the total number of input variables should be 1 (structval) + 2*N (N=the number of fields to be set to structval).
+
+ [output]
+ structval : structure with full fields you want.
+
+
+ Created    : &quot;2018-11-11 21:38:52 ban&quot;
+ Last Update: &quot;2018-11-11 22:03:36 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="isstructmember.html" class="code" title="function isFieldResult = isstructmember(inStruct, fieldName)">isstructmember</a>	Checks whether the target struct contains a filed you specified as a member.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/cbar.html" class="code" title="function cbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cbar_fixtask.html" class="code" title="function cbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cbar_fixtask</a>	Color/luminance-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual.html" class="code" title="function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cdual_fixtask.html" class="code" title="function cdual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cdual_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/chrf.html" class="code" title="function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/chrf_fixtask.html" class="code" title="function chrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">chrf_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer.html" class="code" title="function clgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer</a>	Color/luminance-defined checkerboard stimulus with checker-patch luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clgnlocalizer_fixtask.html" class="code" title="function clgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clgnlocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/cmeridian.html" class="code" title="function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmeridian_fixtask.html" class="code" title="function cmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmeridian_fixtask</a>	Color/luminance-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy.html" class="code" title="function cretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy</a>	Color/luminance-defined checkerboard retinotopy stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cretinotopy_fixtask.html" class="code" title="function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cretinotopy_fixtask</a>	Color/luminance-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar.html" class="code" title="function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dbar_fixtask.html" class="code" title="function dbar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dbar_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard bar stimulus (pRF) with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual.html" class="code" title="function ddual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ddual_fixtask.html" class="code" title="function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ddual_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dhrf.html" class="code" title="function dhrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dhrf_fixtask.html" class="code" title="function dhrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dhrf_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer.html" class="code" title="function dlgnlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlgnlocalizer_fixtask.html" class="code" title="function dlgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlgnlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with fixation-point luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/dlocalizer.html" class="code" title="function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer_fixtask.html" class="code" title="function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dmeridian.html" class="code" title="function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmeridian_fixtask.html" class="code" title="function dmeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmeridian_fixtask</a>	Random-Dot-Stereogram(RDS)-defined dual checkerboard stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal.html" class="code" title="function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal_fixtask.html" class="code" title="function dmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal_fixtask</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy.html" class="code" title="function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dretinotopy_fixtask.html" class="code" title="function dretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dretinotopy_fixtask</a>	Random-Dot-Stereogram(RDS)-defined stereo checkerboard retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/gen_bar_windows.html" class="code" title="function stim_windows=gen_bar_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_bar_windows</a>	Generates bar stimulus windows for pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/gen_dual_windows.html" class="code" title="function stim_windows=gen_dual_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_dual_windows</a>	Generates retinotopy stimulus (polar wedge + eccentricity annulus) windows for pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/gen_multifocal_windows.html" class="code" title="function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_multifocal_windows</a>	Generates multi-focal retinotopy stimulus windows for GLM modeling or pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/gen_retinotopy_windows.html" class="code" title="function stim_windows=gen_retinotopy_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_retinotopy_windows</a>	Generates retinotopy stimulus (polar/eccentricity) windows for pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/ibar_fixtask.html" class="code" title="function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ibar_fixtask</a>	Object-image-defined bar stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/idual_fixtask.html" class="code" title="function idual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">idual_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/ihrf_fixtask.html" class="code" title="function ihrf_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ihrf_fixtask</a>	Object-image-defined checkerboard stimulus with fixation-point luminance change detection tasks for measuring and estimating a HRF function.</li><li><a href="../../Retinotopy/Presentation/ilgnlocalizer_fixtask.html" class="code" title="function ilgnlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilgnlocalizer_fixtask</a>	Object-image-defined wedge stimulus with fixation luminance change-detection tasks, for localizing LGN.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/imeridian_fixtask.html" class="code" title="function imeridian_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imeridian_fixtask</a>	Object-image-defined dual wedge stimulus along horizontal/vertical meridians with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/iretinotopy_fixtask.html" class="code" title="function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">iretinotopy_fixtask</a>	Object-image-defined retinotopy stimulus with fixation luminance change-detection tasks.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function structval=ValidateStructureFields(structval,varargin)</a>
+0002 
+0003 <span class="comment">% Validates the input structure and set the default values to the missing field(s)</span>
+0004 <span class="comment">% function structval=ValidateStructureFields(structval,varargin)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% [about]</span>
+0007 <span class="comment">% This function validates the input structure, structval, and set the default values</span>
+0008 <span class="comment">% to the missing field(s).</span>
+0009 <span class="comment">% For instance, if you run the codes below,</span>
+0010 <span class="comment">% &gt;&gt; dparam=struct(); % initialize</span>
+0011 <span class="comment">% &gt;&gt; if ~isempty(displayfile) % displayfile contains specific fields (dparam.*), and they are loaded onto memory</span>
+0012 <span class="comment">% &gt;&gt;   run(fullfile(rootDir,'subjects',subjID,displayfile));</span>
+0013 <span class="comment">% &gt;&gt; end</span>
+0014 <span class="comment">% &gt;&gt; dparam=ValidateStructureFields(dparam,... % validate fields and set the default values to missing field(s)</span>
+0015 <span class="comment">% &gt;&gt;          'ExpMode','shutter',...</span>
+0016 <span class="comment">% &gt;&gt;          'start_method',1,...</span>
+0017 <span class="comment">% &gt;&gt;          'custom_trigger',KbName(84),...</span>
+0018 <span class="comment">% &gt;&gt;          'Key1',37,...</span>
+0019 <span class="comment">% &gt;&gt;          'Key2',39,...</span>
+0020 <span class="comment">% &gt;&gt;          'givefeedback',1,...</span>
+0021 <span class="comment">% &gt;&gt;          'fullscr',false,...</span>
+0022 <span class="comment">% &gt;&gt;          'ScrHeight',1200,...</span>
+0023 <span class="comment">% &gt;&gt;          'ScrWidth',1920);</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% The procedures below are evaluated.</span>
+0026 <span class="comment">% 1.'dparam' structure is initialized as empty at the begnning.</span>
+0027 <span class="comment">% 2. the specific fileds and values are set at the socond-fourth lines.</span>
+0028 <span class="comment">% 3. the 'dparam' structure is validated and set the default values to the missing field(s) with this function.</span>
+0029 <span class="comment">% If some fields are already configured by user, this function never overwrites them.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% [input]</span>
+0032 <span class="comment">% structval : a structure to be validated. structval=struct(); by default.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% From the second input variables, please set as</span>
+0035 <span class="comment">% 'fieldname1',default_value(s),'fieldname2',default_value(s),'fieldname3',default_value(s),...</span>
+0036 <span class="comment">% Therefore, the total number of input variables should be 1 (structval) + 2*N (N=the number of fields to be set to structval).</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% [output]</span>
+0039 <span class="comment">% structval : structure with full fields you want.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% Created    : &quot;2018-11-11 21:38:52 ban&quot;</span>
+0043 <span class="comment">% Last Update: &quot;2018-11-11 22:03:36 ban&quot;</span>
+0044 
+0045 <span class="comment">% check the input variable</span>
+0046 <span class="keyword">if</span> nargin&lt;1, help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0047 <span class="keyword">if</span> mod(nargin,2)==0
+0048   <span class="comment">% here, %s is required as error can not recoginize cadge return (e.g. \n) unless it has more than 1 input variables.</span>
+0049   error([<span class="string">'the total number of input variables should be\n'</span>,<span class="keyword">...</span>
+0050          <span class="string">'1 (structval) + 2 (name and default value(s)) * N (N=the number of fields to be set to structval).\n'</span>,<span class="keyword">...</span>
+0051          <span class="string">'check the input variables%s'</span>],<span class="string">'.'</span>);
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% loop for the fields with validating the</span>
+0055 <span class="keyword">for</span> ii=1:2:nargin-1
+0056   <span class="keyword">if</span> <a href="isstructmember.html" class="code" title="function isFieldResult = isstructmember(inStruct, fieldName)">isstructmember</a>(structval,varargin{ii})
+0057     <span class="keyword">if</span> isempty(getfield(structval,varargin{ii}))
+0058       structval=setfield(structval,varargin{ii},varargin{ii+1});
+0059     <span class="keyword">end</span>
+0060   <span class="keyword">else</span>
+0061     structval=setfield(structval,varargin{ii},varargin{ii+1});
+0062   <span class="keyword">end</span>
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

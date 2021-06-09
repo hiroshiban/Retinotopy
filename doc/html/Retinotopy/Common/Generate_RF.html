@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Generate_RF</title>
+  <meta name="keywords" content="Generate_RF">
+  <meta name="description" content="Generates 1D/2D 2-diff of gaussian response pulse.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>Generate_RF
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates 1D/2D 2-diff of gaussian response pulse.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function resp=generate_RF(x,mu,sigma,amp1,amp2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates 1D/2D 2-diff of gaussian response pulse.
+ function generate_RF(x,mu,sigma,amp1,amp2)
+
+ This function generates 1D/2D 2-diff of gaussian response pulse
+
+ [input]
+ x     : input response field,
+         e.g. x=-5:5; (for 1D gaussian), x=[-5:5;-5:5]; (for 2D)
+ mu    : center of the response field, e.g. mu=0;
+ sigma : sigma of gaussians
+ amp1  : positive amplitude
+ amp2  : amplitude of the undershoot component
+
+ [output]
+ resp  : output gaussian response
+
+
+ Created    : &quot;2011-07-14 13:22:03 banh&quot;
+ Last Update: &quot;2013-11-22 18:49:21 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function resp=generate_RF(x,mu,sigma,amp1,amp2)</a>
+0002 
+0003 <span class="comment">% Generates 1D/2D 2-diff of gaussian response pulse.</span>
+0004 <span class="comment">% function generate_RF(x,mu,sigma,amp1,amp2)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function generates 1D/2D 2-diff of gaussian response pulse</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% x     : input response field,</span>
+0010 <span class="comment">%         e.g. x=-5:5; (for 1D gaussian), x=[-5:5;-5:5]; (for 2D)</span>
+0011 <span class="comment">% mu    : center of the response field, e.g. mu=0;</span>
+0012 <span class="comment">% sigma : sigma of gaussians</span>
+0013 <span class="comment">% amp1  : positive amplitude</span>
+0014 <span class="comment">% amp2  : amplitude of the undershoot component</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% [output]</span>
+0017 <span class="comment">% resp  : output gaussian response</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Created    : &quot;2011-07-14 13:22:03 banh&quot;</span>
+0021 <span class="comment">% Last Update: &quot;2013-11-22 18:49:21 ban (ban.hiroshi@gmail.com)&quot;</span>
+0022 
+0023 <span class="comment">% check input variables</span>
+0024 <span class="keyword">if</span> nargin&lt;1 || isempty(x), x=-5:5; <span class="keyword">end</span>
+0025 
+0026 <span class="comment">% generate gaussian response</span>
+0027 <span class="keyword">if</span> size(x,1)==1 <span class="comment">% 1D gaussian response</span>
+0028   <span class="keyword">if</span> nargin&lt;2 || isempty(mu), mu=0; <span class="keyword">end</span>
+0029   <span class="keyword">if</span> nargin&lt;3 || isempty(sigma), sigma=2; <span class="keyword">end</span>
+0030   <span class="keyword">if</span> nargin&lt;4 || isempty(amp1), amp1=1.0; <span class="keyword">end</span>
+0031   <span class="keyword">if</span> nargin&lt;5 || isempty(amp2), amp2=0.5; <span class="keyword">end</span>
+0032 
+0033   resp=amp1.*exp(-(x-mu(1)).^2/(sigma(1)^2))-(amp2.*exp(-(x-mu(1)).^2/(2*sigma(1)^2)));
+0034 
+0035 <span class="keyword">else</span> <span class="comment">% 2D gaussian response</span>
+0036   [xx,yy]=meshgrid(x(1,:),x(2,:));
+0037   <span class="keyword">if</span> nargin&lt;2 || isempty(mu), mu=[0,0]; <span class="keyword">end</span>
+0038   <span class="keyword">if</span> nargin&lt;3 || isempty(sigma), sigma=[2,2]; <span class="keyword">end</span>
+0039   <span class="keyword">if</span> nargin&lt;4 || isempty(amp1), amp1=1.0; <span class="keyword">end</span>
+0040   <span class="keyword">if</span> nargin&lt;5 || isempty(amp2), amp2=0.5; <span class="keyword">end</span>
+0041 
+0042   resp=amp1.*exp( -( (xx-mu(1)).^2/(sigma(1)^2) + (yy-mu(1)).^2/(sigma(1)^2) ) )-<span class="keyword">...</span>
+0043        amp2.*exp( -( (xx-mu(2)).^2/(2*sigma(2)^2) + (yy-mu(2)).^2/(2*sigma(2)^2) ) );
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

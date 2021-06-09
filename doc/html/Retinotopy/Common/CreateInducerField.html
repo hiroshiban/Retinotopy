@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateInducerField</title>
+  <meta name="keywords" content="CreateInducerField">
+  <meta name="description" content="Creates an oriented circular slant that can be used as an inducer of depth percepts.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CreateInducerField
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates an oriented circular slant that can be used as an inducer of depth percepts.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [field,mask]=CreateInducerField(fieldSize,theta_deg,orient_deg,inducer_pos,inducer_height,inducer_width,pix_per_deg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates an oriented circular slant that can be used as an inducer of depth percepts.
+ function [field,mask]=CreateInducerField(fieldSize,theta_deg,orient_deg,...
+                                          inducer_pos,inducer_height,inducer_width,pix_per_deg)
+
+ Creates oriented slant field
+
+ [input]
+ fieldSize   : the size of the field in degrees, [row,col] (deg)
+ theta_deg   : an angle measured fromh the vertical, [deg]
+ orient_deg  : an angle (orientation) of slant,
+               from horizontal meridian, clockwise [deg]
+ inducer_pos : position of inducer along x-axis [deg]
+ inducer_height : height of inducer along y-axis [deg]
+ inducer_width  : width of inducer along x-axis [deg]
+ pix_per_deg : pixels per degree, [pixels]
+
+ [output]
+ field       : grating image, double format, [row,col]
+ mask        : mask field, [row,col]
+
+ Created    : &quot;2012-03-14 11:10:03 ban&quot;
+ Last Update: &quot;2013-11-22 18:42:14 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [field,mask]=CreateInducerField(fieldSize,theta_deg,orient_deg,inducer_pos,inducer_height,inducer_width,pix_per_deg)</a>
+0002 
+0003 <span class="comment">% Creates an oriented circular slant that can be used as an inducer of depth percepts.</span>
+0004 <span class="comment">% function [field,mask]=CreateInducerField(fieldSize,theta_deg,orient_deg,...</span>
+0005 <span class="comment">%                                          inducer_pos,inducer_height,inducer_width,pix_per_deg)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Creates oriented slant field</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% fieldSize   : the size of the field in degrees, [row,col] (deg)</span>
+0011 <span class="comment">% theta_deg   : an angle measured fromh the vertical, [deg]</span>
+0012 <span class="comment">% orient_deg  : an angle (orientation) of slant,</span>
+0013 <span class="comment">%               from horizontal meridian, clockwise [deg]</span>
+0014 <span class="comment">% inducer_pos : position of inducer along x-axis [deg]</span>
+0015 <span class="comment">% inducer_height : height of inducer along y-axis [deg]</span>
+0016 <span class="comment">% inducer_width  : width of inducer along x-axis [deg]</span>
+0017 <span class="comment">% pix_per_deg : pixels per degree, [pixels]</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% field       : grating image, double format, [row,col]</span>
+0021 <span class="comment">% mask        : mask field, [row,col]</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Created    : &quot;2012-03-14 11:10:03 ban&quot;</span>
+0024 <span class="comment">% Last Update: &quot;2013-11-22 18:42:14 ban (ban.hiroshi@gmail.com)&quot;</span>
+0025 
+0026 <span class="comment">% check input variables</span>
+0027 <span class="keyword">if</span> nargin&lt;1 || isempty(fieldSize), fieldSize=8; <span class="keyword">end</span>
+0028 <span class="keyword">if</span> nargin&lt;2 || isempty(theta_deg), theta_deg=45; <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin&lt;3 || isempty(orient_deg), orient_deg=0; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;4 || isempty(inducer_pos), inducer_pos=2; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;5 || isempty(inducer_height), inducer_height=6; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;6 || isempty(inducer_width), inducer_width=2; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;7 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0034 
+0035 <span class="keyword">if</span> numel(fieldSize)==1, fieldSize=[fieldSize,fieldSize]; <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% convert to pixels and radians</span>
+0038 fieldSize=round(fieldSize.*pix_per_deg);
+0039 theta_deg=theta_deg*pi/180;
+0040 orient_deg=orient_deg*pi/180;
+0041 inducer_pos=round(inducer_pos*pix_per_deg);
+0042 inducer_height=round(inducer_height*pix_per_deg);
+0043 inducer_width=round(inducer_width*pix_per_deg);
+0044 
+0045 <span class="comment">% create slant field</span>
+0046 step=1;
+0047 [x,y]=meshgrid(0:step:fieldSize(2),0:step:fieldSize(1));
+0048 x=x-fieldSize(2)/2; y=y-fieldSize(1)/2;
+0049 <span class="keyword">if</span> mod(size(x,1),2), x=x(1:end-1,:); <span class="keyword">end</span>
+0050 <span class="keyword">if</span> mod(size(x,2),2), x=x(:,1:end-1); <span class="keyword">end</span>
+0051 <span class="keyword">if</span> mod(size(y,1),2), y=y(1:end-1,:); <span class="keyword">end</span>
+0052 <span class="keyword">if</span> mod(size(y,2),2), y=y(:,1:end-1); <span class="keyword">end</span>
+0053 z = x*cos(orient_deg) - y*sin(orient_deg);
+0054 
+0055 field=z*tan(theta_deg);
+0056 
+0057 <span class="comment">% mask the outside region</span>
+0058 mask=ones(size(field));
+0059 mask(1:ceil((size(mask,1)-inducer_height)/2),:)=0;
+0060 mask(ceil((size(mask,1)+inducer_height)/2)+1:<span class="keyword">end</span>,:)=0;
+0061 mask(:,1:ceil((size(mask,2)-2*inducer_pos-inducer_width)/2))=0;
+0062 mask(:,ceil((size(mask,2)+2*inducer_pos+inducer_width)/2)+1:end)=0;
+0063 mask(:,ceil((size(mask,2)-2*inducer_pos+inducer_width)/2)+1:ceil((size(mask,2)+2*inducer_pos-inducer_width)/2))=0;
+0064 field(~mask)=0;
+0065 
+0066 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

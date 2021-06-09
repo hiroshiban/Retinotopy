@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of c_multifocal</title>
+  <meta name="keywords" content="c_multifocal">
+  <meta name="description" content="************************************************************">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- ../../menu.html Presentation --><!-- # subjects --><!-- menu.html HB -->
+<h1>c_multifocal
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>************************************************************</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top"><pre class="comment"> ************************************************************
+ This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.
+ Please_change_the_parameters_below.
+ retinotopyDepthfMRI.m
+ Programmed_by_Hiroshi_Ban___November_29_2018
+ ************************************************************</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../Retinotopy/Common/mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>	Generates maximum-length sequence(s).</li><li><a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>	Shifts 2D matrix circularly.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top"><pre>0001 <span class="comment">% ************************************************************</span>
+0002 <span class="comment">% This_is_the_stimulus_parameter_file_for_retinotopy_Checker_experiment.</span>
+0003 <span class="comment">% Please_change_the_parameters_below.</span>
+0004 <span class="comment">% retinotopyDepthfMRI.m</span>
+0005 <span class="comment">% Programmed_by_Hiroshi_Ban___November_29_2018</span>
+0006 <span class="comment">% ************************************************************</span>
+0007 
+0008 <span class="comment">%%% stimulus parameters</span>
+0009 sparam.nwedges     = 36;   <span class="comment">% number of wedge subdivisions along polar angle</span>
+0010 sparam.nrings      = 9;    <span class="comment">% number of ring subdivisions along eccentricity angle</span>
+0011 sparam.width       = 360;  <span class="comment">% wedge width in deg along polar angle</span>
+0012 sparam.ndivsP      = 12;   <span class="comment">% number of visual field subdivisions along polar angle</span>
+0013 sparam.ndivsE      = 3;    <span class="comment">% number of visual field subdivisions along eccentricity</span>
+0014 sparam.phase       = 0;    <span class="comment">% phase shift in deg</span>
+0015 sparam.startangle  = 0;    <span class="comment">% presentation start angle in deg, from right-horizontal meridian, ccw</span>
+0016 
+0017 sparam.maxRad      = 7.5;  <span class="comment">% maximum radius of  annulus (degrees)</span>
+0018 sparam.minRad      = 0;    <span class="comment">% minumum</span>
+0019 
+0020 sparam.dimratio    = 0.4; <span class="comment">% luminance dim ratio for the checker-pattern change detection task</span>
+0021 
+0022 <span class="comment">% checkerboard colors, this variable is only for c* stimulus presentation scripts (e.g. cretinotopy)</span>
+0023 sparam.colors      = [ 128, 128, 128; <span class="comment">% number of colors for compensating flickering checkerboard</span>
+0024                        255,   0,   0; <span class="comment">% the first row is background</span>
+0025                          0, 255,   0; <span class="comment">% the second to end are patch colors</span>
+0026                        255, 255,   0;
+0027                          0,   0, 255;
+0028                        255,   0, 255;
+0029                          0, 255, 255;
+0030                        255, 255, 255;
+0031                          0,   0,   0;
+0032                        255, 128,   0;
+0033                        128,   0, 255;];
+0034 
+0035 <span class="comment">%%% RDS parameters, these are only for d* stimulus presentation scripts (e.g dretinotopy_fixtask)</span>
+0036 sparam.RDSdepth = [ -12, 12, 5]; <span class="comment">% binocular disparity in arcmins, [min, max, #steps(from min to max)]</span>
+0037 sparam.RDSDense=0.5; <span class="comment">% dot density in the RDS images to be generated (percentage)</span>
+0038 sparam.RDSradius=0.05; <span class="comment">% dot radius in deg</span>
+0039 sparam.RDScolors=[255,0,128]; <span class="comment">% dot colors in the RDS, [color1, color2, background (grayscale)]</span>
+0040 sparam.RDSbackground=0; <span class="comment">% 1 = with background, 0 = no background</span>
+0041 sparam.RDStaskmagnitude=2; <span class="comment">% ratio (x2, x3, etc against the sparam.RDSdepth([1,2])) of the depth maginitude in the change-detection task</span>
+0042 
+0043 <span class="comment">%%% generate stimulus presentation design</span>
+0044 
+0045 <span class="comment">% generating 0/1 sequence using m-sequence</span>
+0046 <span class="comment">% ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps).</span>
+0047 <span class="comment">% here, shift and whichSeq should be set if you want to use a specific stimulus presentation order.</span>
+0048 <span class="comment">% if these values are not set, shift=1 and whichSeq=ceil(rand(1)*length(tap)) are used as defult,</span>
+0049 <span class="comment">% which means the different m-sequences are generated each time when the mseq() function is called.</span>
+0050 <span class="comment">% or if you want to provide a specific stimulus presentation order, please set sparam.design as a</span>
+0051 <span class="comment">% fixed matrix as below (sparam.design should be [ndivsE*ndivsP,numel(mseq(2,8))]).</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">% % sparam.design=[</span>
+0054 <span class="comment">%     0,1,1,0,1,1,1,1,0,1,...;</span>
+0055 <span class="comment">%     1,1,0,0,0,0,0,0,1,1,...;</span>
+0056 <span class="comment">%     1,1,0,1,1,1,1,0,1,1,...];</span>
+0057 
+0058 tmp_design=<a href="../../../../Retinotopy/Common/mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>(2,8,1,1); <span class="comment">% to provide a specific stimulation order, the third and fourth variables are explicitly given.</span>
+0059 tmp_shift=[1:sparam.ndivsP*sparam.ndivsE];
+0060 <a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>=zeros(numel(tmp_shift),1);
+0061 shift_counter=1;
+0062 <span class="keyword">while</span> ~isempty(tmp_shift)
+0063   <span class="keyword">if</span> mod(shift_counter,2)
+0064     <a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(shift_counter)=tmp_shift(1);
+0065     tmp_shift(1)=[];
+0066   <span class="keyword">else</span>
+0067     <a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(shift_counter)=tmp_shift(floor(numel(tmp_shift/2)));
+0068     tmp_shift(floor(numel(tmp_shift/2)))=[];
+0069   <span class="keyword">end</span>
+0070   shift_counter=shift_counter+1;
+0071 <span class="keyword">end</span>
+0072 
+0073 sparam.design=zeros(numel(<a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>),numel(tmp_design));
+0074 <span class="keyword">for</span> mmmm=1:1:numel(<a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>), sparam.design(mmmm,:)=tmp_design([<a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(mmmm):<span class="keyword">end</span>,1:<a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(mmmm)-1]); <span class="keyword">end</span>
+0075 
+0076 clear tmp_design tmp_shift <a href="../../../../Retinotopy/Common/shift.html" class="code" title="function res = shift(mtx, offset)">shift</a> shift_counter mmmm;
+0077 
+0078 <span class="comment">%%% duration in msec for each trial</span>
+0079 sparam.trial_duration=2000; <span class="comment">% msec</span>
+0080 sparam.rest_duration=0; <span class="comment">% stimulation = trial_duration-rest_duration</span>
+0081 
+0082 sparam.numTrials=size(sparam.design,2);
+0083 
+0084 <span class="comment">%%% object-image presentation parameters, only for i* object-image-based retinotopy stimuli (e.g. iretinotopy_fixtask)</span>
+0085 sparam.flip_duration=250; <span class="comment">% msec</span>
+0086 sparam.nimg=120; <span class="comment">% number of images to be presented at a frame</span>
+0087 sparam.imRatio=[0.2,0.5]; <span class="comment">% image magnification ratio, [min, max] (0.0-1.0), the image sizes are randomly selected whithin this range</span>
+0088 sparam.imdepth=[-12,12]; <span class="comment">% disparities (arcmins) added to the images, effective only in a stereo mode (e.g. shutter, dual, parallel etc)</span>
+0089 
+0090 <span class="comment">%%% set number of frames to flip the screen</span>
+0091 <span class="comment">% Here, I set the number as large as I can to minimize vertical cynching error.</span>
+0092 <span class="comment">% the final 2 is for 2 times repetitions of flicker</span>
+0093 <span class="comment">% Set 1 if you want to flip the display at each vertical sync, but not recommended as it uses much CPU power</span>
+0094 <span class="comment">%sparam.waitframes = Screen('FrameRate',0)*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );</span>
+0095 sparam.waitframes = 60*((sparam.trial_duration-sparam.rest_duration)/1000) / ( (size(sparam.colors,1)-1)*2 );
+0096 <span class="comment">%sparam.waitframes = 1;</span>
+0097 
+0098 <span class="comment">%%% fixation period in msec before/after presenting the target stimuli, integer</span>
+0099 <span class="comment">% must set a value more than 1 TR for initializing the frame counting.</span>
+0100 sparam.initial_fixation_time=[4000,4000];
+0101 
+0102 <span class="comment">%%% fixation size &amp; color</span>
+0103 sparam.fixtype=1; <span class="comment">% 1: circular, 2: rectangular, 3: concentric fixation point</span>
+0104 sparam.fixsize=4; <span class="comment">% radius in pixels</span>
+0105 sparam.fixcolor=[255,255,255];
+0106 
+0107 <span class="comment">%%% background color</span>
+0108 sparam.bgcolor=sparam.colors(1,:); <span class="comment">%[0,0,0];</span>
+0109 
+0110 <span class="comment">%%% RGB for background patches</span>
+0111 <span class="comment">% 1x3 matrices</span>
+0112 sparam.patch_color1=[255,255,255];
+0113 sparam.patch_color2=[0,0,0];
+0114 
+0115 <span class="comment">%%% for converting degree to pixels</span>
+0116 run(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),<span class="string">'sizeparams'</span>));
+0117 <span class="comment">%sparam.pix_per_cm=57.1429;</span>
+0118 <span class="comment">%sparam.vdist=65;</span>
+0119 <span class="comment">%sparam.ipd=6.5;</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

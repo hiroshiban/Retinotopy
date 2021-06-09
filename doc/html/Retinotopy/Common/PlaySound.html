@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PlaySound</title>
+  <meta name="keywords" content="PlaySound">
+  <meta name="description" content="function PlaySound(high_flg)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>PlaySound
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function PlaySound(high_flg)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function PlaySound(high_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> function PlaySound(high_flg)
+
+ Play sound with high/low tone to notify the processing
+
+ [input]
+ high_flg  : if 1, high-tone sound will be played
+             if 0, low-tone sound will be played
+
+
+ Created    : &quot;2012-05-29 04:09:02 ban&quot;
+ Last Update: &quot;2012-05-29 16:32:07 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function PlaySound(high_flg)</a>
+0002 
+0003 <span class="comment">% function PlaySound(high_flg)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Play sound with high/low tone to notify the processing</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% [input]</span>
+0008 <span class="comment">% high_flg  : if 1, high-tone sound will be played</span>
+0009 <span class="comment">%             if 0, low-tone sound will be played</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Created    : &quot;2012-05-29 04:09:02 ban&quot;</span>
+0013 <span class="comment">% Last Update: &quot;2012-05-29 16:32:07 ban&quot;</span>
+0014 
+0015 <span class="keyword">if</span> nargin&lt;1 || isempty(high_flg), high_flg=1; <span class="keyword">end</span>
+0016 <span class="keyword">try</span>
+0017   <span class="keyword">if</span> high_flg <span class="comment">% high-tone</span>
+0018     sound(sin(2*pi*0.2*(0:900)),22000);
+0019   <span class="keyword">else</span> <span class="comment">% low-tone</span>
+0020     sound(sin(2*pi*0.012*(0:900)),22000);
+0021   <span class="keyword">end</span>
+0022 <span class="keyword">catch</span> <span class="comment">%#ok</span>
+0023   disp(<span class="string">'finished.'</span>);
+0024 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

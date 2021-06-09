@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_mseq</title>
+  <meta name="keywords" content="test_mseq">
+  <meta name="description" content="compare auto-correlations between M-sequnce &amp; MT19937's rondom array">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>test_mseq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>compare auto-correlations between M-sequnce &amp; MT19937's rondom array</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> compare auto-correlations between M-sequnce &amp; MT19937's rondom array</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>	Generates maximum-length sequence(s).</li><li><a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>	Shifts 2D matrix circularly.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <span class="comment">% compare auto-correlations between M-sequnce &amp; MT19937's rondom array</span>
+0002 
+0003 clear all; close all;
+0004 
+0005 <span class="comment">% set base etc.</span>
+0006 base=2;
+0007 power=8;
+0008 slength=base^power-1;
+0009 
+0010 <span class="comment">% repetitions</span>
+0011 rept=1;
+0012 
+0013 <span class="comment">% initialize random seed</span>
+0014 <span class="keyword">if</span> ~exist(<span class="string">'RandStream'</span>,<span class="string">'file'</span>)
+0015   <span class="comment">% run old method</span>
+0016   rand(<span class="string">'twister'</span>,sum(100*clock)); <span class="comment">%#ok</span>
+0017   cseed=<span class="string">''</span>;
+0018 <span class="keyword">else</span>
+0019   <span class="comment">% new method</span>
+0020   cseed = RandStream.create(<span class="string">'mt19937ar'</span>,<span class="string">'seed'</span>,sum(100*clock));
+0021   <span class="comment">%cseed = RandStream.create('mrg32k3a','seed',sum(100*clock));</span>
+0022   RandStream.setDefaultStream(cseed);
+0023 <span class="keyword">end</span>
+0024 
+0025 
+0026 <span class="comment">% msequence</span>
+0027 ms=zeros(rept,slength);
+0028 macorr=zeros(rept,2*slength-1);
+0029 <span class="keyword">for</span> ii=1:1:rept
+0030   <span class="comment">%ms(ii,:)=mseq(base,power,1,mod(ii,15)+1,1)';</span>
+0031   ms(ii,:)=<a href="mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>(base,power,1,14,1)';
+0032   
+0033   <span class="comment">% calculate auto-correlations</span>
+0034   <span class="comment">%macorr(ii,:)=xcorr(ms(ii,:),slength,'coeff');</span>
+0035   <span class="keyword">for</span> jj=1:1:slength-1
+0036     macorr(ii,jj)=corr(ms(ii,:)',<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(ms(ii,:),-(slength-jj))');
+0037   <span class="keyword">end</span>
+0038   macorr(ii,slength)=corr(ms(ii,:)',ms(ii,:)');
+0039   <span class="keyword">for</span> jj=1:1:slength-1
+0040     macorr(ii,slength+1+jj)=corr(ms(ii,:)',<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(ms(ii,:),jj)');
+0041   <span class="keyword">end</span>
+0042   
+0043 <span class="keyword">end</span>
+0044 mcmean=mean(macorr,1);
+0045 <span class="comment">%mcmean(round(numel(mcmean)/2))=[];</span>
+0046 
+0047 <span class="comment">% random</span>
+0048 rnd=zeros(rept,slength);
+0049 racorr=zeros(rept,2*slength-1);
+0050 <span class="keyword">for</span> ii=1:1:rept
+0051   tmp=randi(2,[1,slength])-1;
+0052   tmp(tmp==0)=-1;
+0053   rnd(ii,:)=tmp;
+0054   
+0055   <span class="comment">% calculate auto-correlations</span>
+0056   <span class="comment">%racorr(ii,:)=xcorr(rnd(ii,:),slength,'coeff');</span>
+0057   <span class="keyword">for</span> jj=1:1:slength-1
+0058     racorr(ii,jj)=corr(rnd(ii,:)',<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(rnd(ii,:),-(slength-jj))');
+0059   <span class="keyword">end</span>
+0060   racorr(ii,slength)=corr(rnd(ii,:)',rnd(ii,:)');
+0061   <span class="keyword">for</span> jj=1:1:slength-1
+0062     racorr(ii,slength+1+jj)=corr(rnd(ii,:)',<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>(rnd(ii,:),jj)');
+0063   <span class="keyword">end</span>
+0064   
+0065 <span class="keyword">end</span>
+0066 mrmean=mean(racorr,1);
+0067 <span class="comment">%mrmean(round(numel(mrmean)/2))=[];</span>
+0068 
+0069 <span class="comment">% plot the result</span>
+0070 figure(<span class="string">'MenuBar'</span>,<span class="string">'none'</span>); hold on;
+0071 L2=plot(mrmean,<span class="string">'g-'</span>,<span class="string">'LineWidth'</span>,2);
+0072 L1=plot(mcmean,<span class="string">'b-'</span>,<span class="string">'LineWidth'</span>,2);
+0073 
+0074 legend([L1,L2],<span class="string">'m-sequence'</span>,<span class="string">'MT19937'</span>);
+0075 
+0076 set(gca,<span class="string">'XLim'</span>,[0,2*slength-1]);
+0077 set(gca,<span class="string">'XTick'</span>,[1,slength,2*slength-1]);
+0078 set(gca,<span class="string">'XTickLabel'</span>,[-slength+1 0 slength-1]);
+0079 
+0080 set(gca,<span class="string">'YLim'</span>,[-0.4,1.2]);
+0081 set(gca,<span class="string">'YTick'</span>,-0.4:0.2:1.2);
+0082 set(gca,<span class="string">'YTickLabel'</span>,-0.4:0.2:1.2);
+0083 
+0084 title(<span class="string">'auto-correlation against the lag'</span>);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

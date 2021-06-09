@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imRGB2Gray</title>
+  <meta name="keywords" content="imRGB2Gray">
+  <meta name="description" content="Converts input RGB images to grayscale ones.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>imRGB2Gray
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Converts input RGB images to grayscale ones.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,fnames]=imRGB2Gray(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Converts input RGB images to grayscale ones.
+ function [img,fnames]=imRGB2Gray(tgt_dir,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg)
+ (: is optional)
+
+ This function reads RGB images and convert them to grayscale ones.
+
+ [input]
+ tgt_dir        : target directory that includes images you want to process.
+                  should set with a relative path format, e.g. tgt_dir='../images/image01';
+ img_ext        : image file extension(s), cell structure or string. '.jpg' by default
+ img_inc_prefix : image file prefix(s) that is to be included in processing,
+                  cell structure or string, '*' by default.
+ img_exc_prefix : image file prefix(s) that is to be excluded from processing,
+                  cell structure or string, empty by default.
+ display_flg    : whether displaying the converted image [0|1]. 0 by default.
+ save_flg       : whether saving the converted image [0|1]. 0 by default.
+
+ [output]
+ img            : converted grayscale images, cell structure
+ fnames         : the corresponding file names that are converted.
+
+
+ Created    : &quot;2013-11-14 16:54:40 ban&quot;
+ Last Update: &quot;2013-11-22 23:23:22 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,fnames]=imRGB2Gray(tgt_dir,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)</a>
+0002 
+0003 <span class="comment">% Converts input RGB images to grayscale ones.</span>
+0004 <span class="comment">% function [img,fnames]=imRGB2Gray(tgt_dir,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads RGB images and convert them to grayscale ones.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% tgt_dir        : target directory that includes images you want to process.</span>
+0011 <span class="comment">%                  should set with a relative path format, e.g. tgt_dir='../images/image01';</span>
+0012 <span class="comment">% img_ext        : image file extension(s), cell structure or string. '.jpg' by default</span>
+0013 <span class="comment">% img_inc_prefix : image file prefix(s) that is to be included in processing,</span>
+0014 <span class="comment">%                  cell structure or string, '*' by default.</span>
+0015 <span class="comment">% img_exc_prefix : image file prefix(s) that is to be excluded from processing,</span>
+0016 <span class="comment">%                  cell structure or string, empty by default.</span>
+0017 <span class="comment">% display_flg    : whether displaying the converted image [0|1]. 0 by default.</span>
+0018 <span class="comment">% save_flg       : whether saving the converted image [0|1]. 0 by default.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% [output]</span>
+0021 <span class="comment">% img            : converted grayscale images, cell structure</span>
+0022 <span class="comment">% fnames         : the corresponding file names that are converted.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Created    : &quot;2013-11-14 16:54:40 ban&quot;</span>
+0026 <span class="comment">% Last Update: &quot;2013-11-22 23:23:22 ban (ban.hiroshi@gmail.com)&quot;</span>
+0027 
+0028 <span class="comment">% check input variables</span>
+0029 <span class="keyword">if</span> nargin&lt;1 || isempty(tgt_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;2 || isempty(img_ext), img_ext=<span class="string">'.jpg'</span>; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;3 || isempty(img_inc_prefix), img_inc_prefix=<span class="string">'*'</span>; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;4 || isempty(img_exc_prefix), img_exc_prefix=<span class="string">''</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;5 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;6 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> ~iscell(img_ext), img_ext={img_ext}; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> ~iscell(img_inc_prefix), img_inc_prefix={img_inc_prefix}; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> ~iscell(img_exc_prefix), img_exc_prefix={img_exc_prefix}; <span class="keyword">end</span>
+0039 
+0040 <span class="keyword">if</span> save_flg, save_prefix=<span class="string">'_gray'</span>; <span class="keyword">end</span>
+0041 
+0042 <span class="comment">% set prefix correctly</span>
+0043 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0044   <span class="keyword">if</span> ~strcmp(img_ext{ii}(1),<span class="string">'.'</span>), img_ext{ii}=[<span class="string">'.'</span>,img_ext{ii}]; <span class="keyword">end</span>
+0045 <span class="keyword">end</span>
+0046 
+0047 <span class="comment">% check target directory</span>
+0048 tgt_dir=fullfile(pwd,tgt_dir);
+0049 <span class="keyword">if</span> ~exist(tgt_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find taget directory. check input variable.'</span>); <span class="keyword">end</span>
+0050 
+0051 fprintf(<span class="string">'target: %s\n'</span>,tgt_dir);
+0052 
+0053 <span class="comment">% get image files</span>
+0054 fprintf(<span class="string">'converting images...'</span>);
+0055 img=<span class="string">''</span>; fnames=<span class="string">''</span>; img_counter=0;
+0056 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0057   <span class="keyword">for</span> jj=1:1:length(img_inc_prefix)
+0058     tmpfnames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(tgt_dir,[img_inc_prefix{jj},img_ext{ii}]);
+0059     <span class="keyword">for</span> kk=1:1:length(tmpfnames)
+0060 
+0061       <span class="comment">% check whether the target image is excluded from processing</span>
+0062       exc_flg=0;
+0063       <span class="keyword">for</span> mm=1:1:length(img_exc_prefix)
+0064         <span class="keyword">if</span> ~isempty(img_exc_prefix{mm}) &amp;&amp; strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; <span class="keyword">break</span>; <span class="keyword">end</span>
+0065       <span class="keyword">end</span>
+0066       <span class="keyword">if</span> exc_flg, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0067 
+0068       <span class="comment">% convert RGB to grayscale image</span>
+0069       timg=imread(tmpfnames{kk});
+0070       <span class="keyword">if</span> numel(size(timg))==3 <span class="comment">% if the target is a RGB image</span>
+0071         img_counter=img_counter+1;
+0072         img{img_counter}=rgb2gray(timg);
+0073         fnames{img_counter}=tmpfnames{kk};
+0074       <span class="keyword">else</span>
+0075         [dummy,fname,ext]=fileparts(tmpfnames{kk});
+0076         fprintf(<span class="string">'\nimage:%s%s is already grayscale. skipping.\n'</span>,fname,ext);
+0077         clear dummy fname ext;
+0078       <span class="keyword">end</span>
+0079 
+0080     <span class="keyword">end</span>
+0081   <span class="keyword">end</span>
+0082 <span class="keyword">end</span>
+0083 disp(<span class="string">'done.'</span>);
+0084 
+0085 <span class="comment">% displaying</span>
+0086 <span class="keyword">if</span> display_flg
+0087   fprintf(<span class="string">'displaying the converted images...'</span>);
+0088   <span class="keyword">for</span> ii=1:1:length(img)
+0089     figure;
+0090     imshow(img{ii});
+0091   <span class="keyword">end</span>
+0092   disp(<span class="string">'done.'</span>);
+0093 <span class="keyword">end</span>
+0094 
+0095 <span class="comment">% saving the images</span>
+0096 <span class="keyword">if</span> save_flg
+0097   fprintf(<span class="string">'saving the converted images...'</span>)
+0098   <span class="keyword">for</span> ii=1:1:length(img)
+0099     [save_path,save_name,save_ext]=fileparts(fnames{ii});
+0100     imwrite(img{ii},fullfile(save_path,[save_name,save_prefix,save_ext]),strrep(save_ext,<span class="string">'.'</span>,<span class="string">''</span>));
+0101   <span class="keyword">end</span>
+0102   disp(<span class="string">'done.'</span>);
+0103 <span class="keyword">end</span>
+0104 
+0105 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of size_one2one</title>
+  <meta name="keywords" content="size_one2one">
+  <meta name="description" content="Displays an image in true size without any scaling">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>size_one2one
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Displays an image in true size without any scaling</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function size_one2one(im_h) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Displays an image in true size without any scaling
+ function size_one2one(im_h)
+
+ This fucntion displays an image in true size without any scaling
+
+ [input]
+ im_h : handle of the image you want to visualize
+        e.g. im_h = imagesc(M); (here, M is image [row,col])
+
+ [output]
+ no output, the image attached im_h will be displayed
+
+ Created: &quot;2010-04-03 14:48:48 ban&quot;
+ Last Update: &quot;2013-11-22 23:52:52 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CreateSolidInducers.html" class="code" title="function [imgL,imgR,maskL,maskR]=CreateSolidInducers(stimSize,fieldSize,theta_deg,orient_deg,colors,ipd,vdist,pix_per_deg,oversampling_ratio,display_flag,save_flag)">CreateSolidInducers</a>	Creates a solid rectangular depth inducers.</li><li><a href="RDS.html" class="code" title="function [imgL,imgR]=RDS(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDS</a>	Generates left/right Random-Dot-Stereogram images.</li><li><a href="RDSbyOval.html" class="code" title="function [imgL,imgR]=RDSbyOval(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOval</a>	Generates left/right Random-Dot-Stereogram images using oval textures, not dots.</li><li><a href="RDSbyOvalFast.html" class="code" title="function [imgL,imgR]=RDSbyOvalFast(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOvalFast</a>	Generates left/right Random-Dot-Stereogram images.</li><li><a href="RDSbyOvalbyRayTracer.html" class="code" title="function [imgL,imgR]=RDSbyOvalbyRayTracer(heightfield,dotRadius,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyOvalbyRayTracer</a>	Generates left/right Random-Dot-Stereogram images using Ray-tracer procedure (thus, vertical disparities are included).</li><li><a href="RDSbyRayTracer.html" class="code" title="function [imgL,imgR]=RDSbyRayTracer(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSbyRayTracer</a>	Generates left/right Random-Dot-Stereogram images using Ray-tracer procedure (thus, vertical disparities are included).</li><li><a href="RDSfast.html" class="code" title="function [imgL,imgR]=RDSfast(heightfield,dotDens,imgNum,colors,ipd,vdist,pix_per_cm,oversampling_ratio,display_flag,save_flag)">RDSfast</a>	Generates left/right Random-Dot-Stereogram images.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function size_one2one(im_h)</a>
+0002 
+0003 <span class="comment">% Displays an image in true size without any scaling</span>
+0004 <span class="comment">% function size_one2one(im_h)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This fucntion displays an image in true size without any scaling</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [input]</span>
+0009 <span class="comment">% im_h : handle of the image you want to visualize</span>
+0010 <span class="comment">%        e.g. im_h = imagesc(M); (here, M is image [row,col])</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [output]</span>
+0013 <span class="comment">% no output, the image attached im_h will be displayed</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Created: &quot;2010-04-03 14:48:48 ban&quot;</span>
+0016 <span class="comment">% Last Update: &quot;2013-11-22 23:52:52 ban (ban.hiroshi@gmail.com)&quot;</span>
+0017 
+0018 ax_h = gca;
+0019 fig_h = gcf;
+0020 
+0021 iw = size(get(im_h, <span class="string">'CData'</span>), 2);
+0022 ih = size(get(im_h, <span class="string">'CData'</span>), 1);
+0023 
+0024 set(ax_h, <span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+0025 set(fig_h, <span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+0026 set(0, <span class="string">'Units'</span>, <span class="string">'pixels'</span>);
+0027 
+0028 figurePos = get(fig_h, <span class="string">'Position'</span>);
+0029 
+0030 dap = get(0,<span class="string">'DefaultAxesPosition'</span>);
+0031 
+0032 brdr_wi = round((1 - dap(3)) * iw / dap(3));
+0033 brdr_he = round((1 - dap(4)) * ih / dap(4));
+0034 brdr_le = floor(brdr_wi/2);
+0035 brdr_bo = floor(brdr_he/2);
+0036 
+0037 RDS_fig_wi = iw + brdr_wi;
+0038 RDS_fig_he = ih + brdr_he;
+0039 
+0040 <span class="comment">%figurePos(1) = figurePos(1) - floor((RDS_fig_wi - figurePos(3))/2);</span>
+0041 <span class="comment">%figurePos(2) = figurePos(2) - floor((RDS_fig_he - figurePos(4))/2);</span>
+0042 figurePos(1) = 0;
+0043 figurePos(2) = 0;
+0044 figurePos(3) = RDS_fig_wi;
+0045 figurePos(4) = RDS_fig_he;
+0046 
+0047 axesPos(1) = brdr_le + 1;
+0048 axesPos(2) = brdr_bo + 1;
+0049 axesPos(3) = iw;
+0050 axesPos(4) = ih;
+0051 
+0052 set(fig_h, <span class="string">'Position'</span>, figurePos)
+0053 set(ax_h, <span class="string">'Position'</span>, axesPos);
+0054 
+0055 drawnow;
+0056 
+0057 <span class="keyword">return</span>;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DisplayMessage</title>
+  <meta name="keywords" content="DisplayMessage">
+  <meta name="description" content="Display message on a PTB window.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>DisplayMessage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Display message on a PTB window.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function DisplayMessage(message,bgcolor,screens,drawing_font,drawing_size) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Display message on a PTB window.
+ function DisplayMessage(message,bgcolor,scrren_size)
+
+ Display message on the center of the left/right (if available)
+ screen with your specified background color
+
+ [requirement/dependency]
+ Psychtoolbox ver.3 or above
+
+ [input]
+ message : string, you want to display
+ bgcolor : background color [r,g,b]
+ screens : the cell array of PTB screens (e.g. leftEyeWindow)
+ drawing_font : option for setting text font (e.g. 'Arial')
+ drawing_size : option for setting text size (e.g. 36)
+
+ [ouput]
+ no output variable
+
+ Created: Feb 04 2010 Hiroshi Ban
+ Last Update: &quot;2013-11-22 22:51:58 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="DisplayMessage.html" class="code" title="function DisplayMessage(message,bgcolor,screens,drawing_font,drawing_size)">DisplayMessage</a>	Display message on a PTB window.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="DisplayMessage.html" class="code" title="function DisplayMessage(message,bgcolor,screens,drawing_font,drawing_size)">DisplayMessage</a>	Display message on a PTB window.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function DisplayMessage(message,bgcolor,screens,drawing_font,drawing_size)</a>
+0002 
+0003 <span class="comment">% Display message on a PTB window.</span>
+0004 <span class="comment">% function DisplayMessage(message,bgcolor,scrren_size)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Display message on the center of the left/right (if available)</span>
+0007 <span class="comment">% screen with your specified background color</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [requirement/dependency]</span>
+0010 <span class="comment">% Psychtoolbox ver.3 or above</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [input]</span>
+0013 <span class="comment">% message : string, you want to display</span>
+0014 <span class="comment">% bgcolor : background color [r,g,b]</span>
+0015 <span class="comment">% screens : the cell array of PTB screens (e.g. leftEyeWindow)</span>
+0016 <span class="comment">% drawing_font : option for setting text font (e.g. 'Arial')</span>
+0017 <span class="comment">% drawing_size : option for setting text size (e.g. 36)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [ouput]</span>
+0020 <span class="comment">% no output variable</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Created: Feb 04 2010 Hiroshi Ban</span>
+0023 <span class="comment">% Last Update: &quot;2013-11-22 22:51:58 ban (ban.hiroshi@gmail.com)&quot;</span>
+0024 
+0025 <span class="comment">% input variable check</span>
+0026 <span class="keyword">if</span> nargin &lt; 3, help <a href="DisplayMessage.html" class="code" title="function DisplayMessage(message,bgcolor,screens,drawing_font,drawing_size)">DisplayMessage</a>; <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin &lt; 4, drawing_font=<span class="string">'Arial'</span>; <span class="keyword">end</span>
+0028 <span class="keyword">if</span> nargin &lt; 5, drawing_size=36; <span class="keyword">end</span>
+0029 
+0030 <span class="comment">% get the size of the screen</span>
+0031 tmp=Screen(0,<span class="string">'rect'</span>);
+0032 screen_size=[tmp(3) tmp(4)];
+0033 
+0034 <span class="comment">% create background texture</span>
+0035 grey_texture=repmat(bgcolor,screen_size(1),screen_size(2));
+0036 
+0037 <span class="comment">% loop for the number of PTB screens</span>
+0038 greyScreen=cell(length(screens),1);
+0039 <span class="keyword">for</span> ii=1:1:length(screens)
+0040   <span class="comment">% fill the background</span>
+0041   greyScreen{ii}=Screen(<span class="string">'MakeTexture'</span>,screens{ii},grey_texture);
+0042   Screen(<span class="string">'DrawTexture'</span>,screens{ii},greyScreen{ii});
+0043   
+0044   <span class="comment">% set drawing options</span>
+0045   eval(sprintf(<span class="string">'Screen(screens{ii},''TextFont'',''%s'');'</span>,drawing_font));
+0046   eval(sprintf(<span class="string">'Screen(screens{ii},''TextSize'',%d);'</span>,drawing_size));
+0047   <span class="keyword">if</span> sum(bgcolor)==0
+0048     eval(sprintf(<span class="string">'Screen(screens{ii},''TextColor'',%d);'</span>,255));
+0049   <span class="keyword">end</span>
+0050     
+0051   <span class="comment">% draw formatterd text on the center of the screen</span>
+0052   DrawFormattedText(screens{ii},message,<span class="string">'center'</span>,<span class="string">'center'</span>);
+0053 <span class="keyword">end</span>
+0054 
+0055 <span class="comment">% display</span>
+0056 Screen(<span class="string">'DrawingFinished'</span>,screens{1},2);
+0057 Screen(<span class="string">'Flip'</span>,screens{1},[],[],[],1);
+0058 
+0059 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

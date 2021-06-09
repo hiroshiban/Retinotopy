@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of isfunction</title>
+  <meta name="keywords" content="isfunction">
+  <meta name="description" content="ISFUNCTION - true for valid matlab functions">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>isfunction
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ISFUNCTION - true for valid matlab functions</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [TF, ID] = isfunction(FUN) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> ISFUNCTION - true for valid matlab functions
+
+   TF = ISFUNCTION(FUN) returns 1 if FUN is a valid matlab function, and 0
+   otherwise. Matlab functions can be strings or function handles.
+
+   [TF, ID] = ISFUNCTION(FUN) also returns an identier ID. ID can take the
+   following values:
+      1  : FUN is a function string
+      2  : FUN is a function handle
+      0  : FUN is not a function, but no further specification
+     -1  : FUN is script
+     -2  : FUN is not a valid function m-file (e.g., a matfile)
+     -3  : FUN does not exist (as a function)
+     -4  : FUN is not a function but something else (a variable)
+
+   FUN can also be a cell array, TF and ID will then be arrays.
+
+   Examples:
+     tf = isfunction('lookfor') 
+        % tf = 1
+     [tf, id] = isfunction({@isfunction, 'sin','qrqtwrxxy',1:4, @clown.jpg})
+        % -&gt; tf = [ 1  1  0  0  0 ]
+        %    id = [ 2  1 -2 -4 -3 ]
+
+   See also FUNCTION, SCRIPT, EXIST,
+            ISA, WHICH, NARGIN, FUNCTION_HANDLE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function ID = local_isfunction(FUNNAME)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [TF, ID] = isfunction(FUN)</a>
+0002 <span class="comment">% ISFUNCTION - true for valid matlab functions</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   TF = ISFUNCTION(FUN) returns 1 if FUN is a valid matlab function, and 0</span>
+0005 <span class="comment">%   otherwise. Matlab functions can be strings or function handles.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   [TF, ID] = ISFUNCTION(FUN) also returns an identier ID. ID can take the</span>
+0008 <span class="comment">%   following values:</span>
+0009 <span class="comment">%      1  : FUN is a function string</span>
+0010 <span class="comment">%      2  : FUN is a function handle</span>
+0011 <span class="comment">%      0  : FUN is not a function, but no further specification</span>
+0012 <span class="comment">%     -1  : FUN is script</span>
+0013 <span class="comment">%     -2  : FUN is not a valid function m-file (e.g., a matfile)</span>
+0014 <span class="comment">%     -3  : FUN does not exist (as a function)</span>
+0015 <span class="comment">%     -4  : FUN is not a function but something else (a variable)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   FUN can also be a cell array, TF and ID will then be arrays.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   Examples:</span>
+0020 <span class="comment">%     tf = isfunction('lookfor')</span>
+0021 <span class="comment">%        % tf = 1</span>
+0022 <span class="comment">%     [tf, id] = isfunction({@isfunction, 'sin','qrqtwrxxy',1:4, @clown.jpg})</span>
+0023 <span class="comment">%        % -&gt; tf = [ 1  1  0  0  0 ]</span>
+0024 <span class="comment">%        %    id = [ 2  1 -2 -4 -3 ]</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   See also FUNCTION, SCRIPT, EXIST,</span>
+0027 <span class="comment">%            ISA, WHICH, NARGIN, FUNCTION_HANDLE</span>
+0028 
+0029 <span class="comment">% version 3.1 (feb 2014)</span>
+0030 <span class="comment">% (c) Jos van der Geest</span>
+0031 <span class="comment">% email: jos@jasen.nl</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% History:</span>
+0034 <span class="comment">% 1.0 (dec 2011) created for strings only</span>
+0035 <span class="comment">% 2.0 (apr 2013) accepts cell arrays</span>
+0036 <span class="comment">% 3.0 (feb 2014) implemented identier based on catched error</span>
+0037 <span class="comment">% 3.1 (feb 2014) added lots of help and documentation, inspired to post on</span>
+0038 <span class="comment">%                FEX by a recent Question/Answer thread</span>
+0039 
+0040 <span class="keyword">if</span> ~iscell(FUN)
+0041     <span class="comment">% we use cellfun, so convert to cells</span>
+0042     FUN = {FUN} ;
+0043 <span class="keyword">end</span>
+0044 ID = cellfun(@<a href="#_sub1" class="code" title="subfunction ID = local_isfunction(FUNNAME)">local_isfunction</a>,FUN) ; <span class="comment">% get the identifier for each &quot;function&quot;</span>
+0045 TF = ID &gt; 0 ; <span class="comment">% valid matlab functions have a positive identifier</span>
+0046 
+0047 <span class="comment">% = = = = = = = = = = = = = = = = = = = = =</span>
+0048 
+0049 <a name="_sub1" href="#_subfunctions" class="code">function ID = local_isfunction(FUNNAME)</a>
+0050 <span class="keyword">try</span>    
+0051     nargin(FUNNAME) ; <span class="comment">% nargin errors when FUNNAME is not a function</span>
+0052     ID = 1  + isa(FUNNAME, <span class="string">'function_handle'</span>) ; <span class="comment">% 1 for m-file, 2 for handle</span>
+0053 <span class="keyword">catch</span> ME
+0054     <span class="comment">% catch the error of nargin</span>
+0055     <span class="keyword">switch</span> (ME.identifier)        
+0056         <span class="keyword">case</span> <span class="string">'MATLAB:nargin:isScript'</span>
+0057             ID = -1 ; <span class="comment">% script</span>
+0058         <span class="keyword">case</span> <span class="string">'MATLAB:narginout:notValidMfile'</span>
+0059             ID = -2 ; <span class="comment">% probably another type of file, or it does not exist</span>
+0060         <span class="keyword">case</span> <span class="string">'MATLAB:narginout:functionDoesnotExist'</span>
+0061             ID = -3 ; <span class="comment">% porbably a handle, but not to a function</span>
+0062         <span class="keyword">case</span> <span class="string">'MATLAB:narginout:BadInput'</span>
+0063             ID = -4 ; <span class="comment">% probably a variable or an array</span>
+0064         <span class="keyword">otherwise</span>
+0065             ID = 0 ; <span class="comment">% unknown cause for error</span>
+0066     <span class="keyword">end</span>
+0067 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

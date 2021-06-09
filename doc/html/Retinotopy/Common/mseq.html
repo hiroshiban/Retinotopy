@@ -1,0 +1,957 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mseq</title>
+  <meta name="keywords" content="mseq">
+  <meta name="description" content="Generates maximum-length sequence(s).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>mseq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates maximum-length sequence(s).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Generates maximum-length sequence(s).
+ function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)
+
+ Maximum length sequence assuming 2,3,4,5,7,8,9,11,13 distinct values
+
+   ms=mseq(baseVal,powerVal,:shift,:whichSeq,:balance_flag,:user_taps)
+   (: is optional)
+
+ [input]
+ baseVal  : base, number of sequence levels, one of 2,3,4,5,7,8,9,11,13
+ powerVal : power so that sequence m-sequence length is
+            length=baseVal^powerVal-1
+ shift    : cyclical shift of the sequence
+ whichSeq : sequence instantiation to use
+            (number of sequence varies with powerval.
+             For details, please check the code)
+ balance_flag : if 1, the sequence will be balanced [0/1]
+                e.g. 0,2,1,1,0,2,1 -&gt; 0,1,-1,-1,0,1,-1
+ user_taps: use user-defined tap
+
+ [output]
+ ms = generated maximum length sequence, of length basisVal^powerVal-1
+
+ [history]
+
+ * Original script is written by Giedrius T. Buracas, SNL-B, Salk Institute
+   Register values are taken from: WDT Davies, System Identification
+   for self-adaptive control. Wiley-Interscience, 1970
+  
+ * Modifications are by Thomas Liu, UCSD Center for fMRI to extend the Mods
+   020915 TTL added basevals =  4, 7, 8, 9, 11, 13
+              tap combos are from K. Godfrey, Perturbation Signals for
+              System Identification, Prentice Hall 1993
+   020929 TTL adding optional taps option to try out different taps
+   020930 TTL - expanding the number of tap options for baseval =11, power
+                 =2; these tap options were found by brute-force simulation
+              - got rid of the conversion from positive integers to
+                signed ints.. 
+   send comments and questions to ttliu@ucsd.edu
+
+ * Modifications are made by Hiroshi Ban
+   100302 balance_flag, used for calculating auto-correlation etc.
+   100302 check input variables, adding default value
+   100302 refining the source code
+   100302 bug fix for polynominal at baseVal=2, powerVal=8, &amp; whichSeq=14
+   100303 add polynominals (powerVal={11-32} for baseVal=2)
+
+   reference 1: http://www-mobile.ecs.soton.ac.uk/bjc97r/pnseq.old/doc.html
+   reference 2: W.W.Peterson, &quot;Error Correctiong Codes,&quot; MIT Press,
+                Wiley, New York.
+   reference 3: W.P.Horton, &quot;Shift Counters,&quot; Computer Control Corporation.
+   reference 4: R.C.White,Jr., &quot;Experiments with Digital Computer Simulation
+                of Pseudo-Random Noise Gerenatiors, &quot; IEEE Trans. Elect.
+                Comp., June 1967.
+
+ Created    : &quot;2010-03-02 15:15:01 Hiroshi Ban&quot;
+ Last Update: &quot;2013-11-22 23:35:44 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>	Generates maximum-length sequence(s).</li><li><a href="qadd.html" class="code" title="function y = qadd(a,b,base)">qadd</a>	qadd(a,b,base)</li><li><a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>	Shifts 2D matrix circularly.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>	Generates maximum-length sequence(s).</li><li><a href="test_mseq.html" class="code" title="">test_mseq</a>	compare auto-correlations between M-sequnce & MT19937's rondom array</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal.html" class="code" title="function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal_fixtask.html" class="code" title="function dmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal_fixtask</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/gen_multifocal_windows.html" class="code" title="function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_multifocal_windows</a>	Generates multi-focal retinotopy stimulus windows for GLM modeling or pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/subjects/2d/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/3d/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/3d_fhd/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/HB/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/HNW/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/S001/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/XXX/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/_DEFAULT_/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/meg/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/subj_01/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/test/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)</a>
+0002 
+0003 <span class="comment">% Generates maximum-length sequence(s).</span>
+0004 <span class="comment">% function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Maximum length sequence assuming 2,3,4,5,7,8,9,11,13 distinct values</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   ms=mseq(baseVal,powerVal,:shift,:whichSeq,:balance_flag,:user_taps)</span>
+0009 <span class="comment">%   (: is optional)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% [input]</span>
+0012 <span class="comment">% baseVal  : base, number of sequence levels, one of 2,3,4,5,7,8,9,11,13</span>
+0013 <span class="comment">% powerVal : power so that sequence m-sequence length is</span>
+0014 <span class="comment">%            length=baseVal^powerVal-1</span>
+0015 <span class="comment">% shift    : cyclical shift of the sequence</span>
+0016 <span class="comment">% whichSeq : sequence instantiation to use</span>
+0017 <span class="comment">%            (number of sequence varies with powerval.</span>
+0018 <span class="comment">%             For details, please check the code)</span>
+0019 <span class="comment">% balance_flag : if 1, the sequence will be balanced [0/1]</span>
+0020 <span class="comment">%                e.g. 0,2,1,1,0,2,1 -&gt; 0,1,-1,-1,0,1,-1</span>
+0021 <span class="comment">% user_taps: use user-defined tap</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [output]</span>
+0024 <span class="comment">% ms = generated maximum length sequence, of length basisVal^powerVal-1</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% [history]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% * Original script is written by Giedrius T. Buracas, SNL-B, Salk Institute</span>
+0029 <span class="comment">%   Register values are taken from: WDT Davies, System Identification</span>
+0030 <span class="comment">%   for self-adaptive control. Wiley-Interscience, 1970</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% * Modifications are by Thomas Liu, UCSD Center for fMRI to extend the Mods</span>
+0033 <span class="comment">%   020915 TTL added basevals =  4, 7, 8, 9, 11, 13</span>
+0034 <span class="comment">%              tap combos are from K. Godfrey, Perturbation Signals for</span>
+0035 <span class="comment">%              System Identification, Prentice Hall 1993</span>
+0036 <span class="comment">%   020929 TTL adding optional taps option to try out different taps</span>
+0037 <span class="comment">%   020930 TTL - expanding the number of tap options for baseval =11, power</span>
+0038 <span class="comment">%                 =2; these tap options were found by brute-force simulation</span>
+0039 <span class="comment">%              - got rid of the conversion from positive integers to</span>
+0040 <span class="comment">%                signed ints..</span>
+0041 <span class="comment">%   send comments and questions to ttliu@ucsd.edu</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% * Modifications are made by Hiroshi Ban</span>
+0044 <span class="comment">%   100302 balance_flag, used for calculating auto-correlation etc.</span>
+0045 <span class="comment">%   100302 check input variables, adding default value</span>
+0046 <span class="comment">%   100302 refining the source code</span>
+0047 <span class="comment">%   100302 bug fix for polynominal at baseVal=2, powerVal=8, &amp; whichSeq=14</span>
+0048 <span class="comment">%   100303 add polynominals (powerVal={11-32} for baseVal=2)</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%   reference 1: http://www-mobile.ecs.soton.ac.uk/bjc97r/pnseq.old/doc.html</span>
+0051 <span class="comment">%   reference 2: W.W.Peterson, &quot;Error Correctiong Codes,&quot; MIT Press,</span>
+0052 <span class="comment">%                Wiley, New York.</span>
+0053 <span class="comment">%   reference 3: W.P.Horton, &quot;Shift Counters,&quot; Computer Control Corporation.</span>
+0054 <span class="comment">%   reference 4: R.C.White,Jr., &quot;Experiments with Digital Computer Simulation</span>
+0055 <span class="comment">%                of Pseudo-Random Noise Gerenatiors, &quot; IEEE Trans. Elect.</span>
+0056 <span class="comment">%                Comp., June 1967.</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% Created    : &quot;2010-03-02 15:15:01 Hiroshi Ban&quot;</span>
+0059 <span class="comment">% Last Update: &quot;2013-11-22 23:35:44 ban (ban.hiroshi@gmail.com)&quot;</span>
+0060 
+0061 
+0062 <span class="comment">%% check input variables</span>
+0063 <span class="keyword">if</span> nargin &lt; 2
+0064   help <a href="mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>; <span class="keyword">return</span>;
+0065 <span class="keyword">end</span>
+0066 
+0067 base=[2,3,4,5,7,8,9,11,13];
+0068 <span class="keyword">if</span> isempty(intersect(baseVal,base))
+0069   error(<span class="string">'baseVal should be one of 2,3,4,5,7,8,9,11,13.'</span>);
+0070 <span class="keyword">end</span>
+0071   
+0072 <span class="keyword">if</span> nargin &lt; 3 || isempty(<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>), <a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>=1; <span class="keyword">end</span>
+0073 <span class="keyword">if</span> nargin &lt; 4 || isempty(whichSeq), whichSeq=[]; <span class="keyword">end</span>
+0074 <span class="keyword">if</span> nargin &lt; 5 || isempty(balance_flag), balance_flag=0; <span class="keyword">end</span>
+0075 <span class="keyword">if</span> nargin &lt; 6 || isempty(user_taps), user_taps=[]; <span class="keyword">end</span>
+0076 
+0077 
+0078 <span class="comment">%% set the initial tap &amp; register</span>
+0079 bitNum=baseVal^powerVal-1;
+0080 register=ones(powerVal,1);
+0081 
+0082 <span class="comment">%foo=bitNum;</span>
+0083 <span class="comment">%for i=1:powerVal</span>
+0084 <span class="comment">%   register(i)=rem(foo,baseVal);</span>
+0085 <span class="comment">%   foo=(foo-register(i))/baseVal;</span>
+0086 <span class="comment">%end</span>
+0087 
+0088 <span class="comment">%ind=find(register==0); register(ind)=-1*ones(length(ind),1); %values</span>
+0089 
+0090 <span class="keyword">if</span> baseVal==2
+0091   
+0092   <span class="keyword">switch</span> powerVal
+0093     <span class="keyword">case</span> 2
+0094       tap(1).No=[1,2];
+0095     <span class="keyword">case</span> 3
+0096       tap(1).No=[1,3];
+0097       tap(2).No=[2,3];
+0098     <span class="keyword">case</span> 4
+0099       tap(1).No=[1,4];
+0100       tap(2).No=[3,4];
+0101     <span class="keyword">case</span> 5
+0102       tap(1).No=[2,5];
+0103       tap(2).No=[3,5];
+0104       tap(3).No=[1,2,3,5];
+0105       tap(4).No=[2,3,4,5];
+0106       tap(5).No=[1,2,4,5];
+0107       tap(6).No=[1,3,4,5];
+0108     <span class="keyword">case</span> 6
+0109       tap(1).No=[1,6];
+0110       tap(2).No=[5,6];
+0111       tap(3).No=[1,2,5,6];
+0112       tap(4).No=[1,4,5,6];
+0113       tap(5).No=[1,3,4,6];
+0114       tap(6).No=[2,3,5,6];
+0115     <span class="keyword">case</span> 7
+0116       tap(1).No=[1,7];
+0117       tap(2).No=[6,7];
+0118       tap(3).No=[3,7];
+0119       tap(4).No=[4,7];
+0120       tap(5).No=[1,2,3,7];
+0121       tap(6).No=[4,5,6,7];
+0122       tap(7).No=[1,2,5,7];
+0123       tap(8).No=[2,5,6,7];
+0124       tap(9).No=[2,3,4,7];
+0125       tap(10).No=[3,4,5,7];
+0126       tap(11).No=[1,3,5,7];
+0127       tap(12).No=[2,4,6,7];
+0128       tap(13).No=[1,3,6,7];
+0129       tap(14).No=[1,4,6,7];
+0130       tap(15).No=[2,3,4,5,6,7];
+0131       tap(16).No=[1,2,3,4,5,7];
+0132       tap(17).No=[1,2,4,5,6,7];
+0133       tap(18).No=[1,2,3,5,6,7];
+0134     <span class="keyword">case</span> 8
+0135       tap(1).No=[1,2,7,8];
+0136       tap(2).No=[1,6,7,8];
+0137       tap(3).No=[1,3,5,8];
+0138       tap(4).No=[3,5,7,8];
+0139       tap(5).No=[2,3,4,8];
+0140       tap(6).No=[4,5,6,8];
+0141       tap(7).No=[2,3,5,8];
+0142       tap(8).No=[3,5,6,8];
+0143       tap(9).No=[2,3,6,8];
+0144       tap(10).No=[2,5,6,8];
+0145       tap(11).No=[2,3,7,8];
+0146       tap(12).No=[1,5,6,8];
+0147       tap(13).No=[1,2,3,4,6,8];
+0148       <span class="comment">%tap(14).No=[2,4,5,7,8]; !BUG! This polynominal can not construct m-sequence</span>
+0149       tap(14).No=[1,2,3,6,7,8];
+0150       tap(15).No=[1,2,5,6,7,8];
+0151     <span class="keyword">case</span> 9
+0152       tap(1).No=[4,9];
+0153       tap(2).No=[5,9];
+0154       tap(3).No=[3,4,6,9];
+0155       tap(4).No=[3,5,6,9];
+0156       tap(5).No=[4,5,8,9];
+0157       tap(6).No=[1,4,5,9];
+0158       tap(7).No=[1,4,8,9];
+0159       tap(8).No=[1,5,8,9];
+0160       tap(9).No=[2,3,5,9];
+0161       tap(10).No=[4,6,7,9];
+0162       tap(11).No=[5,6,8,9];
+0163       tap(12).No=[1,3,4,9];
+0164       tap(13).No=[2,7,8,9];
+0165       tap(14).No=[1,2,7,9];
+0166       tap(15).No=[2,4,7,9];
+0167       tap(16).No=[2,5,7,9];
+0168       tap(17).No=[2,4,8,9];
+0169       tap(18).No=[1,5,7,9];
+0170       tap(19).No=[1,2,4,5,6,9];
+0171       tap(20).No=[3,4,5,7,8,9];
+0172       tap(21).No=[1,3,4,6,7,9];
+0173       tap(22).No=[2,3,5,6,8,9];
+0174       tap(23).No=[3,5,6,7,8,9];
+0175       tap(24).No=[1,2,3,4,6,9];
+0176       tap(25).No=[1,5,6,7,8,9];
+0177       tap(26).No=[1,2,3,4,8,9];
+0178       tap(27).No=[1,2,3,7,8,9];
+0179       tap(28).No=[1,2,6,7,8,9];
+0180       tap(29).No=[1,3,5,6,8,9];
+0181       tap(30).No=[1,3,4,6,8,9];
+0182       tap(31).No=[1,2,3,5,6,9];
+0183       tap(32).No=[3,4,6,7,8,9];
+0184       tap(33).No=[2,3,6,7,8,9];
+0185       tap(34).No=[1,2,3,6,7,9];
+0186       tap(35).No=[1,4,5,6,8,9];
+0187       tap(36).No=[1,3,4,5,8,9];
+0188       tap(37).No=[1,3,6,7,8,9];
+0189       tap(38).No=[1,2,3,6,8,9];
+0190       tap(39).No=[2,3,4,5,6,9];
+0191       tap(40).No=[3,4,5,6,7,9];
+0192       tap(41).No=[2,4,6,7,8,9];
+0193       tap(42).No=[1,2,3,5,7,9];
+0194       tap(43).No=[2,3,4,5,7,9];
+0195       tap(44).No=[2,4,5,6,7,9];
+0196       tap(45).No=[1,2,4,5,7,9];
+0197       tap(46).No=[2,4,5,6,7,9];
+0198       tap(47).No=[1,3,4,5,6,7,8,9];
+0199       tap(48).No=[1,2,3,4,5,6,8,9];
+0200     <span class="keyword">case</span> 10
+0201       tap(1).No=[3,10];
+0202       tap(2).No=[7,10];
+0203       tap(3).No=[2,3,8,10];
+0204       tap(4).No=[2,7,8,10];
+0205       tap(5).No=[1,3,4,10];
+0206       tap(6).No=[6,7,9,10];
+0207       tap(7).No=[1,5,8,10];
+0208       tap(8).No=[2,5,9,10];
+0209       tap(9).No=[4,5,8,10];
+0210       tap(10).No=[2,5,6,10];
+0211       tap(11).No=[1,4,9,10];
+0212       tap(12).No=[1,6,9,10];
+0213       tap(13).No=[3,4,8,10];
+0214       tap(14).No=[2,6,7,10];
+0215       tap(15).No=[2,3,5,10];
+0216       tap(16).No=[5,7,8,10];
+0217       tap(17).No=[1,2,5,10];
+0218       tap(18).No=[5,8,9,10];
+0219       tap(19).No=[2,4,9,10];
+0220       tap(20).No=[1,6,8,10];
+0221       tap(21).No=[3,7,9,10];
+0222       tap(22).No=[1,3,7,10];
+0223       tap(23).No=[1,2,3,5,6,10];
+0224       tap(24).No=[4,5,7,8,9,10];
+0225       tap(25).No=[2,3,6,8,9,10];
+0226       tap(26).No=[1,2,4,7,8,10];
+0227       tap(27).No=[1,5,6,8,9,10];
+0228       tap(28).No=[1,2,4,5,9,10];
+0229       tap(29).No=[2,5,6,7,8,10];
+0230       tap(30).No=[2,3,4,5,8,10];
+0231       tap(31).No=[2,4,6,8,9,10];
+0232       tap(32).No=[1,2,4,6,8,10];
+0233       tap(33).No=[1,2,3,7,8,10];
+0234       tap(34).No=[2,3,7,8,9,10];
+0235       tap(35).No=[3,4,5,8,9,10];
+0236       tap(36).No=[1,2,5,6,7,10];
+0237       tap(37).No=[1,4,6,7,9,10];
+0238       tap(38).No=[1,3,4,6,9,10];
+0239       tap(39).No=[1,2,6,8,9,10];
+0240       tap(40).No=[1,2,4,8,9,10];
+0241       tap(41).No=[1,4,7,8,9,10];
+0242       tap(42).No=[1,2,3,6,9,10];
+0243       tap(43).No=[1,2,6,7,8,10];
+0244       tap(44).No=[2,3,4,8,9,10];
+0245       tap(45).No=[1,2,4,6,7,10];
+0246       tap(46).No=[3,4,6,8,9,10];
+0247       tap(47).No=[2,4,5,7,9,10];
+0248       tap(48).No=[1,3,5,6,8,10];
+0249       tap(49).No=[3,4,5,6,9,10];
+0250       tap(50).No=[1,4,5,6,7,10];
+0251       tap(51).No=[1,3,4,5,6,7,8,10];
+0252       tap(52).No=[2,3,4,5,6,7,9,10];
+0253       tap(53).No=[3,4,5,6,7,8,9,10];
+0254       tap(54).No=[1,2,3,4,5,6,7,10];
+0255       tap(55).No=[1,2,3,4,5,6,9,10];
+0256       tap(56).No=[1,4,5,6,7,8,9,10];
+0257       tap(57).No=[2,3,4,5,6,8,9,10];
+0258       tap(58).No=[1,2,4,5,6,7,8,10];
+0259       tap(59).No=[1,2,3,4,6,7,9,10];
+0260       tap(60).No=[1,3,4,6,7,8,9,10];
+0261     <span class="keyword">case</span> 11
+0262       tap(1).No=[9,11];
+0263       tap(2).No=[11,1];
+0264       tap(3).No=[11,8,5,2];
+0265       tap(4).No=[11,7,3,2];
+0266       tap(5).No=[11,5,3,2,];
+0267       tap(6).No=[11,10,3,2];
+0268       tap(7).No=[11,6,5,1];
+0269       tap(8).No=[11,5,3,1];
+0270       tap(9).No=[11,9,4,1];
+0271       tap(10).No=[11,8,6,2];
+0272       tap(11).No=[11,9,8,3];
+0273     <span class="keyword">case</span> 12
+0274       tap(1).No=[6,8,11,12];
+0275       tap(2).No=[12,6,4,1]; 
+0276       tap(3).No=[12,9,3,2]; 
+0277       tap(4).No=[12,11,10,5,2,1]; 
+0278       tap(5).No=[12,11,6,4,2,1]; 
+0279       tap(6).No=[12,11,9,7,6,5]; 
+0280       tap(7).No=[12,11,9,5,3,1]; 
+0281       tap(8).No=[12,11,9,8,7,4]; 
+0282       tap(9).No=[12,11,9,7,6,5]; 
+0283       tap(10).No=[12,9,8,3,2,1]; 
+0284       tap(11).No=[12,10,9,8,6,2]; 
+0285     <span class="keyword">case</span> 13
+0286       tap(1).No=[9,10,12,13];
+0287       tap(2).No=[13,4,3,1]; 
+0288       tap(3).No=[13,10,9,7,5,4]; 
+0289       tap(4).No=[13,11,8,7,4,1]; 
+0290       tap(5).No=[13,12,8,7,6,5]; 
+0291       tap(6).No=[13,9,8,7,5,1]; 
+0292       tap(7).No=[13,12,6,5,4,3]; 
+0293       tap(8).No=[13,12,11,9,5,3]; 
+0294       tap(9).No=[13,12,11,5,2,1]; 
+0295       tap(10).No=[13,12,9,8,4,2]; 
+0296       tap(11).No=[13,8,7,4,3,2]; 
+0297     <span class="keyword">case</span> 14
+0298       tap(1).No=[4,8,13,14];
+0299       tap(2).No=[14,12,2,1]; 
+0300       tap(3).No=[14,13,4,2]; 
+0301       tap(4).No=[14,13,11,9]; 
+0302       tap(5).No=[14,10,6,1]; 
+0303       tap(6).No=[14,11,6,1]; 
+0304       tap(7).No=[14,12,11,1]; 
+0305       tap(8).No=[14,6,4,2]; 
+0306       tap(9).No=[14,11,9,6,5,2]; 
+0307       tap(10).No=[14,13,6,5,3,1]; 
+0308       tap(11).No=[14,13,12,8,4,1]; 
+0309       tap(12).No=[14,8,7,6,4,2]; 
+0310       tap(13).No=[14,10,6,5,4,1]; 
+0311       tap(14).No=[14,13,12,7,6,3]; 
+0312       tap(15).No=[14,13,11,10,8,3];
+0313     <span class="keyword">case</span> 15
+0314       tap(1).No=[14,15];
+0315       tap(2).No=[15,13,10,9]; 
+0316       tap(3).No=[15,13,10,1]; 
+0317       tap(4).No=[15,14,9,2]; 
+0318       tap(5).No=[15,1]; 
+0319       tap(6).No=[15,9,4,1]; 
+0320       tap(7).No=[15,12,3,1]; 
+0321       tap(8).No=[15,10,5,4]; 
+0322       tap(9).No=[15,10,5,4,3,2]; 
+0323       tap(10).No=[15,11,7,6,2,1]; 
+0324       tap(11).No=[15,7,6,3,2,1]; 
+0325       tap(12).No=[15,10,9,8,5,3]; 
+0326       tap(13).No=[15,12,5,4,3,2]; 
+0327       tap(14).No=[15,10,9,7,5,3]; 
+0328       tap(15).No=[15,13,12,10]; 
+0329       tap(16).No=[15,13,10,2]; 
+0330       tap(17).No=[15,12,9,1]; 
+0331       tap(18).No=[15,14,12,2]; 
+0332       tap(19).No=[15,13,7,4,1]; 
+0333       tap(20).No=[15,13,7,4];
+0334     <span class="keyword">case</span> 16
+0335       tap(1).No=[4,13,15,16];
+0336       tap(2).No=[16,12,3,1]; 
+0337       tap(3).No=[16,12,9,6]; 
+0338       tap(4).No=[16,9,4,3]; 
+0339       tap(5).No=[16,12,7,2]; 
+0340       tap(6).No=[16,10,7,6]; 
+0341       tap(7).No=[16,15,7,2]; 
+0342       tap(8).No=[16,9,5,2]; 
+0343       tap(9).No=[16,13,9,6]; 
+0344       tap(10).No=[16,15,4,2]; 
+0345       tap(11).No=[16,15,9,4]; 
+0346     <span class="keyword">case</span> 17
+0347       tap(1).No=[14,17];
+0348       tap(2).No=[17,3]; 
+0349       tap(3).No=[17,3,2,1]; 
+0350       tap(4).No=[17,7,4,3]; 
+0351       tap(5).No=[17,16,3,1]; 
+0352       tap(6).No=[17,12,6,3,2,1]; 
+0353       tap(7).No=[17,8,7,6,4,3]; 
+0354       tap(8).No=[17,11,8,6,3,2]; 
+0355       tap(9).No=[17,9,8,6,4,1]; 
+0356       tap(10).No=[17,16,14,10,3,2]; 
+0357       tap(11).No=[17,12,11,8,5,2]; 
+0358     <span class="keyword">case</span> 18
+0359       tap(1).No=[11,18];
+0360       tap(2).No=[18,7]; 
+0361       tap(3).No=[18,10,7,5]; 
+0362       tap(4).No=[18,13,11,9,8,7,6,3]; 
+0363       tap(5).No=[18,17,16,15,10,9,8,7]; 
+0364       tap(6).No=[18,15,12,11,9,8,7,6]; 
+0365     <span class="keyword">case</span> 19
+0366       tap(1).No=[14,17,18,19];
+0367       tap(2).No=[19,5,2,1]; 
+0368       tap(3).No=[19,13,8,5,4,3]; 
+0369       tap(4).No=[19,12,10,9,7,3]; 
+0370       tap(5).No=[19,17,15,14,13,12,6,1]; 
+0371       tap(6).No=[19,17,15,14,13,9,8,4,2,1]; 
+0372       tap(7).No=[19,16,13,11,10,9,4,1]; 
+0373       tap(8).No=[19,9,8,7,6,3]; 
+0374       tap(9).No=[19,16,15,13,12,9,5,4,2,1]; 
+0375       tap(10).No=[19,18,15,14,11,10,8,5,3,2]; 
+0376       tap(11).No=[19,18,17,16,12,7,6,5,3,1]; 
+0377     <span class="keyword">case</span> 20
+0378       tap(1).No=[17,20];
+0379       tap(2).No=[20,3]; 
+0380       tap(3).No=[20,9,5,3]; 
+0381       tap(4).No=[20,19,4,3]; 
+0382       tap(5).No=[20,11,8,6,3,2]; 
+0383       tap(6).No=[20,17,14,10,7,4,3,2]; 
+0384     <span class="keyword">case</span> 21
+0385       tap(1).No=[19,21];
+0386       tap(2).No=[21,2]; 
+0387       tap(3).No=[21,14,7,2]; 
+0388       tap(4).No=[21,13,5,2]; 
+0389       tap(5).No=[21,14,7,6,3,2]; 
+0390       tap(6).No=[21,8,7,4,3,2]; 
+0391       tap(7).No=[21,10,6,4,3,2]; 
+0392       tap(8).No=[21,15,10,9,5,4,3,2]; 
+0393       tap(9).No=[21,14,12,7,6,4,3,2]; 
+0394       tap(10).No=[21,2019,18,5,4,3,2]; 
+0395     <span class="keyword">case</span> 22
+0396       tap(1).No=[21,22];
+0397       tap(2).No=[22,1]; 
+0398       tap(3).No=[22,9,5,1]; 
+0399       tap(4).No=[22,20,18,16,6,4,2,1]; 
+0400       tap(5).No=[22,19,16,13,10,7,4,1]; 
+0401       tap(6).No=[22,17,9,7,2,1]; 
+0402       tap(7).No=[22,17,13,12,8,7,2,1]; 
+0403       tap(8).No=[22,14,13,12,7,3,2,1]; 
+0404     <span class="keyword">case</span> 23
+0405       tap(1).No=[18,23];
+0406       tap(2).No=[23,4]; 
+0407       tap(3).No=[23,5]; 
+0408       tap(4).No=[23,17,11,5]; 
+0409       tap(5).No=[23,5,4,1]; 
+0410       tap(6).No=[23,12,5,4]; 
+0411       tap(7).No=[23,21,7,5]; 
+0412       tap(8).No=[23,16,13,6,5,3]; 
+0413       tap(9).No=[23,11,10,7,6,5]; 
+0414       tap(10).No=[23,15,10,9,7,5,4,3]; 
+0415       tap(11).No=[23,17,11,9,8,5,4,1]; 
+0416       tap(12).No=[23,18,16,13,11,8,5,2]; 
+0417     <span class="keyword">case</span> 24
+0418       tap(1).No=[17,22,23,24];
+0419       tap(2).No=[24,7,2]; 
+0420       tap(3).No=[24,4,3,1]; 
+0421       tap(4).No=[24,22,20,18,16,14,11,9,8,7,5,4]; 
+0422       tap(5).No=[24,21,19,18,17,16,15,14,13,10,9,5,4,1]; 
+0423     <span class="keyword">case</span> 25
+0424       tap(1).No=[22,25];
+0425       tap(2).No=[25,3]; 
+0426       tap(3).No=[25,3,21]; 
+0427       tap(4).No=[25,20,5,3]; 
+0428       tap(5).No=[25,12,4,3]; 
+0429       tap(6).No=[25,17,10,3,2,1]; 
+0430       tap(7).No=[25,23,21,19,9,7,5,3]; 
+0431       tap(8).No=[25,18,12,11,6,5,4]; 
+0432       tap(9).No=[25,20,16,11,5,3,2,1]; 
+0433       tap(10).No=[25,12,11,8,7,6,4,3]; 
+0434     <span class="keyword">case</span> 26
+0435       tap(1).No=[20,24,25,26];
+0436       tap(2).No=[26,6,2,1]; 
+0437       tap(3).No=[26,22,21,16,12,11,10,8,5,4,3,1]; 
+0438     <span class="keyword">case</span> 27
+0439       tap(1).No=[22,25,26,27];
+0440       tap(2).No=[27,5,2,1]; 
+0441       tap(3).No=[27,18,11,10,9,5,4,3]; 
+0442     <span class="keyword">case</span> 28
+0443       tap(1).No=[25,28];
+0444       tap(2).No=[28,3]; 
+0445       tap(3).No=[28,13,11,9,5,3]; 
+0446       tap(4).No=[28,22,11,10,4,3]; 
+0447       tap(5).No=[28,24,20,16,12,8,4,3,2,1]; 
+0448     <span class="keyword">case</span> 29
+0449       tap(1).No=[27,29];
+0450       tap(2).No=[29,2]; 
+0451       tap(3).No=[29,20,11,2]; 
+0452       tap(4).No=[29,13,7,2]; 
+0453       tap(5).No=[29,21,5,2]; 
+0454       tap(6).No=[29,26,5,2]; 
+0455       tap(7).No=[29,19,16,6,3,2]; 
+0456       tap(8).No=[29,18,14,6,3,2]; 
+0457     <span class="keyword">case</span> 30
+0458       tap(1).No=[7,28,29,30];
+0459       tap(2).No=[30,23,2,1]; 
+0460       tap(3).No=[30,6,4,1]; 
+0461       tap(4).No=[30,24,20,16,14,13,11,7,2,1]; 
+0462     <span class="keyword">case</span> 31
+0463       tap(1).No=[31,29,21,17]; 
+0464       tap(2).No=[31,28,19,15]; 
+0465       tap(3).No=[31,3]; 
+0466       tap(4).No=[31,3,2,1]; 
+0467       tap(5).No=[31,13,8,3]; 
+0468       tap(6).No=[31,30,29,25]; 
+0469       tap(7).No=[31,28,24,10]; 
+0470       tap(8).No=[31,20,15,5,4,3];
+0471       tap(9).No=[31,16,8,4,3,2];
+0472     <span class="keyword">case</span> 32
+0473       tap(1).No=[32,22,2,1];
+0474       tap(2).No=[32,7,5,3,2,1];
+0475       tap(3).No=[32,28,19,18,16,14,11,10,9,6,5,1];
+0476     <span class="keyword">otherwise</span>
+0477       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0478   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0479   
+0480 <span class="keyword">elseif</span> baseVal==3
+0481   
+0482   <span class="keyword">switch</span> powerVal
+0483     <span class="keyword">case</span> 2
+0484       tap(1).No=[2,1];
+0485       tap(2).No=[1,1];
+0486     <span class="keyword">case</span> 3
+0487       tap(1).No=[0,1,2];
+0488       tap(2).No=[1,0,2];
+0489       tap(3).No=[1,2,2];
+0490       tap(4).No=[2,1,2];
+0491     <span class="keyword">case</span> 4
+0492       tap(1).No=[0,0,2,1];
+0493       tap(2).No=[0,0,1,1];
+0494       tap(3).No=[2,0,0,1];
+0495       tap(4).No=[2,2,1,1];
+0496       tap(5).No=[2,1,1,1];
+0497       tap(6).No=[1,0,0,1];
+0498       tap(7).No=[1,2,2,1];
+0499       tap(8).No=[1,1,2,1];
+0500     <span class="keyword">case</span> 5
+0501       tap(1).No=[0,0,0,1,2]; 
+0502       tap(2).No=[0,0,0,1,2];
+0503       tap(3).No=[0,0,1,2,2];
+0504       tap(4).No=[0,2,1,0,2];
+0505       tap(5).No=[0,2,1,1,2];
+0506       tap(6).No=[0,1,2,0,2];
+0507       tap(7).No=[0,1,1,2,2];
+0508       tap(8).No=[2,0,0,1,2];
+0509       tap(9).No=[2,0,2,0,2];
+0510       tap(10).No=[2,0,2,2,2];
+0511       tap(11).No=[2,2,0,2,2];
+0512       tap(12).No=[2,2,2,1,2];
+0513       tap(13).No=[2,2,1,2,2];
+0514       tap(14).No=[2,1,2,2,2];
+0515       tap(15).No=[2,1,1,0,2];
+0516       tap(16).No=[1,0,0,0,2];
+0517       tap(17).No=[1,0,0,2,2];
+0518       tap(18).No=[1,0,1,1,2];
+0519       tap(19).No=[1,2,2,2,2];
+0520       tap(20).No=[1,1,0,1,2];
+0521       tap(21).No=[1,1,2,0,2];
+0522     <span class="keyword">case</span> 6
+0523       tap(1).No=[0,0,0,0,2,1];
+0524       tap(2).No=[0,0,0,0,1,1];
+0525       tap(3).No=[0,0,2,0,2,1];
+0526       tap(4).No=[0,0,1,0,1,1];
+0527       tap(5).No=[0,2,0,1,2,1];
+0528       tap(6).No=[0,2,0,1,1,1];
+0529       tap(7).No=[0,2,2,0,1,1];
+0530       tap(8).No=[0,2,2,2,1,1];
+0531       tap(9).No=[2,1,1,1,0,1];
+0532       tap(10).No=[1,0,0,0,0,1];
+0533       tap(11).No=[1,0,2,1,0,1];
+0534       tap(12).No=[1,0,1,0,0,1];
+0535       tap(13).No=[1,0,1,2,1,1];
+0536       tap(14).No=[1,0,1,1,1,1];
+0537       tap(15).No=[1,2,0,2,2,1];
+0538       tap(16).No=[1,2,0,1,0,1];
+0539       tap(17).No=[1,2,2,1,2,1];
+0540       tap(18).No=[1,2,1,0,1,1];
+0541       tap(19).No=[1,2,1,2,1,1];
+0542       tap(20).No=[1,2,1,1,2,1];
+0543       tap(21).No=[1,1,2,1,0,1];
+0544       tap(22).No=[1,1,1,0,1,1];
+0545       tap(23).No=[1,1,1,2,0,1];
+0546       tap(24).No=[1,1,1,1,1,1];
+0547     <span class="keyword">case</span> 7
+0548       tap(1).No=[0,0,0,0,2,1,2];
+0549       tap(2).No=[0,0,0,0,1,0,2];
+0550       tap(3).No=[0,0,0,2,0,2,2];
+0551       tap(4).No=[0,0,0,2,2,2,2];
+0552       tap(5).No=[0,0,0,2,1,0,2];
+0553       tap(6).No=[0,0,0,1,1,2,2];
+0554       tap(7).No=[0,0,0,1,1,1,2];
+0555       tap(8).No=[0,0,2,2,2,0,2];
+0556       tap(9).No=[0,0,2,2,1,2,2];
+0557       tap(10).No=[0,0,2,1,0,0,2];
+0558       tap(11).No=[0,0,2,1,2,2,2];
+0559       tap(12).No=[0,0,1,0,2,1,2];
+0560       tap(13).No=[0,0,1,0,1,1,2];
+0561       tap(14).No=[0,0,1,1,0,1,2];
+0562       tap(15).No=[0,0,1,1,2,0,2];
+0563       tap(16).No=[0,2,0,0,0,2,2];
+0564       tap(17).No=[0,2,0,0,1,0,2];
+0565       tap(18).No=[0,2,0,0,1,1,2];
+0566       tap(19).No=[0,2,0,2,2,0,2];
+0567       tap(20).No=[0,2,0,2,1,2,2];
+0568       tap(21).No=[0,2,0,1,1,0,2];
+0569       tap(22).No=[0,2,2,0,2,0,2];
+0570       tap(23).No=[0,2,2,0,1,2,2];
+0571       tap(24).No=[0,2,2,2,2,1,2];
+0572       tap(25).No=[0,2,2,2,1,0,2];
+0573       tap(26).No=[0,2,2,1,0,1,2];
+0574       tap(27).No=[0,2,2,1,2,2,2];
+0575     <span class="keyword">otherwise</span>
+0576       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0577   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0578   
+0579 <span class="keyword">elseif</span> baseVal==4
+0580   
+0581   <span class="keyword">switch</span> powerVal
+0582     <span class="keyword">case</span> 2
+0583       tap(1).No = [1,2];
+0584     <span class="keyword">case</span> 3
+0585       tap(1).No=[1,1,2];
+0586     <span class="keyword">case</span> 4
+0587       tap(1).No = [1,2,2,2];
+0588     <span class="keyword">otherwise</span>
+0589       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0590   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0591 
+0592 <span class="keyword">elseif</span> baseVal==5
+0593   
+0594   <span class="keyword">switch</span> powerVal
+0595     <span class="keyword">case</span> 2
+0596       tap(1).No=[4,3];
+0597       tap(2).No=[3,2];
+0598       tap(3).No=[2,2];
+0599       tap(4).No=[1,3];
+0600     <span class="keyword">case</span> 3
+0601       tap(1).No=[0,2,3];
+0602       tap(2).No=[4,1,2];
+0603       tap(3).No=[3,0,2];
+0604       tap(4).No=[3,4,2];
+0605       tap(5).No=[3,3,3];
+0606       tap(6).No=[3,3,2];
+0607       tap(7).No=[3,1,3];
+0608       tap(8).No=[2,0,3];
+0609       tap(9).No=[2,4,3];
+0610       tap(10).No=[2,3,3];
+0611       tap(11).No=[2,3,2];
+0612       tap(12).No=[2,1,2];
+0613       tap(13).No=[1,0,2];
+0614       tap(14).No=[1,4,3];
+0615       tap(15).No=[1,1,3];
+0616     <span class="keyword">case</span> 4
+0617       tap(1).No=[0,4,3,3];
+0618       tap(2).No=[0,4,3,2];
+0619       tap(3).No=[0,4,2,3];
+0620       tap(4).No=[0,4,2,2];
+0621       tap(5).No=[0,1,4,3];
+0622       tap(6).No=[0,1,4,2];
+0623       tap(7).No=[0,1,1,3];
+0624       tap(8).No=[0,1,1,2];
+0625       tap(9).No=[4,0,4,2];
+0626       tap(10).No=[4,0,3,2];
+0627       tap(11).No=[4,0,2,3];
+0628       tap(12).No=[4,0,1,3];
+0629       tap(13).No=[4,4,4,2];
+0630       tap(14).No=[4,3,0,3];
+0631       tap(15).No=[4,3,4,3];
+0632       tap(16).No=[4,2,0,2];
+0633       tap(17).No=[4,2,1,3];
+0634       tap(18).No=[4,1,1,2];
+0635       tap(19).No=[3,0,4,2];
+0636       tap(20).No=[3,0,3,3];
+0637       tap(21).No=[3,0,2,2];
+0638       tap(22).No=[3,0,1,3];
+0639       tap(23).No=[3,4,3,2];
+0640       tap(24).No=[3,3,0,2];
+0641       tap(25).No=[3,3,3,3];
+0642       tap(26).No=[3,2,0,3];
+0643       tap(27).No=[3,2,2,3];
+0644       tap(28).No=[3,1,2,2];
+0645       tap(29).No=[2,0,4,3];
+0646       tap(30).No=[2,0,3,2];
+0647       tap(31).No=[2,0,2,3];
+0648       tap(32).No=[2,0,1,2];
+0649       tap(33).No=[2,4,2,2];
+0650       tap(34).No=[2,3,0,2];
+0651       tap(35).No=[2,3,2,3];
+0652       tap(36).No=[2,2,0,3];
+0653       tap(37).No=[2,2,3,3];
+0654       tap(38).No=[2,1,3,2];
+0655       tap(39).No=[1,0,4,3];
+0656       tap(40).No=[1,0,3,3];
+0657       tap(41).No=[1,0,2,2];
+0658       tap(42).No=[1,0,1,2];
+0659       tap(43).No=[1,4,1,2];
+0660       tap(44).No=[1,3,0,3];
+0661       tap(45).No=[1,3,1,3];
+0662       tap(46).No=[1,2,0,2];
+0663       tap(47).No=[1,2,4,3];
+0664       tap(48).No=[1,1,4,2];
+0665     <span class="keyword">otherwise</span>
+0666       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0667   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0668   
+0669 <span class="keyword">elseif</span> baseVal==7
+0670   
+0671   <span class="keyword">switch</span> powerVal
+0672     <span class="keyword">case</span> 2
+0673       tap(1).No=[1,4];
+0674     <span class="keyword">case</span> 3
+0675       tap(1).No=[0,1,5];
+0676     <span class="keyword">case</span> 4
+0677       tap(1).No=[0,1,1,4];
+0678     <span class="keyword">otherwise</span>
+0679       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0680   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0681   
+0682 <span class="keyword">elseif</span> baseVal==8
+0683   
+0684   <span class="keyword">switch</span> powerVal
+0685     <span class="keyword">case</span> 2
+0686       tap(1).No=[1,2];
+0687     <span class="keyword">case</span> 3
+0688       tap(1).No=[1,0,3];
+0689     <span class="keyword">case</span> 4
+0690       tap(1).No=[1,0,0,5];
+0691     <span class="keyword">otherwise</span>
+0692       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0693   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0694 
+0695 <span class="keyword">elseif</span> baseVal==9
+0696   
+0697   <span class="keyword">switch</span> powerVal
+0698     <span class="keyword">case</span> 2
+0699       tap(1).No=[1,3];
+0700     <span class="keyword">case</span> 3
+0701       tap(1).No=[0,1,3];
+0702     <span class="keyword">case</span> 4
+0703       tap(1).No=[1,0,0,6];
+0704     <span class="keyword">otherwise</span>
+0705       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0706   <span class="keyword">end</span> <span class="comment">%switch powerVal</span>
+0707   
+0708 <span class="keyword">elseif</span> baseVal==11
+0709   
+0710   <span class="keyword">switch</span> powerVal
+0711     <span class="keyword">case</span> 2
+0712       tap(1).No=[10,4];
+0713       tap(2).No=[12,4];
+0714       tap(3).No=[1,3];
+0715       tap(4).No=[3,3];
+0716       tap(5).No=[8,3];
+0717       tap(6).No=[10,3];
+0718       tap(7).No=[12,3];
+0719       tap(8).No=[1,4];
+0720       tap(9).No=[4,4];
+0721       tap(10).No=[7,4];
+0722       tap(11).No=[2,5];
+0723       tap(12).No=[3,5];
+0724       tap(13).No=[8,5];
+0725       tap(14).No=[9,5];
+0726       tap(15).No=[4,9];
+0727       tap(16).No=[5,9];
+0728       tap(17).No=[6,9];
+0729       tap(18).No=[7,9];
+0730     <span class="keyword">case</span> 3
+0731       tap(1).No=[0,10,7];
+0732     <span class="keyword">case</span> 4
+0733       tap(1).No=[0,0,10,9];
+0734     <span class="keyword">otherwise</span>
+0735       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0736   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0737   
+0738 <span class="keyword">elseif</span> baseVal==13
+0739   
+0740   <span class="keyword">switch</span> powerVal
+0741     <span class="keyword">case</span> 2
+0742       tap(1).No=[12,11];
+0743     <span class="keyword">case</span> 3
+0744       tap(1).No=[0,12,7];
+0745     <span class="keyword">otherwise</span>
+0746       error(<span class="string">'M-sequence %.0f^%.0f is not defined'</span>,baseVal,powerVal);
+0747   <span class="keyword">end</span> <span class="comment">% switch powerVal</span>
+0748 
+0749 <span class="keyword">end</span> <span class="comment">% if baseVal</span>
+0750 
+0751 
+0752 <span class="comment">%% construct m-sequence</span>
+0753 
+0754 <span class="comment">% set the initial sequence</span>
+0755 ms=zeros(bitNum,1);
+0756 <span class="keyword">if</span> isempty(whichSeq), whichSeq=ceil(rand(1)*length(tap));
+0757 <span class="keyword">else</span> 
+0758   <span class="keyword">if</span> whichSeq&gt;length(tap) || whichSeq&lt;1
+0759     disp(<span class="string">' wrapping arround!'</span>);
+0760     whichSeq=rem(whichSeq,length(tap))+1;
+0761   <span class="keyword">end</span>
+0762 <span class="keyword">end</span>
+0763 
+0764 <span class="comment">% weights</span>
+0765 weights=zeros(1,powerVal);
+0766 <span class="keyword">if</span> baseVal==2
+0767     weights(tap(whichSeq).No)=1;
+0768 <span class="keyword">elseif</span> baseVal&gt;2
+0769    weights=tap(whichSeq).No;
+0770 <span class="keyword">end</span>
+0771 
+0772 <span class="comment">% set user-defined tap</span>
+0773 <span class="keyword">if</span> exist(<span class="string">'user_taps'</span>,<span class="string">'var'</span>)
+0774   <span class="keyword">if</span> ~isempty(user_taps), weights = user_taps; <span class="keyword">end</span>
+0775 <span class="keyword">end</span>
+0776 
+0777 <span class="comment">% generate the sequence</span>
+0778 <span class="keyword">for</span> i=1:bitNum
+0779   <span class="comment">% calculating next digit with modulo powerVal arithmetic</span>
+0780   <span class="comment">% register, (tap(1).No)</span>
+0781   
+0782   <span class="comment">%ms(i)=rem(sum(register(tap(whichSeq).No)),baseVal);</span>
+0783   <span class="keyword">if</span> baseVal == 4 || baseVal == 8 || baseVal == 9
+0784     <span class="comment">% operation for power of prime base</span>
+0785     tmp = 0;
+0786     <span class="keyword">for</span> ind = 1:(length(weights))
+0787       tmp = <a href="qadd.html" class="code" title="function y = qadd(a,b,base)">qadd</a>(tmp,qmult(weights(ind),register(ind),baseVal),baseVal);
+0788     <span class="keyword">end</span>
+0789     ms(i) = tmp;
+0790   <span class="keyword">else</span> <span class="comment">% operation for prime bases</span>
+0791     ms(i)=rem(weights*register+baseVal,baseVal);
+0792   <span class="keyword">end</span>
+0793   
+0794   <span class="comment">% updating the register</span>
+0795   register=[ms(i);register(1:powerVal-1)];
+0796 <span class="keyword">end</span>
+0797 
+0798 <span class="comment">% shift the generated sequence</span>
+0799 ms=ms(:);
+0800 <span class="keyword">if</span> ~isempty(<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>),
+0801   <a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>=rem(<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>, length(ms));
+0802   ms=[ms(<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>+1:end); ms(1:<a href="shift.html" class="code" title="function res = shift(mtx, offset)">shift</a>)];
+0803 <span class="keyword">end</span>
+0804 
+0805 <span class="comment">% balance the sequence</span>
+0806 <span class="keyword">if</span> balance_flag
+0807   <span class="keyword">if</span> baseVal==2  
+0808     ms=ms*2-1;
+0809   <span class="keyword">elseif</span> baseVal==3
+0810     ms(ms==2)=-1;
+0811   <span class="keyword">elseif</span> baseVal==4 
+0812     ms(ms==3)=-1;
+0813     ms(ms==2)=-2;
+0814     ms(ms==1)=2;
+0815     ms(ms==0)=1;
+0816   <span class="keyword">elseif</span> baseVal==5 
+0817     ms(ms==4)=-1;
+0818     ms(ms==3)=-2;
+0819   <span class="keyword">elseif</span> baseVal==7
+0820     ms(ms==6)=-1;
+0821     ms(ms==5)=-2;
+0822     ms(ms==4)=-3;
+0823   <span class="keyword">elseif</span> baseVal==8
+0824     ms(ms==7)=-1;
+0825     ms(ms==6)=-2;
+0826     ms(ms==5)=-3;
+0827     ms(ms==4)=-4;
+0828     ms(ms==3)=4;
+0829     ms(ms==2)=3;
+0830     ms(ms==1)=2;
+0831     ms(ms==0)=1;
+0832   <span class="keyword">elseif</span> baseVal==9
+0833     ms(ms==8)=-1;
+0834     ms(ms==7)=-2;
+0835     ms(ms==6)=-3;
+0836     ms(ms==5)=-4;
+0837   <span class="keyword">elseif</span> baseVal==11
+0838     ms(ms==10)=-1;
+0839     ms(ms==9)=-2;
+0840     ms(ms==8)=-3;
+0841     ms(ms==7)=-4;
+0842     ms(ms==6)=-5;
+0843   <span class="keyword">elseif</span> baseVal==13
+0844     ms(ms==12)=-1;
+0845     ms(ms==11)=-2;
+0846     ms(ms==10)=-3;
+0847     ms(ms==9)=-4;
+0848     ms(ms==8)=-5;
+0849     ms(ms==7)=-6;
+0850   <span class="keyword">else</span>
+0851     error(<span class="string">'wrong baseVal!'</span>);
+0852   <span class="keyword">end</span>
+0853 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

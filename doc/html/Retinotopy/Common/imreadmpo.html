@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imreadmpo</title>
+  <meta name="keywords" content="imreadmpo">
+  <meta name="description" content="Reads an MPO (multiple picture object) file.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>imreadmpo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Reads an MPO (multiple picture object) file.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [imgs,imgsize,IFD,MPE,header]=imreadmpo(mpofile,save_jpg_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Reads an MPO (multiple picture object) file.
+ function [imgs,imgsize,IFD,MPE,header]=imreadmpo(mpofile,:save_flg)
+ (: is optional)
+
+ This function reads an input MPO file and stores the image data as a MATLAB matrix.
+ It is especially focusing on loading two (left/right-eyes) images extracted from
+ one MPO photo file taken with FujiFilm Real W3 stereo camera and storing them
+ separately into a MATLAB matrix. Any MPO file can be processed but have not fully
+ tested yet.
+
+ [input]
+ mpofile      : input MPO-file name, a RELATIVE path format as the location
+                where this function is called is the origin
+                e.g. mpofile='../DSCF0008.mpo';
+ save_jpg_flg : whether saving the separated jpeg file. [0|1]. 0 by defaut.
+
+ [output]
+ imgs         : image object, a cell strucuture
+ imgsize      : image size, [height, width]
+ IFD          : MP index IDF information
+ MPE          : MP entry information
+ header       : header information of the input MPO file
+
+ [note]
+ The MPO header structure is as below
+ FF E2 00 9E 4D 50 46 00 | 4D 4D 00 2A | 00 00 00 08 | 00 03 B0 00 00 07 ...
+      (APP2 marker)      |  (endian)      (offset)   |  (MP index IFD, 12 byte x N blocks)   ... (image data)
+                         |                           |
+                         | &lt;-- offset_start          | &lt;-- mp_idx
+
+
+ Created    : &quot;2015-06-30 09:21:28 ban&quot;
+ Last Update: &quot;2015-07-02 10:24:12 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="CheckImagesPTB.html" class="code" title="function imgfiles=CheckImagesPTB(img_dir,img_ext,auto_msec,img_size)">CheckImagesPTB</a>	Reads images in the target directory and presents them onto the PTB screen</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function output=bytereader(data,endian)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [imgs,imgsize,IFD,MPE,header]=imreadmpo(mpofile,save_jpg_flg)</a>
+0002 
+0003 <span class="comment">% Reads an MPO (multiple picture object) file.</span>
+0004 <span class="comment">% function [imgs,imgsize,IFD,MPE,header]=imreadmpo(mpofile,:save_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads an input MPO file and stores the image data as a MATLAB matrix.</span>
+0008 <span class="comment">% It is especially focusing on loading two (left/right-eyes) images extracted from</span>
+0009 <span class="comment">% one MPO photo file taken with FujiFilm Real W3 stereo camera and storing them</span>
+0010 <span class="comment">% separately into a MATLAB matrix. Any MPO file can be processed but have not fully</span>
+0011 <span class="comment">% tested yet.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% [input]</span>
+0014 <span class="comment">% mpofile      : input MPO-file name, a RELATIVE path format as the location</span>
+0015 <span class="comment">%                where this function is called is the origin</span>
+0016 <span class="comment">%                e.g. mpofile='../DSCF0008.mpo';</span>
+0017 <span class="comment">% save_jpg_flg : whether saving the separated jpeg file. [0|1]. 0 by defaut.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% imgs         : image object, a cell strucuture</span>
+0021 <span class="comment">% imgsize      : image size, [height, width]</span>
+0022 <span class="comment">% IFD          : MP index IDF information</span>
+0023 <span class="comment">% MPE          : MP entry information</span>
+0024 <span class="comment">% header       : header information of the input MPO file</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% [note]</span>
+0027 <span class="comment">% The MPO header structure is as below</span>
+0028 <span class="comment">% FF E2 00 9E 4D 50 46 00 | 4D 4D 00 2A | 00 00 00 08 | 00 03 B0 00 00 07 ...</span>
+0029 <span class="comment">%      (APP2 marker)      |  (endian)      (offset)   |  (MP index IFD, 12 byte x N blocks)   ... (image data)</span>
+0030 <span class="comment">%                         |                           |</span>
+0031 <span class="comment">%                         | &lt;-- offset_start          | &lt;-- mp_idx</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% Created    : &quot;2015-06-30 09:21:28 ban&quot;</span>
+0035 <span class="comment">% Last Update: &quot;2015-07-02 10:24:12 ban&quot;</span>
+0036 
+0037 <span class="comment">% check the input variable</span>
+0038 mpofile=fullfile(pwd,mpofile);
+0039 <span class="keyword">if</span> ~exist(mpofile,<span class="string">'file'</span>), error(<span class="string">'can not find mpofile. check the input variable.'</span>); <span class="keyword">end</span>
+0040 
+0041 <span class="keyword">if</span> nargin&lt;2 || isempty(save_jpg_flg), save_jpg_flg=0; <span class="keyword">end</span>
+0042 
+0043 <span class="comment">% load the input mpo file and store the content</span>
+0044 finput=fopen(mpofile,<span class="string">'rb'</span>);
+0045 <span class="keyword">if</span> finput==-1, error(<span class="string">'can not read mpofile. check the inpur variable.'</span>); <span class="keyword">end</span>
+0046 data=fread(finput,Inf,<span class="string">'uint8'</span>)';
+0047 fclose(finput);
+0048 
+0049 <span class="comment">% find JPEG APP2 header positions</span>
+0050 <span class="comment">% APP2 marker is as below</span>
+0051 <span class="comment">% address  : +00  +01  +02  +03      +04      +05      +06       +07</span>
+0052 <span class="comment">% code(hex):  FF   E2   --   --  4D('M')  50('P')  46('F')  00(NULL)</span>
+0053 <span class="comment">% therefore, the elements in the first tmp_idx should be less than numel(data)-8</span>
+0054 
+0055 <span class="comment">% get the first &quot;FF E2&quot; marker</span>
+0056 tmp_idx1=find(data==hex2dec(<span class="string">'FF'</span>));
+0057 tmp_idx1(tmp_idx1&gt;=numel(data)-8)=[];
+0058 
+0059 tmp_idx2=logical(data(tmp_idx1+1)==hex2dec(<span class="string">'E2'</span>));
+0060 app2_start=tmp_idx1(tmp_idx2);
+0061 clear tmp_idx1 tmp_idx2;
+0062 
+0063 <span class="comment">% then, search the &quot;4D 50 46 00&quot; marker</span>
+0064 offset_counter=0;
+0065 offset_start=[];
+0066 <span class="keyword">for</span> ii=1:1:numel(app2_start)
+0067   <span class="keyword">if</span> sum(strcmp(dec2hex(data(app2_start(ii)+4:app2_start(ii)+7)),{<span class="string">'4D'</span>,<span class="string">'50'</span>,<span class="string">'46'</span>,<span class="string">'00'</span>}))==4
+0068     offset_counter=offset_counter+1;
+0069     offset_start(offset_counter)=app2_start(ii)+8; <span class="comment">%#ok % start position of the byte order mark</span>
+0070   <span class="keyword">end</span>
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">% get endian</span>
+0074 <span class="comment">% note: the next 4 bytes are endian (4D 3D 00 2A = big endian, 49 49 2A 00 = little endian)</span>
+0075 <span class="keyword">if</span> sum(strcmp(dec2hex(data(offset_start(1):offset_start(1)+3)),{<span class="string">'49'</span>,<span class="string">'49'</span>,<span class="string">'2A'</span>,<span class="string">'00'</span>}))==4
+0076   endian=<span class="string">'LE'</span>;
+0077 <span class="keyword">elseif</span> sum(strcmp(dec2hex(data(offset_start(1):offset_start(1)+3)),{<span class="string">'4D'</span>,<span class="string">'4D'</span>,<span class="string">'00'</span>,<span class="string">'2A'</span>}))==4
+0078   endian=<span class="string">'BE'</span>;
+0079 <span class="keyword">else</span>
+0080   error(<span class="string">'unexpected endian: can not identify the byte order of the input file. check the input file format.'</span>);
+0081 <span class="keyword">end</span>
+0082 
+0083 <span class="comment">% get MP index IFD</span>
+0084 mp_idx=zeros(numel(offset_start),1);
+0085 <span class="keyword">for</span> ii=1:1:numel(offset_start)
+0086   mp_offset=<a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(offset_start(ii)+4:offset_start(ii)+7),endian);
+0087   mp_idx(ii)=offset_start(ii)+mp_offset; <span class="comment">% start position of the MP index IFD</span>
+0088 <span class="keyword">end</span>
+0089 
+0090 <span class="comment">% interpret MP index IFD, IFD consists of 12 byte blocks</span>
+0091 <span class="keyword">for</span> ii=1:1:1<span class="comment">%numel(mp_idx) % the first IFD information is enough to separate jpeg files from the input MPO.</span>
+0092   IFD(ii).Count = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+0:mp_idx(ii)+1),endian);              <span class="comment">%#ok</span>
+0093 
+0094   IFD(ii).version.tag      = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+2:mp_idx(ii)+3),endian);   <span class="comment">%#ok</span>
+0095   IFD(ii).version.type     = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+4:mp_idx(ii)+5),endian);   <span class="comment">%#ok</span>
+0096   IFD(ii).version.count    = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+6:mp_idx(ii)+9),endian);   <span class="comment">%#ok</span>
+0097   IFD(ii).version.offset   = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+10:mp_idx(ii)+13),endian); <span class="comment">%#ok</span>
+0098 
+0099   IFD(ii).number.tag       = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+14:mp_idx(ii)+15),endian); <span class="comment">%#ok</span>
+0100   IFD(ii).number.type      = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+16:mp_idx(ii)+17),endian); <span class="comment">%#ok</span>
+0101   IFD(ii).number.count     = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+18:mp_idx(ii)+21),endian); <span class="comment">%#ok</span>
+0102   IFD(ii).number.offset    = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+22:mp_idx(ii)+25),endian); <span class="comment">%#ok</span>
+0103 
+0104   IFD(ii).entryIdx.tag     = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+26:mp_idx(ii)+27),endian); <span class="comment">%#ok</span>
+0105   IFD(ii).entryIdx.type    = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+28:mp_idx(ii)+29),endian); <span class="comment">%#ok</span>
+0106   IFD(ii).entryIdx.count   = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+30:mp_idx(ii)+33),endian); <span class="comment">%#ok</span>
+0107   IFD(ii).entryIdx.offset  = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(mp_idx(ii)+34:mp_idx(ii)+37),endian); <span class="comment">%#ok</span>
+0108 <span class="keyword">end</span>
+0109 
+0110 <span class="comment">% get each image offset and byte length, interpreting MP entry</span>
+0111 <span class="keyword">for</span> ii=1:1:IFD(1).number.offset <span class="comment">% IFD.number.offset = the number of images contained in the target MPO file</span>
+0112   current_offset=offset_start(1)+IFD(1).entryIdx.offset+16*(ii-1); <span class="comment">% since MP entry consists of 16 byte blocks</span>
+0113 
+0114   MPE(ii).ImageAttr       = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(current_offset+0:current_offset+3),endian);   <span class="comment">%#ok</span>
+0115   MPE(ii).ImageSize       = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(current_offset+4:current_offset+7),endian);   <span class="comment">%#ok</span>
+0116   MPE(ii).ImageDataOffset = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(current_offset+8:current_offset+11),endian);  <span class="comment">%#ok</span>
+0117   MPE(ii).DependentImage1 = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(current_offset+12:current_offset+13),endian); <span class="comment">%#ok</span>
+0118   MPE(ii).DependentImage2 = <a href="#_sub1" class="code" title="subfunction output=bytereader(data,endian)">bytereader</a>(data(current_offset+14:current_offset+15),endian); <span class="comment">%#ok</span>
+0119 <span class="keyword">end</span>
+0120 
+0121 <span class="comment">% get the image size information</span>
+0122 tmp_idx1=find(data==hex2dec(<span class="string">'FF'</span>));
+0123 tmp_idx1(tmp_idx1&gt;=numel(data)-2)=[];
+0124 
+0125 tmp_idx2=logical(data(tmp_idx1+1)==hex2dec(<span class="string">'C0'</span>)); <span class="comment">% using FFC0 tag to extract image size information</span>
+0126 sof_start=tmp_idx1(tmp_idx2);
+0127 
+0128 tmp_idx3=logical(data(tmp_idx1+1)==hex2dec(<span class="string">'C4'</span>)); <span class="comment">% using FFC4 tag (DHT = Haffman table) as the border</span>
+0129 sof_edge=tmp_idx1(tmp_idx3);
+0130 
+0131 sof_start=max(sof_start(sof_start&lt;sof_edge(end))); <span class="comment">% this is not good in interpreting the header, but required to speeding up the process.</span>
+0132 clear tmp_idx1 tmp_idx2 tmp_idx3;
+0133 
+0134 imgsize=[256*data(sof_start+5)+data(sof_start+6),256*data(sof_start+7)+data(sof_start+8)];
+0135 
+0136 <span class="comment">% extract and store the image data object</span>
+0137 imgs=cell(IFD(1).number.offset,1);
+0138 <span class="keyword">for</span> ii=1:1:IFD(1).number.offset
+0139   <span class="keyword">if</span> ii==1
+0140     current_offset=0;
+0141   <span class="keyword">else</span>
+0142     current_offset=offset_start(1)+MPE(ii).ImageDataOffset-1; <span class="comment">% here, -1 is to adjust the start point.</span>
+0143   <span class="keyword">end</span>
+0144 
+0145   imgdata=data(current_offset+1:current_offset+MPE(ii).ImageSize);
+0146 
+0147   [dummy,mpofname]=fileparts(mpofile); <span class="comment">%#ok</span>
+0148   outfname=sprintf(<span class="string">'%s_%02d.jpg'</span>,mpofname,ii);
+0149   fout=fopen(fullfile(pwd,outfname),<span class="string">'w'</span>);
+0150   c=onCleanup(@() fclose(fout));
+0151   fwrite(fout,imgdata,<span class="string">'uint8'</span>);
+0152   clear c;
+0153 
+0154   imgs{ii}=imread(fullfile(pwd,outfname));
+0155   <span class="keyword">if</span> ~save_jpg_flg, delete(fullfile(pwd,outfname)); <span class="keyword">end</span>
+0156 <span class="keyword">end</span>
+0157 
+0158 <span class="keyword">if</span> nargout&gt;4, header=imfinfo(mpofile); <span class="keyword">end</span>
+0159 
+0160 <span class="keyword">return</span>
+0161 
+0162 
+0163 <span class="comment">%% subfunction</span>
+0164 
+0165 <a name="_sub1" href="#_subfunctions" class="code">function output=bytereader(data,endian)</a>
+0166 
+0167 <span class="comment">% Converts the input decimal byte data with the specified byte-order format</span>
+0168 <span class="comment">% function output=bytereader(data,endian)</span>
+0169 <span class="comment">%</span>
+0170 <span class="comment">% [input]</span>
+0171 <span class="comment">% data   : byte array, e.g. data=[8 0 0 0];</span>
+0172 <span class="comment">% endian : byte order, 'LE' or 'BE'</span>
+0173 <span class="comment">%</span>
+0174 <span class="comment">% [output]</span>
+0175 <span class="comment">% output : decimal data formatted by the given endian</span>
+0176 
+0177 <span class="keyword">if</span> strcmp(endian,<span class="string">'LE'</span>)
+0178   tmpdata=dec2hex(fliplr(data));
+0179   data=[];
+0180   <span class="keyword">for</span> ii=1:1:size(tmpdata,1), data=strcat(data,tmpdata(ii,:)); <span class="keyword">end</span>
+0181   output=hex2dec(data);
+0182 <span class="keyword">else</span> <span class="comment">% if strcmp(endian,'BE')</span>
+0183   tmpdata=dec2hex(data);
+0184   data=[];
+0185   <span class="keyword">for</span> ii=1:1:size(tmpdata,1), data=strcat(data,tmpdata(ii,:)); <span class="keyword">end</span>
+0186   output=hex2dec(data);
+0187 <span class="keyword">end</span>
+0188 
+0189 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

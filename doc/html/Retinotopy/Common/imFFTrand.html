@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imFFTrand</title>
+  <meta name="keywords" content="imFFTrand">
+  <meta name="description" content="Randomizes FFT amplitudes/phases of the input images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>imFFTrand
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Randomizes FFT amplitudes/phases of the input images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg,fullrand_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Randomizes FFT amplitudes/phases of the input images.
+ function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg,:randseed_flg,:fullrand_flg)
+ (: is optional)
+
+ This function reads grayscale/RGB images and randomizes their amplitudes and/or phases in Fourier domain.
+
+ [input]
+ tgt_dir        : target directory that includes images you want to process.
+                  should set with a relative path format, e.g. tgt_dir='../images/image01';
+ amp_shuffle    : whether shuffling amplitudes of the images in Fourier domain, [0|1]. 0 by default.
+ phase_shuffle  : whether shuffling phases of the images in Fourier domain, [0|1]. 0 by default.
+ img_ext        : image file extension(s), cell structure or string. '.jpg' by default
+ img_inc_prefix : image file prefix(s) that is to be included in processing,
+                  cell structure or string, '*' by default.
+ img_exc_prefix : image file prefix(s) that is to be excluded from processing,
+                  cell structure or string, empty by default.
+ display_flg    : whether displaying the converted image [0|1]. 0 by default.
+ save_flg       : whether saving the converted image, [0|1]. 0 by default.
+ randseed_flg   : whether initializing random seed, [0|1]. 1 by default.
+ fullrand_flg   : whether randomizing phase/amplitudes fully over the RGB layers, [0|1].
+                  only valid when the input images are in the RGB format. 0 by default.
+
+ [output]
+ img            : converted Fourier-phase/power randomized images, cell structure
+ fnames         : the corresponding file names that are converted.
+
+
+ Created    : &quot;2013-11-13 15:36:11 ban&quot;
+ Last Update: &quot;2018-12-11 17:02:22 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>	Initializes MATLAB internal state of a random seed.</li><li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg,randseed_flg,fullrand_flg)</a>
+0002 
+0003 <span class="comment">% Randomizes FFT amplitudes/phases of the input images.</span>
+0004 <span class="comment">% function [img,fnames]=imFFTrand(tgt_dir,amp_shuffle_ratio,phase_shuffle_ratio,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg,:randseed_flg,:fullrand_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads grayscale/RGB images and randomizes their amplitudes and/or phases in Fourier domain.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [input]</span>
+0010 <span class="comment">% tgt_dir        : target directory that includes images you want to process.</span>
+0011 <span class="comment">%                  should set with a relative path format, e.g. tgt_dir='../images/image01';</span>
+0012 <span class="comment">% amp_shuffle    : whether shuffling amplitudes of the images in Fourier domain, [0|1]. 0 by default.</span>
+0013 <span class="comment">% phase_shuffle  : whether shuffling phases of the images in Fourier domain, [0|1]. 0 by default.</span>
+0014 <span class="comment">% img_ext        : image file extension(s), cell structure or string. '.jpg' by default</span>
+0015 <span class="comment">% img_inc_prefix : image file prefix(s) that is to be included in processing,</span>
+0016 <span class="comment">%                  cell structure or string, '*' by default.</span>
+0017 <span class="comment">% img_exc_prefix : image file prefix(s) that is to be excluded from processing,</span>
+0018 <span class="comment">%                  cell structure or string, empty by default.</span>
+0019 <span class="comment">% display_flg    : whether displaying the converted image [0|1]. 0 by default.</span>
+0020 <span class="comment">% save_flg       : whether saving the converted image, [0|1]. 0 by default.</span>
+0021 <span class="comment">% randseed_flg   : whether initializing random seed, [0|1]. 1 by default.</span>
+0022 <span class="comment">% fullrand_flg   : whether randomizing phase/amplitudes fully over the RGB layers, [0|1].</span>
+0023 <span class="comment">%                  only valid when the input images are in the RGB format. 0 by default.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% [output]</span>
+0026 <span class="comment">% img            : converted Fourier-phase/power randomized images, cell structure</span>
+0027 <span class="comment">% fnames         : the corresponding file names that are converted.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Created    : &quot;2013-11-13 15:36:11 ban&quot;</span>
+0031 <span class="comment">% Last Update: &quot;2018-12-11 17:02:22 ban&quot;</span>
+0032 
+0033 <span class="comment">% check input variables</span>
+0034 <span class="keyword">if</span> nargin&lt;1 || isempty(tgt_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;2 || isempty(amp_shuffle_ratio), amp_shuffle_ratio=1; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;3 || isempty(phase_shuffle_ratio), phase_shuffle_ratio=1; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;4 || isempty(img_ext), img_ext=<span class="string">'.jpg'</span>; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;5 || isempty(img_inc_prefix), img_inc_prefix=<span class="string">'*'</span>; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;6 || isempty(img_exc_prefix), img_exc_prefix=<span class="string">''</span>; <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin&lt;7 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin&lt;8 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;9 || isempty(randseed_flg), randseed_flg=1; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> nargin&lt;10 || isempty(fullrand_flg), fullrand_flg=0; <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> ~iscell(img_ext), img_ext={img_ext}; <span class="keyword">end</span>
+0046 <span class="keyword">if</span> ~iscell(img_inc_prefix), img_inc_prefix={img_inc_prefix}; <span class="keyword">end</span>
+0047 <span class="keyword">if</span> ~iscell(img_exc_prefix), img_exc_prefix={img_exc_prefix}; <span class="keyword">end</span>
+0048 
+0049 <span class="keyword">if</span> save_flg, save_prefix=<span class="string">'_fftrand'</span>; <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% set prefix correctly</span>
+0052 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0053   <span class="keyword">if</span> ~strcmp(img_ext{ii}(1),<span class="string">'.'</span>), img_ext{ii}=[<span class="string">'.'</span>,img_ext{ii}]; <span class="keyword">end</span>
+0054 <span class="keyword">end</span>
+0055 
+0056 <span class="comment">% check target directory</span>
+0057 tgt_dir=fullfile(pwd,tgt_dir);
+0058 <span class="keyword">if</span> ~exist(tgt_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find taget directory. check input variable.'</span>); <span class="keyword">end</span>
+0059 
+0060 <span class="comment">% initialize random seed</span>
+0061 <span class="keyword">if</span> randseed_flg, <a href="InitializeRandomSeed.html" class="code" title="function cseed=InitializeRandomSeed">InitializeRandomSeed</a>(); <span class="keyword">end</span>
+0062 
+0063 fprintf(<span class="string">'target: %s\n'</span>,tgt_dir);
+0064 
+0065 <span class="comment">% get image files</span>
+0066 fprintf(<span class="string">'converting images...'</span>);
+0067 img=<span class="string">''</span>; fnames=<span class="string">''</span>; img_counter=0;
+0068 dcr=1; <span class="comment">% for preserving DC component of the image</span>
+0069 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0070   <span class="keyword">for</span> jj=1:1:length(img_inc_prefix)
+0071     tmpfnames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(tgt_dir,[img_inc_prefix{jj},img_ext{ii}]);
+0072     <span class="keyword">for</span> kk=1:1:length(tmpfnames)
+0073 
+0074       <span class="comment">% check whether the target image is excluded from processing</span>
+0075       exc_flg=0;
+0076       <span class="keyword">for</span> mm=1:1:length(img_exc_prefix)
+0077         <span class="keyword">if</span> ~isempty(img_exc_prefix{mm}) &amp; strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; <span class="keyword">break</span>; <span class="keyword">end</span>
+0078       <span class="keyword">end</span>
+0079       <span class="keyword">if</span> exc_flg, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0080 
+0081       <span class="comment">% FFT and amp/phase randomization</span>
+0082       timg=imread(tmpfnames{kk});
+0083       <span class="keyword">if</span> numel(size(timg))~=3 <span class="comment">% if the target is not a RGB image</span>
+0084         img_counter=img_counter+1;
+0085 
+0086         <span class="comment">%% 2D FFT</span>
+0087         fftimg=fft2(double(timg));
+0088         fftimg=fftshift(fftimg); <span class="comment">% set DC component to the center, point symmetric</span>
+0089                                  <span class="comment">% preserve DC component to recover image mean intensity later</span>
+0090         sz=ceil(size(fftimg)./2);
+0091         DC=fftimg(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+0092 
+0093         <span class="comment">%% phase shuffling</span>
+0094         phase=angle(fftimg);
+0095         tidx=randperm(numel(fftimg));
+0096         idx1=tidx(1:round(numel(tidx)*phase_shuffle_ratio));
+0097         idx2=sort(idx1,<span class="string">'ascend'</span>);
+0098         phase(idx2)=phase(idx1);
+0099 
+0100         <span class="comment">%% amplitude shuffling</span>
+0101         amp=abs(fftimg);
+0102         tidx=randperm(numel(fftimg));
+0103         idx1=tidx(1:round(numel(tidx)*amp_shuffle_ratio));
+0104         idx2=sort(idx1,<span class="string">'ascend'</span>);
+0105         amp(idx2)=amp(idx1);
+0106 
+0107         <span class="comment">%% recreate FFT map</span>
+0108         fftimg=complex(amp.*cos(phase),amp.*sin(phase));
+0109         <span class="comment">% recover DC component</span>
+0110         fftimg(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+0111         <span class="comment">% inverse FFT</span>
+0112         img{img_counter}=uint8(ifft2(ifftshift(fftimg))); <span class="comment">% reset FFT map to raw format</span>
+0113         fnames{img_counter}=tmpfnames{kk};
+0114       <span class="keyword">else</span>
+0115         img_counter=img_counter+1;
+0116 
+0117         <span class="comment">%% 2D FFT for the first (R of the RGB) layer</span>
+0118         fftimg{1}=fft2(double(timg(:,:,1)));
+0119         fftimg{1}=fftshift(fftimg{1}); <span class="comment">% set DC component to the center, point symmetric</span>
+0120                                  <span class="comment">% preserve DC component to recover image mean intensity later</span>
+0121         sz=ceil(size(fftimg{1})./2);
+0122         DC=fftimg{1}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+0123 
+0124         <span class="comment">%% phase shuffling</span>
+0125         phase=angle(fftimg{1});
+0126         tidx_phase=randperm(numel(fftimg{1}));
+0127         idx1_phase=tidx_phase(1:round(numel(tidx_phase)*phase_shuffle_ratio));
+0128         idx2_phase=sort(idx1_phase,<span class="string">'ascend'</span>);
+0129         phase(idx2_phase)=phase(idx1_phase);
+0130 
+0131         <span class="comment">%% amplitude shuffling</span>
+0132         amp=abs(fftimg{1});
+0133         tidx_amp=randperm(numel(fftimg{1}));
+0134         idx1_amp=tidx_amp(1:round(numel(tidx_amp)*amp_shuffle_ratio));
+0135         idx2_amp=sort(idx1_amp,<span class="string">'ascend'</span>);
+0136         amp(idx2_amp)=amp(idx1_amp);
+0137 
+0138         <span class="comment">%% recreate FFT map</span>
+0139         fftimg{1}=complex(amp.*cos(phase),amp.*sin(phase));
+0140         <span class="comment">% recover DC component</span>
+0141         fftimg{1}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+0142         
+0143         <span class="comment">%% 2D FFT for the G layer</span>
+0144         fftimg{2}=fft2(double(timg(:,:,2)));
+0145         fftimg{2}=fftshift(fftimg{2}); <span class="comment">% set DC component to the center, point symmetric</span>
+0146                                  <span class="comment">% preserve DC component to recover image mean intensity later</span>
+0147         DC=fftimg{2}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+0148 
+0149         <span class="comment">%% phase shuffling</span>
+0150         phase=angle(fftimg{2});
+0151         <span class="keyword">if</span> fullrand_flg
+0152           tidx_phase=randperm(numel(fftimg{2}));
+0153           idx1_phase=tidx_phase(1:round(numel(tidx_phase)*phase_shuffle_ratio));
+0154           idx2_phase=sort(idx1_phase,<span class="string">'ascend'</span>);
+0155         <span class="keyword">end</span>
+0156         phase(idx2_phase)=phase(idx1_phase);
+0157 
+0158         <span class="comment">%% amplitude shuffling</span>
+0159         amp=abs(fftimg{2});
+0160         <span class="keyword">if</span> fullrand_flg
+0161           tidx_amp=randperm(numel(fftimg{2}));
+0162           idx1_amp=tidx_amp(1:round(numel(tidx_amp)*amp_shuffle_ratio));
+0163           idx2_amp=sort(idx1_amp,<span class="string">'ascend'</span>);
+0164         <span class="keyword">end</span>
+0165         amp(idx2_amp)=amp(idx1_amp);
+0166 
+0167         <span class="comment">%% recreate FFT map</span>
+0168         fftimg{2}=complex(amp.*cos(phase),amp.*sin(phase));
+0169         <span class="comment">% recover DC component</span>
+0170         fftimg{2}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+0171 
+0172         <span class="comment">%% 2D FFT for the B layer</span>
+0173         fftimg{3}=fft2(double(timg(:,:,3)));
+0174         fftimg{3}=fftshift(fftimg{3}); <span class="comment">% set DC component to the center, point symmetric</span>
+0175                                  <span class="comment">% preserve DC component to recover image mean intensity later</span>
+0176         DC=fftimg{3}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr);
+0177 
+0178         <span class="comment">%% phase shuffling</span>
+0179         phase=angle(fftimg{3});
+0180         <span class="keyword">if</span> fullrand_flg
+0181           tidx_phase=randperm(numel(fftimg{3}));
+0182           idx1_phase=tidx_phase(1:round(numel(tidx_phase)*phase_shuffle_ratio));
+0183           idx2_phase=sort(idx1_phase,<span class="string">'ascend'</span>);
+0184         <span class="keyword">end</span>
+0185         phase(idx2_phase)=phase(idx1_phase);
+0186 
+0187         <span class="comment">%% amplitude shuffling</span>
+0188         amp=abs(fftimg{3});
+0189         <span class="keyword">if</span> fullrand_flg
+0190           tidx_amp=randperm(numel(fftimg{3}));
+0191           idx1_amp=tidx_amp(1:round(numel(tidx_amp)*amp_shuffle_ratio));
+0192           idx2_amp=sort(idx1_amp,<span class="string">'ascend'</span>);
+0193         <span class="keyword">end</span>
+0194         amp(idx2_amp)=amp(idx1_amp);
+0195 
+0196         <span class="comment">%% recreate FFT map</span>
+0197         fftimg{3}=complex(amp.*cos(phase),amp.*sin(phase));
+0198         <span class="comment">% recover DC component</span>
+0199         fftimg{3}(sz(1)-dcr:sz(1)+dcr,sz(2)-dcr:sz(2)+dcr)=DC;
+0200 
+0201         <span class="comment">% inverse FFT</span>
+0202         tmpimg=uint8(zeros([size(fftimg{1}),3]));
+0203         warning off;
+0204         <span class="keyword">for</span> mm=1:1:3, tmpimg(:,:,mm)=uint8(ifft2(ifftshift(fftimg{mm}))); <span class="keyword">end</span>
+0205         warning on;
+0206         img{img_counter}=tmpimg; <span class="comment">% reset FFT map to raw format</span>
+0207         fnames{img_counter}=tmpfnames{kk};
+0208       <span class="keyword">end</span> <span class="comment">% if numel(size(img{img_counter}))~=3</span>
+0209 
+0210     <span class="keyword">end</span>
+0211   <span class="keyword">end</span>
+0212 <span class="keyword">end</span>
+0213 disp(<span class="string">'done.'</span>);
+0214 
+0215 <span class="comment">% displaying</span>
+0216 <span class="keyword">if</span> display_flg
+0217   fprintf(<span class="string">'displaying the converted images...'</span>);
+0218   <span class="keyword">for</span> ii=1:1:length(img)
+0219     f1=figure;
+0220     imshow(img{ii});
+0221     pause(0.2);
+0222     close(f1);
+0223   <span class="keyword">end</span>
+0224   disp(<span class="string">'done.'</span>);
+0225 <span class="keyword">end</span>
+0226 
+0227 <span class="comment">% saving the images</span>
+0228 <span class="keyword">if</span> save_flg
+0229   fprintf(<span class="string">'saving the converted images...'</span>)
+0230   <span class="keyword">for</span> ii=1:1:length(img)
+0231     [save_path,save_name,save_ext]=fileparts(fnames{ii});
+0232     imwrite(img{ii},fullfile(save_path,[save_name,save_prefix,save_ext]),strrep(save_ext,<span class="string">'.'</span>,<span class="string">''</span>));
+0233   <span class="keyword">end</span>
+0234   disp(<span class="string">'done.'</span>);
+0235 <span class="keyword">end</span>
+0236 
+0237 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

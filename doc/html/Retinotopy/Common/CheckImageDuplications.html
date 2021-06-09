@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CheckImageDuplications</title>
+  <meta name="keywords" content="CheckImageDuplications">
+  <meta name="description" content="Reads images in the target directory and detect the duplications">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>CheckImageDuplications
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Reads images in the target directory and detect the duplications</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [dupfiles,dup_idx]=CheckImageDuplications(img_dir,img_ext,one_by_one_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Reads images in the target directory and detect the duplications
+ function [dupfiles,dup_idx]=CheckImageDuplications(img_dir,:img_ext,:one_by_one_flg)
+ (: is optional)
+
+ This function reads all the images in the target directory
+ and check whether the duplicated images are included.
+
+ [input]
+ img_dir   : target directory in which images are included.
+             a relative path format in which the directory where this
+             function is called is the origin. e.g. img_dir='../imgs';
+ img_ext   : (optional) file extension of the target image files.
+             e.g. img_ext='.jpg';, empty by default.
+ one_by_one_flg : (optional) whether reading images one by one
+                  to save the memory space or reading all at once
+
+ [output]
+ dupfiles : the duplicated image file names. the first image will be
+            kept as the original and the duplicated ones will be listed.
+ dup_idx  : index of the duplicated images
+
+ [note]
+ a log file will be saved in the directory where this function is called.
+
+
+ Created    : &quot;2015-07-24 09:15:27 ban&quot;
+ Last Update: &quot;2015-07-24 11:40:04 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [dupfiles,dup_idx]=CheckImageDuplications(img_dir,img_ext,one_by_one_flg)</a>
+0002 
+0003 <span class="comment">% Reads images in the target directory and detect the duplications</span>
+0004 <span class="comment">% function [dupfiles,dup_idx]=CheckImageDuplications(img_dir,:img_ext,:one_by_one_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads all the images in the target directory</span>
+0008 <span class="comment">% and check whether the duplicated images are included.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% img_dir   : target directory in which images are included.</span>
+0012 <span class="comment">%             a relative path format in which the directory where this</span>
+0013 <span class="comment">%             function is called is the origin. e.g. img_dir='../imgs';</span>
+0014 <span class="comment">% img_ext   : (optional) file extension of the target image files.</span>
+0015 <span class="comment">%             e.g. img_ext='.jpg';, empty by default.</span>
+0016 <span class="comment">% one_by_one_flg : (optional) whether reading images one by one</span>
+0017 <span class="comment">%                  to save the memory space or reading all at once</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [output]</span>
+0020 <span class="comment">% dupfiles : the duplicated image file names. the first image will be</span>
+0021 <span class="comment">%            kept as the original and the duplicated ones will be listed.</span>
+0022 <span class="comment">% dup_idx  : index of the duplicated images</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% [note]</span>
+0025 <span class="comment">% a log file will be saved in the directory where this function is called.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Created    : &quot;2015-07-24 09:15:27 ban&quot;</span>
+0029 <span class="comment">% Last Update: &quot;2015-07-24 11:40:04 ban&quot;</span>
+0030 
+0031 <span class="comment">% check the input variables</span>
+0032 <span class="keyword">if</span> nargin&lt;1 || isempty(img_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;2 || isempty(img_ext), img_ext=<span class="string">''</span>; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;3 || isempty(one_by_one_flg), one_by_one_flg=1; <span class="keyword">end</span>
+0035 
+0036 img_dir=fullfile(pwd,img_dir);
+0037 <span class="keyword">if</span> ~exist(img_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find img_dir. check input variable.'</span>); <span class="keyword">end</span>
+0038 
+0039 <span class="comment">% log file</span>
+0040 diary(fullfile(fileparts(mfilename(<span class="string">'fullpath'</span>)),strcat(mfilename(),<span class="string">'_'</span>,datestr(date,<span class="string">'yymmdd'</span>),<span class="string">'.log'</span>)));
+0041 
+0042 <span class="comment">% processing</span>
+0043 fprintf(<span class="string">'\n'</span>);
+0044 imgfiles=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(img_dir,[<span class="string">'*'</span>,img_ext]);
+0045 dup_idx=zeros(length(imgfiles),1);
+0046 dup_counter=0;
+0047 
+0048 <span class="keyword">if</span> one_by_one_flg <span class="comment">% read images one by one to save the memory</span>
+0049 
+0050   <span class="keyword">for</span> ii=1:1:length(imgfiles)
+0051 
+0052     <span class="keyword">if</span> dup_idx(ii)~=0
+0053       <span class="keyword">continue</span>;
+0054     <span class="keyword">else</span>
+0055       dup_idx(ii)=ii;
+0056     <span class="keyword">end</span>
+0057 
+0058     <span class="comment">% read the reference image</span>
+0059     [dummy,imgfname,imgext]=fileparts(imgfiles{ii}); <span class="comment">%#ok</span>
+0060     fprintf(<span class="string">'reference    : %s%s\n'</span>,imgfname,imgext)
+0061     fref=fopen(imgfiles{ii},<span class="string">'rb'</span>);
+0062     <span class="keyword">if</span> fref==-1, error(<span class="string">'can not read the target file. check the input variable.'</span>); <span class="keyword">end</span>
+0063     r_data=fread(fref,Inf,<span class="string">'uint8'</span>)';
+0064     fclose(fref);
+0065 
+0066     unprocessed_idx=(find(dup_idx==0))';
+0067     <span class="keyword">for</span> jj=unprocessed_idx
+0068       [dummy,imgfname,imgext]=fileparts(imgfiles{jj}); <span class="comment">%#ok</span>
+0069       ftgt=fopen(imgfiles{jj},<span class="string">'rb'</span>);
+0070       <span class="keyword">if</span> ftgt==-1, error(<span class="string">'can not read the target file. check the input variable.'</span>); <span class="keyword">end</span>
+0071       t_data=fread(ftgt,Inf,<span class="string">'uint8'</span>)';
+0072       fclose(ftgt);
+0073 
+0074       <span class="keyword">if</span> numel(r_data)==numel(t_data) &amp;&amp; sum(r_data-t_data)==0
+0075         fprintf(<span class="string">'  duplicated : %s%s\n'</span>,imgfname,imgext);
+0076         dup_idx(jj)=ii;
+0077         dup_counter=dup_counter+1;
+0078         dupfiles{dup_counter}=imgfiles{jj}; <span class="comment">%#ok % get duplicated image filename</span>
+0079       <span class="keyword">end</span>
+0080     <span class="keyword">end</span> <span class="comment">% for jj=unprocessed_idx</span>
+0081 
+0082   <span class="keyword">end</span> <span class="comment">% for ii=1:1:length(imgfiles)</span>
+0083 
+0084 <span class="keyword">else</span> <span class="comment">% if one_by_one_flg % read all images at once</span>
+0085 
+0086   <span class="comment">% read all image data</span>
+0087   fprintf(<span class="string">'reading all images in the target directory...'</span>);
+0088   data=cell(length(imgfiles),1);
+0089   <span class="keyword">for</span> ii=1:1:length(imgfiles)
+0090     fimg=fopen(imgfiles{ii},<span class="string">'rb'</span>);
+0091     <span class="keyword">if</span> fimg==-1, error(<span class="string">'can not read the target file %s. check the input variable.'</span>,imgfiles{ii}); <span class="keyword">end</span>
+0092     data{ii}=fread(fimg,Inf,<span class="string">'uint8'</span>)';
+0093     fclose(fimg);
+0094   <span class="keyword">end</span>
+0095   disp(<span class="string">'done.'</span>);
+0096 
+0097   <span class="keyword">for</span> ii=1:1:length(imgfiles)
+0098 
+0099     <span class="keyword">if</span> dup_idx(ii)~=0
+0100       <span class="keyword">continue</span>;
+0101     <span class="keyword">else</span>
+0102       dup_idx(ii)=ii;
+0103     <span class="keyword">end</span>
+0104 
+0105     [dummy,imgfname,imgext]=fileparts(imgfiles{ii}); <span class="comment">%#ok</span>
+0106     fprintf(<span class="string">'reference    : %s%s\n'</span>,imgfname,imgext);
+0107 
+0108     unprocessed_idx=(find(dup_idx==0))';
+0109     <span class="keyword">for</span> jj=unprocessed_idx
+0110       <span class="keyword">if</span> numel(data{ii})==numel(data{jj}) &amp;&amp; sum(data{ii}-data{jj})==0
+0111         [dummy,imgfname,imgext]=fileparts(imgfiles{jj}); <span class="comment">%#ok</span>
+0112         fprintf(<span class="string">'  duplicated : %s%s\n'</span>,imgfname,imgext);
+0113         dup_idx(jj)=ii;
+0114         dup_counter=dup_counter+1;
+0115         dupfiles{dup_counter}=imgfiles{jj}; <span class="comment">%#ok % get duplicated image filename</span>
+0116       <span class="keyword">end</span>
+0117     <span class="keyword">end</span> <span class="comment">% for jj=unprocessed_idx</span>
+0118 
+0119   <span class="keyword">end</span> <span class="comment">% for ii=1:1:length(imgfiles)</span>
+0120 
+0121 <span class="keyword">end</span> <span class="comment">% if one_by_one_flg</span>
+0122 
+0123 diary off;
+0124 
+0125 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

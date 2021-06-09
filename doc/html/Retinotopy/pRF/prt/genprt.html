@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of genprt</title>
+  <meta name="keywords" content="genprt">
+  <meta name="description" content="% polar data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- # pRF --><!-- menu.html prt -->
+<h1>genprt
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% polar data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top"><pre class="comment">% polar data
+ total volumes: 1:8 9:1:38 39:1:68 69:1:98 99:1:128 129:1:158 159:1:188 189:196</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../Retinotopy/Common/rainbow.html" class="code" title="function map = rainbow(m)">rainbow</a>	Returns an M-by-3 marix containing a rainbow colormap.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../hb_brain.png); background-position:right top"><pre>0001 
+0002 <span class="comment">%% polar data</span>
+0003 <span class="comment">% total volumes: 1:8 9:1:38 39:1:68 69:1:98 99:1:128 129:1:158 159:1:188 189:196</span>
+0004 fix=[1,8;189,196];
+0005 stimvols=[9:1:38;39:1:68;69:1:98;99:1:128;129:1:158;159:1:188]';
+0006 colors=[round(255*<a href="../../../Retinotopy/Common/rainbow.html" class="code" title="function map = rainbow(m)">rainbow</a>(30))];
+0007 step=12; <span class="comment">%deg</span>
+0008 
+0009 <span class="comment">%% processing cw</span>
+0010 prt=BVQXfile(<span class="string">'new:prt'</span>);
+0011 
+0012 prt.Experiment=<span class="string">'Retinotopy CW'</span>;
+0013 prt.ResolutionOfTime=<span class="string">'Volumes'</span>;
+0014 prt.ReferenceFuncThick=2;
+0015 prt.NrOfConditions=31;
+0016 
+0017 prt.Cond(1).ConditionName={<span class="string">'Fix'</span>};
+0018 prt.Cond(1).NrOfOnOffsets=2;
+0019 prt.Cond(1).OnOffsets=fix;
+0020 prt.Cond(1).Weights=[1;1];
+0021 prt.Cond(1).Color=[195,195,195];
+0022 
+0023 <span class="keyword">for</span> ii=1:1:30
+0024   prt.Cond(ii+1).ConditionName={sprintf(<span class="string">'deg%03d'</span>,step*(ii-1))};
+0025   prt.Cond(ii+1).NrOfOnOffsets=6;
+0026   prt.Cond(ii+1).OnOffsets=[(stimvols(ii,:))' (stimvols(ii,:))'];
+0027   prt.Cond(ii+1).Weights=[1;1;1;1;1;1];
+0028   prt.Cond(ii+1).Color=colors(ii,:);
+0029 <span class="keyword">end</span>
+0030 
+0031 prt.SaveAs(<span class="string">'clockwise.prt'</span>);
+0032 
+0033 
+0034 <span class="comment">%% processing ccw</span>
+0035 prt=BVQXfile(<span class="string">'new:prt'</span>);
+0036 
+0037 prt.Experiment=<span class="string">'Retinotopy CCW'</span>;
+0038 prt.ResolutionOfTime=<span class="string">'Volumes'</span>;
+0039 prt.ReferenceFuncThick=2;
+0040 prt.NrOfConditions=31;
+0041 
+0042 prt.Cond(1).ConditionName={<span class="string">'Fix'</span>};
+0043 prt.Cond(1).NrOfOnOffsets=2;
+0044 prt.Cond(1).OnOffsets=fix;
+0045 prt.Cond(1).Weights=[1;1];
+0046 prt.Cond(1).Color=[195,195,195];
+0047 
+0048 <span class="keyword">for</span> ii=1:1:30
+0049   prt.Cond(ii+1).ConditionName={sprintf(<span class="string">'deg%03d'</span>,step*(30-ii))};
+0050   prt.Cond(ii+1).NrOfOnOffsets=6;
+0051   prt.Cond(ii+1).OnOffsets=[(stimvols(ii,:))' (stimvols(ii,:))'];
+0052   prt.Cond(ii+1).Weights=[1;1;1;1;1;1];
+0053   prt.Cond(ii+1).Color=colors(30-ii+1,:);
+0054 <span class="keyword">end</span>
+0055 
+0056 prt.SaveAs(<span class="string">'countercw.prt'</span>);
+0057 
+0058 
+0059 <span class="comment">%% eccentricity, expansion data</span>
+0060 <span class="comment">% total volumes: 1:8 9:1:33 34:38 39:1:63 64:68 69:1:93 94:98 99:1:123 124:128 129:1:153 154:158 159:1:183 184:188 189:196</span>
+0061 fix=[1,8;34,38;64,68;94,98;124,128;154,158;184,196];
+0062 stimvols=[9:1:33;39:1:63;69:1:93;99:1:123;129:1:153;159:1:183]';
+0063 colors=[round(255*<a href="../../../Retinotopy/Common/rainbow.html" class="code" title="function map = rainbow(m)">rainbow</a>(25))];
+0064 step=1; <span class="comment">%deg</span>
+0065 
+0066 <span class="comment">%% processing exp</span>
+0067 prt=BVQXfile(<span class="string">'new:prt'</span>);
+0068 
+0069 prt.Experiment=<span class="string">'Retinotopy EXP'</span>;
+0070 prt.ResolutionOfTime=<span class="string">'Volumes'</span>;
+0071 prt.ReferenceFuncThick=2;
+0072 prt.NrOfConditions=26;
+0073 
+0074 prt.Cond(1).ConditionName={<span class="string">'Fix'</span>};
+0075 prt.Cond(1).NrOfOnOffsets=7;
+0076 prt.Cond(1).OnOffsets=fix;
+0077 prt.Cond(1).Weights=[1;1;1;1;1;1;1];
+0078 prt.Cond(1).Color=[195,195,195];
+0079 
+0080 <span class="keyword">for</span> ii=1:1:25
+0081   prt.Cond(ii+1).ConditionName={sprintf(<span class="string">'ecc%03d'</span>,ii)};
+0082   prt.Cond(ii+1).NrOfOnOffsets=6;
+0083   prt.Cond(ii+1).OnOffsets=[(stimvols(ii,:))' (stimvols(ii,:))'];
+0084   prt.Cond(ii+1).Weights=[1;1;1;1;1;1];
+0085   prt.Cond(ii+1).Color=colors(ii,:);
+0086 <span class="keyword">end</span>
+0087 
+0088 prt.SaveAs(<span class="string">'expansion.prt'</span>);
+0089 
+0090 
+0091 <span class="comment">%% eccentricity, contraction data</span>
+0092 <span class="comment">% total volumes: 1:8 9:13 14:1:38 39:43 44:1:68 69:73 74:1:98 99:103 104:1:128 129:133 134:1:158 159:163 164:1:188 189:196</span>
+0093 fix=[1,13;39,43;69,73;99,103;129,133;159,163;189,196];
+0094 stimvols=[14:1:38;44:1:68;74:1:98;104:1:128;134:1:158;164:1:188]';
+0095 colors=[round(255*<a href="../../../Retinotopy/Common/rainbow.html" class="code" title="function map = rainbow(m)">rainbow</a>(25))];
+0096 step=1; <span class="comment">%deg</span>
+0097 
+0098 <span class="comment">%% processing exp</span>
+0099 prt=BVQXfile(<span class="string">'new:prt'</span>);
+0100 
+0101 prt.Experiment=<span class="string">'Retinotopy CONTRA'</span>;
+0102 prt.ResolutionOfTime=<span class="string">'Volumes'</span>;
+0103 prt.ReferenceFuncThick=2;
+0104 prt.NrOfConditions=26;
+0105 
+0106 prt.Cond(1).ConditionName={<span class="string">'Fix'</span>};
+0107 prt.Cond(1).NrOfOnOffsets=7;
+0108 prt.Cond(1).OnOffsets=fix;
+0109 prt.Cond(1).Weights=[1;1;1;1;1;1;1];
+0110 prt.Cond(1).Color=[195,195,195];
+0111 
+0112 <span class="keyword">for</span> ii=1:1:25
+0113   prt.Cond(ii+1).ConditionName={sprintf(<span class="string">'ecc%03d'</span>,25-ii)};
+0114   prt.Cond(ii+1).NrOfOnOffsets=6;
+0115   prt.Cond(ii+1).OnOffsets=[(stimvols(ii,:))' (stimvols(ii,:))'];
+0116   prt.Cond(ii+1).Weights=[1;1;1;1;1;1];
+0117   prt.Cond(ii+1).Color=colors(25-ii+1,:);
+0118 <span class="keyword">end</span>
+0119 
+0120 prt.SaveAs(<span class="string">'contraction.prt'</span>);</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

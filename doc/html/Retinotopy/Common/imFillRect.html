@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imFillRect</title>
+  <meta name="keywords" content="imFillRect">
+  <meta name="description" content="Fills the extended rectangular background regions of the input images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>imFillRect
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Fills the extended rectangular background regions of the input images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [img,fnames]=imFillRect(tgt_dir,outputsize,fillcolor,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Fills the extended rectangular background regions of the input images.
+ function [img,fnames]=imFillRect(tgt_dir,:outputsize,:fillcolor,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg)
+ (: is optional)
+
+ This function reads RGB images and convert them to grayscale ones.
+ If the target image is larger than the outputsize, the input image is cropped to match with the outputsize.
+
+ [input]
+ tgt_dir        : target directory that includes images you want to process.
+                  should set with a relative path format, e.g. tgt_dir='../images/image01';
+ outputsize     : the output image size, [row,col]. [640,640] by default.
+ fillcolor      : RGB or grayscale color used to fill the region. 0-255. 127 by default.
+ img_ext        : image file extension(s), cell structure or string. '.jpg' by default
+ img_inc_prefix : image file prefix(s) that is to be included in processing,
+                  cell structure or string, '*' by default.
+ img_exc_prefix : image file prefix(s) that is to be excluded from processing,
+                  cell structure or string, empty by default.
+ display_flg    : whether displaying the converted image [0|1]. 0 by default.
+ save_flg       : whether saving the converted image [0|1]. 0 by default.
+
+ [output]
+ img            : filled images, cell structure
+ fnames         : the corresponding file names that are converted.
+
+
+ Created    : &quot;2013-11-14 16:55:08 ban&quot;
+ Last Update: &quot;2013-11-22 23:24:55 ban (ban.hiroshi@gmail.com)&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>	WILDCARDSEARCH Searches the file system for files matching a wildcard</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [img,fnames]=imFillRect(tgt_dir,outputsize,fillcolor,img_ext,img_inc_prefix,img_exc_prefix,display_flg,save_flg)</a>
+0002 
+0003 <span class="comment">% Fills the extended rectangular background regions of the input images.</span>
+0004 <span class="comment">% function [img,fnames]=imFillRect(tgt_dir,:outputsize,:fillcolor,:img_ext,:img_inc_prefix,:img_exc_prefix,:display_flg,:save_flg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function reads RGB images and convert them to grayscale ones.</span>
+0008 <span class="comment">% If the target image is larger than the outputsize, the input image is cropped to match with the outputsize.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% tgt_dir        : target directory that includes images you want to process.</span>
+0012 <span class="comment">%                  should set with a relative path format, e.g. tgt_dir='../images/image01';</span>
+0013 <span class="comment">% outputsize     : the output image size, [row,col]. [640,640] by default.</span>
+0014 <span class="comment">% fillcolor      : RGB or grayscale color used to fill the region. 0-255. 127 by default.</span>
+0015 <span class="comment">% img_ext        : image file extension(s), cell structure or string. '.jpg' by default</span>
+0016 <span class="comment">% img_inc_prefix : image file prefix(s) that is to be included in processing,</span>
+0017 <span class="comment">%                  cell structure or string, '*' by default.</span>
+0018 <span class="comment">% img_exc_prefix : image file prefix(s) that is to be excluded from processing,</span>
+0019 <span class="comment">%                  cell structure or string, empty by default.</span>
+0020 <span class="comment">% display_flg    : whether displaying the converted image [0|1]. 0 by default.</span>
+0021 <span class="comment">% save_flg       : whether saving the converted image [0|1]. 0 by default.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [output]</span>
+0024 <span class="comment">% img            : filled images, cell structure</span>
+0025 <span class="comment">% fnames         : the corresponding file names that are converted.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Created    : &quot;2013-11-14 16:55:08 ban&quot;</span>
+0029 <span class="comment">% Last Update: &quot;2013-11-22 23:24:55 ban (ban.hiroshi@gmail.com)&quot;</span>
+0030 
+0031 <span class="comment">% check input variables</span>
+0032 <span class="keyword">if</span> nargin&lt;1 || isempty(tgt_dir), help(mfilename()); <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;2 || isempty(outputsize), outputsize=[640,640]; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;3 || isempty(fillcolor), fillcolor=127; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;4 || isempty(img_ext), img_ext=<span class="string">'.jpg'</span>; <span class="keyword">end</span>
+0036 <span class="keyword">if</span> nargin&lt;5 || isempty(img_inc_prefix), img_inc_prefix=<span class="string">'*'</span>; <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin&lt;6 || isempty(img_exc_prefix), img_exc_prefix=<span class="string">''</span>; <span class="keyword">end</span>
+0038 <span class="keyword">if</span> nargin&lt;7 || isempty(display_flg), display_flg=0; <span class="keyword">end</span>
+0039 <span class="keyword">if</span> nargin&lt;8 || isempty(save_flg), save_flg=0; <span class="keyword">end</span>
+0040 
+0041 <span class="keyword">if</span> ~iscell(img_ext), img_ext={img_ext}; <span class="keyword">end</span>
+0042 <span class="keyword">if</span> ~iscell(img_inc_prefix), img_inc_prefix={img_inc_prefix}; <span class="keyword">end</span>
+0043 <span class="keyword">if</span> ~iscell(img_exc_prefix), img_exc_prefix={img_exc_prefix}; <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> numel(outputsize)==1, outputsize=[outputsize,outputsize]; <span class="keyword">end</span>
+0046 
+0047 <span class="keyword">if</span> save_flg, save_prefix=<span class="string">'_fill'</span>; <span class="keyword">end</span>
+0048 
+0049 <span class="comment">% set prefix correctly</span>
+0050 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0051   <span class="keyword">if</span> ~strcmp(img_ext{ii}(1),<span class="string">'.'</span>), img_ext{ii}=[<span class="string">'.'</span>,img_ext{ii}]; <span class="keyword">end</span>
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% check target directory</span>
+0055 tgt_dir=fullfile(pwd,tgt_dir);
+0056 <span class="keyword">if</span> ~exist(tgt_dir,<span class="string">'dir'</span>), error(<span class="string">'can not find taget directory. check input variable.'</span>); <span class="keyword">end</span>
+0057 
+0058 fprintf(<span class="string">'target: %s\n'</span>,tgt_dir);
+0059 
+0060 <span class="comment">% get image files</span>
+0061 fprintf(<span class="string">'converting images...'</span>);
+0062 img=<span class="string">''</span>; fnames=<span class="string">''</span>; img_counter=0;
+0063 <span class="keyword">for</span> ii=1:1:length(img_ext)
+0064   <span class="keyword">for</span> jj=1:1:length(img_inc_prefix)
+0065     tmpfnames=<a href="wildcardsearch.html" class="code" title="function result = wildcardsearch(rootdir, searchstr, casesensitive, strict)">wildcardsearch</a>(tgt_dir,[img_inc_prefix{jj},img_ext{ii}]);
+0066     <span class="keyword">for</span> kk=1:1:length(tmpfnames)
+0067 
+0068       <span class="comment">% check whether the target image is excluded from processing</span>
+0069       exc_flg=0;
+0070       <span class="keyword">for</span> mm=1:1:length(img_exc_prefix)
+0071         <span class="keyword">if</span> ~isempty(img_exc_prefix{mm}) &amp;&amp; strfind(tmpfnames{kk},img_exc_prefix{mm}), exc_flg=1; <span class="keyword">break</span>; <span class="keyword">end</span>
+0072       <span class="keyword">end</span>
+0073       <span class="keyword">if</span> exc_flg, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0074 
+0075       <span class="comment">% convert RGB to grayscale image</span>
+0076       img_counter=img_counter+1;
+0077       img{img_counter}=imread(tmpfnames{kk});
+0078 
+0079       <span class="comment">% get image size parameters</span>
+0080       sz=size(img{img_counter});
+0081       <span class="keyword">if</span> numel(sz)==3 <span class="comment">% RGB image</span>
+0082         <span class="keyword">if</span> numel(fillcolor)==1
+0083           filling=[fillcolor,fillcolor,fillcolor];
+0084         <span class="keyword">else</span>
+0085           filling=fillcolor;
+0086         <span class="keyword">end</span>
+0087         outimg=zeros([outputsize,3]);
+0088         <span class="keyword">for</span> pp=1:1:3, outimg(:,:,pp)=filling(pp).*ones(outputsize); <span class="keyword">end</span>
+0089       <span class="keyword">else</span> <span class="comment">% grayscale</span>
+0090         <span class="keyword">if</span> numel(fillcolor)==1
+0091           filling=fillcolor;
+0092         <span class="keyword">else</span>
+0093           filling=uint8(mean(fillcolor));
+0094         <span class="keyword">end</span>
+0095         outimg=filling.*ones(outputsize);
+0096       <span class="keyword">end</span>
+0097 
+0098       <span class="comment">% filling the region</span>
+0099       sr1=max(1,round((outputsize(1)-sz(1))/2+1)); er1=min(sr1+sz(1)-1,outputsize(1));
+0100       sc1=max(1,round((outputsize(2)-sz(2))/2+1)); ec1=min(sc1+sz(2)-1,outputsize(2));
+0101       sr2=max(1,round((sz(1)-outputsize(1))/2+1)); er2=min(sr2+sz(1)-1,sr2+outputsize(1)-1);
+0102       sc2=max(1,round((sz(2)-outputsize(2))/2+1)); ec2=min(sc2+sz(2)-1,sc2+outputsize(2)-1);
+0103       outimg(sr1:er1,sc1:ec1,:)=img{img_counter}(sr2:er2,sc2:ec2,:);
+0104       img{img_counter}=uint8(outimg);
+0105 
+0106       fnames{img_counter}=tmpfnames{kk};
+0107 
+0108     <span class="keyword">end</span>
+0109   <span class="keyword">end</span>
+0110 <span class="keyword">end</span>
+0111 disp(<span class="string">'done.'</span>);
+0112 
+0113 <span class="comment">% displaying</span>
+0114 <span class="keyword">if</span> display_flg
+0115   fprintf(<span class="string">'displaying the converted images...'</span>);
+0116   <span class="keyword">for</span> ii=1:1:length(img)
+0117     figure;
+0118     imshow(img{ii});
+0119   <span class="keyword">end</span>
+0120   disp(<span class="string">'done.'</span>);
+0121 <span class="keyword">end</span>
+0122 
+0123 <span class="comment">% saving the images</span>
+0124 <span class="keyword">if</span> save_flg
+0125   fprintf(<span class="string">'saving the converted images...'</span>)
+0126   <span class="keyword">for</span> ii=1:1:length(img)
+0127     [save_path,save_name,save_ext]=fileparts(fnames{ii});
+0128     imwrite(img{ii},fullfile(save_path,[save_name,save_prefix,save_ext]),strrep(save_ext,<span class="string">'.'</span>,<span class="string">''</span>));
+0129   <span class="keyword">end</span>
+0130   disp(<span class="string">'done.'</span>);
+0131 <span class="keyword">end</span>
+0132 
+0133 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

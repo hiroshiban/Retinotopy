@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of shift</title>
+  <meta name="keywords" content="shift">
+  <meta name="description" content="Shifts 2D matrix circularly.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Common -->
+<h1>shift
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Shifts 2D matrix circularly.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function res = shift(mtx, offset) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Shifts 2D matrix circularly.
+ [RES] = shift(MTX, OFFSET)
+ 
+ Circular shift 2D matrix samples by OFFSET (a [Y,X] 2-vector),
+ such that  RES(POS) = MTX(POS-OFFSET).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mseq.html" class="code" title="function ms=mseq(baseVal,powerVal,shift,whichSeq,balance_flag,user_taps)">mseq</a>	Generates maximum-length sequence(s).</li><li><a href="test_mseq.html" class="code" title="">test_mseq</a>	compare auto-correlations between M-sequnce & MT19937's rondom array</li><li><a href="../../Retinotopy/Presentation/cmultifocal.html" class="code" title="function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with checker-patch luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/cmultifocal_fixtask.html" class="code" title="function cmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">cmultifocal_fixtask</a>	Color/luminance-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal.html" class="code" title="function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with checker-patch depth change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/dmultifocal_fixtask.html" class="code" title="function dmultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dmultifocal_fixtask</a>	Random-Dot-Stereogram(RDS)-defined multi-focal retinotopy checkerboard stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/gen_multifocal_windows.html" class="code" title="function stim_windows=gen_multifocal_windows(subjID,exp_mode,acq,displayfile,stimulusfile,overwrite_pix_per_deg,TR)">gen_multifocal_windows</a>	Generates multi-focal retinotopy stimulus windows for GLM modeling or pRF (population receptive field) analysis.</li><li><a href="../../Retinotopy/Presentation/imultifocal_fixtask.html" class="code" title="function imultifocal_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">imultifocal_fixtask</a>	Object-image-defined multi-focal retinotopy stimulus with fixation luminance change-detection tasks.</li><li><a href="../../Retinotopy/Presentation/subjects/2d/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/3d/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/3d_fhd/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/HB/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/HNW/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/S001/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/XXX/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/_DEFAULT_/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/meg/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/subj_01/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li><li><a href="../../Retinotopy/Presentation/subjects/test/c_multifocal.html" class="code" title="">c_multifocal</a>	************************************************************</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function res = shift(mtx, offset)</a>
+0002 
+0003 <span class="comment">% Shifts 2D matrix circularly.</span>
+0004 <span class="comment">% [RES] = shift(MTX, OFFSET)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Circular shift 2D matrix samples by OFFSET (a [Y,X] 2-vector),</span>
+0007 <span class="comment">% such that  RES(POS) = MTX(POS-OFFSET).</span>
+0008 
+0009 dims = size(mtx);
+0010 
+0011 offset = mod(-offset,dims);
+0012 
+0013 res = [ mtx(offset(1)+1:dims(1), offset(2)+1:dims(2)),  <span class="keyword">...</span>
+0014           mtx(offset(1)+1:dims(1), 1:offset(2));        <span class="keyword">...</span>
+0015         mtx(1:offset(1), offset(2)+1:dims(2)),          <span class="keyword">...</span>
+0016       mtx(1:offset(1), 1:offset(2)) ];
+0017 
+0018 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

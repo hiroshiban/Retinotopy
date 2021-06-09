@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CreateWedgeMask</title>
+  <meta name="keywords" content="CreateWedgeMask">
+  <meta name="description" content="Creates a wedge-shaped mask with 0 &amp; 1 values.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- menu.html Generation -->
+<h1>CreateWedgeMask
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Creates a wedge-shaped mask with 0 &amp; 1 values.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtwidth,start_angle,pix_per_deg) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre class="comment"> Creates a wedge-shaped mask with 0 &amp; 1 values.
+ function mask=CreateWedgeMask(:rmin,:rmax,:tgtmin,:tgtmax,:tgtrad,:start_angle,:pix_per_deg)
+ (: is optional)
+
+ This function creates a wedge-shaped mask. The generated mask will be useful to hide specific region
+ of the checkerboard etc.
+
+ [input]
+ rmin        : mask's minimum radius in deg, [val]
+ rmax        : mask's maximum radius in deg, [val]
+ tgtmin      : minimum deg of the region to be maskd, [val]
+ tgtmax      : maximum deg of the region to be maskd, [val]
+ tgtwidth    : width of the annulus in deg, [val]
+ startangle  : checker board start angle, from right horizontal meridian, clockwise
+               *** multiple start angles are acceptable ***
+               e.g. [0,12,24,36,...]
+ pix_per_deg : pixels per degree, [val]
+
+ [output]
+ mask        : mask image with 0 &amp; 1, 2 cell structure, asis and its compensating
+
+
+ Created    : &quot;2009-07-24 12:20:15 ban&quot;
+ Last Update: &quot;2018-12-11 18:15:31 ban&quot;</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Retinotopy/Presentation/clocalizer.html" class="code" title="function clocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer</a>	Color/luminance-defined checkerboard stimulus with checkerboard luminance change detection tasks, for localizing specific retinotopic (eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/clocalizer_fixtask.html" class="code" title="function clocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">clocalizer_fixtask</a>	Color/luminance-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer.html" class="code" title="function dlocalizer(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with checker-patch depth change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/dlocalizer_fixtask.html" class="code" title="function dlocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">dlocalizer_fixtask</a>	Random-Dot-Stereogram(RDS)-defined checkerboard stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li><li><a href="../../Retinotopy/Presentation/ilocalizer_fixtask.html" class="code" title="function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite_flg,force_proceed_flag)">ilocalizer_fixtask</a>	Object-image-defined annulus stimulus with central-fixation luminance change detection tasks, for localizing specific retinotopic (iso-eccentricity) regions.</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../hb_brain.png); background-position:right top"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mask=CreateWedgeMask(rmin,rmax,tgtmin,tgtmax,tgtwidth,start_angle,pix_per_deg)</a>
+0002 
+0003 <span class="comment">% Creates a wedge-shaped mask with 0 &amp; 1 values.</span>
+0004 <span class="comment">% function mask=CreateWedgeMask(:rmin,:rmax,:tgtmin,:tgtmax,:tgtrad,:start_angle,:pix_per_deg)</span>
+0005 <span class="comment">% (: is optional)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function creates a wedge-shaped mask. The generated mask will be useful to hide specific region</span>
+0008 <span class="comment">% of the checkerboard etc.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [input]</span>
+0011 <span class="comment">% rmin        : mask's minimum radius in deg, [val]</span>
+0012 <span class="comment">% rmax        : mask's maximum radius in deg, [val]</span>
+0013 <span class="comment">% tgtmin      : minimum deg of the region to be maskd, [val]</span>
+0014 <span class="comment">% tgtmax      : maximum deg of the region to be maskd, [val]</span>
+0015 <span class="comment">% tgtwidth    : width of the annulus in deg, [val]</span>
+0016 <span class="comment">% startangle  : checker board start angle, from right horizontal meridian, clockwise</span>
+0017 <span class="comment">%               *** multiple start angles are acceptable ***</span>
+0018 <span class="comment">%               e.g. [0,12,24,36,...]</span>
+0019 <span class="comment">% pix_per_deg : pixels per degree, [val]</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% [output]</span>
+0022 <span class="comment">% mask        : mask image with 0 &amp; 1, 2 cell structure, asis and its compensating</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Created    : &quot;2009-07-24 12:20:15 ban&quot;</span>
+0026 <span class="comment">% Last Update: &quot;2018-12-11 18:15:31 ban&quot;</span>
+0027 
+0028 <span class="comment">% check the input variables</span>
+0029 <span class="keyword">if</span> nargin&lt;1 || isempty(rmin), rmin=0.0; <span class="keyword">end</span>
+0030 <span class="keyword">if</span> nargin&lt;2 || isempty(rmax), rmax=8.0; <span class="keyword">end</span>
+0031 <span class="keyword">if</span> nargin&lt;3 || isempty(tgtmin), tgtmin=2.0; <span class="keyword">end</span>
+0032 <span class="keyword">if</span> nargin&lt;4 || isempty(tgtmax), tgtmax=4.0; <span class="keyword">end</span>
+0033 <span class="keyword">if</span> nargin&lt;5 || isempty(tgtwidth), tgtwidth=360; <span class="keyword">end</span>
+0034 <span class="keyword">if</span> nargin&lt;6 || isempty(start_angle), start_angle=0; <span class="keyword">end</span>
+0035 <span class="keyword">if</span> nargin&lt;7 || isempty(pix_per_deg), pix_per_deg=40; <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% convert deg to pixels</span>
+0038 rmin=rmin*pix_per_deg;
+0039 rmax=rmax*pix_per_deg;
+0040 tgtmin=tgtmin*pix_per_deg;
+0041 tgtmax=tgtmax*pix_per_deg;
+0042 
+0043 <span class="comment">% convert deg to radians</span>
+0044 start_angle=mod(start_angle*pi/180,2*pi);
+0045 tgtwidth=tgtwidth*pi/180;
+0046 
+0047 <span class="comment">% add small lim in checkerboard image, this is to avoid unwanted juggy edges</span>
+0048 imsize_ratio=1.01;
+0049 
+0050 <span class="comment">%% processing</span>
+0051 
+0052 <span class="comment">% base xy distance field</span>
+0053 [xx,yy]=meshgrid((0:1:imsize_ratio*2*rmax)-imsize_ratio*rmax,(0:1:imsize_ratio*2*rmax)-imsize_ratio*rmax);
+0054 <span class="comment">%if mod(size(xx,1),2), xx=xx(1:end-1,:); yy=yy(1:end-1,:); end</span>
+0055 <span class="comment">%if mod(size(xx,2),2), xx=xx(:,1:end-1); yy=yy(:,1:end-1); end</span>
+0056 
+0057 <span class="comment">% convert distance field to radians and degree fields</span>
+0058 rfield=sqrt(xx.^2+yy.^2);
+0059 thetafield=mod(atan2(yy,xx),2*pi);
+0060 
+0061 <span class="comment">% get index of the mask field</span>
+0062 minlim=start_angle;
+0063 maxlim=mod(start_angle+tgtwidth,2*pi);
+0064 <span class="keyword">if</span> minlim==maxlim <span class="comment">% whole annulus</span>
+0065   tgtidx=find( rfield&gt;tgtmin &amp; rfield&lt;tgtmax );
+0066 <span class="keyword">elseif</span> minlim&gt;maxlim
+0067   tgtidx=find( (rfield&gt;tgtmin &amp; rfield&lt;tgtmax) &amp; ( (minlim&lt;=thetafield &amp; thetafield&lt;2*pi) | (0&lt;=thetafield &amp; thetafield&lt;=maxlim) ) );
+0068 <span class="keyword">else</span>
+0069   tgtidx=find( (rfield&gt;tgtmin &amp; rfield&lt;tgtmax) &amp; ( (minlim&lt;=thetafield) &amp; (thetafield&lt;=maxlim) ) );
+0070 <span class="keyword">end</span>
+0071 
+0072 mask{1}=zeros(size(xx)); mask{1}(tgtidx)=1;
+0073 mask{2}=1-mask{1};
+0074 
+0075 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>

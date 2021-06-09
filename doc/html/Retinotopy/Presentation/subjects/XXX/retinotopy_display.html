@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of retinotopy_display</title>
+  <meta name="keywords" content="retinotopy_display">
+  <meta name="description" content="************************************************************">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- # Retinotopy --><!-- ../../menu.html Presentation --><!-- # subjects --><!-- menu.html XXX -->
+<h1>retinotopy_display
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>************************************************************</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top"><pre class="comment"> ************************************************************
+ This is the display configuration file for the retinotopy stimuli
+ Programmed by Hiroshi Ban Nov 01 2013
+ ************************************************************</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top">
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../../hb_brain.png); background-position:right top"><pre>0001 <span class="comment">% ************************************************************</span>
+0002 <span class="comment">% This is the display configuration file for the retinotopy stimuli</span>
+0003 <span class="comment">% Programmed by Hiroshi Ban Nov 01 2013</span>
+0004 <span class="comment">% ************************************************************</span>
+0005 
+0006 <span class="comment">% display mode, one of &quot;mono&quot;, &quot;dual&quot;, &quot;dualcross&quot;, &quot;dualparallel&quot;, &quot;cross&quot;, &quot;parallel&quot;, &quot;redgreen&quot;, &quot;greenred&quot;,</span>
+0007 <span class="comment">% &quot;redblue&quot;, &quot;bluered&quot;, &quot;shutter&quot;, &quot;topbottom&quot;, &quot;bottomtop&quot;, &quot;interleavedline&quot;, &quot;interleavedcolumn&quot;, &quot;propixxmono&quot;, &quot;propixxstereo&quot;</span>
+0008 dparam.ExpMode=<span class="string">'mono'</span>;<span class="comment">%'dualparallel';%'mono';</span>
+0009 
+0010 dparam.scrID=1; <span class="comment">% screen ID, generally 0 for a single display setup, 1 for dual display setup</span>
+0011 
+0012 <span class="comment">% a method to start stimulus presentation</span>
+0013 <span class="comment">% 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),</span>
+0014 <span class="comment">% 3:waiting for a MR trigger pulse (BUIC) -- checking onset of pin #11 of the parallel port</span>
+0015 <span class="comment">% or 4:custom key trigger (wait for a key input that you specify as tgt_key).</span>
+0016 dparam.start_method=4;
+0017 
+0018 <span class="comment">% a pseudo trigger key from the MR scanner when it starts, valid only when dparam.start_method=4;</span>
+0019 dparam.custom_trigger=KbName(84);
+0020 
+0021 <span class="comment">% keyboard settings</span>
+0022 dparam.Key1=82; <span class="comment">% key 1 'r'</span>
+0023 dparam.Key2=71; <span class="comment">% key 2 'g'</span>
+0024 
+0025 <span class="comment">% screen settings</span>
+0026 
+0027 <span class="comment">%%% whether displaying the stimuli in full-screen mode or</span>
+0028 <span class="comment">%%% as is (the precise resolution), 'true' or 'false' (true)</span>
+0029 dparam.fullscr=false;
+0030 
+0031 <span class="comment">%%% the resolution of the screen height</span>
+0032 dparam.ScrHeight=1024;
+0033 
+0034 <span class="comment">%% the resolution of the screen width</span>
+0035 dparam.ScrWidth=1280;
+0036 
+0037 <span class="comment">% whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.</span>
+0038 <span class="comment">% if non zero, the value is used as the screen frame rate.</span>
+0039 dparam.force_frame_rate=60;
+0040 
+0041 <span class="comment">% whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped</span>
+0042 dparam.skip_sync_test=0;</pre></div>
+<hr><address>Generated on Wed 09-Jun-2021 14:56:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+</body>
+</html>
