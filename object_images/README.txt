@@ -2,8 +2,12 @@
 README.txt on object image database in this directory
 
 Created    : "2019-04-03 15:30:17 ban"
-Last Update: "2019-05-24 13:32:35 ban"
+Last Update: "2021-06-13 16:16:31 ban"
 **************************************************
+
+The object image database is compressed and split to 6 files due to the GitHub file size limitation.
+Before using the script, please combine object_image_database.7z.001 - 007 with 7-zip.
+
 
 The object images used in this function (stored in ~/Retinotopy/object_images/ as object_image_database.mat) are
 obtained and modified from the databases publicly available from http://konklab.fas.harvard.edu/#

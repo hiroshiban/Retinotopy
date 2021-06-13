@@ -3,7 +3,7 @@ README on the "Retinotopy" stimulus package
 
 
 Created    : "2013-11-25 10:25:05 ban"
-Last Update: "2021-06-09 14:52:10 ban"
+Last Update: "2021-06-13 16:17:16 ban"
 **********************************************************************
 
 ======================================================================
@@ -222,6 +222,9 @@ For more details, please see the comment lines of retinotopy.m and ~/Retinotopy/
 ======================================================================
 About the object image databases used in the Retinotopy package
 ======================================================================
+
+The object image database (~/Retinotopy/object_images) is compressed and split to 6 files due to the GitHub file size limitation.
+Before using the script, please combine object_image_database.7z.001 - 007 with 7-zip.
 
 The object images stored in the object_image_database.mat and used in i* retinotopy stimuli are obtained and modified from the databases publicly available from
 http://konklab.fas.harvard.edu/#
