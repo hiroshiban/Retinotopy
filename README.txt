@@ -1,3 +1,7 @@
+THE FULL MarkDown VERSION OF README IS COMING SOON.
+
+
+
 **********************************************************************
 README on the "Retinotopy" stimulus package
 
