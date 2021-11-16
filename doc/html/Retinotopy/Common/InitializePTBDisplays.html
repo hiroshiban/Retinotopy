@@ -57,7 +57,12 @@
              &quot;propixxmono&quot;, &quot;propixxstereo&quot;, &quot;3Dpixx&quot;.
              &quot;mono&quot; by default.
  bgcolor   : background color, [r,g,b]. [127,127,127] by default.
- flipping  : whther flipping displays, 0:none, 1:horizontal, 2:vertical, 3:horizontal &amp; vertical. 0 by default.
+ flipping  : whether flipping displays, 0:none, 1:horizontal, 2:vertical,
+             3: both horizontal &amp; vertical,
+             4: horizontal only for the left view (the first) display,
+             5: horizontal only for the right view (the second) display.
+             The 4th and 5th options are for some half-mirror-type stereo displays.
+             0 by default.
  rgb_gains : RGB phosphor gains, [2(left/right)x3(r,g,b)] matrix. [1,1,1;1,1,1] by default.
              if empty, the default parameters will be set. For details, see the codes below.
  custom_scrIDs : scrIDs you want to force to use in displaying stimuli. [ID] or [ID(left-eye),ID(righteye)].
@@ -81,7 +86,7 @@
 
 
  Created : Feb 04 2010 Hiroshi Ban
- Last Update: &quot;2021-06-03 16:46:25 ban&quot;</pre></div>
+ Last Update: &quot;2021-08-03 14:05:20 ban&quot;</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
@@ -131,266 +136,275 @@ This function is called by:
 0031 <span class="comment">%             &quot;propixxmono&quot;, &quot;propixxstereo&quot;, &quot;3Dpixx&quot;.</span>
 0032 <span class="comment">%             &quot;mono&quot; by default.</span>
 0033 <span class="comment">% bgcolor   : background color, [r,g,b]. [127,127,127] by default.</span>
-0034 <span class="comment">% flipping  : whther flipping displays, 0:none, 1:horizontal, 2:vertical, 3:horizontal &amp; vertical. 0 by default.</span>
-0035 <span class="comment">% rgb_gains : RGB phosphor gains, [2(left/right)x3(r,g,b)] matrix. [1,1,1;1,1,1] by default.</span>
-0036 <span class="comment">%             if empty, the default parameters will be set. For details, see the codes below.</span>
-0037 <span class="comment">% custom_scrIDs : scrIDs you want to force to use in displaying stimuli. [ID] or [ID(left-eye),ID(righteye)].</span>
-0038 <span class="comment">%                 if empty, default value(s) (dependes on the display mode) will be applied. empty by default.</span>
-0039 <span class="comment">%</span>
-0040 <span class="comment">% [output]</span>
-0041 <span class="comment">% winPtr         : target window pointer</span>
-0042 <span class="comment">% winRect        : target window screen rect</span>
-0043 <span class="comment">% nScr           : the number of screens to be used for the presentation</span>
-0044 <span class="comment">% fps            : screen refresh rate (the number of screen flips per second)</span>
-0045 <span class="comment">% ifi            : inter flip interval in sec</span>
-0046 <span class="comment">% initDisplay_OK : if 1, the initialization is done correctly [0/1]</span>
-0047 <span class="comment">%</span>
-0048 <span class="comment">% [note]</span>
-0049 <span class="comment">% PTB screens should be initialized</span>
-0050 <span class="comment">% 1. depending on the number of displays you use (0, 1, 2, and/or 3).</span>
-0051 <span class="comment">% 2. depending on whether the experiment is conducted with Haploscope or in fMRI scanner.</span>
-0052 <span class="comment">% for details, please type,</span>
-0053 <span class="comment">% &gt;&gt; help Screen</span>
-0054 <span class="comment">% on MATLAB command window.</span>
-0055 <span class="comment">%</span>
-0056 <span class="comment">%</span>
-0057 <span class="comment">% Created : Feb 04 2010 Hiroshi Ban</span>
-0058 <span class="comment">% Last Update: &quot;2021-06-03 16:46:25 ban&quot;</span>
-0059 
-0060 <span class="comment">% initialize</span>
-0061 winPtr=[];
-0062 winRect=[];
-0063 nScr=2; <span class="comment">% use two screens by default, but if disp_mode=='mono', it will turn to 1.</span>
+0034 <span class="comment">% flipping  : whether flipping displays, 0:none, 1:horizontal, 2:vertical,</span>
+0035 <span class="comment">%             3: both horizontal &amp; vertical,</span>
+0036 <span class="comment">%             4: horizontal only for the left view (the first) display,</span>
+0037 <span class="comment">%             5: horizontal only for the right view (the second) display.</span>
+0038 <span class="comment">%             The 4th and 5th options are for some half-mirror-type stereo displays.</span>
+0039 <span class="comment">%             0 by default.</span>
+0040 <span class="comment">% rgb_gains : RGB phosphor gains, [2(left/right)x3(r,g,b)] matrix. [1,1,1;1,1,1] by default.</span>
+0041 <span class="comment">%             if empty, the default parameters will be set. For details, see the codes below.</span>
+0042 <span class="comment">% custom_scrIDs : scrIDs you want to force to use in displaying stimuli. [ID] or [ID(left-eye),ID(righteye)].</span>
+0043 <span class="comment">%                 if empty, default value(s) (dependes on the display mode) will be applied. empty by default.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% [output]</span>
+0046 <span class="comment">% winPtr         : target window pointer</span>
+0047 <span class="comment">% winRect        : target window screen rect</span>
+0048 <span class="comment">% nScr           : the number of screens to be used for the presentation</span>
+0049 <span class="comment">% fps            : screen refresh rate (the number of screen flips per second)</span>
+0050 <span class="comment">% ifi            : inter flip interval in sec</span>
+0051 <span class="comment">% initDisplay_OK : if 1, the initialization is done correctly [0/1]</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">% [note]</span>
+0054 <span class="comment">% PTB screens should be initialized</span>
+0055 <span class="comment">% 1. depending on the number of displays you use (0, 1, 2, and/or 3).</span>
+0056 <span class="comment">% 2. depending on whether the experiment is conducted with Haploscope or in fMRI scanner.</span>
+0057 <span class="comment">% for details, please type,</span>
+0058 <span class="comment">% &gt;&gt; help Screen</span>
+0059 <span class="comment">% on MATLAB command window.</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% Created : Feb 04 2010 Hiroshi Ban</span>
+0063 <span class="comment">% Last Update: &quot;2021-08-03 14:05:20 ban&quot;</span>
 0064 
-0065 <span class="comment">% check input variables</span>
-0066 <span class="keyword">if</span> nargin&lt;1 || isempty(disp_mode), disp_mode=<span class="string">'mono'</span>; <span class="keyword">end</span>
-0067 <span class="keyword">if</span> nargin&lt;2 || isempty(bgcolor), bgcolor=[127,127,127]; <span class="keyword">end</span>
-0068 <span class="keyword">if</span> nargin&lt;3 || isempty(flipping), flipping=0; <span class="keyword">end</span>
-0069 <span class="keyword">if</span> nargin&lt;4 || isempty(rgb_gains)
-0070   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'redgreen'</span>)
-0071     rgb_gains(1,:)=[1.0,0.0,0.0];
-0072     rgb_gains(2,:)=[0.0,1.0,0.0];<span class="comment">%[0.0,0.6,0.0];</span>
-0073   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'greenred'</span>)
-0074     rgb_gains(1,:)=[0.0,1.0,0.0];<span class="comment">%[0.0,0.6,0.0];</span>
-0075     rgb_gains(2,:)=[1.0,0.0,0.0];
-0076   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'redblue'</span>)
-0077     rgb_gains(1,:)=[0.4,0.0,0.0];
-0078     rgb_gains(2,:)=[0.0,0.2,0.7];
-0079   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'bluered'</span>)
-0080     rgb_gains(1,:)=[0.0,0.2,0.7];
-0081     rgb_gains(2,:)=[0.4,0.0,0.0];
-0082   <span class="keyword">else</span> <span class="comment">% red green by default.</span>
-0083     rgb_gains(1,:)=[1.0,0.0,0.0];
-0084     rgb_gains(2,:)=[0.0,1.0,0.0];
-0085   <span class="keyword">end</span>
-0086 <span class="keyword">end</span>
-0087 <span class="keyword">if</span> nargin&lt;5, custom_scrIDs=[]; <span class="keyword">end</span>
-0088 
-0089 <span class="keyword">if</span> numel(bgcolor)==1, bgcolor=[bgcolor,bgcolor,bgcolor]; <span class="keyword">end</span>
-0090 <span class="keyword">if</span> ~isempty(rgb_gains) &amp;&amp; size(rgb_gains,2)==1, rgb_gains=[rgb_gains,rgb_gains,rgb_gains]; <span class="keyword">end</span>
-0091 <span class="keyword">if</span> ~isempty(rgb_gains) &amp;&amp; size(rgb_gains,1)==1, rgb_gains=[rgb_gains;rgb_gains]; <span class="keyword">end</span>
-0092 
-0093 <span class="comment">% check OS (Windows or the others)</span>
-0094 is_windows=false;
-0095 winstr=mexext(); winstr=winstr(end-2:end);
-0096 <span class="keyword">if</span> strcmpi(winstr,<span class="string">'w32'</span>) || strcmpi(winstr,<span class="string">'w64'</span>), is_windows=true; <span class="keyword">end</span>
+0065 <span class="comment">% initialize</span>
+0066 winPtr=[];
+0067 winRect=[];
+0068 nScr=2; <span class="comment">% use two screens by default, but if disp_mode=='mono', it will turn to 1.</span>
+0069 
+0070 <span class="comment">% check input variables</span>
+0071 <span class="keyword">if</span> nargin&lt;1 || isempty(disp_mode), disp_mode=<span class="string">'mono'</span>; <span class="keyword">end</span>
+0072 <span class="keyword">if</span> nargin&lt;2 || isempty(bgcolor), bgcolor=[127,127,127]; <span class="keyword">end</span>
+0073 <span class="keyword">if</span> nargin&lt;3 || isempty(flipping), flipping=0; <span class="keyword">end</span>
+0074 <span class="keyword">if</span> nargin&lt;4 || isempty(rgb_gains)
+0075   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'redgreen'</span>)
+0076     rgb_gains(1,:)=[1.0,0.0,0.0];
+0077     rgb_gains(2,:)=[0.0,1.0,0.0];<span class="comment">%[0.0,0.6,0.0];</span>
+0078   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'greenred'</span>)
+0079     rgb_gains(1,:)=[0.0,1.0,0.0];<span class="comment">%[0.0,0.6,0.0];</span>
+0080     rgb_gains(2,:)=[1.0,0.0,0.0];
+0081   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'redblue'</span>)
+0082     rgb_gains(1,:)=[0.4,0.0,0.0];
+0083     rgb_gains(2,:)=[0.0,0.2,0.7];
+0084   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'bluered'</span>)
+0085     rgb_gains(1,:)=[0.0,0.2,0.7];
+0086     rgb_gains(2,:)=[0.4,0.0,0.0];
+0087   <span class="keyword">else</span> <span class="comment">% red green by default.</span>
+0088     rgb_gains(1,:)=[1.0,0.0,0.0];
+0089     rgb_gains(2,:)=[0.0,1.0,0.0];
+0090   <span class="keyword">end</span>
+0091 <span class="keyword">end</span>
+0092 <span class="keyword">if</span> nargin&lt;5, custom_scrIDs=[]; <span class="keyword">end</span>
+0093 
+0094 <span class="keyword">if</span> numel(bgcolor)==1, bgcolor=[bgcolor,bgcolor,bgcolor]; <span class="keyword">end</span>
+0095 <span class="keyword">if</span> ~isempty(rgb_gains) &amp;&amp; size(rgb_gains,2)==1, rgb_gains=[rgb_gains,rgb_gains,rgb_gains]; <span class="keyword">end</span>
+0096 <span class="keyword">if</span> ~isempty(rgb_gains) &amp;&amp; size(rgb_gains,1)==1, rgb_gains=[rgb_gains;rgb_gains]; <span class="keyword">end</span>
 0097 
-0098 <span class="keyword">try</span>
-0099 
-0100   <span class="comment">% assign display mode (stereomode)</span>
-0101   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'mono'</span>) || strcmpi(disp_mode,<span class="string">'propixxmono'</span>)
-0102     display_mode=0; <span class="comment">% mono display, no stereo at all.</span>
-0103   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
-0104     display_mode=10; <span class="comment">% dual display mode (especially for Mac with Matrox DualHead setups)</span>
-0105   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'dualcross'</span>)
-0106     display_mode=5; <span class="comment">% dual displays + free cross fusion (lefteye=right, righteye=left)</span>
-0107   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'dualparallel'</span>)
-0108     display_mode=4; <span class="comment">% dual displays + free parallel fusion (lefteye=left, righteye=right)</span>
-0109   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'cross'</span>)
-0110     display_mode=5; <span class="comment">% free cross fusion (lefteye=right, righteye=left)</span>
-0111   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'parallel'</span>)
-0112     display_mode=4; <span class="comment">% free parallel fusion (lefteye=left, righteye=right)</span>
-0113   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'redgreen'</span>)
-0114     display_mode=6; <span class="comment">% stereo view with red/green glasses</span>
-0115   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'greenred'</span>)
-0116     display_mode=7; <span class="comment">% stereo view with green/red glasses</span>
-0117   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'redblue'</span>)
-0118     display_mode=8; <span class="comment">% stereo view with red/blue glasses</span>
-0119   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'bluered'</span>)
-0120     display_mode=9; <span class="comment">% stereo view with blue/red glasses</span>
-0121   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'shutter'</span>) || strcmpi(disp_mode,<span class="string">'propixxstereo'</span>)
-0122     display_mode=1; <span class="comment">% flip frame stereo (temporally interleaved), need shutter glasses</span>
-0123   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'topbottom'</span>)
-0124     display_mode=2; <span class="comment">% top/bottom image stereo with left=top</span>
-0125   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'bottomtop'</span>)
-0126     display_mode=3; <span class="comment">% top/bottom image stereo with left=bottom</span>
-0127   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'interleavedline'</span>)
-0128     display_mode=100; <span class="comment">% interleaved line stereo: left=even scanlines, right=odd scanlines</span>
-0129   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'interleavedcolumn'</span>)
-0130     display_mode=101; <span class="comment">% interleaved column stereo: left=even columns, right=odd columns</span>
-0131   <span class="keyword">else</span>
-0132     error(<span class="string">'disp_mode is not valid. check input variable.'</span>);
-0133   <span class="keyword">end</span>
-0134 
-0135   <span class="comment">% set window ID</span>
-0136   scrID1=max(Screen(<span class="string">'Screens'</span>));
-0137 
-0138   <span class="comment">% Windows-Hack: If mode 4 or 5 is requested, we select screen zero as target screen: This will open a window</span>
-0139   <span class="comment">% that spans multiple monitors on multi-display setups, which is usually what one wants for this mode.</span>
-0140   <span class="keyword">if</span> is_windows &amp;&amp; ( strcmpi(disp_mode,<span class="string">'dualcross'</span>) || strcmpi(disp_mode,<span class="string">'dualparallel'</span>) )
-0141     <span class="keyword">if</span> numel(Screen(<span class="string">'Screens'</span>))&gt;1
-0142       scrID1=1;
-0143     <span class="keyword">else</span>
-0144       scrID1=0;
-0145     <span class="keyword">end</span>
-0146   <span class="keyword">end</span>
-0147 
-0148   <span class="comment">% check whether the computer is connected to two displays</span>
-0149   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
-0150     <span class="keyword">if</span> length(Screen(<span class="string">'Screens'</span>))&lt;2
-0151       warning(<span class="string">'Not enough displays. Using screen 0 alone.'</span>);
-0152       disp_mode=<span class="string">'mono'</span>;
-0153     <span class="keyword">end</span>
-0154   <span class="keyword">end</span>
-0155 
-0156   <span class="comment">% setup the OS-dependent screen ID for dual display mode</span>
-0157   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
-0158     <span class="keyword">if</span> is_windows
-0159       scrID1=1;
-0160     <span class="keyword">else</span>
-0161       scrID1=0;
-0162     <span class="keyword">end</span>
-0163   <span class="keyword">end</span>
-0164 
-0165   <span class="comment">% override the screen ID if it is specified</span>
-0166   <span class="keyword">if</span> ~isempty(custom_scrIDs), scrID1=custom_scrIDs(1); <span class="keyword">end</span>
-0167 
-0168   <span class="comment">% set the number of screens</span>
-0169   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'mono'</span>), nScr=1; <span class="keyword">end</span>
-0170 
-0171   <span class="comment">% Open double-buffered onscreen window with the requested display mode,</span>
-0172   <span class="comment">% setup imaging pipeline for additional on-the-fly processing:</span>
-0173 
-0174   <span class="comment">% prep PTB PsychImaging configuration</span>
-0175   PsychImaging(<span class="string">'PrepareConfiguration'</span>);
-0176 
-0177   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'propixxmono'</span>) || strcmpi(disp_mode,<span class="string">'propixxstereo'</span>)
-0178     <span class="comment">% Tell PTB we want to display on a DataPixx device:</span>
-0179     PsychImaging(<span class="string">'AddTask'</span>, <span class="string">'General'</span>, <span class="string">'UseDataPixx'</span>);
-0180     Datapixx(<span class="string">'Open'</span>);
+0098 <span class="comment">% check OS (Windows or the others)</span>
+0099 is_windows=false;
+0100 winstr=mexext(); winstr=winstr(end-2:end);
+0101 <span class="keyword">if</span> strcmpi(winstr,<span class="string">'w32'</span>) || strcmpi(winstr,<span class="string">'w64'</span>), is_windows=true; <span class="keyword">end</span>
+0102 
+0103 <span class="keyword">try</span>
+0104 
+0105   <span class="comment">% assign display mode (stereomode)</span>
+0106   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'mono'</span>) || strcmpi(disp_mode,<span class="string">'propixxmono'</span>)
+0107     display_mode=0; <span class="comment">% mono display, no stereo at all.</span>
+0108   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
+0109     display_mode=10; <span class="comment">% dual display mode (especially for Mac with Matrox DualHead setups)</span>
+0110   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'dualcross'</span>)
+0111     display_mode=5; <span class="comment">% dual displays + free cross fusion (lefteye=right, righteye=left)</span>
+0112   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'dualparallel'</span>)
+0113     display_mode=4; <span class="comment">% dual displays + free parallel fusion (lefteye=left, righteye=right)</span>
+0114   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'cross'</span>)
+0115     display_mode=5; <span class="comment">% free cross fusion (lefteye=right, righteye=left)</span>
+0116   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'parallel'</span>)
+0117     display_mode=4; <span class="comment">% free parallel fusion (lefteye=left, righteye=right)</span>
+0118   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'redgreen'</span>)
+0119     display_mode=6; <span class="comment">% stereo view with red/green glasses</span>
+0120   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'greenred'</span>)
+0121     display_mode=7; <span class="comment">% stereo view with green/red glasses</span>
+0122   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'redblue'</span>)
+0123     display_mode=8; <span class="comment">% stereo view with red/blue glasses</span>
+0124   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'bluered'</span>)
+0125     display_mode=9; <span class="comment">% stereo view with blue/red glasses</span>
+0126   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'shutter'</span>) || strcmpi(disp_mode,<span class="string">'propixxstereo'</span>)
+0127     display_mode=1; <span class="comment">% flip frame stereo (temporally interleaved), need shutter glasses</span>
+0128   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'topbottom'</span>)
+0129     display_mode=2; <span class="comment">% top/bottom image stereo with left=top</span>
+0130   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'bottomtop'</span>)
+0131     display_mode=3; <span class="comment">% top/bottom image stereo with left=bottom</span>
+0132   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'interleavedline'</span>)
+0133     display_mode=100; <span class="comment">% interleaved line stereo: left=even scanlines, right=odd scanlines</span>
+0134   <span class="keyword">elseif</span> strcmpi(disp_mode,<span class="string">'interleavedcolumn'</span>)
+0135     display_mode=101; <span class="comment">% interleaved column stereo: left=even columns, right=odd columns</span>
+0136   <span class="keyword">else</span>
+0137     error(<span class="string">'disp_mode is not valid. check input variable.'</span>);
+0138   <span class="keyword">end</span>
+0139 
+0140   <span class="comment">% set window ID</span>
+0141   scrID1=max(Screen(<span class="string">'Screens'</span>));
+0142 
+0143   <span class="comment">% Windows-Hack: If mode 4 or 5 is requested, we select screen zero as target screen: This will open a window</span>
+0144   <span class="comment">% that spans multiple monitors on multi-display setups, which is usually what one wants for this mode.</span>
+0145   <span class="keyword">if</span> is_windows &amp;&amp; ( strcmpi(disp_mode,<span class="string">'dualcross'</span>) || strcmpi(disp_mode,<span class="string">'dualparallel'</span>) )
+0146     <span class="keyword">if</span> numel(Screen(<span class="string">'Screens'</span>))&gt;1
+0147       scrID1=1;
+0148     <span class="keyword">else</span>
+0149       scrID1=0;
+0150     <span class="keyword">end</span>
+0151   <span class="keyword">end</span>
+0152 
+0153   <span class="comment">% check whether the computer is connected to two displays</span>
+0154   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
+0155     <span class="keyword">if</span> length(Screen(<span class="string">'Screens'</span>))&lt;2
+0156       warning(<span class="string">'Not enough displays. Using screen 0 alone.'</span>);
+0157       disp_mode=<span class="string">'mono'</span>;
+0158     <span class="keyword">end</span>
+0159   <span class="keyword">end</span>
+0160 
+0161   <span class="comment">% setup the OS-dependent screen ID for dual display mode</span>
+0162   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
+0163     <span class="keyword">if</span> is_windows
+0164       scrID1=1;
+0165     <span class="keyword">else</span>
+0166       scrID1=0;
+0167     <span class="keyword">end</span>
+0168   <span class="keyword">end</span>
+0169 
+0170   <span class="comment">% override the screen ID if it is specified</span>
+0171   <span class="keyword">if</span> ~isempty(custom_scrIDs), scrID1=custom_scrIDs(1); <span class="keyword">end</span>
+0172 
+0173   <span class="comment">% set the number of screens</span>
+0174   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'mono'</span>), nScr=1; <span class="keyword">end</span>
+0175 
+0176   <span class="comment">% Open double-buffered onscreen window with the requested display mode,</span>
+0177   <span class="comment">% setup imaging pipeline for additional on-the-fly processing:</span>
+0178 
+0179   <span class="comment">% prep PTB PsychImaging configuration</span>
+0180   PsychImaging(<span class="string">'PrepareConfiguration'</span>);
 0181 
-0182     <span class="comment">% Enable DATAPixx blueline support, and VIEWPixx scanning backlight for optimal 3D</span>
-0183     <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'propixxstereo'</span>)
-0184       <span class="keyword">if</span> (Datapixx(<span class="string">'IsVIEWPixx'</span>)), Datapixx(<span class="string">'EnableVideoScanningBacklight'</span>); <span class="keyword">end</span> <span class="comment">% Only required if a VIEWPixx.</span>
-0185       Datapixx(<span class="string">'EnableVideoStereoBlueline'</span>);
-0186       Datapixx(<span class="string">'SetVideoStereoVesaWaveform'</span>, 2);      <span class="comment">% If driving NVIDIA glasses</span>
-0187 
-0188       <span class="comment">% Liquid crystal displays can exhibit an artifact when presenting 2 static images on alternating video frames, such as with frame-sequencial 3D.</span>
-0189       <span class="comment">% The origin of this artifact is related to LCD pixel polarity inversion.</span>
-0190       <span class="comment">% The optical transmission of a liquid crystal cell varies with the magnitude of the voltage applied to the cell.</span>
-0191       <span class="comment">% Liquid crystal cells are designed to be driven by an AC voltage with little or no DC component.</span>
-0192       <span class="comment">% As such, the cell drivers alternate the polarity of the cell's driving voltage on alternate video frames.</span>
-0193       <span class="comment">% The cell will see no net DC driving voltage, as long as the pixel is programmed to the same intensity on even and odd video frames.</span>
-0194       <span class="comment">% Small differences in a pixel's even and odd frame luminance tend to leave the cell unaffected,</span>
-0195       <span class="comment">% and large differences in even and odd frame luminance for short periods of time (10-20 frames?) also do not seem to affect the cell;</span>
-0196       <span class="comment">% however, large differences in luminance for a longer period of time will cause a DC buildup in the pixel's liquid crystal cell.</span>
-0197       <span class="comment">% This can result in the pixel not showing the programmed luminance correctly,</span>
-0198       <span class="comment">% and can also cause the pixel to &quot;stick&quot; for several seconds after the image has been removed, causing an after-image on the display.</span>
-0199       <span class="comment">% VPixx Technologies has developed a strategy for keeping the pixel cells DC balanced.</span>
-0200       <span class="comment">% Instead of alternating the cell driving voltage on every video frame, we can alternate the voltage only on every second frame.</span>
-0201       <span class="comment">% This feature is enabled by calling the function EnableVideoLcd3D60Hz.</span>
-0202       <span class="comment">% Call this routine before presenting static or slowly-moving 3D images, or when presenting 60Hz flickering stimuli.</span>
-0203       <span class="comment">% Be sure to call DisableVideoLcd3D60Hz afterwards to return to normal pixel driving.</span>
-0204       <span class="comment">% Note that this feature is only supported on the VIEWPixx/3D when running with a refresh rate of 120Hz.</span>
-0205       <span class="keyword">if</span> Datapixx(<span class="string">'IsViewpixx3D'</span>), Datapixx(<span class="string">'EnableVideoLcd3D60Hz'</span>); <span class="keyword">end</span>
-0206 
-0207       Datapixx(<span class="string">'RegWr'</span>);
-0208     <span class="keyword">end</span>
-0209   <span class="keyword">end</span>
-0210 
-0211   <span class="comment">% flipping Screen</span>
-0212   <span class="keyword">if</span> flipping==1
-0213     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipHorizontal'</span>);
-0214   <span class="keyword">elseif</span> flipping==2
-0215     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipVertical'</span>);
-0216   <span class="keyword">elseif</span> flipping==3
-0217     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipHorizontal'</span>);
-0218     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipVertical'</span>);
-0219   <span class="keyword">end</span>
-0220 
-0221   <span class="comment">% triggers line interleaved display:</span>
-0222   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'interleavedline'</span>), PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'General'</span>,<span class="string">'InterleavedLineStereo'</span>,0); <span class="keyword">end</span>
-0223 
-0224   <span class="comment">% triggers column interleaved display</span>
-0225   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'interleavedcolumn'</span>), PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'General'</span>,<span class="string">'InterleavedColumnStereo'</span>,0); <span class="keyword">end</span>
-0226 
-0227   <span class="comment">% Consolidate the list of requirements (error checking etc.), open a suitable onscreen window and configure</span>
-0228   <span class="comment">% the imaging pipeline for that window according to our specs. The syntax is the same as for Screen('OpenWindow'):</span>
-0229   [winPtr,winRect]=PsychImaging(<span class="string">'OpenWindow'</span>,scrID1,bgcolor,[],[],[],display_mode);
-0230 
-0231   <span class="comment">% In dual-window, dual-display mode, we open the slave window on</span>
-0232   <span class="comment">% the secondary screen. Please note that, after opening this window</span>
-0233   <span class="comment">% with the same parameters as the &quot;master-window&quot;, we won't touch</span>
-0234   <span class="comment">% it anymore until the end of the experiment. PTB will take care of</span>
-0235   <span class="comment">% managing this window automatically as appropriate for a stereo</span>
-0236   <span class="comment">% display setup. That is why we are not even interested in the window</span>
-0237   <span class="comment">% handles of this window:</span>
-0238   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
-0239     <span class="keyword">if</span> is_windows
-0240       scrID2=2;
-0241     <span class="keyword">else</span>
-0242       scrID2=1;
-0243     <span class="keyword">end</span>
-0244     <span class="comment">% override the screen ID when it is specified</span>
-0245     <span class="keyword">if</span> numel(custom_scrIDs)==2, scrID2=custom_scrIDs(2); <span class="keyword">end</span>
-0246     Screen(<span class="string">'OpenWindow'</span>,scrID2,bgcolor,[],[],[],display_mode); <span class="comment">% slave window</span>
-0247   <span class="keyword">end</span>
-0248 
-0249   <span class="comment">% set color gains for stereo glasses viewing</span>
-0250   <span class="keyword">if</span> ismember(display_mode,[6,7,8,9])
-0251     <span class="keyword">if</span> isempty(rgb_gains)
-0252       <span class="keyword">switch</span> display_mode
-0253         <span class="keyword">case</span> 6,
-0254           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[1.0,0.0,0.0]);
-0255           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[0.0,0.6,0.0]);
-0256         <span class="keyword">case</span> 7,
-0257           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[0.0,0.6,0.0]);
-0258           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[1.0,0.0,0.0]);
-0259         <span class="keyword">case</span> 8,
-0260           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[0.4,0.0,0.0]);
-0261           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[0.0,0.2,0.7]);
-0262         <span class="keyword">case</span> 9,
-0263           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[0.0,0.2,0.7]);
-0264           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[0.4,0.0,0.0]);
-0265         <span class="keyword">otherwise</span>
-0266           <span class="comment">% do nothing</span>
-0267       <span class="keyword">end</span>
-0268     <span class="keyword">else</span>
-0269       SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,rgb_gains(1,:));
-0270       SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,rgb_gains(2,:));
-0271     <span class="keyword">end</span>
-0272   <span class="keyword">end</span>
-0273 
-0274   <span class="comment">% get screen refresh rate and inter-flip-interval</span>
-0275   fps=Screen(<span class="string">'FrameRate'</span>,winPtr);
-0276   <span class="keyword">if</span> fps==0
-0277     ifi=Screen(<span class="string">'GetFlipInterval'</span>,winPtr);
-0278     fps=1/ifi;
-0279   <span class="keyword">else</span>
-0280     ifi=1/fps;
+0182   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'propixxmono'</span>) || strcmpi(disp_mode,<span class="string">'propixxstereo'</span>)
+0183     <span class="comment">% Tell PTB we want to display on a DataPixx device:</span>
+0184     PsychImaging(<span class="string">'AddTask'</span>, <span class="string">'General'</span>, <span class="string">'UseDataPixx'</span>);
+0185     Datapixx(<span class="string">'Open'</span>);
+0186 
+0187     <span class="comment">% Enable DATAPixx blueline support, and VIEWPixx scanning backlight for optimal 3D</span>
+0188     <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'propixxstereo'</span>)
+0189       <span class="keyword">if</span> (Datapixx(<span class="string">'IsVIEWPixx'</span>)), Datapixx(<span class="string">'EnableVideoScanningBacklight'</span>); <span class="keyword">end</span> <span class="comment">% Only required if a VIEWPixx.</span>
+0190       Datapixx(<span class="string">'EnableVideoStereoBlueline'</span>);
+0191       Datapixx(<span class="string">'SetVideoStereoVesaWaveform'</span>, 2);      <span class="comment">% If driving NVIDIA glasses</span>
+0192 
+0193       <span class="comment">% Liquid crystal displays can exhibit an artifact when presenting 2 static images on alternating video frames, such as with frame-sequencial 3D.</span>
+0194       <span class="comment">% The origin of this artifact is related to LCD pixel polarity inversion.</span>
+0195       <span class="comment">% The optical transmission of a liquid crystal cell varies with the magnitude of the voltage applied to the cell.</span>
+0196       <span class="comment">% Liquid crystal cells are designed to be driven by an AC voltage with little or no DC component.</span>
+0197       <span class="comment">% As such, the cell drivers alternate the polarity of the cell's driving voltage on alternate video frames.</span>
+0198       <span class="comment">% The cell will see no net DC driving voltage, as long as the pixel is programmed to the same intensity on even and odd video frames.</span>
+0199       <span class="comment">% Small differences in a pixel's even and odd frame luminance tend to leave the cell unaffected,</span>
+0200       <span class="comment">% and large differences in even and odd frame luminance for short periods of time (10-20 frames?) also do not seem to affect the cell;</span>
+0201       <span class="comment">% however, large differences in luminance for a longer period of time will cause a DC buildup in the pixel's liquid crystal cell.</span>
+0202       <span class="comment">% This can result in the pixel not showing the programmed luminance correctly,</span>
+0203       <span class="comment">% and can also cause the pixel to &quot;stick&quot; for several seconds after the image has been removed, causing an after-image on the display.</span>
+0204       <span class="comment">% VPixx Technologies has developed a strategy for keeping the pixel cells DC balanced.</span>
+0205       <span class="comment">% Instead of alternating the cell driving voltage on every video frame, we can alternate the voltage only on every second frame.</span>
+0206       <span class="comment">% This feature is enabled by calling the function EnableVideoLcd3D60Hz.</span>
+0207       <span class="comment">% Call this routine before presenting static or slowly-moving 3D images, or when presenting 60Hz flickering stimuli.</span>
+0208       <span class="comment">% Be sure to call DisableVideoLcd3D60Hz afterwards to return to normal pixel driving.</span>
+0209       <span class="comment">% Note that this feature is only supported on the VIEWPixx/3D when running with a refresh rate of 120Hz.</span>
+0210       <span class="keyword">if</span> Datapixx(<span class="string">'IsViewpixx3D'</span>), Datapixx(<span class="string">'EnableVideoLcd3D60Hz'</span>); <span class="keyword">end</span>
+0211 
+0212       Datapixx(<span class="string">'RegWr'</span>);
+0213     <span class="keyword">end</span>
+0214   <span class="keyword">end</span>
+0215 
+0216   <span class="comment">% flipping Screen</span>
+0217   <span class="keyword">if</span> flipping==1
+0218     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipHorizontal'</span>);
+0219   <span class="keyword">elseif</span> flipping==2
+0220     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipVertical'</span>);
+0221   <span class="keyword">elseif</span> flipping==3
+0222     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipHorizontal'</span>);
+0223     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'AllViews'</span>,<span class="string">'FlipVertical'</span>);
+0224   <span class="keyword">elseif</span> flipping==4
+0225     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'LeftView'</span>,<span class="string">'FlipHorizontal'</span>);
+0226   <span class="keyword">elseif</span> flipping==5
+0227     PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'RightView'</span>,<span class="string">'FlipHorizontal'</span>);
+0228   <span class="keyword">end</span>
+0229 
+0230   <span class="comment">% triggers line interleaved display:</span>
+0231   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'interleavedline'</span>), PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'General'</span>,<span class="string">'InterleavedLineStereo'</span>,0); <span class="keyword">end</span>
+0232 
+0233   <span class="comment">% triggers column interleaved display</span>
+0234   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'interleavedcolumn'</span>), PsychImaging(<span class="string">'AddTask'</span>,<span class="string">'General'</span>,<span class="string">'InterleavedColumnStereo'</span>,0); <span class="keyword">end</span>
+0235 
+0236   <span class="comment">% Consolidate the list of requirements (error checking etc.), open a suitable onscreen window and configure</span>
+0237   <span class="comment">% the imaging pipeline for that window according to our specs. The syntax is the same as for Screen('OpenWindow'):</span>
+0238   [winPtr,winRect]=PsychImaging(<span class="string">'OpenWindow'</span>,scrID1,bgcolor,[],[],[],display_mode);
+0239 
+0240   <span class="comment">% In dual-window, dual-display mode, we open the slave window on</span>
+0241   <span class="comment">% the secondary screen. Please note that, after opening this window</span>
+0242   <span class="comment">% with the same parameters as the &quot;master-window&quot;, we won't touch</span>
+0243   <span class="comment">% it anymore until the end of the experiment. PTB will take care of</span>
+0244   <span class="comment">% managing this window automatically as appropriate for a stereo</span>
+0245   <span class="comment">% display setup. That is why we are not even interested in the window</span>
+0246   <span class="comment">% handles of this window:</span>
+0247   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'dual'</span>)
+0248     <span class="keyword">if</span> is_windows
+0249       scrID2=2;
+0250     <span class="keyword">else</span>
+0251       scrID2=1;
+0252     <span class="keyword">end</span>
+0253     <span class="comment">% override the screen ID when it is specified</span>
+0254     <span class="keyword">if</span> numel(custom_scrIDs)==2, scrID2=custom_scrIDs(2); <span class="keyword">end</span>
+0255     Screen(<span class="string">'OpenWindow'</span>,scrID2,bgcolor,[],[],[],display_mode); <span class="comment">% slave window</span>
+0256   <span class="keyword">end</span>
+0257 
+0258   <span class="comment">% set color gains for stereo glasses viewing</span>
+0259   <span class="keyword">if</span> ismember(display_mode,[6,7,8,9])
+0260     <span class="keyword">if</span> isempty(rgb_gains)
+0261       <span class="keyword">switch</span> display_mode
+0262         <span class="keyword">case</span> 6
+0263           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[1.0,0.0,0.0]);
+0264           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[0.0,0.6,0.0]);
+0265         <span class="keyword">case</span> 7
+0266           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[0.0,0.6,0.0]);
+0267           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[1.0,0.0,0.0]);
+0268         <span class="keyword">case</span> 8
+0269           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[0.4,0.0,0.0]);
+0270           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[0.0,0.2,0.7]);
+0271         <span class="keyword">case</span> 9
+0272           SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,[0.0,0.2,0.7]);
+0273           SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,[0.4,0.0,0.0]);
+0274         <span class="keyword">otherwise</span>
+0275           <span class="comment">% do nothing</span>
+0276       <span class="keyword">end</span>
+0277     <span class="keyword">else</span>
+0278       SetAnaglyphStereoParameters(<span class="string">'LeftGains'</span>,winPtr,rgb_gains(1,:));
+0279       SetAnaglyphStereoParameters(<span class="string">'RightGains'</span>,winPtr,rgb_gains(2,:));
+0280     <span class="keyword">end</span>
 0281   <span class="keyword">end</span>
 0282 
-0283   initDisplay_OK=true;
-0284 <span class="keyword">catch</span> lasterror
-0285   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'propixxmono'</span>) || strcmpi(disp_mode,<span class="string">'propixxstereo'</span>), Datapixx(<span class="string">'Close'</span>); <span class="keyword">end</span>
-0286   display(lasterror);
-0287   nScr=0;
-0288   fps=0;
-0289   ifi=0;
-0290   initDisplay_OK=false;
-0291 <span class="keyword">end</span>
-0292 
-0293 <span class="keyword">return</span></pre></div>
-<hr><address>Generated on Thu 10-Jun-2021 10:01:25 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
+0283   <span class="comment">% get screen refresh rate and inter-flip-interval</span>
+0284   fps=Screen(<span class="string">'FrameRate'</span>,winPtr);
+0285   <span class="keyword">if</span> fps==0
+0286     ifi=Screen(<span class="string">'GetFlipInterval'</span>,winPtr);
+0287     fps=1/ifi;
+0288   <span class="keyword">else</span>
+0289     ifi=1/fps;
+0290   <span class="keyword">end</span>
+0291 
+0292   initDisplay_OK=true;
+0293 <span class="keyword">catch</span> lasterror
+0294   <span class="keyword">if</span> strcmpi(disp_mode,<span class="string">'propixxmono'</span>) || strcmpi(disp_mode,<span class="string">'propixxstereo'</span>), Datapixx(<span class="string">'Close'</span>); <span class="keyword">end</span>
+0295   display(lasterror);
+0296   nScr=0;
+0297   fps=0;
+0298   ifi=0;
+0299   initDisplay_OK=false;
+0300 <span class="keyword">end</span>
+0301 
+0302 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Tue 03-Aug-2021 14:14:51 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005 using a BVQX_hbtools customized template</address>
 </body>
 </html>

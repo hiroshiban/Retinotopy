@@ -31,7 +31,12 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %             "propixxmono", "propixxstereo", "3Dpixx".
 %             "mono" by default.
 % bgcolor   : background color, [r,g,b]. [127,127,127] by default.
-% flipping  : whther flipping displays, 0:none, 1:horizontal, 2:vertical, 3:horizontal & vertical. 0 by default.
+% flipping  : whether flipping displays, 0:none, 1:horizontal, 2:vertical,
+%             3: both horizontal & vertical,
+%             4: horizontal only for the left view (the first) display,
+%             5: horizontal only for the right view (the second) display.
+%             The 4th and 5th options are for some half-mirror-type stereo displays.
+%             0 by default.
 % rgb_gains : RGB phosphor gains, [2(left/right)x3(r,g,b)] matrix. [1,1,1;1,1,1] by default.
 %             if empty, the default parameters will be set. For details, see the codes below.
 % custom_scrIDs : scrIDs you want to force to use in displaying stimuli. [ID] or [ID(left-eye),ID(righteye)].
@@ -55,7 +60,7 @@ function [winPtr,winRect,nScr,fps,ifi,initDisplay_OK]=InitializePTBDisplays(disp
 %
 %
 % Created : Feb 04 2010 Hiroshi Ban
-% Last Update: "2021-06-03 16:46:25 ban"
+% Last Update: "2021-08-03 14:05:20 ban"
 
 % initialize
 winPtr=[];
@@ -216,6 +221,10 @@ try
   elseif flipping==3
     PsychImaging('AddTask','AllViews','FlipHorizontal');
     PsychImaging('AddTask','AllViews','FlipVertical');
+  elseif flipping==4
+    PsychImaging('AddTask','LeftView','FlipHorizontal');
+  elseif flipping==5
+    PsychImaging('AddTask','RightView','FlipHorizontal');
   end
 
   % triggers line interleaved display:
@@ -250,16 +259,16 @@ try
   if ismember(display_mode,[6,7,8,9])
     if isempty(rgb_gains)
       switch display_mode
-        case 6,
+        case 6
           SetAnaglyphStereoParameters('LeftGains',winPtr,[1.0,0.0,0.0]);
           SetAnaglyphStereoParameters('RightGains',winPtr,[0.0,0.6,0.0]);
-        case 7,
+        case 7
           SetAnaglyphStereoParameters('LeftGains',winPtr,[0.0,0.6,0.0]);
           SetAnaglyphStereoParameters('RightGains',winPtr,[1.0,0.0,0.0]);
-        case 8,
+        case 8
           SetAnaglyphStereoParameters('LeftGains',winPtr,[0.4,0.0,0.0]);
           SetAnaglyphStereoParameters('RightGains',winPtr,[0.0,0.2,0.7]);
-        case 9,
+        case 9
           SetAnaglyphStereoParameters('LeftGains',winPtr,[0.0,0.2,0.7]);
           SetAnaglyphStereoParameters('RightGains',winPtr,[0.4,0.0,0.0]);
         otherwise
