@@ -38,7 +38,7 @@ Retinotopy is a ***MATLAB***-based all-in-one software package for presenting/co
 
 (Matlab is a registered trademark of [***The Mathworks Inc.*** ](https://www.mathworks.com/) )  
 
-While many of the similar lines of stimulus codes are already publicly available, among them, the benefits of this package are that  
+While many of the similar lines of stimulus codes are already publicly available, among them, the benefits of this package are  
 
   ***1. Many types of the retinototpy stimuli as well as conventional wedges and annuli are implemented. The users can access these stimuli through one simple wrapper function.***  
 
