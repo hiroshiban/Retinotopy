@@ -1,8 +1,7 @@
-
 # **README on Retinotopy**
 
 <div>Created    : "2013-11-25 10:25:05 ban"</div>
-<div>Last Update: "2021-11-17 03:49:04 ban"
+<div>Last Update: "2021-11-17 04:02:35 ban"
 
 ***
 
@@ -37,13 +36,13 @@
 <br></br>
 Retinotopy is a ***MATLAB***-based all-in-one software package for presenting/controlling so-called "retinotopy stimuli", which includes, as some instances, the conventional counter-clockwise/clockwise rotating wedges, expanding/contracting annuli, sweeping bars, and multifocal patterns, consisted of checkerboards, random-dot-stereograms, and object images. By measuring fMRI/MEG responses while particpants are viewing these stimuli, we can get cortical retinotopy representations. The obtained representation can be used for delineating the borders of retinotopic visual areas such as V1, V2, and V3.  
 
+(Matlab is a registered trademark of [***The Mathworks Inc.*** ](https://www.mathworks.com/) )  
+
 While many of the similar lines of stimulus codes are already publicly available, among them, the benefits of this package are that  
 
   ***1. Many types of the retinototpy stimuli as well as conventional wedges and annuli are implemented. The users can access these stimuli through one simple wrapper function.***  
 
-  ***2. As I have been doing binocular/stereo vision studies with fMRI/MEG, I often have to present the stimuli with binocular viewing setups, such as stereo-shutter-goggles and polarized glasses, on the dual display systems. This Retinotopy package can handle suc situations and is fully compatible with the dual-display as well as single-display configurations.***  
-
-(Matlab is a registered trademark of [***The Mathworks Inc.*** ](https://www.mathworks.com/) )  
+  ***2. As I have been doing binocular/stereo vision studies with fMRI/MEG, I often have to present the stimuli with binocular viewing setups, such as stereo-shutter-goggles and polarized glasses, on the dual display systems. This Retinotopy package can handle such situations and is fully compatible with the dual-display as well as single-display configurations.***  
 
 For more details, please read the descriptions below.  
 Also please check the header comments in ~/Retinotopy/Presentation/retinotopy.m.  
@@ -391,7 +390,7 @@ The Retinotopy package uses **Psychtoolboox** library for generating/presenting/
        object_image_database.7z.001 - 007 with 7-zip.
 
 **About the original rertinotopy stimulus codes**  
-The Retinotopy package consists of a series of modified versions of the retinotopy stimuli that I had developed and used when I had been working at University of Birmingham, UK, under supervisions of Dr Andrew Welchman and Dr Zoe Kourtzi. I express my big and many thanks for their supports here. Furthermore, I would also like to note that the retinotopy stimuli in this package were based on the codes (worked on the Solaris/Irix boxes) originally developed with C/C++ and the Visualization Toolkit (VTK, Kitware Inc.) library by Dr Hiroki Yamamoto @ Kyoto University. I leant a lot on how to make visual stimuli from him: This Retinotopy package is a fully modified (with using MATLAB and Psychtoolbox) and updated version of those original stimuli. The new functionalities and new types of stimuli were also added in the past years of developments.  
+The Retinotopy package consists of a series of modified versions of the retinotopy stimuli that I had developed and used when I had been working at University of Birmingham, UK, under supervisions of Dr Andrew Welchman and Dr Zoe Kourtzi. I express my big and many thanks for their supports here. Furthermore, I would also like to note that the retinotopy stimuli in this package were based on the codes (worked on the Solaris/Irix boxes) originally developed with C/C++ and the Visualization Toolkit (VTK, Kitware Inc.) library by Dr Hiroki Yamamoto and Dr Yoshimichi Ejima @ Kyoto University. I leant a lot on how to make visual stimuli from them: This Retinotopy package is a fully modified (with using MATLAB and Psychtoolbox) and updated version of those original stimuli. The new functionalities and new types of stimuli were also added in the past years of developments.  
 
 [back to the menu](#Menu)
 
