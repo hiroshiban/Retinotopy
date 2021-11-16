@@ -34,7 +34,7 @@
 
 *The retinotopic mapping results on the author's cortices.*  
 <br></br>
-Retinotopy is a ***MATLAB***-based all-in-one software package for presenting/controlling so-called "retinotopy stimuli", which includes, as some instances, the conventional counter-clockwise/clockwise rotating wedges, expanding/contracting annuli, sweeping bars, and multifocal patterns, consisted of checkerboards, random-dot-stereograms, and object images. By measuring fMRI/MEG responses while particpants are viewing these stimuli, we can get cortical retinotopy representations. The obtained representation can be used for delineating the borders of retinotopic visual areas such as V1, V2, and V3.  
+Retinotopy is a ***MATLAB***-based all-in-one software package for presenting/controlling so-called "retinotopy stimuli", which includes, as some instances, the conventional counter-clockwise/clockwise rotating wedges, expanding/contracting annuli, sweeping bars, and multifocal patterns, consisting of checkerboards, random-dot-stereograms, and object images. By measuring fMRI/MEG responses while particpants are viewing these stimuli, we can get cortical retinotopy representations. The obtained representation can be used for delineating the borders of retinotopic visual areas such as V1, V2, and V3.  
 
 (Matlab is a registered trademark of [***The Mathworks Inc.*** ](https://www.mathworks.com/) )  
 
@@ -228,7 +228,7 @@ exp_mode: experiment mode (= stimulus type) that you want to run, one of
           - hrfdf   : disparity(depth, Random-Dot-Stereogram (RDS))-defined pattern, to evaluate HRF responses
           - localizerdf: disparity(depth, Random-Dot-Stereogram (RDS))-defined iso-eccentricity stimulation patterns, to identify specific iso-eccentricity regions
 
-          *** object-image stimuli for stimulation ventral regions more. task -- luminance change detection on the central "f"ixation point ***
+          *** object-image stimuli on the pink-noise background for stimulating ventral regions more. task -- luminance change detection on the central "f"ixation point ***
           - ccwi    : Object-image-defined wedge rotating counter-clockwisely
           - cwi     : Object-image-defined wedge rotating clockwisely
           - expi    : Object-image-defined annulus expanding from fovea to periphery
