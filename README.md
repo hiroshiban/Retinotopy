@@ -1,7 +1,7 @@
 # **README on Retinotopy**
 
 <div>Created    : "2013-11-25 10:25:05 ban"</div>
-<div>Last Update: "2021-11-17 04:02:35 ban"
+<div>Last Update: "2021-11-17 04:06:14 ban"
 
 ***
 
@@ -300,7 +300,7 @@ like ./subjects/(ID)/results/(today)/(ID)_cretinotopy_ccw_results_run_(run_num).
 
 An example of the displayfile is as below.  
 
-[displayfile.m](doc/markdowns/didplayfile.md)  
+[displayfile.m](doc/markdowns/displayfile.md)  
 
 [back to the menu](#Menu)
 
