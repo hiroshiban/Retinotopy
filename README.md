@@ -62,7 +62,7 @@ I am happy if Retinotopy can help your research projects.
   - note 2: Psychtoolbox 3.0.15 or above is required. We have not tested the compatibility of Retinotopy with the former versions of PTB3 and PTB2.  
 
 - **Graphics board**  
-  - OpenGL-compatible graphic board is preferred rather than using built-in CPU graphics function.
+  - OpenGL-compatible graphics board is preferred rather than using built-in CPU graphics function.
 
 [back to the menu](#Menu)
 
