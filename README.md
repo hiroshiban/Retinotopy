@@ -1,7 +1,7 @@
 # **README on Retinotopy**
 
 <div>Created    : "2013-11-25 10:25:05 ban"</div>
-<div>Last Update: "2021-11-17 04:06:14 ban"
+<div>Last Update: "2021-11-17 05:28:24 ban"
 
 ***
 
@@ -24,7 +24,7 @@
 
 ![Retinotopy](doc/images/00_Retinotopy_stimuli.gif)  
 
-*The Retinotopy package is an all-in-one package of the visual stimuli for the retinotopic mapping.*  
+*The Retinotopy is an all-in-one package of the visual stimuli for the retinotopic mapping.*  
 
 ![Retinotopy](doc/images/00_Retinotopy_analysis.png) 
 
