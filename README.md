@@ -16,6 +16,7 @@
 - [Acknowledgments](#Acknowledgments)
 - [License](#License)
 - [Citation](#Citation)
+- [References](#References)
 - [TODOs](#TODOs)
 
 ***
@@ -418,6 +419,23 @@ If you have some space in your reference section, please cite this GitHub reposi
 **by Hiroshi Ban**  
 
 If you have no space, please cite it somewhere someday next time. Thank you so much.
+
+[back to the menu](#Menu)
+
+# <a name = "References"> **References** </a>
+
+1. *Large- and Small-Scale Functional Organization of Visual Field Representation in the Human Visual Cortex.*  
+   Yamamoto H., Ban H., Fukunaga M., Umeda M., Tanaka C., Ejima Y. (2009)  
+   In: Portocello T. A. and Velloti R. B. editors. Visual Cortex: New Research. New York: Nova Science Publisher. 195-226.  
+   [PDF](https://repository.kulib.kyoto-u.ac.jp/dspace/bitstream/2433/152362/1/Visual%20Cortex_2008_195-226.pdf)
+
+2. *Topographic processing of an occluded object and the effects of spatiotemporal contexts in human early visual areas.*  
+   *Ban, H., Yamamoto, H., Hanakawa, T., Urayama, S., Aso, T., Fukuyama, H., Ejima, Y. (2013). The Journal of Neuroscience, 33(43): 16992-17002.  
+   DOI: https://doi.org/10.1523/JNEUROSCI.1455-12.2013  
+
+3. *Modulations of depth responses in the human brain by object context: Does biological relevance matter?*  
+   Idy W. Y. Chou, Hiroshi Ban, Dorita H. F. Chang. (2021). eNeuro, 0039-21.2021  
+   DOI: https://doi.org/10.1523/ENEURO.0039-21.2021  
 
 [back to the menu](#Menu)
 
