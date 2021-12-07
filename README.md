@@ -1,7 +1,7 @@
 # **README on Retinotopy**
 
 <div>Created    : "2013-11-25 10:25:05 ban"</div>
-<div>Last Update: "2021-11-30 02:15:16 ban"
+<div>Last Update: "2021-12-07 17:37:07 ban"
 
 ***
 
@@ -47,6 +47,8 @@ While many of the similar lines of stimulus codes are already publicly available
 
 For more details, please read the descriptions below.  
 Also please check the header comments in ~/Retinotopy/Presentation/retinotopy.m.  
+
+***Finally, the package is made publicly available in the hope of keeping our research group being transparent and open. Furthermore, the package is made open also for people who want to know our group's research activities, who want to join our group in the near future, and who want to learn how to create visual stimuli for vision science. Please feel free to contact us if you are interested in our research projects.***  
 
 Thank you for using my software package.  
 I am happy if Retinotopy can help your research projects.  
