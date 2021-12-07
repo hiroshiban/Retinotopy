@@ -1,7 +1,7 @@
 # **README on Retinotopy**
 
 <div>Created    : "2013-11-25 10:25:05 ban"</div>
-<div>Last Update: "2021-12-07 17:37:07 ban"
+<div>Last Update: "2021-12-08 04:42:53 ban"
 
 ***
 
@@ -355,7 +355,7 @@ This file is used for controlling the **localizer/localizerd/localizerf/localize
 
 # <a name = "Acknowledgments"> **Acknowledgments** </a>
 
-The Retinotopy package uses **Psychtoolboox** library for generating/presenting/controlling stimuli, and **Object image databases** described below. I would like to express our sincere gratitude to the authors for sharing these great databases.  
+The Retinotopy package uses **Psychtoolboox** library for generating/presenting/controlling stimuli. I would like to express our sincere gratitude to the authors for sharing the great toolbox.  
 
 **Psychtoolbox** : The individual Psychtoolbox core developers,  
             (c) 1996-2011, David Brainard  
@@ -369,7 +369,7 @@ The Retinotopy package uses **Psychtoolboox** library for generating/presenting/
 
 **Object image databases** : a mat file stored in ~/Retinotopy/object_images  
            The object images stored in the object_image_database.mat and used in ***"\*i"*** (e.g. ***"ccwi"***) retinotopy stimuli are obtained and modified from the databases that are publicly available from [http://konklab.fas.harvard.edu/#](http://konklab.fas.harvard.edu/#).  
-           I sincerely express my gratitude to the developers and distributors, scientists in Dr Talia Konkle's research group, for their contributions in these databases.
+           I sincerely express my gratitude to the developers and distributors, scientists in Dr Talia Konkle's research group, for their contributions in these databases.  
 
 ***- Original papers of these image datasets***  
 ***If you use "\*i" retinotoy stimuli in your studies, please cite some of the original papers listed below.***  
