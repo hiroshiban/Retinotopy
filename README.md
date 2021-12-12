@@ -2,7 +2,7 @@
 
 <div align="right">
 Created    : "2013-11-25 10:25:05 ban"<br>
-Last Update: "2021-12-13 05:22:43 ban"
+Last Update: "2021-12-13 07:29:32 ban"
 </div>
 
 <br>
@@ -11,7 +11,7 @@ Last Update: "2021-12-13 05:22:43 ban"
 <img src="https://img.shields.io/badge/DEPENDENCY-Psychtoolbox3-green" />
 <img src="https://img.shields.io/badge/EDITED%20BY-EmEditor%20&%20VS%20Code-blue" />
 <img src="https://img.shields.io/badge/LICENSE-BSD-red" /><br>
-<img src="https://img.shields.io/badge/KEYWORDS-Vision%20Science,%203D,%20Stereo,%20Binocular,%20Perception,%20Receognition,%20fMRI,%20MEG,%20EEG,%20&%20Psychphysics-blue?style=social&logo=webauthn" /><br>
+<img src="https://img.shields.io/badge/KEYWORDS-Vision%20Science,%203D,%20Stereo,%20Binocular,%20Perception,%20Recognition,%20fMRI,%20MEG,%20EEG,%20&%20Psychophysics-blue?style=social&logo=webauthn" /><br>
 <img src="https://img.shields.io/badge/CONTACT-lightgrey" /> <img src="doc/images/ban_hiroshi_address.png" />
 </div>
 <br>
