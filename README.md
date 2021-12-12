@@ -1,7 +1,20 @@
 # **README on Retinotopy**
 
-<div>Created    : "2013-11-25 10:25:05 ban"</div>
-<div>Last Update: "2021-12-08 04:42:53 ban"
+<div align="right">
+Created    : "2013-11-25 10:25:05 ban"<br>
+Last Update: "2021-12-13 05:22:43 ban"
+</div>
+
+<br>
+<div align="center">
+<img src="https://img.shields.io/badge/LANGUAGE-MATLAB-brightgreen" />
+<img src="https://img.shields.io/badge/DEPENDENCY-Psychtoolbox3-green" />
+<img src="https://img.shields.io/badge/EDITED%20BY-EmEditor%20&%20VS%20Code-blue" />
+<img src="https://img.shields.io/badge/LICENSE-BSD-red" /><br>
+<img src="https://img.shields.io/badge/KEYWORDS-Vision%20Science,%203D,%20Stereo,%20Binocular,%20Perception,%20Receognition,%20fMRI,%20MEG,%20EEG,%20&%20Psychphysics-blue?style=social&logo=webauthn" /><br>
+<img src="https://img.shields.io/badge/CONTACT-lightgrey" /> <img src="doc/images/ban_hiroshi_address.png" />
+</div>
+<br>
 
 ***
 
@@ -401,6 +414,8 @@ The Retinotopy package consists of a series of modified versions of the retinoto
 
 # <a name = "License"> **License** </a>
 
+<img src="https://img.shields.io/badge/LICENSE-BSD-red" /><br>
+
 Retinotopy --- A MATLAB-based all-in-one package for presenting/controlling "retinotopy" stimuli. By using the stimuli in this package together with fMRI/MEG neuroimaging techniques, we can get cortical retinotopic representations that can be used to delineate visual area borders. Copyright (c) 2021, Hiroshi Ban. All rights reserved.  
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:  
@@ -412,6 +427,8 @@ Redistribution and use in source and binary forms, with or without modification,
       the documentation and/or other materials provided with the distribution
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+
+The views and conclusions contained in the software and documentation are those of the authors and should not be interpreted as representing official policies, either expressed or implied, of the FreeBSD Project.  
 
 [back to the menu](#Menu)
 
