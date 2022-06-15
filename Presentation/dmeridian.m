@@ -36,7 +36,7 @@ function dmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2019-05-23 11:05:34 ban"
-% Last Update: "2021-06-07 17:20:00 ban"
+% Last Update: "2022-06-16 07:02:57 ban"
 %
 %
 %
@@ -735,20 +735,29 @@ background=Screen('MakeTexture',winPtr,bgimg{1});
 % Create fixation cross images.
 % Firstly larger fixations are generated, then they are antialiased. This is required to present a beautiful circle
 
+if isMATLABToolBoxAvailable('Image Processing Toolbox')
+  resize_r=4;
+else
+  resize_r=1;
+end
+
 if sparam.fixtype==1 % circular fixation
-  fixW=CreateFixationImgCircular(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*sparam.fixsize,0,0);
-  fixD=CreateFixationImgCircular(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*sparam.fixsize,0,0);
+  fixW=CreateFixationImgCircular(resize_r*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,resize_r*sparam.fixsize,0,0);
+  fixD=CreateFixationImgCircular(resize_r*sparam.fixsize,[64,64,64],sparam.bgcolor,resize_r*sparam.fixsize,0,0);
 elseif sparam.fixtype==2 % rectangular fixation
-  fixW=CreateFixationImgMono(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*2,4*ceil(0.4*sparam.fixsize),0,0);
-  fixD=CreateFixationImgMono(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*2,4*ceil(0.4*sparam.fixsize),0,0);
+  fixW=CreateFixationImgMono(resize_r*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,resize_r*2,resize_r*ceil(0.4*sparam.fixsize),0,0);
+  fixD=CreateFixationImgMono(resize_r*sparam.fixsize,[64,64,64],sparam.bgcolor,resize_r*2,resize_r*ceil(0.4*sparam.fixsize),0,0);
 elseif sparam.fixtype==3 % concentric fixation
-  fixW=CreateFixationImgConcentrateMono(4*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,4*[2,ceil(0.8*sparam.fixsize)],0,0,0);
-  fixD=CreateFixationImgConcentrateMono(4*sparam.fixsize,[64,64,64],sparam.bgcolor,4*[2,ceil(0.8*sparam.fixsize)],0,0,0);
+  fixW=CreateFixationImgConcentrateMono(resize_r*sparam.fixsize,sparam.fixcolor,sparam.bgcolor,resize_r*[2,ceil(0.8*sparam.fixsize)],0,0,0);
+  fixD=CreateFixationImgConcentrateMono(resize_r*sparam.fixsize,[64,64,64],sparam.bgcolor,resize_r*[2,ceil(0.8*sparam.fixsize)],0,0,0);
 else
   error('sparam.fixtype should be one of 1,2, and 3. check the input variable.');
 end
-fixW=imresize(fixW,0.25);
-fixD=imresize(fixD,0.25);
+
+if resize_r~=1
+  fixW=imresize(fixW,1/resize_r);
+  fixD=imresize(fixD,1/resize_r);
+end
 
 fix=cell(2,1); % 1 is for default fixation, 2 is for darker fixation (luminance detection task)
 fix{1}=Screen('MakeTexture',winPtr,fixW);
