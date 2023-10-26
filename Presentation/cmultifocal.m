@@ -40,7 +40,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2021-06-07 17:22:40 ban"
+% Last Update: "2023-10-26 14:30:07 ban"
 %
 %
 %
@@ -148,6 +148,13 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 % % whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
 % dparam.skip_sync_test=0;
+%
+% % whether displaying stimulus onset marker when each of the stimuli is presented (e.g. each timing of the rotating wedge onset).
+% % the marker can be used to get a photodiode trigger etc. The trigger duration is set to each_of_stim_on_duration/2.
+% % [type,onset_marker_size]
+% % type, 0: none, 1: upper-left, 2: upper-right, 3: lower-left, 4: lower-right
+% % onset_marker_size : pixels of the marker
+% dparam.onset_punch=[0,50];
 %
 %
 % [About stimulusfile]
@@ -385,7 +392,8 @@ dparam=ValidateStructureFields(dparam,... % validate fields and set the default 
          'ScrHeight',1200,...
          'ScrWidth',1920,...
          'force_frame_rate',60,...
-         'skip_sync_test',0);
+         'skip_sync_test',0,...
+         'onset_punch',[0,50]);
 
 % organize sparam
 sparam=struct(); % initialize
@@ -488,6 +496,7 @@ end
 fprintf('*************** Screen Settings ****************\n');
 fprintf('Screen Height          : %d\n',dparam.ScrHeight);
 fprintf('Screen Width           : %d\n',dparam.ScrWidth);
+fprintf('Onset Punch [type,size]: [%d,%d]\n',dparam.onset_punch(1),dparam.onset_punch(2));
 fprintf('*********** Stimulation Periods etc. ***********\n');
 fprintf('Fixation Time(sec)     : %d & %d\n',sparam.initial_fixation_time(1),sparam.initial_fixation_time(2));
 fprintf('Trial Duration(sec)    : %d\n',sparam.trial_duration);
@@ -924,6 +933,25 @@ fixRect = [0, 0, fixSize]; % used to display the central fixation point
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Prepare a rectangle for onset punch stimulus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if dparam.onset_punch(1)
+  psize=dparam.onset_punch(2); offset=bgSize./2;
+  if dparam.onset_punch(1)==1 % upper-left
+    punchoffset=[psize/2,psize/2,psize/2,psize/2]-[offset,offset];
+  elseif dparam.onset_punch(1)==2 % upper-right
+    punchoffset=[-psize/2,psize/2,-psize/2,psize/2]+[offset(1),-offset(2),offset(1),-offset(2)];
+  elseif dparam.onset_punch(1)==3 %lower-left
+    punchoffset=[psize/2,-psize/2,psize/2,-psize/2]+[-offset(1),offset(2),-offset(1),offset(2)];
+  elseif dparam.onset_punch(1)==4 % lower-right
+    punchoffset=-[psize/2,psize/2,psize/2,psize/2]+[offset,offset];
+  end
+  clear offset;
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Displaying 'Ready to Start'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -942,6 +970,7 @@ for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{2},[],CenterRect(fixRect,winRect));
+  if dparam.onset_punch(1), Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset); end
 
   % blue line for stereo sync
   if strcmpi(dparam.ExpMode,'propixxstereo')
@@ -957,6 +986,7 @@ for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+  if dparam.onset_punch(1), Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset); end
 
   % blue line for stereo sync
   if strcmpi(dparam.ExpMode,'propixxstereo')
@@ -996,6 +1026,7 @@ for ff=1:1:nframe_fixation(1)
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+    if dparam.onset_punch(1), Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset); end
 
     % blue line for stereo sync
     if strcmpi(dparam.ExpMode,'propixxstereo')
@@ -1041,6 +1072,13 @@ for cc=1:1:sparam.numTrials
         DrawTextureWithCLUT(winPtr,checkertexture,CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
       end
       Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
+      if dparam.onset_punch(1)
+        if ff<=nframe_stim/2
+          Screen('FillRect',winPtr,[255,255,255],CenterRect([0,0,psize,psize],winRect)+punchoffset);
+        else
+          Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset);
+        end
+      end
 
       % blue line for stereo sync
       if strcmpi(dparam.ExpMode,'propixxstereo')
@@ -1105,6 +1143,7 @@ for nn=1:1:nScr
   Screen('SelectStereoDrawBuffer',winPtr,nn-1);
   Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
   Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+  if dparam.onset_punch(1), Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset); end
 
   % blue line for stereo sync
   if strcmpi(dparam.ExpMode,'propixxstereo')
@@ -1124,6 +1163,7 @@ for ff=1:1:nframe_fixation(2)
     Screen('SelectStereoDrawBuffer',winPtr,nn-1);
     Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect));
     Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect));
+    if dparam.onset_punch(1), Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset); end
 
     % blue line for stereo sync
     if strcmpi(dparam.ExpMode,'propixxstereo')

@@ -39,6 +39,13 @@ dparam.ScrWidth=1920;
 % if non zero, the value is used as the screen frame rate.
 dparam.force_frame_rate=60;
 
-% whther skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
+% whether skipping the PTB's vertical-sync signal test. if 1, the sync test is skipped
 dparam.skip_sync_test=0;
+
+% whether displaying stimulus onset marker when each of the stimuli is presented (e.g. each timing of the rotating wedge onset).
+% the marker can be used to get a photodiode trigger etc. The trigger duration is set to each_of_stim_on_duration/2.
+% [type,onset_marker_size]
+% type, 0: none, 1: upper-left, 2: upper-right, 3: lower-left, 4: lower-right
+% onset_marker_size : pixels of the marker
+dparam.onset_punch=[0,50];
 ````

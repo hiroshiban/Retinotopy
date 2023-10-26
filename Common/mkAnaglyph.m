@@ -22,7 +22,7 @@ function oimg=mkAnaglyph(img1,img2,mode,display_flg,save_flg)
 %
 %
 % Created    : "2012-01-18 14:13:37 banh"
-% Last Update: "2013-11-22 23:39:11 ban (ban.hiroshi@gmail.com)"
+% Last Update: "2023-07-04 14:00:45 ban"
 
 % check input variables
 if nargin<3, help mkAnaglyph; return; end
@@ -55,13 +55,8 @@ else
 end
 
 fprintf('generating anaglyph image with %s mode...',modestr);
-oimg=zeros(size(im1));
-for ii=1:1:size(im1,1)
-  for jj=1:1:size(im1,2)
-    oimg(ii,jj,:)=trfmtx1*[im1(ii,jj,1);im1(ii,jj,2);im1(ii,jj,3)]+...
-                  trfmtx2*[im2(ii,jj,1);im2(ii,jj,2);im2(ii,jj,3)];
-  end
-end
+oimg=reshape((trfmtx1*reshape(im1,[size(im1,1)*size(im1,2),3])')',size(im1))+...
+     reshape((trfmtx2*reshape(im2,[size(im2,1)*size(im2,2),3])')',size(im2));
 oimg=uint8(oimg);
 disp('done.');
 
