@@ -59,7 +59,7 @@ function iretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2019-03-04 16:38:34 ban"
-% Last Update: "2023-10-26 16:15:55 ban"
+% Last Update: "2023-11-06 15:51:39 ban"
 %
 %
 %
@@ -1177,7 +1177,7 @@ for cc=1:1:sparam.numRepeats
       Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
       if hide_flg, Screen('DrawTexture',winPtr,abackground,[],winRect); end % additional background to hide the external region
       if dparam.onset_punch(1)
-        if ff<=nframe_stim/2
+        if mod(ff,nframe_movement)<nframe_movement/2 && mod(ff,nframe_movement)~=0
           Screen('FillRect',winPtr,[255,255,255],CenterRect([0,0,psize,psize],winRect)+punchoffset);
         else
           Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset);
@@ -1185,7 +1185,7 @@ for cc=1:1:sparam.numRepeats
       end
 
       % blue line for stereo sync
-      if trcmpi(dparam.ExpMode,'propixxmono') || strcmpi(dparam.ExpMode,'propixxstereo')
+      if strcmpi(dparam.ExpMode,'propixxmono') || strcmpi(dparam.ExpMode,'propixxstereo')
         Screen('FillRect',winPtr,[0,0,255],blueRectOn(nn,:));
         Screen('FillRect',winPtr,[0,0,0],blueRectOff(nn,:));
       end

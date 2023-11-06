@@ -54,7 +54,7 @@ function ibar_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,o
 %
 %
 % Created    : "2019-03-05 15:54:52 ban"
-% Last Update: "2023-10-26 15:58:22 ban"
+% Last Update: "2023-11-06 15:47:17 ban"
 %
 %
 %
@@ -1116,7 +1116,7 @@ for cc=1:1:sparam.numRepeats
         Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
         Screen('DrawTexture',winPtr,background,[],CenterRect(bgRect,winRect)); % background
         if dparam.onset_punch(1)
-          if ff<=nframe_stim/2
+          if mod(ff,nframe_movement)<nframe_movement/2 && mod(ff,nframe_movement)~=0
             Screen('FillRect',winPtr,[255,255,255],CenterRect([0,0,psize,psize],winRect)+punchoffset);
           else
             Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset);

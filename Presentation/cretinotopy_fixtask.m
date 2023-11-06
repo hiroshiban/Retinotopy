@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2023-10-26 14:37:43 ban"
+% Last Update: "2023-11-06 15:35:17 ban"
 %
 %
 %
@@ -1052,7 +1052,7 @@ for cc=1:1:sparam.numRepeats
       DrawTextureWithCLUT(winPtr,checkertexture{stim_pos_id},CLUT{color_id,compensate_id},[],CenterRect(stimRect,winRect)); % checkerboard
       Screen('DrawTexture',winPtr,fix{task_flg(cur_frames)},[],CenterRect(fixRect,winRect)); % the central fixation oval
       if dparam.onset_punch(1)
-        if ff<=nframe_stim/2
+        if mod(ff,nframe_movement)<nframe_movement/2 && mod(ff,nframe_movement)~=0
           Screen('FillRect',winPtr,[255,255,255],CenterRect([0,0,psize,psize],winRect)+punchoffset);
         else
           Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset);

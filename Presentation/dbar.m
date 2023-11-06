@@ -32,7 +32,7 @@ function dbar(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2019-05-22 18:45:53 ban"
-% Last Update: "2023-10-26 14:40:11 ban"
+% Last Update: "2023-11-06 15:36:01 ban"
 %
 %
 %
@@ -1037,7 +1037,7 @@ for cc=1:1:sparam.numRepeats
         end
         Screen('DrawTexture',winPtr,fix{1},[],CenterRect(fixRect,winRect)); % the central fixation oval
         if dparam.onset_punch(1)
-          if ff<=nframe_stim/2
+          if mod(ff,nframe_movement)<nframe_movement/2 && mod(ff,nframe_movement)~=0
             Screen('FillRect',winPtr,[255,255,255],CenterRect([0,0,psize,psize],winRect)+punchoffset);
           else
             Screen('FillRect',winPtr,[0,0,0],CenterRect([0,0,psize,psize],winRect)+punchoffset);
