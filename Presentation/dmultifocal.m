@@ -41,7 +41,7 @@ function dmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2019-05-22 19:29:54 ban"
-% Last Update: "2023-10-26 15:46:21 ban"
+% Last Update: "2023-11-06 16:57:54 ban"
 %
 %
 %
@@ -1026,8 +1026,8 @@ for cc=1:1:sparam.numTrials
 
       % generate a checkerboard texture with/without a luminance detection task
       if do_task(task_id) && ...
-        ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-          ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) )
+        ( ( task_flg(task_id)==1 && (mod(ff,nframe_stim)<=nframe_stim/2 && mod(ff,nframe_stim)~=0) ) || ...
+          ( task_flg(task_id)==2 && (mod(ff,nframe_stim)>nframe_stim/2 || mod(ff,nframe_stim)==0) ) )
         tidx=find(checkerboardID{cc}==task_pos{cc}(task_id));
         cval=checkerboard{cc}(tidx(ceil(numel(tidx)/2))); % ceil(numel(tidx)/2) is required as sometimes tidx(1) is located at the edge of the checkerboard which gives NaN.
         checkerboard{cc}(tidx)=3; % as IDs of the original checkerboard are 0|1|2, 3 is assigned to the task patch.
@@ -1098,8 +1098,8 @@ for cc=1:1:sparam.numTrials
     end
 
     if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
-       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Depth Task',[]); end
+       ( ( task_flg(task_id)==1 && (mod(ff,nframe_stim)<=nframe_stim/2 && mod(ff,nframe_stim)~=0) ) || ...
+         ( task_flg(task_id)==2 && (mod(ff,nframe_stim)>nframe_stim/2 || mod(ff,nframe_stim)==0) ) ) ), event=event.add_event('Depth Task',[]); end
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim+nframe_rest && cc==sparam.numTrials, continue; end

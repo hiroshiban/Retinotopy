@@ -28,7 +28,7 @@ function chrf(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrite
 %
 %
 % Created    : "2019-01-31 17:41:51 ban"
-% Last Update: "2023-10-26 01:30:31 ban"
+% Last Update: "2023-11-06 16:34:48 ban"
 %
 %
 %
@@ -937,8 +937,8 @@ for cc=1:1:sparam.numRepeats
     % generate a checkerboard texture with/without a luminance detection task
     if ff<=nframe_stim
       if do_task(task_id) && ...
-        ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
-          ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
+        ( ( task_flg(task_id)==1 && (mod(ff,2*nframe_task)<=nframe_task && mod(ff,2*nframe_task)~=0) ) || ...
+          ( task_flg(task_id)==2 && (mod(ff,2*nframe_task)>nframe_task || mod(ff,2*nframe_task)==0) ) )
         tidx=find(checkerboardID==task_pos(task_id));
         checkerboard(tidx)=checkerboard(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
         checkertexture=Screen('MakeTexture',winPtr,checkerboard);
@@ -983,8 +983,8 @@ for cc=1:1:sparam.numRepeats
     end
 
     if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
-       ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
-         ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) ) ), event=event.add_event('Luminance Task',[]); end
+       ( ( task_flg(task_id)==1 && (mod(ff,2*nframe_task)<=nframe_task && mod(ff,2*nframe_task)~=0) ) || ...
+         ( task_flg(task_id)==2 && (mod(ff,2*nframe_task)>nframe_task || mod(ff,2*nframe_task)==0) ) ) ), event=event.add_event('Luminance Task',[]); end
 
     % clean up
     if ff<=nframe_stim, Screen('Close',checkertexture); end

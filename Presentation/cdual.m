@@ -39,7 +39,7 @@ function cdual(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,overwrit
 %
 %
 % Created    : "2018-12-20 14:26:03 ban"
-% Last Update: "2023-10-25 18:43:13 ban"
+% Last Update: "2023-11-06 16:34:57 ban"
 %
 %
 %
@@ -1145,8 +1145,8 @@ for cc=1:1:length(checkerboard)
 
     % generate a checkerboard texture with/without a luminance detection task
     if do_task(task_id) && ...
-      ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-        ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) )
+      ( ( task_flg(task_id)==1 && (mod(ff,nframe_stim)<=nframe_stim/2 && mod(ff,nframe_stim)~=0) ) || ...
+        ( task_flg(task_id)==2 && (mod(ff,nframe_stim)>nframe_stim/2 || mod(ff,nframe_stim)==0) ) )
       tidx=find(checkerboardID{cc}==task_pos{cc}(task_id));
       checkerboard{cc}(tidx)=checkerboard{cc}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
       checkertexture=Screen('MakeTexture',winPtr,checkerboard{cc});
@@ -1190,8 +1190,8 @@ for cc=1:1:length(checkerboard)
     end
 
     if firsttask_flg==1 && ( do_task(task_id) && ...
-       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Luminance Task',[]); end
+       ( ( task_flg(task_id)==1 && (mod(ff,nframe_stim)<=nframe_stim/2 && mod(ff,nframe_stim)~=0) ) || ...
+         ( task_flg(task_id)==2 && (mod(ff,nframe_stim)>nframe_stim/2 || mod(ff,nframe_stim)==0) ) ) ), event=event.add_event('Luminance Task',[]); end
 
     % clean up
     Screen('Close',checkertexture);

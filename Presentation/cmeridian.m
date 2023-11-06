@@ -35,7 +35,7 @@ function cmeridian(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,over
 %
 %
 % Created    : "2018-12-11 19:10:32 ban"
-% Last Update: "2023-10-26 14:26:01 ban"
+% Last Update: "2023-11-06 16:39:29 ban"
 %
 %
 %
@@ -795,25 +795,6 @@ fix{2}=Screen('MakeTexture',winPtr,fixD);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Prepare a rectangle for onset punch stimulus
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if dparam.onset_punch(1)
-  psize=dparam.onset_punch(2); offset=bgSize./2;
-  if dparam.onset_punch(1)==1 % upper-left
-    punchoffset=[psize/2,psize/2,psize/2,psize/2]-[offset,offset];
-  elseif dparam.onset_punch(1)==2 % upper-right
-    punchoffset=[-psize/2,psize/2,-psize/2,psize/2]+[offset(1),-offset(2),offset(1),-offset(2)];
-  elseif dparam.onset_punch(1)==3 %lower-left
-    punchoffset=[psize/2,-psize/2,psize/2,-psize/2]+[-offset(1),offset(2),-offset(1),offset(2)];
-  elseif dparam.onset_punch(1)==4 % lower-right
-    punchoffset=-[psize/2,psize/2,psize/2,psize/2]+[offset,offset];
-  end
-  clear offset;
-end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Prepare blue lines for stereo image flip sync with VPixx PROPixx
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -858,6 +839,25 @@ end
 bgRect  = [0, 0, bgSize]; % used to display background images;
 stimRect= [0, 0, stimSize];
 fixRect = [0, 0, fixSize]; % used to display the central fixation point
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Prepare a rectangle for onset punch stimulus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if dparam.onset_punch(1)
+  psize=dparam.onset_punch(2); offset=bgSize./2;
+  if dparam.onset_punch(1)==1 % upper-left
+    punchoffset=[psize/2,psize/2,psize/2,psize/2]-[offset,offset];
+  elseif dparam.onset_punch(1)==2 % upper-right
+    punchoffset=[-psize/2,psize/2,-psize/2,psize/2]+[offset(1),-offset(2),offset(1),-offset(2)];
+  elseif dparam.onset_punch(1)==3 %lower-left
+    punchoffset=[psize/2,-psize/2,psize/2,-psize/2]+[-offset(1),offset(2),-offset(1),offset(2)];
+  elseif dparam.onset_punch(1)==4 % lower-right
+    punchoffset=-[psize/2,psize/2,psize/2,psize/2]+[offset,offset];
+  end
+  clear offset;
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -962,8 +962,8 @@ for cc=1:1:sparam.numRepeats
       % generate a checkerboard texture with/without a luminance detection task
       if ff<=nframe_stim
         if do_task(task_id) && ...
-          ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
-            ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) )
+          ( ( task_flg(task_id)==1 && (mod(ff,2*nframe_task)<=nframe_task && mod(ff,2*nframe_task)~=0) ) || ...
+            ( task_flg(task_id)==2 && (mod(ff,2*nframe_task)>nframe_task || mod(ff,2*nframe_task)==0) ) )
           tidx=find(checkerboardID{pp}==task_pos{pp}(task_id));
           checkerboard{pp}(tidx)=checkerboard{pp}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
           checkertexture=Screen('MakeTexture',winPtr,checkerboard{pp});
@@ -1008,8 +1008,8 @@ for cc=1:1:sparam.numRepeats
       end
 
       if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
-         ( ( task_flg(task_id)==1 && mod(ff,2*nframe_task)<=nframe_task ) || ...
-           ( task_flg(task_id)==2 && mod(ff,2*nframe_task)>nframe_task ) ) ), event=event.add_event('Luminance Task',[]); end
+         ( ( task_flg(task_id)==1 && (mod(ff,2*nframe_task)<=nframe_task && mod(ff,2*nframe_task)~=0) ) || ...
+           ( task_flg(task_id)==2 && (mod(ff,2*nframe_task)>nframe_task || mod(ff,2*nframe_task)==0) ) ) ), event=event.add_event('Luminance Task',[]); end
 
       % clean up
       if ff<=nframe_stim, Screen('Close',checkertexture); end

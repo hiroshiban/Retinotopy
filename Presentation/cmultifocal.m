@@ -40,7 +40,7 @@ function cmultifocal(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2018-11-29 12:13:43 ban"
-% Last Update: "2023-10-26 14:30:07 ban"
+% Last Update: "2023-11-06 16:46:27 ban"
 %
 %
 %
@@ -1052,8 +1052,8 @@ for cc=1:1:sparam.numTrials
     % generate a checkerboard texture with/without a luminance detection task
     if ff<=nframe_stim
       if do_task(task_id) && ...
-        ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-          ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) )
+        ( ( task_flg(task_id)==1 && (mod(ff,nframe_stim)<=nframe_stim/2 && mod(ff,nframe_stim)~=0) ) || ...
+          ( task_flg(task_id)==2 && (mod(ff,nframe_stim)>nframe_stim/2 || mod(ff,nframe_stim)==0) ) )
         tidx=find(checkerboardID{cc}==task_pos{cc}(task_id));
         checkerboard{cc}(tidx)=checkerboard{cc}(tidx)+2; % here +2 is for a dim checker pattern. for details, please see codes in generating CLUT.
         checkertexture=Screen('MakeTexture',winPtr,checkerboard{cc});
@@ -1100,8 +1100,8 @@ for cc=1:1:sparam.numTrials
     end
 
     if ff<=nframe_stim && firsttask_flg==1 && ( do_task(task_id) && ...
-       ( ( task_flg(task_id)==1 && mod(ff,nframe_stim)<=nframe_stim/2 ) || ...
-         ( task_flg(task_id)==2 && mod(ff,nframe_stim)>nframe_stim/2 ) ) ), event=event.add_event('Luminance Task',[]); end
+       ( ( task_flg(task_id)==1 && (mod(ff,nframe_stim)<=nframe_stim/2 && mod(ff,nframe_stim)~=0) ) || ...
+         ( task_flg(task_id)==2 && (mod(ff,nframe_stim)>nframe_stim/2 || mod(ff,nframe_stim)==0) ) ) ), event=event.add_event('Luminance Task',[]); end
 
     % clean up
     if ff<=nframe_stim, Screen('Close',checkertexture); end

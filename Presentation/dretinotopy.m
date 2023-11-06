@@ -37,7 +37,7 @@ function dretinotopy(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,ov
 %
 %
 % Created    : "2019-05-22 15:12:40 ban"
-% Last Update: "2023-11-06 15:46:20 ban"
+% Last Update: "2023-11-06 16:56:54 ban"
 %
 %
 %
@@ -1035,8 +1035,8 @@ for cc=1:1:sparam.numRepeats
 
       % generate a checkerboard texture with/without a depth detection task
       if do_task(task_id) && ...
-        ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
-          ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) )
+        ( ( task_flg(task_id)==1 && (mod(ff,nframe_movement)<=nframe_movement/2 && mod(ff,nframe_movement)~=0) ) || ...
+          ( task_flg(task_id)==2 && (mod(ff,nframe_movement)>nframe_movement/2 || mod(ff,nframe_movement)==0) ) )
         tidx=find(checkerboardID{stim_pos_id}==task_pos{stim_pos_id}(task_id));
         cval=checkerboard{stim_pos_id}(tidx(ceil(numel(tidx)/2))); % ceil(numel(tidx)/2) is required as sometimes tidx(1) is located at the edge of the checkerboard which gives NaN.
         checkerboard{stim_pos_id}(tidx)=3; % as IDs of the original checkerboard are 0|1|2, 3 is assigned to the task patch.
@@ -1108,8 +1108,8 @@ for cc=1:1:sparam.numRepeats
     end
 
     if firsttask_flg==1 && ( do_task(task_id) && ...
-       ( ( task_flg(task_id)==1 && mod(ff,nframe_movement)<=nframe_movement/2 ) || ...
-         ( task_flg(task_id)==2 && mod(ff,nframe_movement)>nframe_movement/2 ) ) ), event=event.add_event('Depth Task',[]); end
+       ( ( task_flg(task_id)==1 && (mod(ff,nframe_movement)<=nframe_movement/2 && mod(ff,nframe_movement)~=0) ) || ...
+         ( task_flg(task_id)==2 && (mod(ff,nframe_movement)>nframe_movement/2 || mod(ff,nframe_movement)==0) ) ) ), event=event.add_event('Depth Task',[]); end
 
     %% exit from the loop if the final frame is displayed
     if ff==nframe_stim && cc==sparam.numRepeats, continue; end
