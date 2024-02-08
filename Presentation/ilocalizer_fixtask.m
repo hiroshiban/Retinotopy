@@ -55,7 +55,7 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 %
 %
 % Created    : "2019-03-05 17:24:24 ban"
-% Last Update: "2023-10-26 16:08:20 ban"
+% Last Update: "2024-02-08 18:10:28 ban"
 %
 %
 %
@@ -224,6 +224,10 @@ function ilocalizer_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_t
 % sparam.fixsize=12; % radius in pixels
 % sparam.fixcolor=[255,255,255];
 %
+% % these are the values only valid for the *_fixtask.m stimuli.
+% sparam.fixtaskfreq=4; % frequency of the fixation color change task. The larger the value, the less frequent the task. 4 by default.
+% sparam.fixtaskduration=18; % the number of frames (duration) assigned to each task. The larger the value, the longer the task duration. 18 by default.
+%
 % %%% background color
 % sparam.bgcolor=[128,128,128];
 %
@@ -390,6 +394,8 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'fixtype',1,...
          'fixsize',12,...
          'fixcolor',[255,255,255],...
+         'fixtaskfreq',4,...
+         'fixtaskduration',18,...
          'bgcolor',[128,128,128],... % sparam.colors(1,:);
          'bgtype',1,...
          'patch_size',[30,30],...
@@ -557,7 +563,7 @@ nframe_fixation=round(sparam.initial_fixation_time.*dparam.fps./sparam.waitframe
 nframe_stim=round((sparam.block_duration-sparam.rest_duration)*dparam.fps/sparam.waitframes);
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_flicker=round(sparam.flip_duration*dparam.fps/sparam.waitframes);
-nframe_task=round(18/sparam.waitframes); % just arbitrary, you can change as you like
+nframe_task=round(sparam.fixtaskduration/sparam.waitframes); % just arbitrary, you can change as you like
 
 %% initialize chackerboard parameters
 
@@ -788,7 +794,7 @@ for nn=2:1:num_tasks
   if task_flg(nn-1)==2
     task_flg(nn)=1;
   else
-    if mod(randi(4,1),4)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
+    if mod(randi(sparam.fixtaskfreq,1),sparam.fixtaskfreq)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
       task_flg(nn)=round(rand(1,1))+1;
     else
       task_flg(nn)=1;

@@ -70,6 +70,10 @@ sparam.fixtype=1; % 1: circular, 2: rectangular, 3: concentric fixation point
 sparam.fixsize=4; % radius in pixels
 sparam.fixcolor=[255,255,255];
 
+% these are the values only valid for the *_fixtask.m stimuli.
+sparam.fixtaskfreq=4; % frequency of the fixation color change task. The larger the value, the less frequent the task. 4 by default.
+sparam.fixtaskduration=18; % the number of frames (duration) assigned to each task. The larger the value, the longer the task duration. 18 by default.
+
 %%% background color
 sparam.bgcolor=sparam.colors(1,:); %[0,0,0];
 

@@ -39,7 +39,7 @@ function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 %
 %
 % Created    : "2019-05-21 10:54:40 ban"
-% Last Update: "2023-10-26 15:11:14 ban"
+% Last Update: "2024-02-08 18:09:19 ban"
 %
 %
 %
@@ -227,6 +227,10 @@ function ddual_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_table,
 % sparam.fixsize=12; % radius in pixels
 % sparam.fixcolor=[255,255,255];
 %
+% % these are the values only valid for the *_fixtask.m stimuli.
+% sparam.fixtaskfreq=4; % frequency of the fixation color change task. The larger the value, the less frequent the task. 4 by default.
+% sparam.fixtaskduration=18; % the number of frames (duration) assigned to each task. The larger the value, the longer the task duration. 18 by default.
+%
 % %%% background color
 % sparam.bgcolor=[128,128,128];
 %
@@ -408,6 +412,8 @@ sparam=ValidateStructureFields(sparam,... % validate fields and set the default 
          'fixtype',1,...
          'fixsize',12,...
          'fixcolor',[255,255,255],...
+         'fixtaskfreq',4,...
+         'fixtaskduration',18,...
          'bgcolor',[128,128,128],... % sparam.colors(1,:);
          'bgtype',1,...
          'patch_size',[30,30],...
@@ -589,7 +595,7 @@ sparam.ecc_npositions=sparam.pol_npositions*(sparam.ecc_cycle_duration-sparam.ec
 
 nframe_stim=round((sparam.pol_cycle_duration-sparam.pol_rest_duration)*dparam.fps/(360/sparam.pol_rotangle)/sparam.waitframes);
 nframe_flicker=round(nframe_stim/sparam.RDSdepth(3)/4);
-nframe_task=round(18/sparam.waitframes); % just arbitrary, you can change as you like
+nframe_task=round(sparam.fixtaskduration/sparam.waitframes); % just arbitrary, you can change as you like
 
 %% initialize chackerboard parameters
 
@@ -806,7 +812,7 @@ for nn=2:1:num_tasks
   if task_flg(nn-1)==2
     task_flg(nn)=1;
   else
-    if mod(randi(4,1),4)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
+    if mod(randi(sparam.fixtaskfreq,1),sparam.fixtaskfreq)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
       task_flg(nn)=round(rand(1,1))+1;
     else
       task_flg(nn)=1;
