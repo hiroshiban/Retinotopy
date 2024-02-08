@@ -37,7 +37,7 @@ function cretinotopy_fixtask(subjID,exp_mode,acq,displayfile,stimulusfile,gamma_
 %
 %
 % Created    : "2013-11-25 11:34:51 ban"
-% Last Update: "2023-11-06 15:35:17 ban"
+% Last Update: "2024-02-08 16:42:38 ban"
 %
 %
 %
@@ -571,7 +571,7 @@ nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/(360/sparam.rotangle)/sparam.waitframes);
 nframe_flicker=round(nframe_movement/sparam.ncolors/4);
-nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
+nframe_task=round(18/sparam.waitframes); % just arbitrary, you can change as you like
 
 %% initialize chackerboard parameters
 
@@ -622,7 +622,7 @@ elseif strcmpi(sparam.mode,'exp') || strcmpi(sparam.mode,'cont')
   % update some parameters here for 'exp' or 'cont' mode
   nframe_movement=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam.npositions/sparam.waitframes);
   nframe_flicker=round(nframe_movement/sparam.ncolors/4);
-  nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
+  nframe_task=round(18/sparam.waitframes); % just arbitrary, you can change as you like
 
   % get annuli's min/max lims
   ecclims=zeros(sparam.npositions,3);
@@ -742,7 +742,7 @@ for nn=2:1:num_tasks
   if task_flg(nn-1)==2
     task_flg(nn)=1;
   else
-    if mod(randi(4,1),4)==0 % this is arbitral, but I put these lines just to reduce the number of tasks
+    if mod(randi(4,1),4)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
       task_flg(nn)=round(rand(1,1))+1;
     else
       task_flg(nn)=1;
@@ -836,25 +836,6 @@ fix{2}=Screen('MakeTexture',winPtr,fixD);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Prepare a rectangle for onset punch stimulus
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if dparam.onset_punch(1)
-  psize=dparam.onset_punch(2); offset=bgSize./2;
-  if dparam.onset_punch(1)==1 % upper-left
-    punchoffset=[psize/2,psize/2,psize/2,psize/2]-[offset,offset];
-  elseif dparam.onset_punch(1)==2 % upper-right
-    punchoffset=[-psize/2,psize/2,-psize/2,psize/2]+[offset(1),-offset(2),offset(1),-offset(2)];
-  elseif dparam.onset_punch(1)==3 %lower-left
-    punchoffset=[psize/2,-psize/2,psize/2,-psize/2]+[-offset(1),offset(2),-offset(1),offset(2)];
-  elseif dparam.onset_punch(1)==4 % lower-right
-    punchoffset=-[psize/2,psize/2,psize/2,psize/2]+[offset,offset];
-  end
-  clear offset;
-end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Prepare blue lines for stereo image flip sync with VPixx PROPixx
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -899,6 +880,25 @@ end
 bgRect  = [0, 0, bgSize]; % used to display background images;
 stimRect= [0, 0, stimSize];
 fixRect = [0, 0, fixSize]; % used to display the central fixation point
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Prepare a rectangle for onset punch stimulus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if dparam.onset_punch(1)
+  psize=dparam.onset_punch(2); offset=bgSize./2;
+  if dparam.onset_punch(1)==1 % upper-left
+    punchoffset=[psize/2,psize/2,psize/2,psize/2]-[offset,offset];
+  elseif dparam.onset_punch(1)==2 % upper-right
+    punchoffset=[-psize/2,psize/2,-psize/2,psize/2]+[offset(1),-offset(2),offset(1),-offset(2)];
+  elseif dparam.onset_punch(1)==3 %lower-left
+    punchoffset=[psize/2,-psize/2,psize/2,-psize/2]+[-offset(1),offset(2),-offset(1),offset(2)];
+  elseif dparam.onset_punch(1)==4 % lower-right
+    punchoffset=-[psize/2,psize/2,psize/2,psize/2]+[offset,offset];
+  end
+  clear offset;
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

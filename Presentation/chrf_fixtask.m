@@ -546,7 +546,7 @@ nframe_stim=round((sparam.cycle_duration-sparam.rest_duration)*dparam.fps/sparam
 nframe_rest=round(sparam.rest_duration*dparam.fps/sparam.waitframes);
 %nframe_flicker=round(sparam.waitframes/2/2); % the first 2 = 2 cycles of color flickering, the second 2 is for compensation colors (e.g. RG and GR)
 nframe_flicker=round(round((60-0)*dparam.fps/(360/12)/sparam.waitframes)/sparam.ncolors/4); %60,0,30 are from CCW/CW parameters.
-nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
+nframe_task=round(18/sparam.waitframes); % just arbitrary, you can change as you like
 
 %% initialize chackerboard parameters
 
@@ -666,7 +666,7 @@ for nn=2:1:num_tasks
   if task_flg(nn-1)==2
     task_flg(nn)=1;
   else
-    if mod(randi(4,1),4)==0 % this is arbitral, but I put these lines just to reduce the number of tasks
+    if mod(randi(4,1),4)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
       task_flg(nn)=round(rand(1,1))+1;
     else
       task_flg(nn)=1;

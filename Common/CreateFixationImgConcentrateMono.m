@@ -6,10 +6,6 @@ function fix=CreateFixationImgConcentrateMono(fixsize,fixcolor,bgcolor,circlesiz
 %
 % Create fixation-cross image that is reported to be able to get more stable and sustained
 % fixation with minimum eye movements.
-% reference: Thaler, L., Shutz, A.C., Goodale, M.A., Gegenfurtner, K.R. (2013).
-%            What is the best fixation target? The effect of target shape on stability of fixational eye movements.
-%            Vision Research, 76, 31-42.
-%            https://www.sciencedirect.com/science/article/pii/S0042698912003380
 %
 % [input]
 % fixsize    : radius of the whole rectangular image, [pixel]. 32 by default.
@@ -24,10 +20,14 @@ function fix=CreateFixationImgConcentrateMono(fixsize,fixcolor,bgcolor,circlesiz
 % fix        : fixation image.
 %
 % [reference]
-% 
+% Thaler, L., Shutz, A.C., Goodale, M.A., Gegenfurtner, K.R. (2013).
+% What is the best fixation target? The effect of target shape on stability of fixational eye movements.
+% Vision Research, 76, 31-42.
+% https://www.sciencedirect.com/science/article/pii/S0042698912003380
+%
 %
 % Created    : "2019-02-12 14:32:02 ban"
-% Last Update: "2019-02-19 20:01:55 ban"
+% Last Update: "2024-02-08 16:40:02 ban"
 
 % check the input variables
 if nargin < 1, fixsize=32; end
@@ -51,7 +51,7 @@ r=sqrt(x.*x+y.*y);
 
 % create the circular background
 alphac=r; alphac(r>fixsize)=0; alphac(r<=fixsize)=255;
-fix=repmat(reshape([bgcolor,1],[1,1,1,4]),[2*fixsize,2*fixsize]);
+fix=repmat(reshape([bgcolor,1],[1,1,4]),[2*fixsize,2*fixsize]);
 fix(:,:,4)=alphac; % alpha channel
 
 % create the central fixation point

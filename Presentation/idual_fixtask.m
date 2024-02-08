@@ -602,7 +602,7 @@ sparam.ecc_npositions=sparam.pol_npositions*(sparam.ecc_cycle_duration-sparam.ec
 
 nframe_stim=round((sparam.pol_cycle_duration-sparam.pol_rest_duration)*dparam.fps/(360/sparam.pol_rotangle)/sparam.waitframes);
 nframe_flicker=round(sparam.flip_duration*dparam.fps/sparam.waitframes);
-nframe_task=round(18/sparam.waitframes); % just arbitral, you can change as you like
+nframe_task=round(18/sparam.waitframes); % just arbitrary, you can change as you like
 
 %% initialize chackerboard parameters
 
@@ -918,7 +918,7 @@ for nn=2:1:num_tasks
   if task_flg(nn-1)==2
     task_flg(nn)=1;
   else
-    if mod(randi(4,1),4)==0 % this is arbitral, but I put these lines just to reduce the number of tasks
+    if mod(randi(4,1),4)==0 % this is arbitrary, but I put these lines just to reduce the number of tasks
       task_flg(nn)=round(rand(1,1))+1;
     else
       task_flg(nn)=1;
