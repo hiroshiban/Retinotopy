@@ -649,7 +649,7 @@ if strfind(upper(subjID),'DEBUG')
 
             % flip the window
             Screen('DrawingFinished',winPtr);
-            Screen('Flip',winPtr,[],[],[],1);
+            Screen('Flip',winPtr);
 
             % get the current frame and save it
             imwrite(Screen('GetImage',winPtr,winRect),fullfile(save_dir,sprintf('checkerboard_%s_cycle_%02d_pos_%02d_%02d_depth_%02d_%02d.png',sparam.mode,cc,nn,rr,mm,pp)),'png');
@@ -878,7 +878,7 @@ for nn=1:1:nScr
   end
 end
 Screen('DrawingFinished',winPtr);
-Screen('Flip', winPtr,[],[],[],1);
+Screen('Flip',winPtr);
 
 % prepare the next frame for the initial fixation period
 for nn=1:1:nScr
@@ -914,7 +914,7 @@ fprintf('\nExperiment running...\n');
 %%%% Initial Fixation Period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-vbl=Screen('Flip',winPtr,[],[],[],1); % the first flip
+vbl=Screen('Flip',winPtr); % the first flip
 [event,the_experiment_start]=event.set_reference_time(vbl);
 event=event.add_event('Initial Fixation',[]);
 fprintf('\nfixation\n\n');
@@ -936,7 +936,7 @@ for ff=1:1:nframe_fixation(1)
   end
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
-  Screen('Flip',winPtr,[],[],[],1);
+  Screen('Flip',winPtr);
 
   % update task
   cur_frames=cur_frames+1;
@@ -998,7 +998,7 @@ for cc=1:1:sparam.numRepeats
       % flip the window
       Screen('DrawingFinished',winPtr);
       while GetSecs()<vbl+sparam.initial_fixation_time(1)+(cc-1)*2*sparam.block_duration+(pp-1)*sparam.block_duration+((ff-1)*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
-      Screen('Flip',winPtr,[],[],[],1);
+      Screen('Flip',winPtr);
 
       if pp==1 && ff==1
         event=event.add_event(sprintf('Cycle: %d',cc),[]);
@@ -1047,7 +1047,7 @@ for nn=1:1:nScr
 end
 Screen('DrawingFinished',winPtr);
 while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration-0.5*dparam.ifi, [resps,event]=resps.check_responses(event); end
-Screen('Flip',winPtr,[],[],[],1);
+Screen('Flip',winPtr);
 %cur_frames=cur_frames+1;
 event=event.add_event('Final Fixation',[]);
 fprintf('\nfixation\n');
@@ -1068,7 +1068,7 @@ for ff=1:1:nframe_fixation(2)
   end
   Screen('DrawingFinished',winPtr);
   while GetSecs()<vbl+sparam.initial_fixation_time(1)+sparam.numRepeats*2*sparam.block_duration+(ff*sparam.waitframes-0.5)*dparam.ifi, [resps,event]=resps.check_responses(event); end
-  Screen('Flip',winPtr,[],[],[],1);
+  Screen('Flip',winPtr);
 
   % update task
   cur_frames=cur_frames+1;

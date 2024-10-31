@@ -7,7 +7,7 @@
 % "redblue", "bluered", "shutter", "topbottom", "bottomtop", "interleavedline", "interleavedcolumn", "propixxmono", "propixxstereo"
 dparam.ExpMode='mono';%'dualparallel';%'mono';
 
-dparam.scrID=1; % screen ID, generally 0 for a single display setup, 1 for dual display setup
+dparam.scrID=2; % screen ID, generally 0 for a single display setup, 1 for dual display setup
 
 % a method to start stimulus presentation
 % 0:ENTER/SPACE, 1:Left-mouse button, 2:the first MR trigger pulse (CiNet),
@@ -29,10 +29,10 @@ dparam.Key2=71; % key 2 'g'
 dparam.fullscr=false;
 
 %%% the resolution of the screen height
-dparam.ScrHeight=1024;
+dparam.ScrHeight=1080;
 
 %% the resolution of the screen width
-dparam.ScrWidth=1280;
+dparam.ScrWidth=1920;
 
 % whether forcing to use specific frame rate, if 0, the frame rate wil bw computed in the ImagesShowPTB function.
 % if non zero, the value is used as the screen frame rate.

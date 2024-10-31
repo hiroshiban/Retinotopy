@@ -21,7 +21,7 @@ function DisplayMessage2(message,bgcolor,winPtr,numScreens,drawing_font,drawing_
 % no output variable
 %
 % Created: Feb 04 2010 Hiroshi Ban
-% Last Update: "2017-11-23 14:26:57 ban"
+% Last Update: "2024-10-31 13:45:36 ban"
 
 % input variable check
 if nargin < 3, help(mfilename()); end
@@ -53,6 +53,6 @@ end
 
 % display
 Screen('DrawingFinished',winPtr,2);
-Screen('Flip',winPtr,[],[],[],1);
+Screen('Flip',winPtr);
 
 return

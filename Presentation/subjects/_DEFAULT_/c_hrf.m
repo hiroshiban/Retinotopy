@@ -10,7 +10,7 @@ sparam.width       = 360; % wedge width in deg along polar angle
 sparam.phase       = 0;   % phase shift in deg
 sparam.startangle  = 0;   % presentation start angle in deg, from right-horizontal meridian, ccw
 
-sparam.maxRad      = 7.5; % maximum radius of  annulus (degrees)
+sparam.maxRad      = 8; % maximum radius of  annulus (degrees)
 sparam.minRad      = 0;   % minumum
 
 sparam.dimratio    = 0.4; % luminance dim ratio for the checker-pattern change detection task

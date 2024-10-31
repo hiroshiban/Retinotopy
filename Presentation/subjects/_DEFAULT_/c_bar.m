@@ -8,7 +8,7 @@
 % "sparam" means "stimulus generation parameters"
 
 %%% stimulus parameters
-sparam.fieldSize   = 15; % stimulation field size in deg. circular region with sparam.fieldSize is stimulated.
+sparam.fieldSize   = 16; % stimulation field size in deg. circular region with sparam.fieldSize is stimulated.
 
 sparam.ndivsL      = 18;  % number of bar subdivisions along bar's long axis
 sparam.ndivsS      = 2;   % number of bar subdivisions along bar's short axis
